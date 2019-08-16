@@ -7,8 +7,14 @@
     "@types/node": "12.7.2",
     "@types/react": "16.9.2",
     "@types/react-dom": "16.8.5",
+    "bootstrap": "^4.3.1",
+    "firebase": "^6.4.0",
+    "node-sass": "^4.12.0",
     "react": "^16.9.0",
+    "react-dnd": "^9.3.4",
+    "react-dnd-html5-backend": "^9.3.4",
     "react-dom": "^16.9.0",
+    "react-router-dom": "^5.0.1",
     "react-scripts": "3.1.1",
     "typescript": "3.5.3"
   },
@@ -32,5 +38,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@testing-library/react": "^9.1.2",
+    "@types/react-router-dom": "^4.3.4"
   }
 }
