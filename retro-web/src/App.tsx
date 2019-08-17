@@ -7,7 +7,7 @@ const App: React.FC = () => {
   return (
     <BrowserRouter>
       <div className="app">
-        <main className="app__main">
+        <main className="app__main full-height">
           <Switch>
             <Redirect exact path="/" to="/login" />
             <Route path="/login" component={LoginPage} />

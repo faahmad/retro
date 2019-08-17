@@ -11,8 +11,7 @@
     "firebase": "^6.4.0",
     "node-sass": "^4.12.0",
     "react": "^16.9.0",
-    "react-dnd": "^9.3.4",
-    "react-dnd-html5-backend": "^9.3.4",
+    "react-beautiful-dnd": "^11.0.5",
     "react-dom": "^16.9.0",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.1.1",
@@ -41,6 +40,7 @@
   },
   "devDependencies": {
     "@testing-library/react": "^9.1.2",
+    "@types/react-beautiful-dnd": "^11.0.3",
     "@types/react-router-dom": "^4.3.4"
   }
 }

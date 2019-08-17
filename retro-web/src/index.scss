@@ -12,6 +12,14 @@ code {
     monospace;
 }
 
-.full-height {
-  height: 90vh;
+.retro-board__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 8px;
+  grid-auto-rows: 45vh;
+}
+
+.retro-list-item {
+  transition: border-color 0.2 ease-in-out;
+  transition: box-shadow 0.2 ease-in-out;
 }
