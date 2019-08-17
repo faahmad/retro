@@ -23,35 +23,36 @@ const firebaseConfig: FirebaseConfig = {
 
 function createFirebaseApp(firebaseConfig: FirebaseConfig) {
   const firebaseApp = firebase.initializeApp(firebaseConfig);
-  const firebaseCollections = {
+
+  const firestoreCollections = {
     retroBoards: "retro-boards"
   };
 
+  const retroBoardsCollection = firebaseApp
+    .firestore()
+    .collection(firestoreCollections.retroBoards);
+
   return {
     fetchAllRetroBoards: async () => {
-      let retroBoards: any[] = [];
-
-      const retroBoardsSnapshot = await firebaseApp
-        .firestore()
-        .collection(firebaseCollections.retroBoards)
-        .limit(10)
-        .get();
-
-      retroBoardsSnapshot.forEach(retroBoardDoc =>
+      let retroBoards: RetroBoard[] = [];
+      const retroBoardsSnapshot = await retroBoardsCollection.limit(10).get();
+      // TODO: Figure out how to type a firebase document snapshot.
+      retroBoardsSnapshot.forEach((retroBoardDoc: any) =>
         retroBoards.push({ ...retroBoardDoc.data(), uid: retroBoardDoc.id })
       );
-
       return retroBoards;
     },
-    updateRetroBoard: async (retroBoardState: any) => {
-      const updateRetroBoardResponse: any = await firebaseApp
-        .firestore()
-        .collection(firebaseCollections.retroBoards)
-        .doc()
-        .set(retroBoardState);
-
-      console.log(`Successfully updated retro-board.`);
-
+    fetchRetroBoardById: async (retroBoardId: RetroBoard["uid"]) => {
+      const retroBoardDoc = await retroBoardsCollection.doc(retroBoardId).get();
+      return { ...retroBoardDoc.data(), uid: retroBoardDoc.id };
+    },
+    updateRetroBoardById: async (
+      retroBoardId: RetroBoard["uid"],
+      retroBoard: RetroBoard
+    ) => {
+      const updateRetroBoardResponse = await retroBoardsCollection
+        .doc(retroBoardId)
+        .set(retroBoard);
       return updateRetroBoardResponse;
     }
   };

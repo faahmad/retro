@@ -2,7 +2,11 @@ import * as React from "react";
 import { Link } from "react-router-dom";
 import { Firebase } from "../lib/Firebase";
 
-export class DashboardPage extends React.Component<any, any> {
+interface DashboardPageState {
+  isFetching: boolean;
+  listOfRetroBoards: RetroBoard[];
+}
+export class DashboardPage extends React.Component<{}, DashboardPageState> {
   state = {
     isFetching: true,
     listOfRetroBoards: []
@@ -15,7 +19,6 @@ export class DashboardPage extends React.Component<any, any> {
 
   render() {
     const { isFetching, listOfRetroBoards } = this.state;
-    console.log(listOfRetroBoards);
     return (
       <div className="dashboard-page container">
         <h1>Dashboard Page</h1>
@@ -26,7 +29,7 @@ export class DashboardPage extends React.Component<any, any> {
           </span>
         )}
         <ul className="dashboard-page__retro-board-list">
-          {listOfRetroBoards.map((retroBoard: any) => {
+          {listOfRetroBoards.map((retroBoard: RetroBoard) => {
             return (
               <li key={retroBoard.uid}>
                 <Link to={`/dashboard/team/retro-boards/${retroBoard.uid}`}>

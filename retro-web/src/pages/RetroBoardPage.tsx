@@ -1,24 +1,40 @@
 import * as React from "react";
 import { RetroList } from "../components/RetroList";
-import { initialState } from "../test-data/initial-state";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { Firebase } from "../lib/Firebase";
 
 interface State {
-  items: { [key: string]: Item };
-  columns: { [key: string]: Column };
-  columnOrder: Column["uid"][];
+  isFetching: boolean;
+  retroBoard: RetroBoard;
 }
 export class RetroBoardPage extends React.Component<any, State> {
-  state: any = initialState;
+  // TODO: Fix this typing.
+  state: any = {
+    isFetching: true,
+    retroBoard: null
+  };
+
+  async componentDidMount() {
+    const retroBoardState: any = await Firebase.fetchRetroBoardById(
+      this.props.match.params.retroBoardId
+    );
+    this.setState({ isFetching: false, retroBoard: retroBoardState });
+    return;
+  }
 
   handleOnClickLike = async (itemId: Item["uid"]) => {
-    const item = this.state.items[itemId];
+    const item = this.state.retroBoard.items[itemId];
     const newItem = { ...item, likeCount: item.likeCount + 1 };
     await this.setState(prevState => ({
-      items: { ...prevState.items, [newItem.uid]: newItem }
+      retroBoard: {
+        ...prevState.retroBoard,
+        items: { ...prevState.retroBoard.items, [newItem.uid]: newItem }
+      }
     }));
-    await Firebase.updateRetroBoard(this.state);
+    await Firebase.updateRetroBoardById(
+      this.state.retroBoard.uid,
+      this.state.retroBoard
+    );
     return;
   };
 
@@ -36,8 +52,8 @@ export class RetroBoardPage extends React.Component<any, State> {
       return;
     }
 
-    const start = this.state.columns[source.droppableId];
-    const finish = this.state.columns[destination.droppableId];
+    const start = this.state.retroBoard.columns[source.droppableId];
+    const finish = this.state.retroBoard.columns[destination.droppableId];
 
     if (start === finish) {
       const newItemIds = [...start.itemIds];
@@ -51,9 +67,12 @@ export class RetroBoardPage extends React.Component<any, State> {
 
       await this.setState(prevState => ({
         ...prevState,
-        columns: {
-          ...prevState.columns,
-          [newColumn.uid]: newColumn
+        retroBoard: {
+          ...prevState.retroBoard,
+          columns: {
+            ...prevState.retroBoard.columns,
+            [newColumn.uid]: newColumn
+          }
         }
       }));
     } else {
@@ -73,40 +92,54 @@ export class RetroBoardPage extends React.Component<any, State> {
 
       await this.setState(prevState => ({
         ...prevState,
-        columns: {
-          ...prevState.columns,
-          [newStart.uid]: newStart,
-          [newFinish.uid]: newFinish
+        retroBoard: {
+          ...prevState.retroBoard,
+          columns: {
+            ...prevState.retroBoard.columns,
+            [newStart.uid]: newStart,
+            [newFinish.uid]: newFinish
+          }
         }
       }));
     }
-    await Firebase.updateRetroBoard(this.state);
+    await Firebase.updateRetroBoardById(
+      this.state.retroBoard.uid,
+      this.state.retroBoard
+    );
     return;
   };
 
   render() {
+    const { isFetching, retroBoard } = this.state;
+
     return (
       <div className="retro-board-page">
         <h1>Retro: {this.props.match.params.retroBoardId}</h1>
-        <div className="retro-board__grid">
-          <DragDropContext onDragEnd={this.handleOnDragEnd}>
-            {this.state.columnOrder.map((columnId: Column["uid"]) => {
-              const column = this.state.columns[columnId];
-              const items = column.itemIds.map(
-                (itemId: Item["uid"]) => this.state.items[itemId]
-              );
-              return (
-                <RetroList
-                  key={columnId}
-                  type={columnId}
-                  items={items}
-                  buttonClassName={column.buttonClassName}
-                  handleOnClickLike={this.handleOnClickLike}
-                />
-              );
-            })}
-          </DragDropContext>
-        </div>
+        {isFetching && <span>Loading...</span>}
+        {!isFetching && !retroBoard && (
+          <span>Oops! Couldn't load your retro board.</span>
+        )}
+        {retroBoard && (
+          <div className="retro-board__grid">
+            <DragDropContext onDragEnd={this.handleOnDragEnd}>
+              {retroBoard.columnOrder.map((columnId: Column["uid"]) => {
+                const column = retroBoard.columns[columnId];
+                const items = column.itemIds.map(
+                  (itemId: Item["uid"]) => retroBoard.items[itemId]
+                );
+                return (
+                  <RetroList
+                    key={columnId}
+                    type={columnId}
+                    items={items}
+                    buttonClassName={column.buttonClassName}
+                    handleOnClickLike={this.handleOnClickLike}
+                  />
+                );
+              })}
+            </DragDropContext>
+          </div>
+        )}
       </div>
     );
   }
