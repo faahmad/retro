@@ -4,12 +4,14 @@ import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { Firebase } from "../lib/Firebase";
 
 interface State {
+  lastUpdatedAt: Date;
   isFetching: boolean;
   retroBoard: RetroBoard;
 }
 export class RetroBoardPage extends React.Component<any, State> {
   // TODO: Fix this typing.
   state: any = {
+    lastUpdatedAt: new Date(),
     isFetching: true,
     retroBoard: null
   };
@@ -114,31 +116,37 @@ export class RetroBoardPage extends React.Component<any, State> {
 
     return (
       <div className="retro-board-page">
-        <h1>Retro: {this.props.match.params.retroBoardId}</h1>
         {isFetching && <span>Loading...</span>}
         {!isFetching && !retroBoard && (
           <span>Oops! Couldn't load your retro board.</span>
         )}
         {retroBoard && (
-          <div className="retro-board__grid">
-            <DragDropContext onDragEnd={this.handleOnDragEnd}>
-              {retroBoard.columnOrder.map((columnId: Column["uid"]) => {
-                const column = retroBoard.columns[columnId];
-                const items = column.itemIds.map(
-                  (itemId: Item["uid"]) => retroBoard.items[itemId]
-                );
-                return (
-                  <RetroList
-                    key={columnId}
-                    type={columnId}
-                    items={items}
-                    buttonClassName={column.buttonClassName}
-                    handleOnClickLike={this.handleOnClickLike}
-                  />
-                );
-              })}
-            </DragDropContext>
-          </div>
+          <React.Fragment>
+            <div className="retro-board__grid">
+              <DragDropContext onDragEnd={this.handleOnDragEnd}>
+                {retroBoard.columnOrder.map((columnId: Column["uid"]) => {
+                  const column = retroBoard.columns[columnId];
+                  const items = column.itemIds.map(
+                    (itemId: Item["uid"]) => retroBoard.items[itemId]
+                  );
+                  return (
+                    <RetroList
+                      key={columnId}
+                      type={columnId}
+                      items={items}
+                      buttonClassName={column.buttonClassName}
+                      handleOnClickLike={this.handleOnClickLike}
+                    />
+                  );
+                })}
+              </DragDropContext>
+            </div>
+            <div className="px-3">
+              <small className="text-muted">
+                Last updated: {this.state.lastUpdatedAt.toString()}
+              </small>
+            </div>
+          </React.Fragment>
         )}
       </div>
     );

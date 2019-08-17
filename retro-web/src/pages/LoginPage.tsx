@@ -5,7 +5,9 @@ export const LoginPage: React.FC = () => {
   return (
     <div className="login-page container">
       <h1>Login Page</h1>
-      <Link to="/dashboard/team/retro-board">Login</Link>
+      <Link className="btn btn-primary" to="/dashboard">
+        Login
+      </Link>
     </div>
   );
 };

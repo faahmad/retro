@@ -1,4 +1,5 @@
 import firebase from "firebase/app";
+import "firebase/auth";
 import "firebase/firestore";
 
 interface FirebaseConfig {
@@ -33,6 +34,7 @@ function createFirebaseApp(firebaseConfig: FirebaseConfig) {
     .collection(firestoreCollections.retroBoards);
 
   return {
+    currentUser: firebaseApp.auth().currentUser,
     fetchAllRetroBoards: async () => {
       let retroBoards: RetroBoard[] = [];
       const retroBoardsSnapshot = await retroBoardsCollection.limit(10).get();
