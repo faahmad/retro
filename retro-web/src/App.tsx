@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import { LoginPage } from "./pages/LoginPage";
+import { DashboardPage } from "./pages/DashboardPage";
 import { RetroBoardPage } from "./pages/RetroBoardPage";
 
 const App: React.FC = () => {
@@ -11,9 +12,9 @@ const App: React.FC = () => {
           <Switch>
             <Redirect exact path="/" to="/login" />
             <Route path="/login" component={LoginPage} />
+            <Route exact path="/dashboard" component={DashboardPage} />
             <Route
-              exact
-              path="/dashboard/team/retro-board"
+              path="/dashboard/team/retro-boards/:retroBoardId"
               component={RetroBoardPage}
             />
           </Switch>

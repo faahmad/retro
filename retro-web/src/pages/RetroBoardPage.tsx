@@ -2,6 +2,7 @@ import * as React from "react";
 import { RetroList } from "../components/RetroList";
 import { initialState } from "../test-data/initial-state";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
+import { Firebase } from "../lib/Firebase";
 
 interface State {
   items: { [key: string]: Item };
@@ -11,15 +12,23 @@ interface State {
 export class RetroBoardPage extends React.Component<any, State> {
   state: any = initialState;
 
+  handleOnClickLike = async (itemId: Item["uid"]) => {
+    const item = this.state.items[itemId];
+    const newItem = { ...item, likeCount: item.likeCount + 1 };
+    await this.setState(prevState => ({
+      items: { ...prevState.items, [newItem.uid]: newItem }
+    }));
+    await Firebase.updateRetroBoard(this.state);
+    return;
+  };
+
   handleOnDragEnd = async (dropResult: DropResult) => {
     const { destination, source, draggableId } = dropResult;
 
-    // If it wasn't dropped in a valid destination.
     if (!destination) {
       return;
     }
 
-    // If it was dropped in the same spot it was picked up from.
     if (
       destination.droppableId === source.droppableId &&
       destination.index === source.index
@@ -47,53 +56,57 @@ export class RetroBoardPage extends React.Component<any, State> {
           [newColumn.uid]: newColumn
         }
       }));
-      return;
+    } else {
+      const startItemIds = [...start.itemIds];
+      startItemIds.splice(source.index, 1);
+      const newStart = {
+        ...start,
+        itemIds: startItemIds
+      };
+
+      const finishItemIds = [...finish.itemIds];
+      finishItemIds.splice(destination.index, 0, draggableId);
+      const newFinish = {
+        ...finish,
+        itemIds: finishItemIds
+      };
+
+      await this.setState(prevState => ({
+        ...prevState,
+        columns: {
+          ...prevState.columns,
+          [newStart.uid]: newStart,
+          [newFinish.uid]: newFinish
+        }
+      }));
     }
-    const startItemIds = [...start.itemIds];
-    startItemIds.splice(source.index, 1);
-    const newStart = {
-      ...start,
-      itemIds: startItemIds
-    };
-
-    const finishItemIds = [...finish.itemIds];
-    finishItemIds.splice(destination.index, 0, draggableId);
-    const newFinish = {
-      ...finish,
-      itemIds: finishItemIds
-    };
-
-    await this.setState(prevState => ({
-      ...prevState,
-      columns: {
-        ...prevState.columns,
-        [newStart.uid]: newStart,
-        [newFinish.uid]: newFinish
-      }
-    }));
-
-    // TODO: Store data in firebase.
+    await Firebase.updateRetroBoard(this.state);
+    return;
   };
 
   render() {
     return (
-      <div className="retro-board-page retro-board__grid">
-        <DragDropContext onDragEnd={this.handleOnDragEnd}>
-          {this.state.columnOrder.map((columnId: Column["uid"]) => {
-            const column = this.state.columns[columnId];
-            const items = column.itemIds.map(
-              (itemId: Item["uid"]) => this.state.items[itemId]
-            );
-            return (
-              <RetroList
-                key={columnId}
-                type={columnId}
-                items={items}
-                buttonClassName={column.buttonClassName}
-              />
-            );
-          })}
-        </DragDropContext>
+      <div className="retro-board-page">
+        <h1>Retro: {this.props.match.params.retroBoardId}</h1>
+        <div className="retro-board__grid">
+          <DragDropContext onDragEnd={this.handleOnDragEnd}>
+            {this.state.columnOrder.map((columnId: Column["uid"]) => {
+              const column = this.state.columns[columnId];
+              const items = column.itemIds.map(
+                (itemId: Item["uid"]) => this.state.items[itemId]
+              );
+              return (
+                <RetroList
+                  key={columnId}
+                  type={columnId}
+                  items={items}
+                  buttonClassName={column.buttonClassName}
+                  handleOnClickLike={this.handleOnClickLike}
+                />
+              );
+            })}
+          </DragDropContext>
+        </div>
       </div>
     );
   }

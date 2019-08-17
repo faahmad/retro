@@ -5,12 +5,14 @@ interface RetroListProps {
   type: Column["uid"];
   items: any[];
   buttonClassName: Column["buttonClassName"];
+  handleOnClickLike: (itemId: Item["uid"]) => void;
 }
 
 export const RetroList: React.FC<RetroListProps> = ({
   type,
   items,
-  buttonClassName
+  buttonClassName,
+  handleOnClickLike
 }) => {
   return (
     <div className="retro-list d-flex flex-column border rounded p-2 bg-light">
@@ -30,7 +32,12 @@ export const RetroList: React.FC<RetroListProps> = ({
             {...provided.droppableProps}
           >
             {items.map((item, index) => (
-              <RetroListItem key={item.uid} index={index} {...item} />
+              <RetroListItem
+                key={item.uid}
+                index={index}
+                handleOnClickLike={handleOnClickLike}
+                {...item}
+              />
             ))}
             {provided.placeholder}
           </ul>
@@ -40,14 +47,12 @@ export const RetroList: React.FC<RetroListProps> = ({
   );
 };
 
-const RetroListItem: React.FC<Item & { index: number }> = ({
-  uid,
-  content,
-  likeCount,
-  index
-}) => {
-  const [localLikeCount, setLocalLikeCount] = React.useState(likeCount);
-
+const RetroListItem: React.FC<
+  Item & {
+    index: number;
+    handleOnClickLike: RetroListProps["handleOnClickLike"];
+  }
+> = ({ uid, content, likeCount, handleOnClickLike, index }) => {
   return (
     <Draggable draggableId={uid} index={index} isDragDisabled={false}>
       {(provided, snapshot) => {
@@ -62,14 +67,10 @@ const RetroListItem: React.FC<Item & { index: number }> = ({
           >
             <span>{content}</span>
             <div>
-              <span className="mr-2">{localLikeCount}</span>
+              <span className="mr-2">{likeCount}</span>
               <button
                 className="btn btn-sm btn-outline-primary"
-                onClick={() =>
-                  setLocalLikeCount(
-                    prevLocalLikeCount => prevLocalLikeCount + 1
-                  )
-                }
+                onClick={() => handleOnClickLike(uid)}
               >
                 +1
               </button>
