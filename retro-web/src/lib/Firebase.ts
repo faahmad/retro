@@ -1,6 +1,7 @@
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
+import { defaultRetroBoard } from "../default-data/default-retro-board";
 
 interface FirebaseConfig {
   apiKey: string;
@@ -35,6 +36,15 @@ function createFirebaseApp(firebaseConfig: FirebaseConfig) {
 
   return {
     currentUser: firebaseApp.auth().currentUser,
+    createRetroBoard: async () => {
+      const newRetroBoardRef = await retroBoardsCollection.doc();
+      await newRetroBoardRef.set({
+        ...defaultRetroBoard,
+        uid: newRetroBoardRef.id,
+        createdAt: new Date()
+      });
+      return newRetroBoardRef.id;
+    },
     fetchAllRetroBoards: async () => {
       let retroBoards: RetroBoard[] = [];
       const retroBoardsSnapshot = await retroBoardsCollection.limit(10).get();

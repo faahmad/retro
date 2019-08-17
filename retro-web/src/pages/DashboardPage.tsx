@@ -6,7 +6,8 @@ interface DashboardPageState {
   isFetching: boolean;
   listOfRetroBoards: RetroBoard[];
 }
-export class DashboardPage extends React.Component<{}, DashboardPageState> {
+
+export class DashboardPage extends React.Component<any, DashboardPageState> {
   state = {
     isFetching: true,
     listOfRetroBoards: []
@@ -17,17 +18,19 @@ export class DashboardPage extends React.Component<{}, DashboardPageState> {
     this.setState({ listOfRetroBoards, isFetching: false });
   }
 
+  handleOnClickCreateRetro = async () => {
+    const newRetroBoardId = await Firebase.createRetroBoard();
+    this.props.history.push(`/dashboard/team/retro-boards/${newRetroBoardId}`);
+  };
+
   render() {
     const { isFetching, listOfRetroBoards } = this.state;
     return (
-      <div className="dashboard-page container">
-        <h1>Dashboard Page</h1>
+      <div className="dashboard-page container mt-5">
         <h3>Your Retros</h3>
         {isFetching && <span>Loading...</span>}
         {!isFetching && listOfRetroBoards.length === 0 && (
-          <span>
-            You don't have any retro boards! Click here to create one.
-          </span>
+          <span>You don't have any retros! </span>
         )}
         <ul className="dashboard-page__retro-board-list">
           {listOfRetroBoards.map((retroBoard: RetroBoard) => {
@@ -40,6 +43,12 @@ export class DashboardPage extends React.Component<{}, DashboardPageState> {
             );
           })}
         </ul>
+        <button
+          className="btn btn-primary font-weight-bold"
+          onClick={this.handleOnClickCreateRetro}
+        >
+          Create a Retro
+        </button>
       </div>
     );
   }
