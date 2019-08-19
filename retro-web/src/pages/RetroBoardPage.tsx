@@ -143,7 +143,7 @@ export class RetroBoardPage extends React.Component<any, State> {
             </div>
             <div className="px-3">
               <small className="text-muted">
-                Created at: {retroBoard.createdAt.toString() || "Invalid date"}
+                Created at: {retroBoard.createdAt.toString()}
               </small>
             </div>
           </React.Fragment>
