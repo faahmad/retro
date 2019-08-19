@@ -5,12 +5,14 @@ import { Firebase } from "../lib/Firebase";
 interface DashboardPageState {
   isFetching: boolean;
   listOfRetroBoards: RetroBoard[];
+  isCreating: boolean;
 }
 
 export class DashboardPage extends React.Component<any, DashboardPageState> {
   state = {
     isFetching: true,
-    listOfRetroBoards: []
+    listOfRetroBoards: [],
+    isCreating: false
   };
 
   async componentDidMount() {
@@ -19,12 +21,14 @@ export class DashboardPage extends React.Component<any, DashboardPageState> {
   }
 
   handleOnClickCreateRetro = async () => {
+    this.setState({ isCreating: true });
     const newRetroBoardId = await Firebase.createRetroBoard();
+    await this.setState({ isCreating: false });
     this.props.history.push(`/dashboard/team/retro-boards/${newRetroBoardId}`);
   };
 
   render() {
-    const { isFetching, listOfRetroBoards } = this.state;
+    const { isFetching, listOfRetroBoards, isCreating } = this.state;
     return (
       <div className="dashboard-page container mt-5">
         <h3>Your Retros</h3>
@@ -44,10 +48,11 @@ export class DashboardPage extends React.Component<any, DashboardPageState> {
           })}
         </ul>
         <button
+          disabled={isCreating}
           className="btn btn-primary font-weight-bold"
           onClick={this.handleOnClickCreateRetro}
         >
-          Create a Retro
+          {!isCreating ? "Create a Retro" : "Creating..."}
         </button>
       </div>
     );

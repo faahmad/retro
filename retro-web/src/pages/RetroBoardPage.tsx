@@ -123,6 +123,7 @@ export class RetroBoardPage extends React.Component<any, State> {
         {retroBoard && (
           <React.Fragment>
             <div className="retro-board__grid">
+              <RetroBoardModal />
               <DragDropContext onDragEnd={this.handleOnDragEnd}>
                 {retroBoard.columnOrder.map((columnId: Column["uid"]) => {
                   const column = retroBoard.columns[columnId];
@@ -148,6 +149,51 @@ export class RetroBoardPage extends React.Component<any, State> {
             </div>
           </React.Fragment>
         )}
+      </div>
+    );
+  }
+}
+
+class RetroBoardModal extends React.Component {
+  render() {
+    return (
+      <div
+        className="modal"
+        id="retro-modal"
+        role="dialog"
+        aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog modal-dialog-centered" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title" id="exampleModalLongTitle">
+                Modal title
+              </h5>
+              <button
+                type="button"
+                className="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div className="modal-body">...</div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                data-dismiss="modal"
+              >
+                Close
+              </button>
+              <button type="button" className="btn btn-primary">
+                Save changes
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
