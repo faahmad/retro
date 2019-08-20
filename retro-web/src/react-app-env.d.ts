@@ -12,7 +12,7 @@ type ColumnButtonClassName = "success" | "danger" | "primary" | "info";
 interface Column {
   type: ColumnType;
   title: string;
-  buttonClassName: ColumnButtonClassNames;
+  buttonClassName: ColumnButtonClassName;
   itemIds: Item["id"][];
 }
 
@@ -20,5 +20,5 @@ interface RetroBoard {
   uid: string;
   items: { [key: string]: Item };
   columns: { [key: string]: Column };
-  columnOrder: ColumnTypes[];
+  columnOrder: ColumnType[];
 }

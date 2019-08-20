@@ -5,6 +5,7 @@ interface RetroListProps {
   type: Column["type"];
   items: any[];
   buttonClassName: Column["buttonClassName"];
+  handleOnClickAdd: () => void;
   handleOnClickLike: (itemId: Item["id"]) => void;
 }
 
@@ -12,6 +13,7 @@ export const RetroList: React.FC<RetroListProps> = ({
   type,
   items,
   buttonClassName,
+  handleOnClickAdd,
   handleOnClickLike
 }) => {
   return (
@@ -19,7 +21,7 @@ export const RetroList: React.FC<RetroListProps> = ({
       <div className="box-shadow bg-white w-100 d-flex flex-column shadow-sm p-2 rounded justify-content-center mb-2">
         <button
           className={`btn btn-${buttonClassName} align-self-end`}
-          onClick={() => console.log("Clicked " + type)}
+          onClick={handleOnClickAdd}
         >
           {type}
         </button>

@@ -1,19 +1,25 @@
 import * as React from "react";
 import { RetroList } from "../components/RetroList";
+import { RetroItemModal } from "../components/RetroItemModal";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { Firebase } from "../lib/Firebase";
 
 interface State {
   lastUpdatedAt: Date;
   isFetching: boolean;
+  // TODO: Fix this typing.
   retroBoard: RetroBoard;
+  isModalOpen: boolean;
+  columnTypeToAddItemTo: ColumnType | null;
 }
 export class RetroBoardPage extends React.Component<any, State> {
-  // TODO: Fix this typing.
   state: any = {
-    lastUpdatedAt: new Date(),
-    isFetching: true,
-    retroBoard: null
+    lastUpdatedAt: new Date() as State["lastUpdatedAt"],
+    isFetching: true as State["isFetching"],
+    // TODO: Fix this typing.
+    retroBoard: null,
+    isModalOpen: false as State["isModalOpen"],
+    columnTypeToAddItemTo: null as State["columnTypeToAddItemTo"]
   };
 
   async componentDidMount() {
@@ -29,7 +35,7 @@ export class RetroBoardPage extends React.Component<any, State> {
     const newItem = { ...item, likeCount: item.likeCount + 1 };
     await this.setState(prevState => ({
       retroBoard: {
-        ...prevState.retroBoard,
+        ...(prevState.retroBoard || {}),
         items: { ...prevState.retroBoard.items, [newItem.uid]: newItem }
       }
     }));
@@ -112,7 +118,7 @@ export class RetroBoardPage extends React.Component<any, State> {
   };
 
   render() {
-    const { isFetching, retroBoard } = this.state;
+    const { isFetching, retroBoard, isModalOpen } = this.state;
 
     return (
       <div className="retro-board-page">
@@ -120,22 +126,37 @@ export class RetroBoardPage extends React.Component<any, State> {
         {!isFetching && !retroBoard && (
           <span>Oops! Couldn't load your retro board.</span>
         )}
+        {isModalOpen && (
+          <RetroItemModal
+            isOpen={this.state.isModalOpen}
+            columnType={this.state.columnTypeToAddItemTo}
+            onToggle={() =>
+              this.setState({ isModalOpen: false, columnTypeToAddItemTo: null })
+            }
+            onSubmit={() => console.log("RetroItemModal onSubmit")}
+          />
+        )}
         {retroBoard && (
           <React.Fragment>
             <div className="retro-board__grid">
-              <RetroBoardModal />
               <DragDropContext onDragEnd={this.handleOnDragEnd}>
-                {retroBoard.columnOrder.map((columnId: Column["type"]) => {
-                  const column = retroBoard.columns[columnId];
+                {retroBoard.columnOrder.map((columnType: Column["type"]) => {
+                  const column = retroBoard.columns[columnType];
                   const items = column.itemIds.map(
                     (itemId: Item["id"]) => retroBoard.items[itemId]
                   );
                   return (
                     <RetroList
-                      key={columnId}
-                      type={columnId}
+                      key={columnType}
+                      type={columnType}
                       items={items}
                       buttonClassName={column.buttonClassName}
+                      handleOnClickAdd={() =>
+                        this.setState({
+                          isModalOpen: true,
+                          columnTypeToAddItemTo: columnType
+                        })
+                      }
                       handleOnClickLike={this.handleOnClickLike}
                     />
                   );
@@ -149,51 +170,6 @@ export class RetroBoardPage extends React.Component<any, State> {
             </div>
           </React.Fragment>
         )}
-      </div>
-    );
-  }
-}
-
-class RetroBoardModal extends React.Component {
-  render() {
-    return (
-      <div
-        className="modal"
-        id="retro-modal"
-        role="dialog"
-        aria-labelledby="exampleModalCenterTitle"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog modal-dialog-centered" role="document">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title" id="exampleModalLongTitle">
-                Modal title
-              </h5>
-              <button
-                type="button"
-                className="close"
-                data-dismiss="modal"
-                aria-label="Close"
-              >
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div className="modal-body">...</div>
-            <div className="modal-footer">
-              <button
-                type="button"
-                className="btn btn-secondary"
-                data-dismiss="modal"
-              >
-                Close
-              </button>
-              <button type="button" className="btn btn-primary">
-                Save changes
-              </button>
-            </div>
-          </div>
-        </div>
       </div>
     );
   }
