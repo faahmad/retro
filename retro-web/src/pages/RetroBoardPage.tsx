@@ -24,7 +24,7 @@ export class RetroBoardPage extends React.Component<any, State> {
     return;
   }
 
-  handleOnClickLike = async (itemId: Item["uid"]) => {
+  handleOnClickLike = async (itemId: Item["id"]) => {
     const item = this.state.retroBoard.items[itemId];
     const newItem = { ...item, likeCount: item.likeCount + 1 };
     await this.setState(prevState => ({
@@ -125,10 +125,10 @@ export class RetroBoardPage extends React.Component<any, State> {
             <div className="retro-board__grid">
               <RetroBoardModal />
               <DragDropContext onDragEnd={this.handleOnDragEnd}>
-                {retroBoard.columnOrder.map((columnId: Column["uid"]) => {
+                {retroBoard.columnOrder.map((columnId: Column["type"]) => {
                   const column = retroBoard.columns[columnId];
                   const items = column.itemIds.map(
-                    (itemId: Item["uid"]) => retroBoard.items[itemId]
+                    (itemId: Item["id"]) => retroBoard.items[itemId]
                   );
                   return (
                     <RetroList
