@@ -8,7 +8,8 @@ import {
   Form,
   FormGroup,
   Label,
-  Input
+  Input,
+  Spinner
 } from "reactstrap";
 
 const columnClassNames = {
@@ -23,12 +24,13 @@ interface RetroItemModalProps {
   isOpen: boolean;
   columnType: ColumnType | null;
   onToggle: () => void;
-  onSubmit: (column: ColumnType, content: Item["content"]) => void;
+  onSubmit: (content: Item["content"], column: ColumnType) => Promise<void>;
 }
 
 interface RetroItemModalState {
   columnType: ColumnType | "";
   content: Item["content"];
+  isSubmitting: boolean;
 }
 
 export class RetroItemModal extends React.Component<
@@ -39,29 +41,43 @@ export class RetroItemModal extends React.Component<
     super(props);
     this.state = {
       columnType: props.columnType || "",
-      content: ""
+      content: "",
+      isSubmitting: false
     };
   }
   handleSubmit = async () => {
-    await this.props.onSubmit("good", "");
+    const { content, columnType } = this.state;
+    if (!content) {
+      console.log("Content can't be empty.");
+      return;
+    }
+    if (!columnType) {
+      console.log("Column can't be empty.");
+      return;
+    }
+    this.setState({ isSubmitting: true });
+    await this.props.onSubmit(content, columnType);
+    await this.setState({ isSubmitting: false });
     this.props.onToggle();
+    return;
   };
   render() {
     const { isOpen, onToggle } = this.props;
-    const { columnType } = this.state;
+    const { columnType, content, isSubmitting } = this.state;
 
     return (
       <Modal isOpen={isOpen} toggle={onToggle}>
         <ModalHeader>
-          <span className="font-weight-normal">
-            Add an item to
+          <span className="font-weight-light">
+            Add an item to the
             <span
               className={`font-weight-bold text-${
                 columnClassNames[columnType || "default"]
               }`}
             >
               {`  ${columnType}` || ""}
-            </span>
+            </span>{" "}
+            column
           </span>
         </ModalHeader>
         <Form>
@@ -72,7 +88,7 @@ export class RetroItemModal extends React.Component<
                 id="retro-item-modal-column-select-input"
                 type="select"
                 name="column"
-                value={this.state.columnType}
+                value={columnType}
                 onChange={e => {
                   const columnType = e.target.value as ColumnType;
                   this.setState({ columnType });
@@ -94,17 +110,22 @@ export class RetroItemModal extends React.Component<
                 type="textarea"
                 name="content"
                 rows={4}
-                value={this.state.content}
+                value={content}
                 onChange={e => this.setState({ content: e.target.value })}
               />
             </FormGroup>
           </ModalBody>
           <ModalFooter className="d-flex justify-content-between">
-            <Button color="light" onClick={this.props.onToggle}>
+            <Button color="light" onClick={onToggle} disabled={isSubmitting}>
               Cancel
             </Button>
-            <Button size="lg" color="primary" onClick={this.handleSubmit}>
-              Submit
+            <Button
+              size="lg"
+              color={columnClassNames[columnType || "default"]}
+              onClick={this.handleSubmit}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? <Spinner color="light" /> : "Submit"}
             </Button>
           </ModalFooter>
         </Form>

@@ -20,7 +20,7 @@ export const RetroList: React.FC<RetroListProps> = ({
     <div className="retro-list d-flex flex-column border rounded p-2 bg-light">
       <div className="box-shadow bg-white w-100 d-flex flex-column shadow-sm p-2 rounded justify-content-center mb-2">
         <button
-          className={`btn btn-${buttonClassName} align-self-end`}
+          className={`btn btn-${buttonClassName} align-self-end font-weight-bold`}
           onClick={handleOnClickAdd}
         >
           {type}
@@ -33,9 +33,9 @@ export const RetroList: React.FC<RetroListProps> = ({
             className="m-0 p-0 overflow-auto h-100"
             {...provided.droppableProps}
           >
-            {items.map((item, index) => (
+            {items.map((item: Item, index) => (
               <RetroListItem
-                key={item.uid}
+                key={item.id}
                 index={index}
                 handleOnClickLike={handleOnClickLike}
                 {...item}
@@ -54,7 +54,7 @@ const RetroListItem: React.FC<
     index: number;
     handleOnClickLike: RetroListProps["handleOnClickLike"];
   }
-> = ({ id, content, likeCount, handleOnClickLike, index }) => {
+> = ({ id, content, likeCount, createdBy, handleOnClickLike, index }) => {
   return (
     <Draggable draggableId={id} index={index} isDragDisabled={false}>
       {(provided, snapshot) => {
@@ -67,7 +67,17 @@ const RetroListItem: React.FC<
             {...provided.draggableProps}
             {...provided.dragHandleProps}
           >
-            <span>{content}</span>
+            <div className="d-flex align-items-center">
+              <div
+                className="d-flex justify-content-center align-items-center bg-light rounded-circle mr-2"
+                style={{ height: 40, width: 40 }}
+              />
+              <div>
+                <div className="small text-muted">{createdBy}</div>
+                <span>{content}</span>
+              </div>
+            </div>
+
             <div>
               <span className="mr-2">{likeCount}</span>
               <button

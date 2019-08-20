@@ -12,6 +12,10 @@ code {
     monospace;
 }
 
+.overflow-wrap {
+  overflow-wrap: break-word;
+}
+
 .retro-board__grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -22,4 +26,6 @@ code {
 .retro-list-item {
   transition: border-color 0.2 ease-in-out;
   transition: box-shadow 0.2 ease-in-out;
+  word-wrap: break-word;
+  word-break: break-all;
 }

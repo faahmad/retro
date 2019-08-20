@@ -3,7 +3,8 @@ import { RetroList } from "../components/RetroList";
 import { RetroItemModal } from "../components/RetroItemModal";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { Firebase } from "../lib/Firebase";
-
+import uuidv4 from "uuid/v4";
+import moment from "moment";
 interface State {
   lastUpdatedAt: Date;
   isFetching: boolean;
@@ -30,13 +31,54 @@ export class RetroBoardPage extends React.Component<any, State> {
     return;
   }
 
+  handleAddItemToColumn = async (
+    content: Item["content"],
+    column: ColumnType
+  ) => {
+    const newItem: Item = {
+      content,
+      id: uuidv4(),
+      likeCount: 0,
+      createdBy: "userId"
+    };
+
+    const prevColumn = this.state.retroBoard.columns[column];
+    const newItemIds = [...prevColumn.itemIds, newItem.id];
+    const newColumn: Column = {
+      ...prevColumn,
+      itemIds: newItemIds
+    };
+
+    // YUCK! FIXME! DRY ME!
+    await this.setState(prevState => ({
+      retroBoard: {
+        ...prevState.retroBoard,
+        items: { ...prevState.retroBoard.items, [newItem.id]: newItem },
+        columns: {
+          ...prevState.retroBoard.columns,
+          [newColumn.type]: {
+            ...prevColumn,
+            itemIds: newItemIds
+          }
+        }
+      }
+    }));
+
+    await Firebase.updateRetroBoardById(
+      this.state.retroBoard.uid,
+      this.state.retroBoard
+    );
+
+    return;
+  };
+
   handleOnClickLike = async (itemId: Item["id"]) => {
     const item = this.state.retroBoard.items[itemId];
     const newItem = { ...item, likeCount: item.likeCount + 1 };
     await this.setState(prevState => ({
       retroBoard: {
         ...(prevState.retroBoard || {}),
-        items: { ...prevState.retroBoard.items, [newItem.uid]: newItem }
+        items: { ...prevState.retroBoard.items, [newItem.id]: newItem }
       }
     }));
     await Firebase.updateRetroBoardById(
@@ -79,7 +121,7 @@ export class RetroBoardPage extends React.Component<any, State> {
           ...prevState.retroBoard,
           columns: {
             ...prevState.retroBoard.columns,
-            [newColumn.uid]: newColumn
+            [newColumn.type]: newColumn
           }
         }
       }));
@@ -104,8 +146,8 @@ export class RetroBoardPage extends React.Component<any, State> {
           ...prevState.retroBoard,
           columns: {
             ...prevState.retroBoard.columns,
-            [newStart.uid]: newStart,
-            [newFinish.uid]: newFinish
+            [newStart.type]: newStart,
+            [newFinish.type]: newFinish
           }
         }
       }));
@@ -133,7 +175,7 @@ export class RetroBoardPage extends React.Component<any, State> {
             onToggle={() =>
               this.setState({ isModalOpen: false, columnTypeToAddItemTo: null })
             }
-            onSubmit={() => console.log("RetroItemModal onSubmit")}
+            onSubmit={this.handleAddItemToColumn}
           />
         )}
         {retroBoard && (
@@ -165,7 +207,7 @@ export class RetroBoardPage extends React.Component<any, State> {
             </div>
             <div className="px-3">
               <small className="text-muted">
-                Created at: {retroBoard.createdAt.toString()}
+                Created: {moment(retroBoard.createdAt.toDate()).calendar()}
               </small>
             </div>
           </React.Fragment>

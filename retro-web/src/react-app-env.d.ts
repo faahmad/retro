@@ -4,6 +4,7 @@ interface Item {
   id: string;
   content: string;
   likeCount: number;
+  createdBy: string;
 }
 
 type ColumnType = "good" | "bad" | "actions" | "questions";
