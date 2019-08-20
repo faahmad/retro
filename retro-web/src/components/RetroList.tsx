@@ -2,16 +2,18 @@ import * as React from "react";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 
 interface RetroListProps {
-  type: Column["uid"];
+  type: Column["type"];
   items: any[];
   buttonClassName: Column["buttonClassName"];
-  handleOnClickLike: (itemId: Item["uid"]) => void;
+  handleOnClickAdd: () => void;
+  handleOnClickLike: (itemId: Item["id"]) => void;
 }
 
 export const RetroList: React.FC<RetroListProps> = ({
   type,
   items,
   buttonClassName,
+  handleOnClickAdd,
   handleOnClickLike
 }) => {
   return (
@@ -19,7 +21,7 @@ export const RetroList: React.FC<RetroListProps> = ({
       <div className="box-shadow bg-white w-100 d-flex flex-column shadow-sm p-2 rounded justify-content-center mb-2">
         <button
           className={`btn btn-${buttonClassName} align-self-end`}
-          onClick={() => console.log("Clicked " + type)}
+          onClick={handleOnClickAdd}
         >
           {type}
         </button>
@@ -52,9 +54,9 @@ const RetroListItem: React.FC<
     index: number;
     handleOnClickLike: RetroListProps["handleOnClickLike"];
   }
-> = ({ uid, content, likeCount, handleOnClickLike, index }) => {
+> = ({ id, content, likeCount, handleOnClickLike, index }) => {
   return (
-    <Draggable draggableId={uid} index={index} isDragDisabled={false}>
+    <Draggable draggableId={id} index={index} isDragDisabled={false}>
       {(provided, snapshot) => {
         return (
           <li
@@ -70,7 +72,7 @@ const RetroListItem: React.FC<
               <span className="mr-2">{likeCount}</span>
               <button
                 className="btn btn-sm btn-outline-primary"
-                onClick={() => handleOnClickLike(uid)}
+                onClick={() => handleOnClickLike(id)}
               >
                 +1
               </button>

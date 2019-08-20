@@ -1,19 +1,24 @@
 /// <reference types="react-scripts" />
+
 interface Item {
-  uid: string;
+  id: string;
   content: string;
   likeCount: number;
 }
+
+type ColumnType = "good" | "bad" | "actions" | "questions";
+type ColumnButtonClassName = "success" | "danger" | "primary" | "info";
+
 interface Column {
-  uid: "good" | "bad" | "actions" | "questions";
+  type: ColumnType;
   title: string;
-  buttonClassName: "success" | "danger" | "primary" | "info";
-  itemIds: Item["uid"][];
+  buttonClassName: ColumnButtonClassName;
+  itemIds: Item["id"][];
 }
 
 interface RetroBoard {
   uid: string;
   items: { [key: string]: Item };
   columns: { [key: string]: Column };
-  columnOrder: Column["uid"][];
+  columnOrder: ColumnType[];
 }

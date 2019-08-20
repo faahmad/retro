@@ -1,26 +1,26 @@
-export const defaultRetroBoard = {
+export const defaultRetroBoard: Partial<RetroBoard> = {
   items: {},
   columns: {
     good: {
-      uid: "good",
+      type: "good",
       title: "Good",
       buttonClassName: "success",
       itemIds: []
     },
     bad: {
-      uid: "bad",
+      type: "bad",
       title: "Bad",
       buttonClassName: "danger",
       itemIds: []
     },
     actions: {
-      uid: "actions",
+      type: "actions",
       title: "Actions",
       buttonClassName: "primary",
       itemIds: []
     },
     questions: {
-      uid: "questions",
+      type: "questions",
       title: "Questions",
       buttonClassName: "info",
       itemIds: []
