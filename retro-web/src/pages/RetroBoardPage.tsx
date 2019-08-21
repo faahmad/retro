@@ -12,7 +12,7 @@ interface State {
   // TODO: Fix this typing.
   retroBoard: RetroBoard;
   isModalOpen: boolean;
-  columnTypeToAddItemTo: ColumnType | null;
+  columnTypeToAddItemTo: RetroColumnType | null;
 }
 export class RetroBoardPage extends React.Component<any, State> {
   state: any = {
@@ -33,10 +33,10 @@ export class RetroBoardPage extends React.Component<any, State> {
   }
 
   handleAddItemToColumn = async (
-    content: Item["content"],
-    column: ColumnType
+    content: RetroItem["content"],
+    column: RetroColumnType
   ) => {
-    const newItem: Item = {
+    const newItem: RetroItem = {
       content,
       id: uuidv4(),
       likeCount: 0,
@@ -45,7 +45,7 @@ export class RetroBoardPage extends React.Component<any, State> {
 
     const prevColumn = this.state.retroBoard.columns[column];
     const newItemIds = [...prevColumn.itemIds, newItem.id];
-    const newColumn: Column = {
+    const newColumn: RetroColumn = {
       ...prevColumn,
       itemIds: newItemIds
     };
@@ -73,7 +73,7 @@ export class RetroBoardPage extends React.Component<any, State> {
     return;
   };
 
-  handleOnClickLike = async (itemId: Item["id"]) => {
+  handleOnClickLike = async (itemId: RetroItem["id"]) => {
     const item = this.state.retroBoard.items[itemId];
     const newItem = { ...item, likeCount: item.likeCount + 1 };
     await this.setState(prevState => ({
@@ -183,27 +183,29 @@ export class RetroBoardPage extends React.Component<any, State> {
           <React.Fragment>
             <div className="retro-board__grid">
               <DragDropContext onDragEnd={this.handleOnDragEnd}>
-                {retroBoard.columnOrder.map((columnType: Column["type"]) => {
-                  const column = retroBoard.columns[columnType];
-                  const items = column.itemIds.map(
-                    (itemId: Item["id"]) => retroBoard.items[itemId]
-                  );
-                  return (
-                    <RetroList
-                      key={columnType}
-                      type={columnType}
-                      items={items}
-                      buttonClassName={column.buttonClassName}
-                      handleOnClickAdd={() =>
-                        this.setState({
-                          isModalOpen: true,
-                          columnTypeToAddItemTo: columnType
-                        })
-                      }
-                      handleOnClickLike={this.handleOnClickLike}
-                    />
-                  );
-                })}
+                {retroBoard.columnOrder.map(
+                  (columnType: RetroColumn["type"]) => {
+                    const column = retroBoard.columns[columnType];
+                    const items = column.itemIds.map(
+                      (itemId: RetroItem["id"]) => retroBoard.items[itemId]
+                    );
+                    return (
+                      <RetroList
+                        key={columnType}
+                        type={columnType}
+                        items={items}
+                        buttonClassName={column.buttonClassName}
+                        handleOnClickAdd={() =>
+                          this.setState({
+                            isModalOpen: true,
+                            columnTypeToAddItemTo: columnType
+                          })
+                        }
+                        handleOnClickLike={this.handleOnClickLike}
+                      />
+                    );
+                  }
+                )}
               </DragDropContext>
             </div>
             <div className="px-3">

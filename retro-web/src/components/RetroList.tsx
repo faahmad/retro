@@ -2,11 +2,11 @@ import * as React from "react";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 
 interface RetroListProps {
-  type: Column["type"];
+  type: RetroColumn["type"];
   items: any[];
-  buttonClassName: Column["buttonClassName"];
+  buttonClassName: RetroColumn["buttonClassName"];
   handleOnClickAdd: () => void;
-  handleOnClickLike: (itemId: Item["id"]) => void;
+  handleOnClickLike: (itemId: RetroItem["id"]) => void;
 }
 
 export const RetroList: React.FC<RetroListProps> = ({
@@ -33,7 +33,7 @@ export const RetroList: React.FC<RetroListProps> = ({
             className="m-0 p-0 overflow-auto h-100"
             {...provided.droppableProps}
           >
-            {items.map((item: Item, index) => (
+            {items.map((item: RetroItem, index) => (
               <RetroListItem
                 key={item.id}
                 index={index}
@@ -50,7 +50,7 @@ export const RetroList: React.FC<RetroListProps> = ({
 };
 
 const RetroListItem: React.FC<
-  Item & {
+  RetroItem & {
     index: number;
     handleOnClickLike: RetroListProps["handleOnClickLike"];
   }

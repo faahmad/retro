@@ -27,12 +27,17 @@ function createFirebaseApp(firebaseConfig: FirebaseConfig) {
   const firebaseApp = firebase.initializeApp(firebaseConfig);
 
   const firestoreCollections = {
-    retroBoards: "retro-boards"
+    retroBoards: "retro-boards",
+    users: "users"
   };
 
   const retroBoardsCollection = firebaseApp
     .firestore()
     .collection(firestoreCollections.retroBoards);
+
+  const usersCollection = firebaseApp
+    .firestore()
+    .collection(firestoreCollections.users);
 
   return {
     signInWithGoogleAuth: async () => {
@@ -41,13 +46,33 @@ function createFirebaseApp(firebaseConfig: FirebaseConfig) {
         googleAuthProvider.addScope(
           "https://www.googleapis.com/auth/contacts.readonly"
         );
-        const result = await firebase
+        const userCredential = await firebase
           .auth()
           .signInWithPopup(googleAuthProvider);
-        console.log(result);
-        return result.user;
+        return userCredential;
       } catch (error) {
         console.log(error.message);
+      }
+    },
+    createUserDoc: async (user: firebase.User) => {
+      try {
+        await usersCollection.doc(user.uid).set({
+          uid: user.uid,
+          displayName: user.displayName,
+          email: user.email,
+          photoURL: user.photoURL
+        });
+        console.log("Successfully created a user document!");
+      } catch (error) {
+        console.log("Error creating user doc:", error);
+      }
+    },
+    fetchUserById: async (userId: firebase.User["uid"]) => {
+      try {
+        const userSnapshot = await usersCollection.doc(userId).get();
+        return userSnapshot.data() as Promise<RetroUser>;
+      } catch (error) {
+        console.log("Error fetching user:", error);
       }
     },
     createRetroBoard: async () => {

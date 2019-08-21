@@ -1,4 +1,5 @@
 import * as React from "react";
+import { GoogleSignInWithPopupButton } from "../components/GoogleSignInWithPopupButton";
 
 export class LandingPage extends React.Component {
   render() {
@@ -8,7 +9,7 @@ export class LandingPage extends React.Component {
           <h1>Accelerate your team with honest retros.</h1>
           <p>Your team will thank you.</p>
           <div className="d-flex flex-column flex-wrap align-items-start">
-            <button className="btn btn-lg btn-success">Try for free</button>
+            <GoogleSignInWithPopupButton />
             <small className="text-muted mt-2">
               14 day free trial. This tool is awesome. We promise.
             </small>
