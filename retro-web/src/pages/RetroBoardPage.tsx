@@ -5,6 +5,7 @@ import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { Firebase } from "../lib/Firebase";
 import uuidv4 from "uuid/v4";
 import moment from "moment";
+import { LoadingText } from "../components/LoadingText";
 interface State {
   lastUpdatedAt: Date;
   isFetching: boolean;
@@ -164,7 +165,7 @@ export class RetroBoardPage extends React.Component<any, State> {
 
     return (
       <div className="retro-board-page">
-        {isFetching && <span>Loading...</span>}
+        {isFetching && <LoadingText />}
         {!isFetching && !retroBoard && (
           <span>Oops! Couldn't load your retro board.</span>
         )}

@@ -35,7 +35,21 @@ function createFirebaseApp(firebaseConfig: FirebaseConfig) {
     .collection(firestoreCollections.retroBoards);
 
   return {
-    currentUser: firebaseApp.auth().currentUser,
+    signInWithGoogleAuth: async () => {
+      try {
+        const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
+        googleAuthProvider.addScope(
+          "https://www.googleapis.com/auth/contacts.readonly"
+        );
+        const result = await firebase
+          .auth()
+          .signInWithPopup(googleAuthProvider);
+        console.log(result);
+        return result.user;
+      } catch (error) {
+        console.log(error.message);
+      }
+    },
     createRetroBoard: async () => {
       const newRetroBoardRef = await retroBoardsCollection.doc();
       await newRetroBoardRef.set({
