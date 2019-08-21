@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
 import { Firebase } from "../lib/Firebase";
+import { UserConsumer } from "../components/UserContext";
 
 interface DashboardPageState {
   isFetching: boolean;
@@ -30,30 +31,41 @@ export class DashboardPage extends React.Component<any, DashboardPageState> {
   render() {
     const { isFetching, listOfRetroBoards, isCreating } = this.state;
     return (
-      <div className="dashboard-page container mt-5">
-        <h3>Your Retros</h3>
-        {isFetching && <span>Loading...</span>}
-        {!isFetching && listOfRetroBoards.length === 0 && (
-          <span>You don't have any retros! </span>
-        )}
-        <ul className="dashboard-page__retro-board-list">
-          {listOfRetroBoards.map((retroBoard: RetroBoard) => {
+      <div className="dashboard-page container">
+        <UserConsumer>
+          {userContext => {
+            console.log("userContext", userContext.user);
             return (
-              <li key={retroBoard.uid}>
-                <Link to={`/dashboard/team/retro-boards/${retroBoard.uid}`}>
-                  {retroBoard.uid}
-                </Link>
-              </li>
+              <React.Fragment>
+                <h3>Your Retros</h3>
+                {isFetching && <span>Loading...</span>}
+                {!isFetching && listOfRetroBoards.length === 0 && (
+                  <span>You don't have any retros! </span>
+                )}
+                <ul className="dashboard-page__retro-board-list">
+                  {listOfRetroBoards.map((retroBoard: RetroBoard) => {
+                    return (
+                      <li key={retroBoard.uid}>
+                        <Link
+                          to={`/dashboard/team/retro-boards/${retroBoard.uid}`}
+                        >
+                          {retroBoard.uid}
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+                <button
+                  disabled={isCreating}
+                  className="btn btn-primary font-weight-bold"
+                  onClick={this.handleOnClickCreateRetro}
+                >
+                  {!isCreating ? "Create a Retro" : "Creating..."}
+                </button>
+              </React.Fragment>
             );
-          })}
-        </ul>
-        <button
-          disabled={isCreating}
-          className="btn btn-primary font-weight-bold"
-          onClick={this.handleOnClickCreateRetro}
-        >
-          {!isCreating ? "Create a Retro" : "Creating..."}
-        </button>
+          }}
+        </UserConsumer>
       </div>
     );
   }

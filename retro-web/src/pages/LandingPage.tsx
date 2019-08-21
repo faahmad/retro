@@ -5,8 +5,8 @@ export class LandingPage extends React.Component {
     return (
       <div className="landing-page container">
         <div className="landing-page__header mb-3">
-          <h1>retro.app</h1>
-          <p>A tool for them retros.</p>
+          <h1>Accelerate your team with honest retros.</h1>
+          <p>Your team will thank you.</p>
           <div className="d-flex flex-column flex-wrap align-items-start">
             <button className="btn btn-lg btn-success">Try for free</button>
             <small className="text-muted mt-2">
