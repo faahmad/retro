@@ -67,7 +67,11 @@ function createFirebaseApp(firebaseConfig: FirebaseConfig) {
         console.log("Error creating user doc:", error);
       }
     },
-    fetchUserById: async (userId: firebase.User["uid"]) => {
+    fetchUserById: async (userId: firebase.User["uid"] | null) => {
+      if (!userId) {
+        console.log("Invalid userId, received: ", userId);
+        return;
+      }
       try {
         const userSnapshot = await usersCollection.doc(userId).get();
         return userSnapshot.data() as Promise<RetroUser>;

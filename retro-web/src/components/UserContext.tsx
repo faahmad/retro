@@ -1,15 +1,16 @@
-import React from "react";
+import * as React from "react";
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/database";
+import { Firebase } from "../lib/Firebase";
 
 interface UserContextValues {
-  userAuthAccount: firebase.User | null;
+  userAuthAccount: firebase.User | unknown;
   user: RetroUser | null;
   isFetchingUser: boolean;
 }
 
-const initialUserContextValues: UserContextValues = {
+const initialUserContextValues = {
   userAuthAccount: null,
   user: null,
   isFetchingUser: true
@@ -19,38 +20,35 @@ const UserContext = React.createContext<UserContextValues>(
   initialUserContextValues
 );
 
-const UserProvider: React.FC = ({ children }) => {
-  const [userAuthAccount, setUserAuthAccount] = React.useState<
-    UserContextValues["userAuthAccount"]
-  >(initialUserContextValues.userAuthAccount);
-
-  const [isFetchingUser, setIsFetchingUser] = React.useState<
-    UserContextValues["isFetchingUser"]
-  >(initialUserContextValues.isFetchingUser);
-
-  const handleAuthStateChanged = (userAuthAccount: firebase.User | null) => {
+class UserProvider extends React.Component<{}, UserContextValues> {
+  state = initialUserContextValues;
+  componentDidMount() {
+    firebase.auth().onAuthStateChanged(this.handleAuthStateChanged);
+  }
+  handleAuthStateChanged = async (userAuthAccount: firebase.User | null) => {
     if (userAuthAccount) {
-      setUserAuthAccount(userAuthAccount);
+      await this.setState({ userAuthAccount });
+      this.handleFetchUser(userAuthAccount.uid);
     } else {
-      setUserAuthAccount(null);
+      this.setState({ userAuthAccount: null });
     }
-    setIsFetchingUser(false);
+    this.setState({ isFetchingUser: false });
   };
-
-  React.useEffect(() => {
-    return firebase.auth().onAuthStateChanged(handleAuthStateChanged);
-  }, []);
-
-  const [user, setUser] = React.useState<UserContextValues["user"]>(
-    initialUserContextValues.user
-  );
-
-  return (
-    <UserContext.Provider value={{ userAuthAccount, user, isFetchingUser }}>
-      {children}
-    </UserContext.Provider>
-  );
-};
+  handleFetchUser = async (userId: firebase.User["uid"]) => {
+    const user = await Firebase.fetchUserById(userId);
+    if (user) {
+      this.setState({ user });
+    }
+    return;
+  };
+  render() {
+    return (
+      <UserContext.Provider value={this.state}>
+        {this.props.children}
+      </UserContext.Provider>
+    );
+  }
+}
 
 const UserConsumer = UserContext.Consumer;
 export { UserProvider, UserConsumer, UserContext };

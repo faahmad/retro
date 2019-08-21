@@ -10,12 +10,12 @@ export const PrivateRoute: React.FC<PrivateRouteProps & any> = ({
   component: Component,
   ...rest
 }) => {
-  const { user } = React.useContext(UserContext);
+  const { userAuthAccount } = React.useContext(UserContext);
   return (
     <Route
       {...rest}
       render={props =>
-        !!user ? (
+        !!userAuthAccount ? (
           <Component {...props} />
         ) : (
           <Redirect

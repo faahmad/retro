@@ -13,6 +13,7 @@ import { LoadingText } from "./components/LoadingText";
 class App extends React.Component {
   static contextType = UserContext;
   render() {
+    console.log(this.context);
     return (
       <BrowserRouter>
         <div className="app">
