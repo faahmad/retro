@@ -1,25 +1,33 @@
 /// <reference types="react-scripts" />
 
-interface Item {
+interface RetroItem {
   id: string;
   content: string;
   likeCount: number;
   createdBy: string;
 }
 
-type ColumnType = "good" | "bad" | "actions" | "questions";
-type ColumnButtonClassName = "success" | "danger" | "primary" | "info";
+type RetroColumnType = "good" | "bad" | "actions" | "questions";
+type RetroColumnButtonClassName = "success" | "danger" | "primary" | "info";
 
-interface Column {
-  type: ColumnType;
+interface RetroColumn {
+  type: RetroColumnType;
   title: string;
-  buttonClassName: ColumnButtonClassName;
-  itemIds: Item["id"][];
+  buttonClassName: RetroColumnButtonClassName;
+  itemIds: RetroItem["id"][];
 }
 
 interface RetroBoard {
   uid: string;
-  items: { [key: string]: Item };
-  columns: { [key: string]: Column };
-  columnOrder: ColumnType[];
+  items: { [key: string]: RetroItem };
+  columns: { [key: string]: RetroColumn };
+  columnOrder: RetroColumnType[];
+}
+
+interface RetroUser {
+  uid: string;
+  email: string;
+  displayName?: string;
+  photoURL: string;
+  workspaceId?: string;
 }
