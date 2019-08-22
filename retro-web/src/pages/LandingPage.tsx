@@ -4,14 +4,14 @@ import { GoogleSignInWithPopupButton } from "../components/GoogleSignInWithPopup
 export class LandingPage extends React.Component {
   render() {
     return (
-      <div className="landing-page container">
+      <div className="landing-page container pt-4">
         <div className="landing-page__header mb-3">
           <h1>Accelerate your team with honest retros.</h1>
           <p>Your team will thank you.</p>
           <div className="d-flex flex-column flex-wrap align-items-start">
             <GoogleSignInWithPopupButton />
             <small className="text-muted mt-2">
-              14 day free trial. This tool is awesome. We promise.
+              30 day free trial. This tool is awesome. We promise.
             </small>
           </div>
         </div>

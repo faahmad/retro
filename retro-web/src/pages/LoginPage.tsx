@@ -4,7 +4,7 @@ import { GoogleSignInWithPopupButton } from "../components/GoogleSignInWithPopup
 export class LoginPage extends React.Component {
   render() {
     return (
-      <div className="login-page container">
+      <div className="login-page container pt-4">
         <h1>Login Page</h1>
         <GoogleSignInWithPopupButton />
       </div>

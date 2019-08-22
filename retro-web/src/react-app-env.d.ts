@@ -3,8 +3,13 @@
 interface RetroItem {
   id: string;
   content: string;
+  likedBy: {
+    [userDisplayName: string]: boolean;
+  };
   likeCount: number;
-  createdBy: string;
+  createdByDisplayName: string;
+  createdByUserId: string;
+  createdByPhotoURL?: string;
 }
 
 type RetroColumnType = "good" | "bad" | "actions" | "questions";
@@ -30,4 +35,5 @@ interface RetroUser {
   displayName?: string;
   photoURL: string;
   workspaceId?: string;
+  workspaceDisplayName?: string;
 }

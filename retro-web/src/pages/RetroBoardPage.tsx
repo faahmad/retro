@@ -6,6 +6,7 @@ import { Firebase } from "../lib/Firebase";
 import uuidv4 from "uuid/v4";
 import moment from "moment";
 import { LoadingText } from "../components/LoadingText";
+import { UserContext } from "../components/UserContext";
 interface State {
   lastUpdatedAt: Date;
   isFetching: boolean;
@@ -15,6 +16,7 @@ interface State {
   columnTypeToAddItemTo: RetroColumnType | null;
 }
 export class RetroBoardPage extends React.Component<any, State> {
+  static contextType = UserContext;
   state: any = {
     lastUpdatedAt: new Date() as State["lastUpdatedAt"],
     isFetching: true as State["isFetching"],
@@ -39,8 +41,11 @@ export class RetroBoardPage extends React.Component<any, State> {
     const newItem: RetroItem = {
       content,
       id: uuidv4(),
+      likedBy: {},
       likeCount: 0,
-      createdBy: "userId"
+      createdByDisplayName: this.context.userAuthAccount.displayName,
+      createdByUserId: this.context.userAuthAccount.uid,
+      createdByPhotoURL: this.context.userAuthAccount.photoURL
     };
 
     const prevColumn = this.state.retroBoard.columns[column];
@@ -74,12 +79,31 @@ export class RetroBoardPage extends React.Component<any, State> {
   };
 
   handleOnClickLike = async (itemId: RetroItem["id"]) => {
+    const { displayName } = this.context.userAuthAccount;
     const item = this.state.retroBoard.items[itemId];
-    const newItem = { ...item, likeCount: item.likeCount + 1 };
+
+    let newLikedBy = item.likedBy;
+    if (item.likedBy[displayName]) {
+      delete newLikedBy[displayName];
+    } else {
+      item.likedBy[displayName] = true;
+    }
+
+    const newItem = {
+      ...item,
+      likedBy: newLikedBy
+    };
+
     await this.setState(prevState => ({
       retroBoard: {
         ...(prevState.retroBoard || {}),
-        items: { ...prevState.retroBoard.items, [newItem.id]: newItem }
+        items: {
+          ...prevState.retroBoard.items,
+          [newItem.id]: {
+            ...newItem,
+            likeCount: Object.keys(newItem.likedBy).length
+          }
+        }
       }
     }));
     await Firebase.updateRetroBoardById(

@@ -31,13 +31,15 @@ export class NavBar extends React.Component {
           </Link>
         )}
         {!isFetchingUser && userAuthAccount && (
-          <Button
-            outline
-            color="light"
-            onClick={() => firebase.auth().signOut()}
-          >
-            Sign Out
-          </Button>
+          <div className="d-flex align-items-end">
+            <Button
+              outline
+              color="light"
+              onClick={() => firebase.auth().signOut()}
+            >
+              Sign Out
+            </Button>
+          </div>
         )}
       </nav>
     );

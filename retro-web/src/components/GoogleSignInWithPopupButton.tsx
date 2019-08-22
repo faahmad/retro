@@ -4,7 +4,7 @@ import { Firebase } from "../lib/Firebase";
 
 export class GoogleSignInWithPopupButton extends React.Component {
   handleSignInWithGoogle = async () => {
-    await Firebase.signInWithGoogleAuth();
+    await Firebase.signInWithGoogleAuthPopup();
   };
   render() {
     return (

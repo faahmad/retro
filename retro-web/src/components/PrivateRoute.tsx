@@ -11,6 +11,7 @@ export const PrivateRoute: React.FC<PrivateRouteProps & any> = ({
   ...rest
 }) => {
   const { userAuthAccount } = React.useContext(UserContext);
+
   return (
     <Route
       {...rest}
