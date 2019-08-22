@@ -1,7 +1,7 @@
 import * as React from "react";
 import firebase from "firebase/app";
 import "firebase/auth";
-import { Button, Spinner, Breadcrumb, BreadcrumbItem } from "reactstrap";
+import { Button, Spinner } from "reactstrap";
 import { Link } from "react-router-dom";
 import Octicon, { Telescope } from "@primer/octicons-react";
 import { UserContext } from "./UserContext";
