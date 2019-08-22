@@ -25,6 +25,7 @@ interface RetroColumn {
 interface RetroBoard {
   uid: string;
   items: { [key: string]: RetroItem };
+  createdAt: firebase.firestore.Timestamp;
   columns: { [key: string]: RetroColumn };
   columnOrder: RetroColumnType[];
 }

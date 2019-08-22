@@ -4,6 +4,7 @@ import { Firebase } from "../lib/Firebase";
 import { UserContext } from "../components/UserContext";
 import { Row, Col } from "reactstrap";
 import { Sidebar } from "../components/SideBar";
+import moment from "moment";
 
 interface DashboardPageState {
   isNewUser: boolean | null;
@@ -50,7 +51,6 @@ export class DashboardPage extends React.Component<any, DashboardPageState> {
       isCreatingRetroBoard,
       user
     } = this.state;
-    console.log("***render***");
 
     if (isNewUser) {
       return <Redirect to="/onboarding" />;
@@ -79,7 +79,7 @@ export class DashboardPage extends React.Component<any, DashboardPageState> {
                         <Link
                           to={`/dashboard/team/retro-boards/${retroBoard.uid}`}
                         >
-                          {retroBoard.uid}
+                          {moment(retroBoard.createdAt.toDate()).calendar()}
                         </Link>
                       </li>
                     );
