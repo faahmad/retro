@@ -3,7 +3,7 @@ import { FormGroup, Label, Input, Row, Col, Button } from "reactstrap";
 import { Formik, Form, FormikActions, ErrorMessage } from "formik";
 import * as yup from "yup";
 import Octicon, { ChevronRight } from "@primer/octicons-react";
-import { UserContext } from "../components/UserContext";
+import { UserAuthContext } from "../components/UserAuthContext";
 import { Firebase } from "../lib/Firebase";
 
 interface CreateWorkspaceFormValue {
@@ -21,7 +21,7 @@ const validationSchema = yup.object().shape({
 });
 
 export class OnboardingPage extends React.Component<any, {}> {
-  static contextType = UserContext;
+  static contextType = UserAuthContext;
   async componentDidMount() {
     const user = await Firebase.fetchUserById(this.context.userAuthAccount.uid);
     if (!user) {

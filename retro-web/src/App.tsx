@@ -7,19 +7,19 @@ import { LoginPage } from "./pages/LoginPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { RetroBoardPage } from "./pages/RetroBoardPage";
 import { PublicOnlyRoute } from "./components/PublicOnlyRoute";
-import { UserContext } from "./components/UserContext";
+import { UserAuthContext } from "./components/UserAuthContext";
 import { LoadingText } from "./components/LoadingText";
 import { OnboardingPage } from "./pages/OnboardingPage";
 
 class App extends React.Component {
-  static contextType = UserContext;
+  static contextType = UserAuthContext;
   render() {
     return (
       <BrowserRouter>
         <div className="app">
           <NavBar />
           <main className="app__main full-height">
-            {this.context.isFetchingUser ? (
+            {this.context.isFetchingUserAuth ? (
               <LoadingText />
             ) : (
               <Switch>

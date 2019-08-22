@@ -6,7 +6,7 @@ import { Firebase } from "../lib/Firebase";
 import uuidv4 from "uuid/v4";
 import moment from "moment";
 import { LoadingText } from "../components/LoadingText";
-import { UserContext } from "../components/UserContext";
+import { UserAuthContext } from "../components/UserAuthContext";
 interface State {
   lastUpdatedAt: Date;
   isFetching: boolean;
@@ -16,7 +16,7 @@ interface State {
   columnTypeToAddItemTo: RetroColumnType | null;
 }
 export class RetroBoardPage extends React.Component<any, State> {
-  static contextType = UserContext;
+  static contextType = UserAuthContext;
   state: any = {
     lastUpdatedAt: new Date() as State["lastUpdatedAt"],
     isFetching: true as State["isFetching"],

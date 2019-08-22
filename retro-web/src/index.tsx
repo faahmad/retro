@@ -3,13 +3,13 @@ import "bootstrap/dist/css/bootstrap.css";
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
-import { UserProvider } from "./components/UserContext";
+import { UserAuthProvider } from "./components/UserAuthContext";
 import * as serviceWorker from "./serviceWorker";
 
 ReactDOM.render(
-  <UserProvider>
+  <UserAuthProvider>
     <App />
-  </UserProvider>,
+  </UserAuthProvider>,
   document.getElementById("root")
 );
 
