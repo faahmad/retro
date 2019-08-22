@@ -1,6 +1,6 @@
 import * as React from "react";
-import { Droppable, Draggable } from "react-beautiful-dnd";
-import Octicon, { Heart, Question } from "@primer/octicons-react";
+import { Droppable } from "react-beautiful-dnd";
+import { RetroItem } from "./RetroItem";
 
 interface RetroListProps {
   type: RetroColumn["type"];
@@ -35,7 +35,7 @@ export const RetroList: React.FC<RetroListProps> = ({
             {...provided.droppableProps}
           >
             {items.map((item: RetroItem, index) => (
-              <RetroListItem
+              <RetroItem
                 key={item.id}
                 index={index}
                 handleOnClickLike={handleOnClickLike}
@@ -47,82 +47,5 @@ export const RetroList: React.FC<RetroListProps> = ({
         )}
       </Droppable>
     </div>
-  );
-};
-
-const RetroListItem: React.FC<
-  RetroItem & {
-    index: number;
-    handleOnClickLike: RetroListProps["handleOnClickLike"];
-  }
-> = ({
-  id,
-  content,
-  likedBy,
-  likeCount,
-  createdByDisplayName,
-  createdByPhotoURL,
-  handleOnClickLike,
-  index
-}) => {
-  return (
-    <Draggable draggableId={id} index={index} isDragDisabled={false}>
-      {(provided, snapshot) => {
-        return (
-          <li
-            ref={provided.innerRef}
-            className={`retro-list-item d-flex align-items-center justify-content-between border rounded p-2 mb-1 bg-white ${
-              snapshot.isDragging ? "border-primary shadow" : ""
-            }`}
-            {...provided.draggableProps}
-            {...provided.dragHandleProps}
-          >
-            <div className="d-flex align-items-center">
-              {createdByPhotoURL ? (
-                <img
-                  className="d-flex justify-content-center align-items-center bg-light rounded-circle mr-2"
-                  style={{ height: 40, width: 40 }}
-                  src={createdByPhotoURL}
-                />
-              ) : (
-                <div
-                  className="d-flex justify-content-center align-items-center bg-light rounded-circle mr-2 text-secondary"
-                  style={{ height: 40, width: 40 }}
-                >
-                  {createdByDisplayName ? (
-                    createdByDisplayName[0]
-                  ) : (
-                    <Octicon size="medium" icon={Question} />
-                  )}
-                </div>
-              )}
-
-              <div>
-                <div className="small text-muted">
-                  {createdByDisplayName || "anonymous"}
-                </div>
-                <span>{content}</span>
-              </div>
-            </div>
-
-            <div>
-              <span className="mr-2">{likeCount}</span>
-              <button
-                className="btn btn-sm btn-light rounded-circle shadow-sm"
-                onClick={() => handleOnClickLike(id)}
-              >
-                <span
-                  className={
-                    likedBy[createdByDisplayName] ? "text-danger" : "text-white"
-                  }
-                >
-                  <Octicon icon={Heart} />
-                </span>
-              </button>
-            </div>
-          </li>
-        );
-      }}
-    </Draggable>
   );
 };

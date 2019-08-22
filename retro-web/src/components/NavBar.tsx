@@ -10,7 +10,7 @@ export class NavBar extends React.Component {
   render() {
     const { userAuthAccount, isFetchingUser } = this.context;
     return (
-      <nav className="navbar navbar-light bg-primary justify-content-between">
+      <nav className="navbar bg-primary justify-content-between">
         <Link
           className="navbar-brand text-white font-weight-bold"
           to={userAuthAccount ? "/dashboard" : "/"}
