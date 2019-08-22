@@ -46,7 +46,7 @@ export class OnboardingPage extends React.Component<any, {}> {
 
   render() {
     return (
-      <div className="onboarding-page container">
+      <div className="onboarding-page container py-4">
         <h1>
           Welcome!{" "}
           <span role="img" aria-label="emoji-tada">

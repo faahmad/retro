@@ -5,6 +5,7 @@ import { UserContext } from "../components/UserContext";
 import { Row, Col } from "reactstrap";
 import { Sidebar } from "../components/SideBar";
 import moment from "moment";
+import { LoadingText } from "../components/LoadingText";
 
 interface DashboardPageState {
   isNewUser: boolean | null;
@@ -66,7 +67,7 @@ export class DashboardPage extends React.Component<any, DashboardPageState> {
           </Col>
           <Col lg="10" className="py-4">
             <h3>Your Retros</h3>
-            {isFetchingRetroBoards && <span>Loading...</span>}
+            {isFetchingRetroBoards && <LoadingText />}
             {!isFetchingRetroBoards && listOfRetroBoards.length === 0 && (
               <span>You don't have any retros! </span>
             )}
@@ -79,7 +80,9 @@ export class DashboardPage extends React.Component<any, DashboardPageState> {
                         <Link
                           to={`/dashboard/team/retro-boards/${retroBoard.uid}`}
                         >
-                          {moment(retroBoard.createdAt.toDate()).calendar()}
+                          {moment(retroBoard.createdAt.toDate()).format(
+                            "dddd - MMMM Mo, YYYY - h:mm a"
+                          )}
                         </Link>
                       </li>
                     );
