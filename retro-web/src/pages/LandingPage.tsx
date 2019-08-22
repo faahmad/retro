@@ -31,9 +31,9 @@ export class LandingPage extends React.Component {
               </span>
             </li>
             <li>
-              3. <span className="text-muted">(Coming soon)</span> Send your
-              results via email and automatically generate GitHub issues from
-              your action items.{" "}
+              3. <span className="text-muted">(Coming soon)</span> We'll analyze
+              previous retros action items so you will know whether or not
+              you're getting better.{" "}
               <span role="img" aria-label="emoji-tada">
                 🎉
               </span>
