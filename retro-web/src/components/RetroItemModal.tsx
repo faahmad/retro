@@ -22,14 +22,17 @@ const columnClassNames = {
 
 interface RetroItemModalProps {
   isOpen: boolean;
-  columnType: ColumnType | null;
+  columnType: RetroColumnType | null;
   onToggle: () => void;
-  onSubmit: (content: Item["content"], column: ColumnType) => Promise<void>;
+  onSubmit: (
+    content: RetroItem["content"],
+    column: RetroColumnType
+  ) => Promise<void>;
 }
 
 interface RetroItemModalState {
-  columnType: ColumnType | "";
-  content: Item["content"];
+  columnType: RetroColumnType | "";
+  content: RetroItem["content"];
   isSubmitting: boolean;
 }
 
@@ -90,7 +93,7 @@ export class RetroItemModal extends React.Component<
                 name="column"
                 value={columnType}
                 onChange={e => {
-                  const columnType = e.target.value as ColumnType;
+                  const columnType = e.target.value as RetroColumnType;
                   this.setState({ columnType });
                 }}
               >

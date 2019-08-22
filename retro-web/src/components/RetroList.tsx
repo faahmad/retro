@@ -1,12 +1,13 @@
 import * as React from "react";
-import { Droppable, Draggable } from "react-beautiful-dnd";
+import { Droppable } from "react-beautiful-dnd";
+import { RetroItem } from "./RetroItem";
 
 interface RetroListProps {
-  type: Column["type"];
+  type: RetroColumn["type"];
   items: any[];
-  buttonClassName: Column["buttonClassName"];
+  buttonClassName: RetroColumn["buttonClassName"];
   handleOnClickAdd: () => void;
-  handleOnClickLike: (itemId: Item["id"]) => void;
+  handleOnClickLike: (itemId: RetroItem["id"]) => void;
 }
 
 export const RetroList: React.FC<RetroListProps> = ({
@@ -33,8 +34,8 @@ export const RetroList: React.FC<RetroListProps> = ({
             className="m-0 p-0 overflow-auto h-100"
             {...provided.droppableProps}
           >
-            {items.map((item: Item, index) => (
-              <RetroListItem
+            {items.map((item: RetroItem, index) => (
+              <RetroItem
                 key={item.id}
                 index={index}
                 handleOnClickLike={handleOnClickLike}
@@ -46,50 +47,5 @@ export const RetroList: React.FC<RetroListProps> = ({
         )}
       </Droppable>
     </div>
-  );
-};
-
-const RetroListItem: React.FC<
-  Item & {
-    index: number;
-    handleOnClickLike: RetroListProps["handleOnClickLike"];
-  }
-> = ({ id, content, likeCount, createdBy, handleOnClickLike, index }) => {
-  return (
-    <Draggable draggableId={id} index={index} isDragDisabled={false}>
-      {(provided, snapshot) => {
-        return (
-          <li
-            ref={provided.innerRef}
-            className={`retro-list-item d-flex align-items-center justify-content-between border rounded p-2 mb-1 bg-white ${
-              snapshot.isDragging ? "border-primary shadow" : ""
-            }`}
-            {...provided.draggableProps}
-            {...provided.dragHandleProps}
-          >
-            <div className="d-flex align-items-center">
-              <div
-                className="d-flex justify-content-center align-items-center bg-light rounded-circle mr-2"
-                style={{ height: 40, width: 40 }}
-              />
-              <div>
-                <div className="small text-muted">{createdBy}</div>
-                <span>{content}</span>
-              </div>
-            </div>
-
-            <div>
-              <span className="mr-2">{likeCount}</span>
-              <button
-                className="btn btn-sm btn-outline-primary"
-                onClick={() => handleOnClickLike(id)}
-              >
-                +1
-              </button>
-            </div>
-          </li>
-        );
-      }}
-    </Draggable>
   );
 };

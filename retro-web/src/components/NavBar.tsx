@@ -8,12 +8,12 @@ import { UserContext } from "./UserContext";
 export class NavBar extends React.Component {
   static contextType = UserContext;
   render() {
-    const { user, isFetchingUser } = this.context;
+    const { userAuthAccount, isFetchingUser } = this.context;
     return (
-      <nav className="navbar navbar-light bg-primary justify-content-between">
+      <nav className="navbar bg-primary justify-content-between">
         <Link
           className="navbar-brand text-white font-weight-bold"
-          to={this.context.user ? "/dashboard" : "/"}
+          to={userAuthAccount ? "/dashboard" : "/"}
         >
           retro.app
         </Link>
@@ -22,7 +22,7 @@ export class NavBar extends React.Component {
             <Spinner size="sm" color="light" />
           </Button>
         )}
-        {!isFetchingUser && !user && (
+        {!isFetchingUser && !userAuthAccount && (
           <Link
             to="/login"
             className="btn btn-primary border-white bg-white text-primary font-weight-bold"
@@ -30,14 +30,16 @@ export class NavBar extends React.Component {
             Login
           </Link>
         )}
-        {!isFetchingUser && user && (
-          <Button
-            outline
-            color="light"
-            onClick={() => firebase.auth().signOut()}
-          >
-            Sign Out
-          </Button>
+        {!isFetchingUser && userAuthAccount && (
+          <div className="d-flex align-items-end">
+            <Button
+              outline
+              color="light"
+              onClick={() => firebase.auth().signOut()}
+            >
+              Sign Out
+            </Button>
+          </div>
         )}
       </nav>
     );

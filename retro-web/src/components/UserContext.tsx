@@ -1,41 +1,43 @@
-import React, { useState, useEffect } from "react";
+import * as React from "react";
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/database";
 
 interface UserContextValues {
-  user: object | null;
+  userAuthAccount: firebase.User | unknown;
   isFetchingUser: boolean;
 }
 
-const UserContext = React.createContext<UserContextValues>({
-  user: null,
+const initialUserContextValues = {
+  userAuthAccount: null,
   isFetchingUser: true
-});
-
-const UserProvider: React.FC = ({ children }) => {
-  const [user, setUser] = useState<object | null>(null);
-  const [isFetchingUser, setIsFetchingUser] = useState<boolean>(true);
-
-  const handleAuthStateChanged = (user: firebase.User | null) => {
-    if (user) {
-      setUser(user);
-    } else {
-      setUser(null);
-    }
-    setIsFetchingUser(false);
-  };
-
-  useEffect(() => {
-    return firebase.auth().onAuthStateChanged(handleAuthStateChanged);
-  }, []);
-
-  return (
-    <UserContext.Provider value={{ user, isFetchingUser }}>
-      {children}
-    </UserContext.Provider>
-  );
 };
+
+const UserContext = React.createContext<UserContextValues>(
+  initialUserContextValues
+);
+
+class UserProvider extends React.Component<{}, UserContextValues> {
+  state = initialUserContextValues;
+  componentDidMount() {
+    firebase.auth().onAuthStateChanged(this.handleAuthStateChanged);
+  }
+  handleAuthStateChanged = async (userAuthAccount: firebase.User | null) => {
+    if (userAuthAccount) {
+      await this.setState({ userAuthAccount });
+    } else {
+      this.setState({ userAuthAccount: null });
+    }
+    this.setState({ isFetchingUser: false });
+  };
+  render() {
+    return (
+      <UserContext.Provider value={this.state}>
+        {this.props.children}
+      </UserContext.Provider>
+    );
+  }
+}
 
 const UserConsumer = UserContext.Consumer;
 export { UserProvider, UserConsumer, UserContext };

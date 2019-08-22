@@ -23,31 +23,93 @@ const firebaseConfig: FirebaseConfig = {
   appId: "1:90646101192:web:a4f37e1b62eb907e"
 };
 
+const transformStringToKebabCase = (s: string) => {
+  return s.replace(/\s+/g, "-").toLowerCase();
+};
+
 function createFirebaseApp(firebaseConfig: FirebaseConfig) {
   const firebaseApp = firebase.initializeApp(firebaseConfig);
 
   const firestoreCollections = {
-    retroBoards: "retro-boards"
+    retroBoards: "retro-boards",
+    users: "users",
+    workspaces: "workspaces"
   };
 
   const retroBoardsCollection = firebaseApp
     .firestore()
     .collection(firestoreCollections.retroBoards);
 
+  const usersCollection = firebaseApp
+    .firestore()
+    .collection(firestoreCollections.users);
+
+  const workspacesCollection = firebaseApp
+    .firestore()
+    .collection(firestoreCollections.workspaces);
+
   return {
-    signInWithGoogleAuth: async () => {
+    signInWithGoogleAuthPopup: async () => {
       try {
         const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
         googleAuthProvider.addScope(
           "https://www.googleapis.com/auth/contacts.readonly"
         );
-        const result = await firebase
+        const userCredential = await firebase
           .auth()
           .signInWithPopup(googleAuthProvider);
-        console.log(result);
-        return result.user;
+        return userCredential;
       } catch (error) {
         console.log(error.message);
+      }
+    },
+    createUserDoc: async (userAuthAccount: firebase.User) => {
+      try {
+        const newUser = {
+          uid: userAuthAccount.uid,
+          displayName: userAuthAccount.displayName,
+          email: userAuthAccount.email,
+          photoURL: userAuthAccount.photoURL
+        };
+        await usersCollection.doc(userAuthAccount.uid).set(newUser);
+        console.log("Successfully created a user document!");
+        return newUser;
+      } catch (error) {
+        console.log("Error creating user document:", error);
+      }
+    },
+    updateUserDoc: async (
+      userId: RetroUser["uid"],
+      fieldsToUpdate: Partial<RetroUser>
+    ) => {
+      try {
+        await usersCollection.doc(userId).set(fieldsToUpdate, { merge: true });
+        console.log(`Successfully updated the user document ${userId}!`);
+      } catch (error) {
+        console.log(`Error updating user document ${userId}:`, error);
+      }
+    },
+    createWorkspace: async (workspaceName: string) => {
+      try {
+        const workspaceId = transformStringToKebabCase(workspaceName);
+        await workspacesCollection
+          .doc(workspaceId)
+          .set({ uid: workspaceId, displayName: workspaceName });
+        return workspaceId;
+      } catch (error) {
+        console.log(`Error creating workspace ${workspaceName}`, error);
+      }
+    },
+    fetchUserById: async (userId: firebase.User["uid"] | null) => {
+      if (!userId) {
+        console.log("Invalid userId, received: ", userId);
+        return;
+      }
+      try {
+        const userSnapshot = await usersCollection.doc(userId).get();
+        return userSnapshot.data() as Promise<RetroUser>;
+      } catch (error) {
+        console.log("Error fetching user:", error);
       }
     },
     createRetroBoard: async () => {

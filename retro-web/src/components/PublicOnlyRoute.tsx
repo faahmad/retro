@@ -10,12 +10,12 @@ export const PublicOnlyRoute: React.FC<PublicOnlyRouteProps & any> = ({
   component: Component,
   ...rest
 }) => {
-  const { user } = React.useContext(UserContext);
+  const { userAuthAccount } = React.useContext(UserContext);
   return (
     <Route
       {...rest}
       render={props =>
-        !user ? (
+        !userAuthAccount ? (
           <Component {...props} />
         ) : (
           <Redirect to={{ pathname: `/dashboard` }} />
