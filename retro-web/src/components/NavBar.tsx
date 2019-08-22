@@ -4,12 +4,12 @@ import "firebase/auth";
 import { Button, Spinner } from "reactstrap";
 import { Link } from "react-router-dom";
 import Octicon, { Telescope } from "@primer/octicons-react";
-import { UserContext } from "./UserContext";
+import { UserAuthContext } from "./UserAuthContext";
 
 export class NavBar extends React.Component {
-  static contextType = UserContext;
+  static contextType = UserAuthContext;
   render() {
-    const { userAuthAccount, isFetchingUser } = this.context;
+    const { userAuthAccount, isFetchingUserAuth } = this.context;
     return (
       <nav className="navbar bg-primary justify-content-between">
         <Link to={userAuthAccount ? "/dashboard" : "/"}>
@@ -18,12 +18,12 @@ export class NavBar extends React.Component {
             <span className="ml-2">Retro</span>
           </div>
         </Link>
-        {isFetchingUser && (
+        {isFetchingUserAuth && (
           <Button outline disabled color="light">
             <Spinner size="sm" color="light" />
           </Button>
         )}
-        {!isFetchingUser && !userAuthAccount && (
+        {!isFetchingUserAuth && !userAuthAccount && (
           <Link
             to="/login"
             className="btn btn-primary border-white bg-white text-primary font-weight-bold"
@@ -31,7 +31,7 @@ export class NavBar extends React.Component {
             Login
           </Link>
         )}
-        {!isFetchingUser && userAuthAccount && (
+        {!isFetchingUserAuth && userAuthAccount && (
           <div className="d-flex align-items-end">
             <Button
               outline

@@ -1,11 +1,10 @@
 import * as React from "react";
 import { Link, Redirect } from "react-router-dom";
 import { Firebase } from "../lib/Firebase";
-import { UserContext } from "../components/UserContext";
+import { UserAuthContext } from "../components/UserAuthContext";
 import { Row, Col } from "reactstrap";
 import { Sidebar } from "../components/SideBar";
 import moment from "moment";
-import { LoadingText } from "../components/LoadingText";
 
 interface DashboardPageState {
   isNewUser: boolean | null;
@@ -16,7 +15,7 @@ interface DashboardPageState {
 }
 
 export class DashboardPage extends React.Component<any, DashboardPageState> {
-  static contextType = UserContext;
+  static contextType = UserAuthContext;
   state = {
     isNewUser: null,
     isFetchingRetroBoards: true,
@@ -67,7 +66,7 @@ export class DashboardPage extends React.Component<any, DashboardPageState> {
           </Col>
           <Col lg="10" className="py-4">
             <h3>Your Retros</h3>
-            {isFetchingRetroBoards && <LoadingText />}
+            {isFetchingRetroBoards && <span>Loading...</span>}
             {!isFetchingRetroBoards && listOfRetroBoards.length === 0 && (
               <span>You don't have any retros! </span>
             )}
