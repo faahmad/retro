@@ -5,7 +5,6 @@ import { UserAuthContext } from "../components/UserAuthContext";
 import { Row, Col } from "reactstrap";
 import { Sidebar } from "../components/SideBar";
 import moment from "moment";
-import { LoadingText } from "../components/LoadingText";
 
 interface DashboardPageState {
   isNewUser: boolean | null;
