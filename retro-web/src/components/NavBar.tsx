@@ -3,6 +3,7 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import { Button, Spinner } from "reactstrap";
 import { Link } from "react-router-dom";
+import Octicon, { Telescope } from "@primer/octicons-react";
 import { UserContext } from "./UserContext";
 
 export class NavBar extends React.Component {
@@ -11,11 +12,11 @@ export class NavBar extends React.Component {
     const { userAuthAccount, isFetchingUser } = this.context;
     return (
       <nav className="navbar bg-primary justify-content-between">
-        <Link
-          className="navbar-brand text-white font-weight-bold"
-          to={userAuthAccount ? "/dashboard" : "/"}
-        >
-          retro.app
+        <Link to={userAuthAccount ? "/dashboard" : "/"}>
+          <div className="d-flex align-items-center navbar-brand text-white font-weight-bold">
+            <Octicon icon={Telescope} size="medium" />
+            <span className="ml-2">Retro</span>
+          </div>
         </Link>
         {isFetchingUser && (
           <Button outline disabled color="light">
