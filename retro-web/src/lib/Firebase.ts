@@ -1,7 +1,7 @@
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
-import { defaultRetroBoard } from "../default-data/default-retro-board";
+import { createDefaultRetroBoard } from "../default-data/default-retro-board";
 
 interface FirebaseConfig {
   apiKey: string;
@@ -31,7 +31,7 @@ function createFirebaseApp(firebaseConfig: FirebaseConfig) {
   const firebaseApp = firebase.initializeApp(firebaseConfig);
 
   const firestoreCollections = {
-    retroBoards: "retro-boards",
+    retroBoards: "retroBoards",
     users: "users",
     workspaces: "workspaces"
   };
@@ -91,13 +91,34 @@ function createFirebaseApp(firebaseConfig: FirebaseConfig) {
     },
     createWorkspace: async (workspaceName: string) => {
       try {
+        const { currentUser } = firebase.auth();
+        if (!currentUser) {
+          return;
+        }
         const workspaceId = transformStringToKebabCase(workspaceName);
-        await workspacesCollection
-          .doc(workspaceId)
-          .set({ uid: workspaceId, displayName: workspaceName });
+        const newWorkspace: RetroWorkspace = {
+          uid: workspaceId,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          createdBy: currentUser.uid,
+          displayName: workspaceName,
+          users: {
+            [currentUser.uid]: true
+          }
+        };
+        await workspacesCollection.doc(workspaceId).set(newWorkspace);
         return workspaceId;
       } catch (error) {
         console.log(`Error creating workspace ${workspaceName}`, error);
+      }
+    },
+    fetchWorkspaceById: async (workspaceId: RetroWorkspace["uid"]) => {
+      try {
+        const workspaceSnapshot = await workspacesCollection
+          .doc(workspaceId)
+          .get();
+        return workspaceSnapshot.data() as Promise<RetroWorkspace>;
+      } catch (error) {
+        console.log("Error fetching workspace:", error);
       }
     },
     fetchUserById: async (userId: firebase.User["uid"] | null) => {
@@ -112,23 +133,42 @@ function createFirebaseApp(firebaseConfig: FirebaseConfig) {
         console.log("Error fetching user:", error);
       }
     },
-    createRetroBoard: async () => {
-      const newRetroBoardRef = await retroBoardsCollection.doc();
-      await newRetroBoardRef.set({
-        ...defaultRetroBoard,
-        uid: newRetroBoardRef.id,
-        createdAt: new Date()
-      });
-      return newRetroBoardRef.id;
+    createRetroBoard: async (workspaceId: RetroWorkspace["uid"] | null) => {
+      if (!workspaceId) {
+        return;
+      }
+      try {
+        const newRetroBoard: RetroBoard = createDefaultRetroBoard(
+          workspaceId,
+          firebase.firestore.FieldValue.serverTimestamp()
+        );
+        const newRetroBoardRef = await retroBoardsCollection.add(newRetroBoard);
+        await retroBoardsCollection
+          .doc(newRetroBoardRef.id)
+          .set({ uid: newRetroBoardRef.id }, { merge: true });
+        return newRetroBoardRef.id;
+      } catch (error) {
+        console.log("Error creating retro board:", error);
+      }
     },
-    fetchAllRetroBoards: async () => {
+    fetchAllRetroBoardsByWorkspaceId: async (
+      workspaceId: RetroWorkspace["uid"]
+    ) => {
       let retroBoards: RetroBoard[] = [];
-      const retroBoardsSnapshot = await retroBoardsCollection.limit(10).get();
-      // TODO: Figure out how to type a firebase document snapshot.
-      retroBoardsSnapshot.forEach((retroBoardDoc: any) =>
-        retroBoards.push({ ...retroBoardDoc.data(), uid: retroBoardDoc.id })
-      );
-      return retroBoards;
+      try {
+        const retroBoardsSnapshot = await retroBoardsCollection
+          .limit(10)
+          .where("workspaceId", "==", workspaceId)
+          .orderBy("createdAt", "desc")
+          .get();
+        // TODO: Figure out how to type a firebase document snapshot.
+        retroBoardsSnapshot.forEach((retroBoardDoc: any) =>
+          retroBoards.push({ ...retroBoardDoc.data(), uid: retroBoardDoc.id })
+        );
+        return retroBoards;
+      } catch (error) {
+        console.log("Error fetching all retro boards:", error);
+      }
     },
     fetchRetroBoardById: async (retroBoardId: RetroBoard["uid"]) => {
       const retroBoardDoc = await retroBoardsCollection.doc(retroBoardId).get();

@@ -38,8 +38,7 @@ export class OnboardingPage extends React.Component<any, {}> {
   ) => {
     const workspaceId = await Firebase.createWorkspace(values.workspaceName);
     await Firebase.updateUserDoc(this.context.userAuthAccount.uid, {
-      workspaceId,
-      workspaceDisplayName: values.workspaceName
+      workspaceId
     });
     this.props.history.push("/dashboard");
   };

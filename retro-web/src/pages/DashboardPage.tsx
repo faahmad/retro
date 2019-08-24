@@ -12,6 +12,7 @@ interface DashboardPageState {
   listOfRetroBoards: RetroBoard[];
   isCreatingRetroBoard: boolean;
   user: RetroUser | null;
+  workspaceDisplayName: RetroWorkspace["displayName"] | null;
 }
 
 export class DashboardPage extends React.Component<any, DashboardPageState> {
@@ -21,25 +22,36 @@ export class DashboardPage extends React.Component<any, DashboardPageState> {
     isFetchingRetroBoards: true,
     listOfRetroBoards: [],
     isCreatingRetroBoard: false,
-    user: null
+    user: null,
+    workspaceDisplayName: null
   };
   async componentDidMount() {
     const user = await Firebase.fetchUserById(this.context.userAuthAccount.uid);
     if (!user || !user.workspaceId) {
       await this.setState({ isNewUser: true });
     } else {
-      const listOfRetroBoards = await Firebase.fetchAllRetroBoards();
-      this.setState({
+      const workspace = await Firebase.fetchWorkspaceById(user.workspaceId);
+      await this.setState({
         user,
-        listOfRetroBoards,
         isNewUser: false,
+        workspaceDisplayName: workspace ? workspace.displayName : null
+      });
+      const listOfRetroBoards = await Firebase.fetchAllRetroBoardsByWorkspaceId(
+        user.workspaceId
+      );
+      await this.setState({
+        listOfRetroBoards: listOfRetroBoards || [],
         isFetchingRetroBoards: false
       });
     }
   }
   handleOnClickCreateRetro = async () => {
+    const user: any = this.state.user;
+    if (!user) {
+      return;
+    }
     this.setState({ isCreatingRetroBoard: true });
-    const newRetroBoardId = await Firebase.createRetroBoard();
+    const newRetroBoardId = await Firebase.createRetroBoard(user.workspaceId);
     await this.setState({ isCreatingRetroBoard: false });
     this.props.history.push(`/dashboard/team/retro-boards/${newRetroBoardId}`);
   };
@@ -49,8 +61,11 @@ export class DashboardPage extends React.Component<any, DashboardPageState> {
       listOfRetroBoards,
       isNewUser,
       isCreatingRetroBoard,
-      user
+      user,
+      workspaceDisplayName
     } = this.state;
+
+    console.log(workspaceDisplayName);
 
     if (isNewUser) {
       return <Redirect to="/onboarding" />;
@@ -60,7 +75,18 @@ export class DashboardPage extends React.Component<any, DashboardPageState> {
       <div className="dashboard-page container-fluid full-height">
         <Row>
           <Col lg="2" className="bg-light full-height py-4 shadow-sm">
-            <WorkspaceName user={user} />
+            <div className="workspace-name">
+              <div
+                className={
+                  workspaceDisplayName
+                    ? "font-weight-bold text-secondary"
+                    : "text-light"
+                }
+              >
+                {workspaceDisplayName ? workspaceDisplayName : "Workspace"}
+              </div>
+              <UserDisplayName user={user} />
+            </div>
             <hr />
             <Sidebar />
           </Col>
@@ -103,25 +129,9 @@ export class DashboardPage extends React.Component<any, DashboardPageState> {
   }
 }
 
-const WorkspaceName = ({ user }: { user: RetroUser | null }) => {
-  const hasWorkspaceDisplayName = user && user.workspaceDisplayName;
-
-  return (
-    <div className="workspace-name">
-      <div
-        className={
-          hasWorkspaceDisplayName
-            ? "font-weight-bold text-secondary"
-            : "text-light"
-        }
-      >
-        {user && user.workspaceDisplayName
-          ? user.workspaceDisplayName
-          : "Workspace"}
-      </div>
-      <small className={hasWorkspaceDisplayName ? "text-muted" : "text-light"}>
-        {user && user.displayName}
-      </small>
-    </div>
-  );
+const UserDisplayName = ({ user }: { user: RetroUser | null }) => {
+  if (!user) {
+    return null;
+  }
+  return <small className="text-muted">{user.displayName || user.email}</small>;
 };
