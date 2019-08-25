@@ -101,6 +101,9 @@ function createFirebaseApp(firebaseConfig: FirebaseConfig) {
           createdAt: firebase.firestore.FieldValue.serverTimestamp(),
           createdBy: currentUser.uid,
           displayName: workspaceName,
+          admins: {
+            [currentUser.uid]: true
+          },
           users: {
             [currentUser.uid]: true
           }
@@ -121,6 +124,14 @@ function createFirebaseApp(firebaseConfig: FirebaseConfig) {
         console.log("Error fetching workspace:", error);
       }
     },
+    // createInvitationURLForWorkspace: async (
+    //   workspaceId: RetroWorkspace["uid"]
+    // ) => {
+    // It should generate a invitationURL.
+    // When a user signs up at the invitationURL, they should automatically
+    // be added to the workspace.
+    // add a workspace invitationURLExpirationDate to the Workspace model.
+    // },
     fetchUserById: async (userId: firebase.User["uid"] | null) => {
       if (!userId) {
         console.log("Invalid userId, received: ", userId);
@@ -146,6 +157,14 @@ function createFirebaseApp(firebaseConfig: FirebaseConfig) {
         await retroBoardsCollection
           .doc(newRetroBoardRef.id)
           .set({ uid: newRetroBoardRef.id }, { merge: true });
+        await workspacesCollection.doc(workspaceId).set(
+          {
+            retroBoards: {
+              [newRetroBoardRef.id]: true
+            }
+          },
+          { merge: true }
+        );
         return newRetroBoardRef.id;
       } catch (error) {
         console.log("Error creating retro board:", error);

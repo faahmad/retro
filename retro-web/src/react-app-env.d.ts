@@ -5,12 +5,22 @@ interface RetroWorkspace {
   createdAt: any;
   createdBy: RetroUser["uid"];
   displayName: string;
+  admins: {
+    [userId: RetroUser["uid"]]: boolean;
+  };
   users: {
     [userId: RetroUser["uid"]]: boolean;
   };
   retroBoards?: {
-    [retroBoardId: RetroBoard["uid"]]: boolean;
+    [retroBoardId: RetroBoad["uid"]]: boolean;
   };
+}
+
+interface RetroUserInvite {
+  uid: string;
+  workspaceId: string;
+  createdBy: RetroUser["uid"];
+  createdAt: any;
 }
 
 interface RetroItem {

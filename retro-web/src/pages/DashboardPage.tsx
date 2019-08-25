@@ -65,8 +65,6 @@ export class DashboardPage extends React.Component<any, DashboardPageState> {
       workspaceDisplayName
     } = this.state;
 
-    console.log(workspaceDisplayName);
-
     if (isNewUser) {
       return <Redirect to="/onboarding" />;
     }
