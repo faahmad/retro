@@ -43,7 +43,7 @@ class App extends React.Component {
                   component={DashboardPage}
                 />
                 <PrivateRoute
-                  path="/dashboard/teams/retro-boards/:retroBoardId"
+                  path="/dashboard/:workspaceId/retro-boards/:retroBoardId"
                   component={RetroBoardPage}
                 />
               </Switch>
