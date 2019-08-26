@@ -8,11 +8,11 @@ import { LoadingText } from "./components/LoadingText";
 // Pages
 import { LandingPage } from "./pages/LandingPage";
 import { LoginPage } from "./pages/LoginPage";
-import { WorkspaceInviteURLPage } from "./pages/WorkspaceInviteURLPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { RetroBoardPage } from "./pages/RetroBoardPage";
 import { PublicOnlyRoute } from "./components/PublicOnlyRoute";
 import { OnboardingPage } from "./pages/OnboardingPage";
+import { WorkspaceMembersPage } from "./pages/WorkspaceMembersPage";
 
 class App extends React.Component {
   static contextType = UserAuthContext;
@@ -28,10 +28,6 @@ class App extends React.Component {
               <Switch>
                 <PublicOnlyRoute exact path="/" component={LandingPage} />
                 <PublicOnlyRoute path="/login" component={LoginPage} />
-                <PublicOnlyRoute
-                  path="/:workspaceId/join/invite"
-                  component={WorkspaceInviteURLPage}
-                />
                 <PrivateRoute
                   exact
                   path="/onboarding"
@@ -41,6 +37,10 @@ class App extends React.Component {
                   exact
                   path="/dashboard"
                   component={DashboardPage}
+                />
+                <PrivateRoute
+                  path="/dashboard/:workspaceId/members/"
+                  component={WorkspaceMembersPage}
                 />
                 <PrivateRoute
                   path="/dashboard/:workspaceId/retro-boards/:retroBoardId"

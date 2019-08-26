@@ -8,7 +8,7 @@ import Octicon, {
 } from "@primer/octicons-react";
 
 interface SidebarProps {
-  workspaceId?: RetroWorkspace["uid"];
+  workspaceId: RetroWorkspace["uid"];
 }
 export class Sidebar extends React.Component<SidebarProps, {}> {
   render() {

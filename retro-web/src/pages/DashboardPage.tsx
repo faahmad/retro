@@ -31,17 +31,14 @@ export class DashboardPage extends React.Component<any, DashboardPageState> {
     if (!user || !user.workspaceId) {
       return;
     } else {
-      console.log(user);
-      await this.setState({ isFetchingUser: false });
       const workspace = await Firebase.fetchWorkspaceById(user.workspaceId);
-      await this.setState({
-        user,
-        workspaceDisplayName: workspace ? workspace.displayName : null
-      });
       const listOfRetroBoards = await Firebase.fetchAllRetroBoardsByWorkspaceId(
         user.workspaceId
       );
       await this.setState({
+        user,
+        isFetchingUser: false,
+        workspaceDisplayName: workspace ? workspace.displayName : null,
         listOfRetroBoards: listOfRetroBoards || [],
         isFetchingRetroBoards: false
       });
@@ -60,25 +57,21 @@ export class DashboardPage extends React.Component<any, DashboardPageState> {
     );
   };
   render() {
-    console.log("render dashboardpage");
+    if (this.state.isFetchingUser) return <LoadingText />;
+    if (
+      !this.state.isFetchingUser &&
+      (!this.state.user || !this.state.user.workspaceId)
+    ) {
+      return <Redirect to="/onboarding" />;
+    }
+
+    const user = this.state.user!;
     const {
-      isFetchingUser,
-      user,
       workspaceDisplayName,
       isFetchingRetroBoards,
       listOfRetroBoards,
       isCreatingRetroBoard
     } = this.state;
-
-    if (isFetchingUser && !user) {
-      return <LoadingText />;
-    }
-
-    console.log(user);
-
-    if (!user || !user.workspaceId) {
-      return <Redirect to="/onboarding" />;
-    }
 
     return (
       <div className="dashboard-page container-fluid full-height">
@@ -97,7 +90,7 @@ export class DashboardPage extends React.Component<any, DashboardPageState> {
               <UserDisplayName user={user} />
             </div>
             <hr />
-            <Sidebar workspaceId={user.workspaceId} />
+            <Sidebar workspaceId={user.workspaceId || "workspace"} />
           </Col>
           <Col lg="10" className="py-4">
             <h3>Your Retros</h3>

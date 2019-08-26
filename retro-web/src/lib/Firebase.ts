@@ -144,7 +144,22 @@ function createFirebaseApp(firebaseConfig: FirebaseConfig) {
         console.log("Error fetching user:", error);
       }
     },
-    createRetroBoard: async (workspaceId: RetroWorkspace["uid"] | null) => {
+    fetchUsersByWorkspaceId: async (workspaceId: RetroWorkspace["uid"]) => {
+      try {
+        const workspaceUsersQuerySnapshot = await usersCollection
+          .where("workspaceId", "==", workspaceId)
+          .get();
+        let workspaceUsers: RetroUser[] = [];
+        workspaceUsersQuerySnapshot.forEach(workspaceUserDoc => {
+          const user = (workspaceUserDoc.data() as unknown) as RetroUser;
+          workspaceUsers.push(user);
+        });
+        return workspaceUsers;
+      } catch (error) {
+        console.log("Error fetching workspace users:", error);
+      }
+    },
+    createRetroBoard: async (workspaceId: RetroWorkspace["uid"]) => {
       if (!workspaceId) {
         return;
       }
