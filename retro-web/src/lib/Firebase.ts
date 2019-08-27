@@ -297,6 +297,16 @@ function createFirebaseApp(firebaseConfig: FirebaseConfig) {
       const retroBoardDoc = await retroBoardsCollection.doc(retroBoardId).get();
       return { ...retroBoardDoc.data(), uid: retroBoardDoc.id };
     },
+    subscribeToRetroBoardById: (
+      retroBoardId: RetroBoard["uid"],
+      onSnapshotCallback: (retroBoard: RetroBoard) => void
+    ) => {
+      return retroBoardsCollection
+        .doc(retroBoardId)
+        .onSnapshot(retroBoardDoc => {
+          onSnapshotCallback((retroBoardDoc.data() as unknown) as RetroBoard);
+        });
+    },
     updateRetroBoardById: async (
       retroBoardId: RetroBoard["uid"],
       retroBoard: RetroBoard

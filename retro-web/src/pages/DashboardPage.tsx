@@ -177,5 +177,9 @@ const UserDisplayName = ({ user }: { user: RetroUser | null }) => {
   if (!user) {
     return null;
   }
-  return <small className="text-muted">{user.displayName || user.email}</small>;
+  return (
+    <div className="d-flex flex-column mt-1">
+      <small className="text-muted">{user.email}</small>
+    </div>
+  );
 };

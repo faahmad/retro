@@ -16,22 +16,41 @@ interface State {
 }
 export class RetroBoardPage extends React.Component<any, State> {
   static contextType = UserAuthContext;
+  unsubscribeFromRetroBoardFn: any;
   // TODO: Fix this typing.
-  state: any = {
-    lastUpdatedAt: new Date() as State["lastUpdatedAt"],
-    isFetching: true as State["isFetching"],
-    retroBoard: null,
-    isModalOpen: false as State["isModalOpen"],
-    columnTypeToAddItemTo: null as State["columnTypeToAddItemTo"]
-  };
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      lastUpdatedAt: new Date() as State["lastUpdatedAt"],
+      isFetching: true as State["isFetching"],
+      retroBoard: null as any,
+      isModalOpen: false as State["isModalOpen"],
+      columnTypeToAddItemTo: null as State["columnTypeToAddItemTo"]
+    };
+    this.unsubscribeFromRetroBoardFn = null;
+  }
 
   async componentDidMount() {
-    const retroBoardState: any = await Firebase.fetchRetroBoardById(
-      this.props.match.params.retroBoardId
+    this.unsubscribeFromRetroBoardFn = Firebase.subscribeToRetroBoardById(
+      this.props.match.params.retroBoardId,
+      this.handleSetRetroBoardState
     );
-    this.setState({ isFetching: false, retroBoard: retroBoardState });
+    await this.setState({ isFetching: false });
     return;
   }
+
+  componentWillUnmount() {
+    if (this.unsubscribeFromRetroBoardFn) {
+      this.unsubscribeFromRetroBoardFn();
+    }
+  }
+
+  handleSetRetroBoardState = async (retroBoard: RetroBoard | undefined) => {
+    if (!retroBoard) {
+      return;
+    }
+    await this.setState({ retroBoard });
+  };
 
   handleAddItemToColumn = async (
     content: RetroItem["content"],
@@ -191,9 +210,6 @@ export class RetroBoardPage extends React.Component<any, State> {
     return (
       <div className="retro-board-page">
         {isFetching && <LoadingText />}
-        {!isFetching && !retroBoard && (
-          <span>Oops! Couldn't load your retro board.</span>
-        )}
         {isModalOpen && (
           <RetroItemModal
             isOpen={this.state.isModalOpen}
