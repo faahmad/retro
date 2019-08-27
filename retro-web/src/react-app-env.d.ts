@@ -1,21 +1,35 @@
 /// <reference types="react-scripts" />
 
+type RetroWorkspaceUserType = "owner" | "member";
 interface RetroWorkspace {
   uid: string;
   createdAt: any;
   createdBy: RetroUser["uid"];
   displayName: string;
   users: {
-    [userId: RetroUser["uid"]]: boolean;
+    [userId: string]: RetroWorkspaceUserType;
   };
   retroBoards?: {
-    [retroBoardId: RetroBoard["uid"]]: boolean;
+    [retroBoardId: string]: boolean;
   };
+}
+
+interface RetroInvitedUser {
+  email: string;
+  workspaceId: RetroWorkspace["uid"];
+  userType: RetroWorkspaceUserType;
+  displayName?: string;
+  invitedBy: string;
+  dateInviteWasSent: any;
+  hasAcceptedInvite: boolean;
+  dateInviteWasAccepted?: any;
+  uid?: string;
 }
 
 interface RetroItem {
   id: string;
   content: string;
+  // TODO: Use the user's id instead of their display name.
   likedBy: {
     [userDisplayName: string]: boolean;
   };

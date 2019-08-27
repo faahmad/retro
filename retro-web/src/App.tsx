@@ -1,15 +1,18 @@
 import React from "react";
 import { BrowserRouter, Switch } from "react-router-dom";
+// Components
 import { PrivateRoute } from "./components/PrivateRoute";
 import { NavBar } from "./components/NavBar";
+import { UserAuthContext } from "./components/UserAuthContext";
+import { LoadingText } from "./components/LoadingText";
+// Pages
 import { LandingPage } from "./pages/LandingPage";
 import { LoginPage } from "./pages/LoginPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { RetroBoardPage } from "./pages/RetroBoardPage";
 import { PublicOnlyRoute } from "./components/PublicOnlyRoute";
-import { UserAuthContext } from "./components/UserAuthContext";
-import { LoadingText } from "./components/LoadingText";
 import { OnboardingPage } from "./pages/OnboardingPage";
+import { WorkspaceMembersPage } from "./pages/WorkspaceMembersPage";
 
 class App extends React.Component {
   static contextType = UserAuthContext;
@@ -36,7 +39,11 @@ class App extends React.Component {
                   component={DashboardPage}
                 />
                 <PrivateRoute
-                  path="/dashboard/team/retro-boards/:retroBoardId"
+                  path="/dashboard/:workspaceId/members/"
+                  component={WorkspaceMembersPage}
+                />
+                <PrivateRoute
+                  path="/dashboard/:workspaceId/retro-boards/:retroBoardId"
                   component={RetroBoardPage}
                 />
               </Switch>
