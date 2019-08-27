@@ -10,17 +10,16 @@ import { UserAuthContext } from "../components/UserAuthContext";
 interface State {
   lastUpdatedAt: Date;
   isFetching: boolean;
-  // TODO: Fix this typing.
   retroBoard: RetroBoard;
   isModalOpen: boolean;
   columnTypeToAddItemTo: RetroColumnType | null;
 }
 export class RetroBoardPage extends React.Component<any, State> {
   static contextType = UserAuthContext;
+  // TODO: Fix this typing.
   state: any = {
     lastUpdatedAt: new Date() as State["lastUpdatedAt"],
     isFetching: true as State["isFetching"],
-    // TODO: Fix this typing.
     retroBoard: null,
     isModalOpen: false as State["isModalOpen"],
     columnTypeToAddItemTo: null as State["columnTypeToAddItemTo"]
@@ -106,10 +105,12 @@ export class RetroBoardPage extends React.Component<any, State> {
         }
       }
     }));
+
     await Firebase.updateRetroBoardById(
       this.state.retroBoard.uid,
       this.state.retroBoard
     );
+
     return;
   };
 
@@ -198,7 +199,10 @@ export class RetroBoardPage extends React.Component<any, State> {
             isOpen={this.state.isModalOpen}
             columnType={this.state.columnTypeToAddItemTo}
             onToggle={() =>
-              this.setState({ isModalOpen: false, columnTypeToAddItemTo: null })
+              this.setState({
+                isModalOpen: false,
+                columnTypeToAddItemTo: null
+              })
             }
             onSubmit={this.handleAddItemToColumn}
           />

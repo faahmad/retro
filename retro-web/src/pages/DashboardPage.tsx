@@ -27,24 +27,70 @@ export class DashboardPage extends React.Component<any, DashboardPageState> {
     isCreatingRetroBoard: false
   };
   async componentDidMount() {
-    const user = await Firebase.fetchUserById(this.context.userAuthAccount.uid);
+    const { userAuthAccount } = this.context;
+    const user = await Firebase.fetchUserById(userAuthAccount.uid);
+    console.log("componentDidMount user", user);
     if (!user || !user.workspaceId) {
-      await this.setState({ isFetchingUser: false });
-      return;
-    } else {
-      const workspace = await Firebase.fetchWorkspaceById(user.workspaceId);
-      const listOfRetroBoards = await Firebase.fetchAllRetroBoardsByWorkspaceId(
-        user.workspaceId
+      console.log("user doesn't exist");
+      const invitedUser = await Firebase.fetchInvitedUserByEmail(
+        userAuthAccount.email
       );
-      await this.setState({
-        user,
-        isFetchingUser: false,
-        workspaceDisplayName: workspace ? workspace.displayName : null,
-        listOfRetroBoards: listOfRetroBoards || [],
-        isFetchingRetroBoards: false
-      });
+
+      if (invitedUser) {
+        console.log("user has an invite");
+        this.handleCreateUserThatHasAnInvite(userAuthAccount, invitedUser);
+        return;
+      }
+      console.log("user doesn't have an invite");
+      this.setState({ isFetchingUser: false });
+    } else {
+      console.log("user exists");
+      this.handleFetchWorkspaceAndRetroBoards(user);
     }
+    return;
   }
+
+  handleCreateUserThatHasAnInvite = async (
+    userAuthAccount: any,
+    invitedUser: RetroInvitedUser
+  ) => {
+    let newUser;
+    newUser = await Firebase.createUserDoc(userAuthAccount);
+
+    await Firebase.updateUserDoc(userAuthAccount.uid, {
+      workspaceId: invitedUser!.workspaceId
+    });
+    await Firebase.addUserIdAndUserTypeToWorkspace(
+      newUser!.uid,
+      invitedUser!.userType,
+      invitedUser!.workspaceId
+    );
+    await Firebase.updateInvitedUserAfterSignUp(invitedUser!.uid);
+
+    newUser = await Firebase.fetchUserById(newUser!.uid);
+    this.handleFetchWorkspaceAndRetroBoards(newUser!);
+
+    return;
+  };
+
+  handleFetchWorkspaceAndRetroBoards = async (user: RetroUser) => {
+    if (!user) {
+      return;
+    }
+    const workspace = await Firebase.fetchWorkspaceById(user.workspaceId!);
+    const listOfRetroBoards = await Firebase.fetchAllRetroBoardsByWorkspaceId(
+      user.workspaceId!
+    );
+    await this.setState({
+      user,
+      isFetchingUser: false,
+      workspaceDisplayName: workspace ? workspace.displayName : null,
+      listOfRetroBoards: listOfRetroBoards || [],
+      isFetchingRetroBoards: false
+    });
+    return;
+  };
+
   handleOnClickCreateRetro = async () => {
     const user = this.state.user;
     if (!user || !user.workspaceId) {
@@ -57,12 +103,14 @@ export class DashboardPage extends React.Component<any, DashboardPageState> {
       `/dashboard/${user.workspaceId}/retro-boards/${newRetroBoardId}`
     );
   };
+
   render() {
     if (this.state.isFetchingUser) return <LoadingText />;
     if (
       !this.state.isFetchingUser &&
       (!this.state.user || !this.state.user.workspaceId)
     ) {
+      console.log("render", this.state);
       return <Redirect to="/onboarding" />;
     }
 

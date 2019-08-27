@@ -9,23 +9,21 @@ interface RetroWorkspace {
   users: {
     [userId: string]: RetroWorkspaceUserType;
   };
-  invitedUsers?: {
-    [email: string]: {
-      invitedBy: RetroUser["uid"];
-      dateInviteWasSent: any;
-      hasAcceptedInvite: boolean;
-    };
-  };
   retroBoards?: {
     [retroBoardId: string]: boolean;
   };
 }
 
-interface RetroUserInvite {
-  uid: string;
-  workspaceId: string;
-  createdBy: RetroUser["uid"];
-  createdAt: any;
+interface RetroInvitedUser {
+  email: string;
+  workspaceId: RetroWorkspace["uid"];
+  userType: RetroWorkspaceUserType;
+  displayName?: string;
+  invitedBy: string;
+  dateInviteWasSent: any;
+  hasAcceptedInvite: boolean;
+  dateInviteWasAccepted?: any;
+  uid?: string;
 }
 
 interface RetroItem {

@@ -13,7 +13,6 @@ import {
   Row,
   Col
 } from "reactstrap";
-import Octicon, { MailRead } from "@primer/octicons-react";
 
 interface InviteUserModalProps {
   isOpen: boolean;
@@ -25,7 +24,6 @@ interface InviteUserModalProps {
 interface InviteUserModalState {
   isSubmitting: boolean;
   email: string;
-  name: string;
 }
 
 export class InviteUserModal extends React.Component<
@@ -36,20 +34,19 @@ export class InviteUserModal extends React.Component<
     super(props);
     this.state = {
       isSubmitting: false,
-      email: "",
-      name: ""
+      email: ""
     };
   }
   handleSubmit = async (e: any) => {
-    e.preventDefaul();
+    e.preventDefault();
     return this.props.onSubmit(this.state.email);
   };
   render() {
     const { isOpen, onToggle } = this.props;
-    const { email, isSubmitting, name } = this.state;
+    const { email, isSubmitting } = this.state;
 
     return (
-      <Modal size="lg" isOpen={isOpen} toggle={onToggle}>
+      <Modal isOpen={isOpen} toggle={onToggle}>
         <ModalHeader>
           <span className="font-weight-light">Invite people to </span>{" "}
           <span>{this.props.workspaceDisplayName}</span>
@@ -57,7 +54,7 @@ export class InviteUserModal extends React.Component<
         <Form onSubmit={this.handleSubmit}>
           <ModalBody>
             <Row className="d-flex align-items-center">
-              <Col md="6">
+              <Col md="10">
                 <FormGroup>
                   <Label for="email">Email Address</Label>
                   <Input
@@ -65,17 +62,6 @@ export class InviteUserModal extends React.Component<
                     name="email"
                     value={email}
                     onChange={e => this.setState({ email: e.target.value })}
-                  />
-                </FormGroup>
-              </Col>
-              <Col md="5">
-                <FormGroup>
-                  <Label for="name">Name (optional)</Label>
-                  <Input
-                    type="text"
-                    name="name"
-                    value={name}
-                    onChange={e => this.setState({ name: e.target.value })}
                   />
                 </FormGroup>
               </Col>

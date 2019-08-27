@@ -33,7 +33,8 @@ function createFirebaseApp(firebaseConfig: FirebaseConfig) {
   const firestoreCollections = {
     retroBoards: "retroBoards",
     users: "users",
-    workspaces: "workspaces"
+    workspaces: "workspaces",
+    invitedUsers: "invitedUsers"
   };
 
   const retroBoardsCollection = firebaseApp
@@ -47,6 +48,10 @@ function createFirebaseApp(firebaseConfig: FirebaseConfig) {
   const workspacesCollection = firebaseApp
     .firestore()
     .collection(firestoreCollections.workspaces);
+
+  const invitedUsersCollection = firebaseApp
+    .firestore()
+    .collection(firestoreCollections.invitedUsers);
 
   return {
     signInWithGoogleAuthPopup: async () => {
@@ -111,23 +116,99 @@ function createFirebaseApp(firebaseConfig: FirebaseConfig) {
         console.log(`Error creating workspace ${workspaceName}`, error);
       }
     },
-    sendWorkspaceInviteByEmail: async (
-      workspaceId: RetroWorkspace["uid"],
-      email: RetroUser["email"]
+    addUserIdAndUserTypeToWorkspace: async (
+      userId: RetroUser["uid"],
+      userType: RetroWorkspaceUserType,
+      workspaceId: RetroWorkspace["uid"]
+    ) => {
+      try {
+        const newUserUpdate: object = { [`users.${userId}`]: userType };
+        await workspacesCollection.doc(workspaceId).update(newUserUpdate);
+        console.log(`Successfully updated workspace users with ${userId}!`);
+      } catch (error) {
+        console.log(
+          `Error adding userId ${userId} to workspace ${workspaceId} users map:`,
+          error.message
+        );
+      }
+    },
+    inviteUserByEmailToWorkspace: async (
+      email: RetroUser["email"],
+      workspaceId: RetroWorkspace["uid"]
     ) => {
       try {
         const { currentUser } = firebase.auth();
-        const invitedWorkspaceUserMetaData = {
+        const invitedUser: RetroInvitedUser = {
+          email,
+          workspaceId,
+          userType: "member",
           invitedBy: currentUser!.uid,
           dateInviteWasSent: firebase.firestore.FieldValue.serverTimestamp(),
           hasAcceptedInvite: false
         };
-        const workspaceUpdate: any = {};
-        workspaceUpdate[`invitedUsers.${email}`] = invitedWorkspaceUserMetaData;
-        await workspacesCollection.doc(workspaceId).update(workspaceUpdate);
-        return workspaceId;
+        const invitedUserRef = await invitedUsersCollection.add(invitedUser);
+        return invitedUserRef.id;
       } catch (error) {
         console.log("Error inviting user to workspace:", error);
+      }
+    },
+    fetchInvitedUsersByWorkspaceId: async (
+      workspaceId: RetroWorkspace["uid"]
+    ) => {
+      try {
+        const invitedUsersQuerySnapshot = await invitedUsersCollection
+          .where("workspaceId", "==", workspaceId)
+          .get();
+        let invitedUsers: RetroInvitedUser[] = [];
+        invitedUsersQuerySnapshot.forEach(invitedUserDoc => {
+          const invitedUser = (invitedUserDoc.data() as unknown) as RetroInvitedUser;
+          invitedUsers.push(invitedUser);
+        });
+        return invitedUsers;
+      } catch (error) {
+        console.log("Error fetching invited users:", error.message);
+      }
+    },
+    fetchInvitedUserByEmail: async (email: string) => {
+      try {
+        const invitedUserQuerySnapshot = await invitedUsersCollection
+          .where("email", "==", email)
+          .get();
+        let invitedUser: RetroInvitedUser | undefined = undefined;
+        invitedUserQuerySnapshot.forEach(invitedUserDoc => {
+          const invitedUserData = invitedUserDoc.data() as RetroInvitedUser;
+          invitedUser = { ...invitedUserData, uid: invitedUserDoc.id };
+        });
+        return invitedUser;
+      } catch (error) {
+        console.log("Error fetching invited user:", error.message);
+      }
+    },
+    updateInvitedUserAfterSignUp: async (
+      invitedUserId: RetroInvitedUser["uid"]
+    ) => {
+      if (!invitedUserId) {
+        return;
+      }
+      try {
+        const invitedUserFieldsToUpdate: {
+          hasAcceptedInvite: RetroInvitedUser["hasAcceptedInvite"];
+          dateInviteWasAccepted: RetroInvitedUser["dateInviteWasAccepted"];
+        } = {
+          hasAcceptedInvite: true,
+          dateInviteWasAccepted: firebase.firestore.FieldValue.serverTimestamp()
+        };
+        await invitedUsersCollection
+          .doc(invitedUserId)
+          .update(invitedUserFieldsToUpdate);
+        console.log(
+          `Successfully updated the invited user document ${invitedUserId}!`
+        );
+      } catch (error) {
+        console.log(
+          `Error updating the invited user document ${invitedUserId}:`,
+          error.message
+        );
       }
     },
     fetchWorkspaceById: async (workspaceId: RetroWorkspace["uid"]) => {
@@ -157,10 +238,10 @@ function createFirebaseApp(firebaseConfig: FirebaseConfig) {
         const workspaceUsersQuerySnapshot = await usersCollection
           .where("workspaceId", "==", workspaceId)
           .get();
-        let workspaceUsers: RetroUser[] = [];
+        let workspaceUsers: { [userId: string]: RetroUser } = {};
         workspaceUsersQuerySnapshot.forEach(workspaceUserDoc => {
           const user = (workspaceUserDoc.data() as unknown) as RetroUser;
-          workspaceUsers.push(user);
+          workspaceUsers[user.uid] = user;
         });
         return workspaceUsers;
       } catch (error) {
