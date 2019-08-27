@@ -63,7 +63,6 @@ export class WorkspaceMembersPage extends React.Component<
     this.setState({ invitedUsers: updatedInvitedUsers! });
   };
   render() {
-    console.log(this.state);
     const { workspace, workspaceUsers, isModalOpen, invitedUsers } = this.state;
     if (!workspace) return <div>Loading...</div>;
     return (

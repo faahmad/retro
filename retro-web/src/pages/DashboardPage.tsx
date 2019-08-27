@@ -29,22 +29,16 @@ export class DashboardPage extends React.Component<any, DashboardPageState> {
   async componentDidMount() {
     const { userAuthAccount } = this.context;
     const user = await Firebase.fetchUserById(userAuthAccount.uid);
-    console.log("componentDidMount user", user);
     if (!user || !user.workspaceId) {
-      console.log("user doesn't exist");
       const invitedUser = await Firebase.fetchInvitedUserByEmail(
         userAuthAccount.email
       );
-
       if (invitedUser) {
-        console.log("user has an invite");
         this.handleCreateUserThatHasAnInvite(userAuthAccount, invitedUser);
         return;
       }
-      console.log("user doesn't have an invite");
       this.setState({ isFetchingUser: false });
     } else {
-      console.log("user exists");
       this.handleFetchWorkspaceAndRetroBoards(user);
     }
     return;
@@ -110,7 +104,6 @@ export class DashboardPage extends React.Component<any, DashboardPageState> {
       !this.state.isFetchingUser &&
       (!this.state.user || !this.state.user.workspaceId)
     ) {
-      console.log("render", this.state);
       return <Redirect to="/onboarding" />;
     }
 
