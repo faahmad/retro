@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Draggable } from "react-beautiful-dnd";
 import Octicon, { Question, ChevronUp } from "@primer/octicons-react";
+import { UserAuthContext } from "./UserAuthContext";
 
 export const RetroItem: React.FC<
   RetroItem & {
@@ -17,6 +18,8 @@ export const RetroItem: React.FC<
   handleOnClickLike,
   index
 }) => {
+  const { userAuthAccount }: any = React.useContext(UserAuthContext);
+
   return (
     <Draggable draggableId={id} index={index} isDragDisabled={false}>
       {(provided, snapshot) => {
@@ -63,7 +66,9 @@ export const RetroItem: React.FC<
               <button
                 style={{ height: 32, width: 32 }}
                 className={`btn btn-sm rounded-circle shadow-sm ${
-                  likedBy[createdByDisplayName] ? "bg-primary" : "bg-light"
+                  likedBy[userAuthAccount.displayName]
+                    ? "bg-primary"
+                    : "bg-light"
                 }`}
                 onClick={() => handleOnClickLike(id)}
               >

@@ -10,7 +10,7 @@ import { LoadingText } from "../components/LoadingText";
 interface DashboardPageState {
   isFetchingUser: boolean;
   user: RetroUser | null;
-  workspaceDisplayName: RetroWorkspace["displayName"] | null;
+  workspace: RetroWorkspace | null;
   isFetchingRetroBoards: boolean;
   listOfRetroBoards: RetroBoard[];
   isCreatingRetroBoard: boolean;
@@ -21,7 +21,7 @@ export class DashboardPage extends React.Component<any, DashboardPageState> {
   state: DashboardPageState = {
     isFetchingUser: true,
     user: null,
-    workspaceDisplayName: null,
+    workspace: null,
     isFetchingRetroBoards: true,
     listOfRetroBoards: [],
     isCreatingRetroBoard: false
@@ -78,7 +78,7 @@ export class DashboardPage extends React.Component<any, DashboardPageState> {
     await this.setState({
       user,
       isFetchingUser: false,
-      workspaceDisplayName: workspace ? workspace.displayName : null,
+      workspace: workspace ? workspace : null,
       listOfRetroBoards: listOfRetroBoards || [],
       isFetchingRetroBoards: false
     });
@@ -109,7 +109,7 @@ export class DashboardPage extends React.Component<any, DashboardPageState> {
 
     const user = this.state.user!;
     const {
-      workspaceDisplayName,
+      workspace,
       isFetchingRetroBoards,
       listOfRetroBoards,
       isCreatingRetroBoard
@@ -122,12 +122,14 @@ export class DashboardPage extends React.Component<any, DashboardPageState> {
             <div className="workspace-name">
               <div
                 className={
-                  workspaceDisplayName
+                  workspace && workspace.displayName
                     ? "font-weight-bold text-secondary"
                     : "text-light"
                 }
               >
-                {workspaceDisplayName ? workspaceDisplayName : "Workspace"}
+                {workspace && workspace.displayName
+                  ? workspace.displayName
+                  : "Workspace"}
               </div>
               <UserDisplayName user={user} />
             </div>
@@ -157,13 +159,15 @@ export class DashboardPage extends React.Component<any, DashboardPageState> {
                     );
                   })}
                 </ul>
-                <button
-                  disabled={isCreatingRetroBoard}
-                  className="btn btn-primary font-weight-bold"
-                  onClick={this.handleOnClickCreateRetro}
-                >
-                  {!isCreatingRetroBoard ? "Create a Retro" : "Creating..."}
-                </button>
+                {workspace && workspace.users[user.uid] === "owner" && (
+                  <button
+                    disabled={isCreatingRetroBoard}
+                    className="btn btn-primary font-weight-bold"
+                    onClick={this.handleOnClickCreateRetro}
+                  >
+                    {!isCreatingRetroBoard ? "Create a Retro" : "Creating..."}
+                  </button>
+                )}
               </React.Fragment>
             )}
           </Col>
