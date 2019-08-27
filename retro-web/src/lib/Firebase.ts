@@ -101,11 +101,8 @@ function createFirebaseApp(firebaseConfig: FirebaseConfig) {
           createdAt: firebase.firestore.FieldValue.serverTimestamp(),
           createdBy: currentUser.uid,
           displayName: workspaceName,
-          admins: {
-            [currentUser.uid]: true
-          },
           users: {
-            [currentUser.uid]: true
+            [currentUser.uid]: "owner"
           }
         };
         await workspacesCollection.doc(workspaceId).set(newWorkspace);
@@ -124,14 +121,6 @@ function createFirebaseApp(firebaseConfig: FirebaseConfig) {
         console.log("Error fetching workspace:", error);
       }
     },
-    // createInvitationURLForWorkspace: async (
-    //   workspaceId: RetroWorkspace["uid"]
-    // ) => {
-    // It should generate a invitationURL.
-    // When a user signs up at the invitationURL, they should automatically
-    // be added to the workspace.
-    // add a workspace invitationURLExpirationDate to the Workspace model.
-    // },
     fetchUserById: async (userId: firebase.User["uid"] | null) => {
       if (!userId) {
         console.log("Invalid userId, received: ", userId);

@@ -1,18 +1,16 @@
 /// <reference types="react-scripts" />
 
+type RetroWorkspaceUserType = "owner" | "member";
 interface RetroWorkspace {
   uid: string;
   createdAt: any;
   createdBy: RetroUser["uid"];
   displayName: string;
-  admins: {
-    [userId: RetroUser["uid"]]: boolean;
-  };
   users: {
-    [userId: RetroUser["uid"]]: boolean;
+    [userId: string]: RetroWorkspaceUserType;
   };
   retroBoards?: {
-    [retroBoardId: RetroBoad["uid"]]: boolean;
+    [retroBoardId: string]: boolean;
   };
 }
 

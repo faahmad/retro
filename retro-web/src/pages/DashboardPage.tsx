@@ -29,6 +29,7 @@ export class DashboardPage extends React.Component<any, DashboardPageState> {
   async componentDidMount() {
     const user = await Firebase.fetchUserById(this.context.userAuthAccount.uid);
     if (!user || !user.workspaceId) {
+      await this.setState({ isFetchingUser: false });
       return;
     } else {
       const workspace = await Firebase.fetchWorkspaceById(user.workspaceId);
