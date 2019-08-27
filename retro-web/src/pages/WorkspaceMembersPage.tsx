@@ -1,6 +1,8 @@
 import * as React from "react";
 import { Row, Col } from "reactstrap";
 import { Firebase } from "../lib/Firebase";
+import { boolean } from "yup";
+import { InviteUserModal } from "../components/InviteUserModal";
 
 interface WorkspaceMembersPageProps {
   match: {
@@ -13,6 +15,7 @@ interface WorkspaceMembersPageProps {
 interface WorkspaceMembersPageState {
   workspace: RetroWorkspace | null;
   workspaceUsers: RetroUser[];
+  isModalOpen: boolean;
 }
 
 export class WorkspaceMembersPage extends React.Component<
@@ -21,7 +24,8 @@ export class WorkspaceMembersPage extends React.Component<
 > {
   state: WorkspaceMembersPageState = {
     workspace: null,
-    workspaceUsers: []
+    workspaceUsers: [],
+    isModalOpen: false
   };
   async componentDidMount() {
     const { workspaceId } = this.props.match.params;
@@ -32,17 +36,41 @@ export class WorkspaceMembersPage extends React.Component<
     }
     return;
   }
-
+  handleOpenModal = () => {
+    this.setState({ isModalOpen: true });
+  };
+  handleSubmit = async (email: string) => {
+    const { workspace } = this.state;
+    if (!workspace) return;
+    await Firebase.sendWorkspaceInviteByEmail(workspace.uid, email);
+    this.setState({ isModalOpen: false });
+    const updatedWorkspace = await Firebase.fetchWorkspaceById(workspace.uid);
+    this.setState({ workspace: updatedWorkspace! });
+  };
   render() {
-    console.log(this.state);
-    const { workspace, workspaceUsers } = this.state;
+    const { workspace, workspaceUsers, isModalOpen } = this.state;
+    if (!workspace) return <div>Loading...</div>;
+    console.log(workspace);
     return (
       <div className="workspace-members container py-4">
+        {isModalOpen && (
+          <InviteUserModal
+            workspaceDisplayName={workspace.displayName}
+            isOpen={this.state.isModalOpen}
+            onToggle={() => this.setState({ isModalOpen: false })}
+            onSubmit={this.handleSubmit}
+          />
+        )}
         <Row>
           <Col lg="8">
             <div className="d-flex align-items-end justify-content-between mb-2">
               <h3 className="m-0">Members</h3>
-              <button className="btn btn-sm btn-primary">Invite People</button>
+              <button
+                className="btn btn-sm btn-primary"
+                onClick={this.handleOpenModal}
+              >
+                Invite People
+              </button>
             </div>
             {!workspace && <span>Loading...</span>}
             {workspace && (
@@ -61,9 +89,12 @@ export class WorkspaceMembersPage extends React.Component<
                 {workspaceUsers.length === 1 && (
                   <div className="small mt-2">
                     <span className="text-muted">
-                      Retros is better with your co-workers,{" "}
+                      Retros are better with other people,{" "}
                     </span>
-                    <span className="text-primary cursor-pointer hover-underline">
+                    <span
+                      className="text-primary cursor-pointer hover-underline"
+                      onClick={this.handleOpenModal}
+                    >
                       invite them
                     </span>
                     .

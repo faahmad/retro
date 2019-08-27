@@ -9,6 +9,13 @@ interface RetroWorkspace {
   users: {
     [userId: string]: RetroWorkspaceUserType;
   };
+  invitedUsers?: {
+    [email: string]: {
+      invitedBy: RetroUser["uid"];
+      dateInviteWasSent: any;
+      hasAcceptedInvite: boolean;
+    };
+  };
   retroBoards?: {
     [retroBoardId: string]: boolean;
   };

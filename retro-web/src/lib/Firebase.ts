@@ -111,6 +111,25 @@ function createFirebaseApp(firebaseConfig: FirebaseConfig) {
         console.log(`Error creating workspace ${workspaceName}`, error);
       }
     },
+    sendWorkspaceInviteByEmail: async (
+      workspaceId: RetroWorkspace["uid"],
+      email: RetroUser["email"]
+    ) => {
+      try {
+        const { currentUser } = firebase.auth();
+        const invitedWorkspaceUserMetaData = {
+          invitedBy: currentUser!.uid,
+          dateInviteWasSent: firebase.firestore.FieldValue.serverTimestamp(),
+          hasAcceptedInvite: false
+        };
+        const workspaceUpdate: any = {};
+        workspaceUpdate[`invitedUsers.${email}`] = invitedWorkspaceUserMetaData;
+        await workspacesCollection.doc(workspaceId).update(workspaceUpdate);
+        return workspaceId;
+      } catch (error) {
+        console.log("Error inviting user to workspace:", error);
+      }
+    },
     fetchWorkspaceById: async (workspaceId: RetroWorkspace["uid"]) => {
       try {
         const workspaceSnapshot = await workspacesCollection
