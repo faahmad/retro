@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Draggable } from "react-beautiful-dnd";
-import Octicon, { Question, ChevronUp } from "@primer/octicons-react";
+import Octicon, { Question, ChevronUp, Pencil } from "@primer/octicons-react";
 import { UserAuthContext } from "./UserAuthContext";
 
 export const RetroItem: React.FC<
@@ -14,6 +14,7 @@ export const RetroItem: React.FC<
   likedBy,
   likeCount,
   createdByDisplayName,
+  createdByUserId,
   createdByPhotoURL,
   handleOnClickLike,
   index
@@ -61,31 +62,70 @@ export const RetroItem: React.FC<
               </div>
             </div>
 
-            <div>
-              <span className="mr-2">{likeCount}</span>
-              <button
-                style={{ height: 32, width: 32 }}
-                className={`btn btn-sm rounded-circle shadow-sm ${
-                  likedBy[userAuthAccount.displayName]
-                    ? "bg-primary"
-                    : "bg-light"
-                }`}
+            <div className="d-flex">
+              {createdByUserId === userAuthAccount.uid && <EditButton />}
+              <LikeButton
+                likeCount={likeCount}
+                likedBy={likedBy}
+                currentUserDisplayName={userAuthAccount.displayName}
                 onClick={() => handleOnClickLike(id)}
-              >
-                <div
-                  className={`d-flex justify-content-center align-items-center pb-1 ${
-                    likedBy[createdByDisplayName]
-                      ? "text-white"
-                      : "text-secondary"
-                  }`}
-                >
-                  <Octicon icon={ChevronUp} />
-                </div>
-              </button>
+              />
             </div>
           </li>
         );
       }}
     </Draggable>
+  );
+};
+
+interface LikeButtonProps {
+  likeCount: number;
+  likedBy: RetroItem["likedBy"];
+  currentUserDisplayName: string;
+  onClick: () => void;
+}
+
+const LikeButton = ({
+  likeCount,
+  likedBy,
+  currentUserDisplayName,
+  onClick
+}: LikeButtonProps) => {
+  return (
+    <div>
+      <span className="mr-2">{likeCount}</span>
+      <button
+        style={{ height: 32, width: 32 }}
+        className={`btn btn-sm rounded-circle shadow-sm ${
+          likedBy[currentUserDisplayName]
+            ? "bg-primary text-white"
+            : "bg-light border-primary text-primary"
+        }`}
+        onClick={onClick}
+      >
+        <div
+          className={`d-flex justify-content-center align-items-center pb-1`}
+        >
+          <Octicon icon={ChevronUp} />
+        </div>
+      </button>
+    </div>
+  );
+};
+
+const EditButton = () => {
+  return (
+    <div className="mr-2">
+      <button
+        style={{ height: 32, width: 32 }}
+        className={`btn btn-sm rounded-circle shadow-sm bg-light`}
+      >
+        <div
+          className={`d-flex justify-content-center align-items-center pb-1`}
+        >
+          <Octicon icon={Pencil} />
+        </div>
+      </button>
+    </div>
   );
 };
