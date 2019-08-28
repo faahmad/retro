@@ -147,6 +147,7 @@ function createFirebaseApp(firebaseConfig: FirebaseConfig) {
           hasAcceptedInvite: false
         };
         const invitedUserRef = await invitedUsersCollection.add(invitedUser);
+
         return invitedUserRef.id;
       } catch (error) {
         console.log("Error inviting user to workspace:", error);
@@ -174,12 +175,15 @@ function createFirebaseApp(firebaseConfig: FirebaseConfig) {
         const invitedUserQuerySnapshot = await invitedUsersCollection
           .where("email", "==", email)
           .get();
-        let invitedUser: RetroInvitedUser | undefined = undefined;
-        invitedUserQuerySnapshot.forEach(invitedUserDoc => {
-          const invitedUserData = invitedUserDoc.data() as RetroInvitedUser;
-          invitedUser = { ...invitedUserData, uid: invitedUserDoc.id };
+        let invitedUserData: RetroInvitedUser | undefined = undefined;
+        await invitedUserQuerySnapshot.forEach(async invitedUserDoc => {
+          invitedUserData = {
+            ...invitedUserDoc.data(),
+            uid: invitedUserDoc.id
+          } as RetroInvitedUser;
+          return;
         });
-        return invitedUser;
+        return invitedUserData;
       } catch (error) {
         console.log("Error fetching invited user:", error.message);
       }

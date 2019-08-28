@@ -29,24 +29,38 @@ service cloud.firestore {
       allow read, write: if false;
     }
     match /users/{userId} {
-      // TODO: Users can read themselves or other users in their workspace.
-      allow read: if isSignedIn()
-      // Users can only write themselves.
-      allow write: if isSignedIn() && isUser(incomingData().uid);
+      // Users can read themselves or other users in their workspace.
+      allow read: if isSignedIn() && get(/databases/$(database)/documents/users/$(currentUserId())).data.workspaceId == existingData().workspaceId
+      // Users create and update themselves.
+      allow create, update: if isSignedIn() && isUser(incomingData().uid);
     }
   	match /workspaces/{workspaceId} {
-      // Users can create workspaces if they are logged in and have a verified email.
+     // Users can create workspaces if they are logged in and have a verified email.
     	allow create: if isSignedIn() && emailVerified() && isUser(incomingData().createdBy);
-      // TODO: Users can only read and update workspaces that they belong to or they are invited to.
-      allow read, update: if isSignedIn();
+    	// Workspace Owners can do anything.
+    	allow read, update: if existingData().users[currentUserId()] == "owner"
+    	// Users can only read and update workspaces they belong to.
+      allow read, update: if currentUserId() in existingData().users
+      allow read, update: if get(/databases/$(database)/documents/users/$(currentUserId())).data.workspaceId == workspaceId
     }
     match /retroBoards/{retroBoardId} {
-    	// TODO: Users can only create retro boards that belong to their workspace.
-      allow read, write: if isSignedIn()
+    	// Users can only create retro boards that are part of their workspace.
+    	allow create: if isSignedIn() && get(/databases/$(database)/documents/users/$(currentUserId())).data.workspaceId == incomingData().workspaceId
+      // Users that are part of the workspace can read and update retro boards.
+      allow read, update: if isSignedIn() && get(/databases/$(database)/documents/users/$(currentUserId())).data.workspaceId == existingData().workspaceId
+      // Only the creator of a retro board can delete it.
+      allow delete: if existingData().createdBy == currentUserId()
     }
     match /invitedUsers/{invitedUserId} {
-    	// TODO: Users can only see other users in their workspace.
-      allow read, write: if isSignedIn()
+      // Only Workspace Owners can invite users to their workspace.
+      allow create: if get(/databases/$(database)/documents/workspaces/$(incomingData().workspaceId)).data.users[currentUserId()] == "owner"
+      allow delete: if get(/databases/$(database)/documents/workspaces/$(existingData().workspaceId)).data.users[currentUserId()] == "owner"
+      // Users can only read invited users that are part of their workspace.
+      allow read: if currentUserId() in get(/databases/$(database)/workspaces/$(existingData().workspaceId)).data.users
+      // Invited users can update themselves.
+      allow update: if existingData().email == request.auth.token.email
+      // Workspace Owners can update invited users.
+      allow update: if get(/databases/$(database)/documents/workspaces/$(existingData().workspaceId)).data.users[currentUserId()] == "owner"
     }
   }
 }

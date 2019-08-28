@@ -22,15 +22,6 @@ const validationSchema = yup.object().shape({
 
 export class OnboardingPage extends React.Component<any, {}> {
   static contextType = UserAuthContext;
-  async componentDidMount() {
-    const user = await Firebase.fetchUserById(this.context.userAuthAccount.uid);
-    if (!user) {
-      // If this is the first time we are seeing this user,
-      // we need to create a user document for them.
-      await Firebase.createUserDoc(this.context.userAuthAccount);
-    }
-    return;
-  }
 
   handleSubmit = async (
     values: CreateWorkspaceFormValue,
@@ -40,7 +31,11 @@ export class OnboardingPage extends React.Component<any, {}> {
     await Firebase.updateUserDoc(this.context.userAuthAccount.uid, {
       workspaceId
     });
-    this.props.history.push("/dashboard");
+    const user = await Firebase.fetchUserById(this.context.userAuthAccount.uid);
+    this.props.history.push({
+      pathname: "/dashboard",
+      state: { user }
+    });
   };
 
   render() {
@@ -52,7 +47,10 @@ export class OnboardingPage extends React.Component<any, {}> {
             🎉
           </span>
         </h1>
-        <p>You're about to set up a new workspace on Retro.</p>
+        <p>
+          Hi {this.context.userAuthAccount.email}, you're about to set up a new
+          workspace on Retro.
+        </p>
         <Row>
           <Col sm="12" lg="6">
             <Formik
