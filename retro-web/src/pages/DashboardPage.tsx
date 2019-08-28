@@ -3,7 +3,7 @@ import { Link, Redirect } from "react-router-dom";
 import { Firebase } from "../lib/Firebase";
 import { UserAuthContext } from "../components/UserAuthContext";
 import { Row, Col } from "reactstrap";
-import { Sidebar } from "../components/Sidebar";
+import { Sidebar } from "../components/SidebarComponent";
 import moment from "moment";
 import { LoadingText } from "../components/LoadingText";
 
@@ -18,48 +18,70 @@ interface DashboardPageState {
 
 export class DashboardPage extends React.Component<any, DashboardPageState> {
   static contextType = UserAuthContext;
-  state: DashboardPageState = {
-    isFetchingUser: true,
-    user: null,
-    workspace: null,
-    isFetchingRetroBoards: true,
-    listOfRetroBoards: [],
-    isCreatingRetroBoard: false
-  };
+
+  constructor(props: any) {
+    super(props);
+    console.log(props);
+
+    const locationState = props.location.state;
+
+    this.state = {
+      isFetchingUser: true,
+      user: locationState ? locationState.user : null,
+      workspace: null,
+      isFetchingRetroBoards: true,
+      listOfRetroBoards: [],
+      isCreatingRetroBoard: false
+    };
+  }
+
   async componentDidMount() {
+    console.log(this.props);
+    console.log(this.state);
     const { userAuthAccount } = this.context;
+
+    const isNewUser =
+      userAuthAccount.metadata.creationTime ===
+      userAuthAccount.metadata.lastSignInTime;
+
+    if (isNewUser && !this.state.user) {
+      await Firebase.createUserDoc(this.context.userAuthAccount);
+    }
+
     const user = await Firebase.fetchUserById(userAuthAccount.uid);
-    if (!user || !user.workspaceId) {
-      const invitedUser = await Firebase.fetchInvitedUserByEmail(
-        userAuthAccount.email
+
+    if (user && !user.workspaceId) {
+      const invitedUserData = await Firebase.fetchInvitedUserByEmail(
+        user.email
       );
-      if (invitedUser) {
-        this.handleCreateUserThatHasAnInvite(userAuthAccount, invitedUser);
+
+      if (invitedUserData) {
+        this.handleAddInvitedUserToWorkspace(user, invitedUserData);
         return;
       }
       this.setState({ isFetchingUser: false });
-    } else {
+    }
+
+    if (user && user.workspaceId) {
       this.handleFetchWorkspaceAndRetroBoards(user);
     }
     return;
   }
 
-  handleCreateUserThatHasAnInvite = async (
-    userAuthAccount: any,
-    invitedUser: RetroInvitedUser
+  handleAddInvitedUserToWorkspace = async (
+    newUser: any,
+    invitedUserData: RetroInvitedUser
   ) => {
-    let newUser;
-    newUser = await Firebase.createUserDoc(userAuthAccount);
-
-    await Firebase.updateUserDoc(userAuthAccount.uid, {
-      workspaceId: invitedUser!.workspaceId
+    await Firebase.updateUserDoc(newUser.uid, {
+      workspaceId: invitedUserData!.workspaceId
     });
+
     await Firebase.addUserIdAndUserTypeToWorkspace(
       newUser!.uid,
-      invitedUser!.userType,
-      invitedUser!.workspaceId
+      invitedUserData!.userType,
+      invitedUserData!.workspaceId
     );
-    await Firebase.updateInvitedUserAfterSignUp(invitedUser!.uid);
+    await Firebase.updateInvitedUserAfterSignUp(invitedUserData!.uid);
 
     newUser = await Firebase.fetchUserById(newUser!.uid);
     this.handleFetchWorkspaceAndRetroBoards(newUser!);
@@ -136,7 +158,7 @@ export class DashboardPage extends React.Component<any, DashboardPageState> {
             <hr />
             <Sidebar workspaceId={user.workspaceId || "workspace"} />
           </Col>
-          <Col lg="10" className="py-4">
+          <Col lg="8" className="py-4">
             <h3>Your Retros</h3>
             {isFetchingRetroBoards && <span>Loading...</span>}
             {!isFetchingRetroBoards && listOfRetroBoards.length === 0 && (
