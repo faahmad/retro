@@ -21,8 +21,6 @@ export class DashboardPage extends React.Component<any, DashboardPageState> {
 
   constructor(props: any) {
     super(props);
-    console.log(props);
-
     const locationState = props.location.state;
 
     this.state = {
@@ -36,8 +34,6 @@ export class DashboardPage extends React.Component<any, DashboardPageState> {
   }
 
   async componentDidMount() {
-    console.log(this.props);
-    console.log(this.state);
     const { userAuthAccount } = this.context;
 
     const isNewUser =

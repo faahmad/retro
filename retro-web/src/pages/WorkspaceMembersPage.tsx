@@ -3,6 +3,7 @@ import { Row, Col } from "reactstrap";
 import { Firebase } from "../lib/Firebase";
 import { InviteUserModal } from "../components/InviteUserModal";
 import moment from "moment";
+import { UserAuthContext } from "../components/UserAuthContext";
 
 interface WorkspaceMembersPageProps {
   match: {
@@ -23,6 +24,8 @@ export class WorkspaceMembersPage extends React.Component<
   WorkspaceMembersPageProps,
   WorkspaceMembersPageState
 > {
+  static contextType = UserAuthContext;
+
   state: WorkspaceMembersPageState = {
     workspace: null,
     workspaceUsers: {},
@@ -65,6 +68,7 @@ export class WorkspaceMembersPage extends React.Component<
   render() {
     const { workspace, workspaceUsers, isModalOpen, invitedUsers } = this.state;
     if (!workspace) return <div>Loading...</div>;
+    const currentUserId = this.context.userAuthAccount.uid;
     return (
       <div className="workspace-members container py-4">
         {isModalOpen && (
@@ -79,12 +83,14 @@ export class WorkspaceMembersPage extends React.Component<
           <Col lg="8">
             <div className="d-flex align-items-end justify-content-between mb-2">
               <h3 className="m-0">Members</h3>
-              <button
-                className="btn btn-sm btn-primary"
-                onClick={this.handleOpenModal}
-              >
-                Invite People
-              </button>
+              {workspace.users[currentUserId] === "owner" && (
+                <button
+                  className="btn btn-sm btn-primary"
+                  onClick={this.handleOpenModal}
+                >
+                  Invite People
+                </button>
+              )}
             </div>
             {!workspace && <span>Loading...</span>}
             {workspace && (
