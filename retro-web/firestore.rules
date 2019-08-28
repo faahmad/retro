@@ -30,6 +30,7 @@ service cloud.firestore {
     }
     match /users/{userId} {
       // Users can read themselves or other users in their workspace.
+      allow read: if isSignedIn() && isUser(userId)
       allow read: if isSignedIn() && get(/databases/$(database)/documents/users/$(currentUserId())).data.workspaceId == existingData().workspaceId
       // Users create and update themselves.
       allow create, update: if isSignedIn() && isUser(incomingData().uid);
@@ -55,8 +56,8 @@ service cloud.firestore {
       // Only Workspace Owners can invite users to their workspace.
       allow create: if get(/databases/$(database)/documents/workspaces/$(incomingData().workspaceId)).data.users[currentUserId()] == "owner"
       allow delete: if get(/databases/$(database)/documents/workspaces/$(existingData().workspaceId)).data.users[currentUserId()] == "owner"
-      // Users can only read invited users that are part of their workspace.
-      allow read: if currentUserId() in get(/databases/$(database)/workspaces/$(existingData().workspaceId)).data.users
+      // TODO: Users can only read invited users that are part of their workspace.
+      allow read: if isSignedIn() && emailVerified()
       // Invited users can update themselves.
       allow update: if existingData().email == request.auth.token.email
       // Workspace Owners can update invited users.
