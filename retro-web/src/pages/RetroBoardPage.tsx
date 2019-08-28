@@ -204,6 +204,10 @@ export class RetroBoardPage extends React.Component<any, State> {
     return;
   };
 
+  handleEditRetroItem = () => {
+    // TODO
+  };
+
   render() {
     const { isFetching, retroBoard, isModalOpen } = this.state;
 
