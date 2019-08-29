@@ -13,6 +13,7 @@ interface State {
   retroBoard: RetroBoard;
   isModalOpen: boolean;
   columnTypeToAddItemTo: RetroColumnType | null;
+  initialContent?: RetroItem["content"];
 }
 export class RetroBoardPage extends React.Component<any, State> {
   static contextType = UserAuthContext;
@@ -25,7 +26,8 @@ export class RetroBoardPage extends React.Component<any, State> {
       isFetching: true as State["isFetching"],
       retroBoard: null as any,
       isModalOpen: false as State["isModalOpen"],
-      columnTypeToAddItemTo: null as State["columnTypeToAddItemTo"]
+      columnTypeToAddItemTo: null as State["columnTypeToAddItemTo"],
+      initialContent: undefined
     };
     this.unsubscribeFromRetroBoardFn = null;
   }
@@ -204,20 +206,34 @@ export class RetroBoardPage extends React.Component<any, State> {
     return;
   };
 
-  handleEditRetroItem = () => {
-    // TODO
+  handleOnClickEdit = (
+    columnType: RetroColumnType,
+    initialContent: RetroItem["content"]
+  ) => {
+    this.setState({
+      initialContent,
+      isModalOpen: true,
+      columnTypeToAddItemTo: columnType
+    });
   };
 
   render() {
-    const { isFetching, retroBoard, isModalOpen } = this.state;
+    const {
+      isFetching,
+      retroBoard,
+      isModalOpen,
+      columnTypeToAddItemTo,
+      initialContent
+    } = this.state;
 
     return (
       <div className="retro-board-page">
         {isFetching && <LoadingText />}
         {isModalOpen && (
           <RetroItemModal
-            isOpen={this.state.isModalOpen}
-            columnType={this.state.columnTypeToAddItemTo}
+            isOpen={isModalOpen}
+            columnType={columnTypeToAddItemTo}
+            initialContent={initialContent}
             onToggle={() =>
               this.setState({
                 isModalOpen: false,
@@ -250,6 +266,7 @@ export class RetroBoardPage extends React.Component<any, State> {
                           })
                         }
                         handleOnClickLike={this.handleOnClickLike}
+                        handleOnClickEdit={this.handleOnClickEdit}
                       />
                     );
                   }

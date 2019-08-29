@@ -28,6 +28,7 @@ interface RetroItemModalProps {
     content: RetroItem["content"],
     column: RetroColumnType
   ) => Promise<void>;
+  initialContent?: string;
 }
 
 interface RetroItemModalState {
@@ -44,7 +45,7 @@ export class RetroItemModal extends React.Component<
     super(props);
     this.state = {
       columnType: props.columnType || "",
-      content: "",
+      content: props.initialContent || "",
       isSubmitting: false
     };
   }
@@ -65,14 +66,14 @@ export class RetroItemModal extends React.Component<
     return;
   };
   render() {
-    const { isOpen, onToggle } = this.props;
+    const { isOpen, onToggle, initialContent } = this.props;
     const { columnType, content, isSubmitting } = this.state;
 
     return (
       <Modal isOpen={isOpen} toggle={onToggle}>
         <ModalHeader>
           <span className="font-weight-light">
-            Add an item to the
+            {!initialContent ? "Add an item to the" : "Edit an item in the"}
             <span
               className={`font-weight-bold text-${
                 columnClassNames[columnType || "default"]

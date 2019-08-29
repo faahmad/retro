@@ -8,6 +8,10 @@ interface RetroListProps {
   buttonClassName: RetroColumn["buttonClassName"];
   handleOnClickAdd: () => void;
   handleOnClickLike: (itemId: RetroItem["id"]) => void;
+  handleOnClickEdit: (
+    columnType: RetroColumnType,
+    initialContent: RetroItem["content"]
+  ) => void;
 }
 
 export const RetroList: React.FC<RetroListProps> = ({
@@ -15,7 +19,8 @@ export const RetroList: React.FC<RetroListProps> = ({
   items,
   buttonClassName,
   handleOnClickAdd,
-  handleOnClickLike
+  handleOnClickLike,
+  handleOnClickEdit
 }) => {
   return (
     <div className="retro-list d-flex flex-column border rounded p-2 bg-light">
@@ -39,6 +44,7 @@ export const RetroList: React.FC<RetroListProps> = ({
                 key={item.id}
                 index={index}
                 handleOnClickLike={handleOnClickLike}
+                handleOnClickEdit={() => handleOnClickEdit(type, item.content)}
                 {...item}
               />
             ))}

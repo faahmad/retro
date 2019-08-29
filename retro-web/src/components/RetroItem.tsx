@@ -1,12 +1,14 @@
 import * as React from "react";
 import { Draggable } from "react-beautiful-dnd";
 import Octicon, { Question, ChevronUp, Pencil } from "@primer/octicons-react";
+import Linkify from "react-linkify";
 import { UserAuthContext } from "./UserAuthContext";
 
 export const RetroItem: React.FC<
   RetroItem & {
     index: number;
     handleOnClickLike: (itemId: RetroItem["id"]) => void;
+    handleOnClickEdit: () => void;
   }
 > = ({
   id,
@@ -17,6 +19,7 @@ export const RetroItem: React.FC<
   createdByUserId,
   createdByPhotoURL,
   handleOnClickLike,
+  handleOnClickEdit,
   index
 }) => {
   const { userAuthAccount }: any = React.useContext(UserAuthContext);
@@ -58,12 +61,16 @@ export const RetroItem: React.FC<
                 <div className="small text-muted">
                   {createdByDisplayName || "anonymous"}
                 </div>
-                <span>{content}</span>
+                <Linkify>
+                  <span className="text-break">{content}</span>
+                </Linkify>
               </div>
             </div>
 
-            <div className="d-flex">
-              {createdByUserId === userAuthAccount.uid && <EditButton />}
+            <div className="d-flex ml-2">
+              {createdByUserId === userAuthAccount.uid && (
+                <EditButton onClick={handleOnClickEdit} />
+              )}
               <LikeButton
                 likeCount={likeCount}
                 likedBy={likedBy}
@@ -113,12 +120,17 @@ const LikeButton = ({
   );
 };
 
-const EditButton = () => {
+interface EditButtonProps {
+  onClick: () => void;
+}
+
+const EditButton: React.FC<EditButtonProps> = ({ onClick }) => {
   return (
     <div className="mr-2">
       <button
         style={{ height: 32, width: 32 }}
         className={`btn btn-sm rounded-circle shadow-sm bg-light`}
+        onClick={onClick}
       >
         <div
           className={`d-flex justify-content-center align-items-center pb-1`}
