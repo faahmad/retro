@@ -11,6 +11,7 @@ import {
   Input,
   Spinner
 } from "reactstrap";
+import Octicon, { Trashcan } from "@primer/octicons-react";
 
 const columnClassNames = {
   default: "dark",
@@ -28,6 +29,9 @@ interface RetroItemModalProps {
     content: RetroItem["content"],
     column: RetroColumnType
   ) => Promise<void>;
+  initialRetroItem?: RetroItem;
+  onEdit: (item: RetroItem, column: RetroColumnType) => Promise<void>;
+  onDelete: (itemId: RetroItem["id"], column: RetroColumnType) => Promise<void>;
 }
 
 interface RetroItemModalState {
@@ -44,12 +48,13 @@ export class RetroItemModal extends React.Component<
     super(props);
     this.state = {
       columnType: props.columnType || "",
-      content: "",
+      content: props.initialRetroItem ? props.initialRetroItem.content : "",
       isSubmitting: false
     };
   }
   handleSubmit = async () => {
     const { content, columnType } = this.state;
+    const { initialRetroItem } = this.props;
     if (!content) {
       console.log("Content can't be empty.");
       return;
@@ -59,20 +64,36 @@ export class RetroItemModal extends React.Component<
       return;
     }
     this.setState({ isSubmitting: true });
-    await this.props.onSubmit(content, columnType);
+    if (!initialRetroItem) {
+      await this.props.onSubmit(content, columnType);
+    } else {
+      await this.props.onEdit({ ...initialRetroItem, content }, columnType);
+    }
     await this.setState({ isSubmitting: false });
     this.props.onToggle();
     return;
   };
+  handleDelete = async () => {
+    const { onDelete, initialRetroItem, columnType, onToggle } = this.props;
+    this.setState({ isSubmitting: true });
+    if (initialRetroItem && columnType) {
+      onDelete(initialRetroItem!.id, columnType!);
+    }
+    await this.setState({ isSubmitting: false });
+    onToggle();
+    return;
+  };
   render() {
-    const { isOpen, onToggle } = this.props;
+    const { isOpen, onToggle, initialRetroItem } = this.props;
     const { columnType, content, isSubmitting } = this.state;
 
     return (
       <Modal isOpen={isOpen} toggle={onToggle}>
         <ModalHeader>
           <span className="font-weight-light">
-            Add an item to the
+            {!initialRetroItem
+              ? "Add an item to the"
+              : "Editing an item in the"}
             <span
               className={`font-weight-bold text-${
                 columnClassNames[columnType || "default"]
@@ -85,29 +106,44 @@ export class RetroItemModal extends React.Component<
         </ModalHeader>
         <Form>
           <ModalBody>
+            {!this.props.initialRetroItem ? (
+              <FormGroup>
+                <Label for="content">Column</Label>
+                <Input
+                  id="retro-item-modal-column-select-input"
+                  type="select"
+                  name="column"
+                  value={columnType}
+                  onChange={e => {
+                    const columnType = e.target.value as RetroColumnType;
+                    this.setState({ columnType });
+                  }}
+                >
+                  <option disabled value="">
+                    Select a column
+                  </option>
+                  <option value="good">good</option>
+                  <option value="bad">bad</option>
+                  <option value="actions">actions</option>
+                  <option value="questions">questions</option>
+                </Input>
+              </FormGroup>
+            ) : null}
             <FormGroup>
-              <Label for="content">Column</Label>
-              <Input
-                id="retro-item-modal-column-select-input"
-                type="select"
-                name="column"
-                value={columnType}
-                onChange={e => {
-                  const columnType = e.target.value as RetroColumnType;
-                  this.setState({ columnType });
-                }}
-              >
-                <option disabled value="">
-                  Select a column
-                </option>
-                <option value="good">good</option>
-                <option value="bad">bad</option>
-                <option value="actions">actions</option>
-                <option value="questions">questions</option>
-              </Input>
-            </FormGroup>
-            <FormGroup>
-              <Label for="content">What's on your mind?</Label>
+              <div className="d-flex justify-content-between">
+                <Label for="content">What's on your mind?</Label>
+                {this.props.initialRetroItem && (
+                  <Button
+                    size="sm"
+                    color="light"
+                    className="mb-2"
+                    onClick={this.handleDelete}
+                    disabled={isSubmitting}
+                  >
+                    <Octicon icon={Trashcan} />
+                  </Button>
+                )}
+              </div>
               <Input
                 id="retro-item-modal-content-text-input"
                 type="textarea"

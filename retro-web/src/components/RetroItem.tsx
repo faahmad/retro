@@ -1,12 +1,14 @@
 import * as React from "react";
 import { Draggable } from "react-beautiful-dnd";
-import Octicon, { Question, ChevronUp } from "@primer/octicons-react";
+import Octicon, { Question, ChevronUp, Pencil } from "@primer/octicons-react";
+import Linkify from "react-linkify";
 import { UserAuthContext } from "./UserAuthContext";
 
 export const RetroItem: React.FC<
   RetroItem & {
     index: number;
     handleOnClickLike: (itemId: RetroItem["id"]) => void;
+    handleOnClickEdit: () => void;
   }
 > = ({
   id,
@@ -14,8 +16,10 @@ export const RetroItem: React.FC<
   likedBy,
   likeCount,
   createdByDisplayName,
+  createdByUserId,
   createdByPhotoURL,
   handleOnClickLike,
+  handleOnClickEdit,
   index
 }) => {
   const { userAuthAccount }: any = React.useContext(UserAuthContext);
@@ -57,35 +61,83 @@ export const RetroItem: React.FC<
                 <div className="small text-muted">
                   {createdByDisplayName || "anonymous"}
                 </div>
-                <span>{content}</span>
+                <Linkify>
+                  <span className="text-break">{content}</span>
+                </Linkify>
               </div>
             </div>
 
-            <div>
-              <span className="mr-2">{likeCount}</span>
-              <button
-                style={{ height: 32, width: 32 }}
-                className={`btn btn-sm rounded-circle shadow-sm ${
-                  likedBy[userAuthAccount.displayName]
-                    ? "bg-primary"
-                    : "bg-light"
-                }`}
+            <div className="d-flex ml-2">
+              {createdByUserId === userAuthAccount.uid && (
+                <EditButton onClick={handleOnClickEdit} />
+              )}
+              <LikeButton
+                likeCount={likeCount}
+                likedBy={likedBy}
+                currentUserDisplayName={userAuthAccount.displayName}
                 onClick={() => handleOnClickLike(id)}
-              >
-                <div
-                  className={`d-flex justify-content-center align-items-center pb-1 ${
-                    likedBy[createdByDisplayName]
-                      ? "text-white"
-                      : "text-secondary"
-                  }`}
-                >
-                  <Octicon icon={ChevronUp} />
-                </div>
-              </button>
+              />
             </div>
           </li>
         );
       }}
     </Draggable>
+  );
+};
+
+interface LikeButtonProps {
+  likeCount: number;
+  likedBy: RetroItem["likedBy"];
+  currentUserDisplayName: string;
+  onClick: () => void;
+}
+
+const LikeButton = ({
+  likeCount,
+  likedBy,
+  currentUserDisplayName,
+  onClick
+}: LikeButtonProps) => {
+  return (
+    <div>
+      <span className="mr-2">{likeCount}</span>
+      <button
+        style={{ height: 32, width: 32 }}
+        className={`btn btn-sm rounded-circle shadow-sm ${
+          likedBy[currentUserDisplayName]
+            ? "bg-primary text-white"
+            : "bg-light border-primary text-primary"
+        }`}
+        onClick={onClick}
+      >
+        <div
+          className={`d-flex justify-content-center align-items-center pb-1`}
+        >
+          <Octicon icon={ChevronUp} />
+        </div>
+      </button>
+    </div>
+  );
+};
+
+interface EditButtonProps {
+  onClick: () => void;
+}
+
+const EditButton: React.FC<EditButtonProps> = ({ onClick }) => {
+  return (
+    <div className="mr-2">
+      <button
+        style={{ height: 32, width: 32 }}
+        className={`btn btn-sm rounded-circle shadow-sm bg-light`}
+        onClick={onClick}
+      >
+        <div
+          className={`d-flex justify-content-center align-items-center pb-1`}
+        >
+          <Octicon icon={Pencil} />
+        </div>
+      </button>
+    </div>
   );
 };

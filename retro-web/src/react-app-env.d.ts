@@ -29,7 +29,6 @@ interface RetroInvitedUser {
 interface RetroItem {
   id: string;
   content: string;
-  // TODO: Use the user's id instead of their display name.
   likedBy: {
     [userDisplayName: string]: boolean;
   };
@@ -37,6 +36,7 @@ interface RetroItem {
   createdByDisplayName: string;
   createdByUserId: string;
   createdByPhotoURL?: string;
+  hasBeenEdited?: boolean;
 }
 
 type RetroColumnType = "good" | "bad" | "actions" | "questions";

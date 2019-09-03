@@ -17,6 +17,7 @@
     "react": "^16.9.0",
     "react-beautiful-dnd": "^11.0.5",
     "react-dom": "^16.9.0",
+    "react-linkify": "^1.0.0-alpha",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.1.1",
     "reactstrap": "^8.0.1",
@@ -48,6 +49,7 @@
   "devDependencies": {
     "@testing-library/react": "^9.1.2",
     "@types/react-beautiful-dnd": "^11.0.3",
+    "@types/react-linkify": "^0.2.0",
     "@types/react-router-dom": "^4.3.4",
     "@types/reactstrap": "^8.0.3",
     "@types/yup": "^0.26.23",
