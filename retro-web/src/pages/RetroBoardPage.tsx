@@ -7,27 +7,27 @@ import uuidv4 from "uuid/v4";
 import moment from "moment";
 import { LoadingText } from "../components/LoadingText";
 import { UserAuthContext } from "../components/UserAuthContext";
-interface State {
+interface RetroBoardPageState {
   lastUpdatedAt: Date;
   isFetching: boolean;
   retroBoard: RetroBoard;
   isModalOpen: boolean;
   columnTypeToAddItemTo: RetroColumnType | null;
-  initialContent?: RetroItem["content"];
+  initialRetroItem?: RetroItem;
 }
-export class RetroBoardPage extends React.Component<any, State> {
+export class RetroBoardPage extends React.Component<any, RetroBoardPageState> {
   static contextType = UserAuthContext;
   unsubscribeFromRetroBoardFn: any;
   // TODO: Fix this typing.
   constructor(props: any) {
     super(props);
     this.state = {
-      lastUpdatedAt: new Date() as State["lastUpdatedAt"],
-      isFetching: true as State["isFetching"],
+      lastUpdatedAt: new Date() as RetroBoardPageState["lastUpdatedAt"],
+      isFetching: true as RetroBoardPageState["isFetching"],
       retroBoard: null as any,
-      isModalOpen: false as State["isModalOpen"],
-      columnTypeToAddItemTo: null as State["columnTypeToAddItemTo"],
-      initialContent: undefined
+      isModalOpen: false as RetroBoardPageState["isModalOpen"],
+      columnTypeToAddItemTo: null as RetroBoardPageState["columnTypeToAddItemTo"],
+      initialRetroItem: undefined
     };
     this.unsubscribeFromRetroBoardFn = null;
   }
@@ -96,6 +96,53 @@ export class RetroBoardPage extends React.Component<any, State> {
     );
 
     return;
+  };
+
+  handleEditItem = async (item: RetroItem, _columnType: any) => {
+    await this.setState(prevState => ({
+      retroBoard: {
+        ...prevState.retroBoard,
+        items: { ...prevState.retroBoard.items, [item.id]: item }
+      }
+    }));
+
+    await Firebase.updateRetroBoardById(
+      this.state.retroBoard.uid,
+      this.state.retroBoard
+    );
+  };
+
+  handleDeleteItem = async (
+    itemId: RetroItem["id"],
+    columnType: RetroColumnType
+  ) => {
+    const { retroBoard } = this.state;
+
+    let items = retroBoard.items;
+    delete items[itemId];
+
+    const prevColumn = retroBoard.columns[columnType];
+    const newItemIds = prevColumn.itemIds.filter(id => id !== itemId);
+
+    await this.setState(prevState => ({
+      initialRetroItem: undefined,
+      retroBoard: {
+        ...prevState.retroBoard,
+        items,
+        columns: {
+          ...prevState.retroBoard.columns,
+          [columnType]: {
+            ...prevColumn,
+            itemIds: newItemIds
+          }
+        }
+      }
+    }));
+
+    await Firebase.updateRetroBoardById(
+      this.state.retroBoard.uid,
+      this.state.retroBoard
+    );
   };
 
   handleOnClickLike = async (itemId: RetroItem["id"]) => {
@@ -208,10 +255,10 @@ export class RetroBoardPage extends React.Component<any, State> {
 
   handleOnClickEdit = (
     columnType: RetroColumnType,
-    initialContent: RetroItem["content"]
+    initialRetroItem: RetroBoardPageState["initialRetroItem"]
   ) => {
     this.setState({
-      initialContent,
+      initialRetroItem,
       isModalOpen: true,
       columnTypeToAddItemTo: columnType
     });
@@ -223,7 +270,7 @@ export class RetroBoardPage extends React.Component<any, State> {
       retroBoard,
       isModalOpen,
       columnTypeToAddItemTo,
-      initialContent
+      initialRetroItem
     } = this.state;
 
     return (
@@ -233,7 +280,7 @@ export class RetroBoardPage extends React.Component<any, State> {
           <RetroItemModal
             isOpen={isModalOpen}
             columnType={columnTypeToAddItemTo}
-            initialContent={initialContent}
+            initialRetroItem={initialRetroItem}
             onToggle={() =>
               this.setState({
                 isModalOpen: false,
@@ -241,6 +288,8 @@ export class RetroBoardPage extends React.Component<any, State> {
               })
             }
             onSubmit={this.handleAddItemToColumn}
+            onEdit={this.handleEditItem}
+            onDelete={this.handleDeleteItem}
           />
         )}
         {retroBoard && (

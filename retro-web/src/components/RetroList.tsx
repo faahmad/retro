@@ -10,7 +10,7 @@ interface RetroListProps {
   handleOnClickLike: (itemId: RetroItem["id"]) => void;
   handleOnClickEdit: (
     columnType: RetroColumnType,
-    initialContent: RetroItem["content"]
+    initialRetroItem: RetroItem
   ) => void;
 }
 
@@ -44,7 +44,7 @@ export const RetroList: React.FC<RetroListProps> = ({
                 key={item.id}
                 index={index}
                 handleOnClickLike={handleOnClickLike}
-                handleOnClickEdit={() => handleOnClickEdit(type, item.content)}
+                handleOnClickEdit={() => handleOnClickEdit(type, item)}
                 {...item}
               />
             ))}
