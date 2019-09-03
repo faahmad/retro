@@ -264,6 +264,14 @@ export class RetroBoardPage extends React.Component<any, RetroBoardPageState> {
     });
   };
 
+  handleToggleModal = () => {
+    this.setState({
+      isModalOpen: false,
+      columnTypeToAddItemTo: null,
+      initialRetroItem: undefined
+    });
+  };
+
   render() {
     const {
       isFetching,
@@ -281,12 +289,7 @@ export class RetroBoardPage extends React.Component<any, RetroBoardPageState> {
             isOpen={isModalOpen}
             columnType={columnTypeToAddItemTo}
             initialRetroItem={initialRetroItem}
-            onToggle={() =>
-              this.setState({
-                isModalOpen: false,
-                columnTypeToAddItemTo: null
-              })
-            }
+            onToggle={this.handleToggleModal}
             onSubmit={this.handleAddItemToColumn}
             onEdit={this.handleEditItem}
             onDelete={this.handleDeleteItem}
