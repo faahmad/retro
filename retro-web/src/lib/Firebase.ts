@@ -35,6 +35,7 @@ function createFirebaseApp(firebaseConfig: FirebaseConfig) {
     retroBoards: "retroBoards",
     users: "users",
     workspaces: "workspaces",
+    workspaceSubscriptions: "workspaceSubscriptions",
     invitedUsers: "invitedUsers"
   };
 
@@ -49,6 +50,10 @@ function createFirebaseApp(firebaseConfig: FirebaseConfig) {
   const workspacesCollection = firebaseApp
     .firestore()
     .collection(firestoreCollections.workspaces);
+
+  const workspaceSubscriptionsCollection = firebaseApp
+    .firestore()
+    .collection(firestoreCollections.workspaceSubscriptions);
 
   const invitedUsersCollection = firebaseApp
     .firestore()
@@ -229,6 +234,23 @@ function createFirebaseApp(firebaseConfig: FirebaseConfig) {
         return workspaceSnapshot.data() as Promise<RetroWorkspace>;
       } catch (error) {
         console.log("Error fetching workspace:", error);
+      }
+    },
+    fetchWorkspaceSubscriptionById: async (
+      workspaceId: RetroWorkspace["uid"]
+    ) => {
+      try {
+        const workspaceSubscriptionSnapshot = await workspaceSubscriptionsCollection
+          .doc(workspaceId)
+          .get();
+        const {
+          trialEnd,
+          subscriptionStatus,
+          createdBy
+        } = workspaceSubscriptionSnapshot.data() as RetroWorkspaceSubscription;
+        return { createdBy, subscriptionStatus, trialEnd };
+      } catch (error) {
+        console.log("Error fetching workspace subscription:", error.message);
       }
     },
     fetchUserById: async (userId: firebase.User["uid"] | null) => {

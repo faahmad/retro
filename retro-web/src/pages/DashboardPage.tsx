@@ -1,16 +1,22 @@
 import * as React from "react";
-import { Link, Redirect } from "react-router-dom";
+import { Link, Redirect, Switch } from "react-router-dom";
 import { Firebase } from "../lib/Firebase";
 import { UserAuthContext } from "../components/UserAuthContext";
-import { Row, Col } from "reactstrap";
+import { Row, Col, Alert } from "reactstrap";
 import { Sidebar } from "../components/SidebarComponent";
 import moment from "moment";
 import { LoadingText } from "../components/LoadingText";
+import Octicon, { Alert as AlertIcon } from "@primer/octicons-react";
+
+import { PrivateRoute } from "../components/PrivateRoute";
+
+import { BillingPage } from "../pages/BillingPage";
 
 interface DashboardPageState {
   isFetchingUser: boolean;
   user: RetroUser | null;
   workspace: RetroWorkspace | null;
+  workspaceSubscription: Partial<RetroWorkspaceSubscription> | null;
   isFetchingRetroBoards: boolean;
   listOfRetroBoards: RetroBoard[];
   isCreatingRetroBoard: boolean;
@@ -27,6 +33,7 @@ export class DashboardPage extends React.Component<any, DashboardPageState> {
       isFetchingUser: true,
       user: locationState ? locationState.user : null,
       workspace: null,
+      workspaceSubscription: null,
       isFetchingRetroBoards: true,
       listOfRetroBoards: [],
       isCreatingRetroBoard: false
@@ -93,13 +100,17 @@ export class DashboardPage extends React.Component<any, DashboardPageState> {
     const listOfRetroBoards = await Firebase.fetchAllRetroBoardsByWorkspaceId(
       user.workspaceId!
     );
+    const workspaceSubscription = await Firebase.fetchWorkspaceSubscriptionById(
+      user.workspaceId!
+    );
     await this.setState({
       user,
-      isFetchingUser: false,
-      workspace: workspace ? workspace : null,
+      workspace: workspace || null,
+      workspaceSubscription: workspaceSubscription || null,
       listOfRetroBoards: listOfRetroBoards || [],
       isFetchingRetroBoards: false
     });
+    await this.setState({ isFetchingUser: false });
     return;
   };
 
@@ -122,19 +133,30 @@ export class DashboardPage extends React.Component<any, DashboardPageState> {
       !this.state.isFetchingUser &&
       (!this.state.user || !this.state.user.workspaceId)
     ) {
+      console.log("no workspace");
       return <Redirect to="/onboarding" />;
     }
+
+    console.log(this.state);
 
     const user = this.state.user!;
     const {
       workspace,
       isFetchingRetroBoards,
       listOfRetroBoards,
-      isCreatingRetroBoard
+      isCreatingRetroBoard,
+      workspaceSubscription
     } = this.state;
 
     return (
       <div className="dashboard-page container-fluid full-height">
+        <Switch>
+          <PrivateRoute
+            exact
+            path={`/dashboard/:workspaceId/billing`}
+            component={BillingPage}
+          />
+        </Switch>
         <Row>
           <Col lg="2" className="bg-light full-height py-4 shadow-sm">
             <div className="workspace-name">
@@ -152,10 +174,42 @@ export class DashboardPage extends React.Component<any, DashboardPageState> {
               <UserDisplayName user={user} />
             </div>
             <hr />
-            <Sidebar workspaceId={user.workspaceId || "workspace"} />
+            <Sidebar
+              workspaceId={user.workspaceId || "workspace"}
+              isWorkspaceOwner={workspace!.users[user.uid] === "owner"}
+            />
           </Col>
           <Col lg="8" className="py-4">
-            <h3>Your Retros</h3>
+            {workspaceSubscription!.subscriptionStatus === "trialing" && (
+              <Alert color="warning">
+                <div className="d-flex align-items-center">
+                  <Octicon size="small" icon={AlertIcon} />
+                  <div className="d-flex ml-3 flex-column small">
+                    <span className="font-weight-bold">Account Status</span>
+                    <span>
+                      {`Your free 30 day trial ends on ${moment(
+                        workspaceSubscription!.trialEnd!
+                      ).calendar()}.`}{" "}
+                      <Link to={`/dashboard/${workspace!.uid}/billing`}>
+                        Click here to upgrade your account.
+                      </Link>
+                    </span>
+                  </div>
+                </div>
+              </Alert>
+            )}
+            <div className="d-flex justify-content-between">
+              <h3>Your Retros</h3>
+              {workspace && workspace.users[user.uid] === "owner" && (
+                <button
+                  disabled={isCreatingRetroBoard}
+                  className="btn btn-primary font-weight-bold"
+                  onClick={this.handleOnClickCreateRetro}
+                >
+                  {!isCreatingRetroBoard ? "Create a Retro" : "Creating..."}
+                </button>
+              )}
+            </div>
             {isFetchingRetroBoards && <span>Loading...</span>}
             {!isFetchingRetroBoards && listOfRetroBoards.length === 0 && (
               <span>You don't have any retros! </span>
@@ -177,15 +231,6 @@ export class DashboardPage extends React.Component<any, DashboardPageState> {
                     );
                   })}
                 </ul>
-                {workspace && workspace.users[user.uid] === "owner" && (
-                  <button
-                    disabled={isCreatingRetroBoard}
-                    className="btn btn-primary font-weight-bold"
-                    onClick={this.handleOnClickCreateRetro}
-                  >
-                    {!isCreatingRetroBoard ? "Create a Retro" : "Creating..."}
-                  </button>
-                )}
               </React.Fragment>
             )}
           </Col>

@@ -16,6 +16,14 @@ interface RetroWorkspace {
   isInTrialMode?: boolean;
 }
 
+interface RetroWorkspaceSubscription {
+  createdBy: RetroUser["uid"];
+  customerId: string;
+  subscriptionId: string;
+  subscriptionStatus: string;
+  trialEnd: number | null;
+}
+
 interface RetroInvitedUser {
   email: string;
   workspaceId: RetroWorkspace["uid"];

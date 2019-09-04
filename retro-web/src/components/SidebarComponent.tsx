@@ -4,15 +4,17 @@ import { Link } from "react-router-dom";
 import Octicon, {
   Home,
   RequestChanges,
-  Organization
+  Organization,
+  Settings
 } from "@primer/octicons-react";
 
 interface SidebarProps {
+  isWorkspaceOwner: boolean;
   workspaceId: RetroWorkspace["uid"];
 }
 export class Sidebar extends React.Component<SidebarProps, {}> {
   render() {
-    const { workspaceId } = this.props;
+    const { workspaceId, isWorkspaceOwner } = this.props;
 
     return (
       <Nav vertical>
@@ -40,6 +42,24 @@ export class Sidebar extends React.Component<SidebarProps, {}> {
             <span className="ml-2">Contact Us</span>
           </a>
         </NavItem>
+
+        {isWorkspaceOwner && (
+          <div>
+            <hr />
+            <div className="font-weight-bold text-secondary my-2">
+              Workspace Settings
+            </div>
+            <NavItem className="mb-3">
+              <Link
+                to={`/dashboard/${workspaceId}/billing`}
+                className="d-flex align-items-center text-muted"
+              >
+                <Octicon size="small" icon={Settings} />
+                <span className="ml-2">Billing</span>
+              </Link>
+            </NavItem>
+          </div>
+        )}
       </Nav>
     );
   }
