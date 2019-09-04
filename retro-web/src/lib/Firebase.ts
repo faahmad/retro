@@ -1,6 +1,7 @@
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
+import axios from "axios";
 import { createDefaultRetroBoard } from "../default-data/default-retro-board";
 
 interface FirebaseConfig {
@@ -95,6 +96,7 @@ function createFirebaseApp(firebaseConfig: FirebaseConfig) {
       }
     },
     createWorkspace: async (workspaceName: string) => {
+      console.log("createWorkspace", workspaceName);
       try {
         const { currentUser } = firebase.auth();
         if (!currentUser) {
@@ -111,6 +113,10 @@ function createFirebaseApp(firebaseConfig: FirebaseConfig) {
           }
         };
         await workspacesCollection.doc(workspaceId).set(newWorkspace);
+        // TODO: Make this URL dynamic.
+        await axios.patch(
+          `http://localhost:5000/retro-dev-786/us-central1/api/v1/workspaces/${workspaceId}/plan`
+        );
         return workspaceId;
       } catch (error) {
         console.log(`Error creating workspace ${workspaceName}`, error);

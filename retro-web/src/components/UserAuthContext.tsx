@@ -2,6 +2,7 @@ import * as React from "react";
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/database";
+import axios from "axios";
 
 interface UserAuthContextValues {
   userAuthAccount: firebase.User | unknown;
@@ -24,6 +25,8 @@ class UserAuthProvider extends React.Component<{}, UserAuthContextValues> {
   }
   handleAuthStateChanged = async (userAuthAccount: firebase.User | null) => {
     if (userAuthAccount) {
+      const idToken = await userAuthAccount.getIdToken(true);
+      axios.defaults.headers.common["Authorization"] = idToken;
       await this.setState({ userAuthAccount });
     } else {
       this.setState({ userAuthAccount: null });

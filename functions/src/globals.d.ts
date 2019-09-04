@@ -1,4 +1,7 @@
-/// <reference types="react-scripts" />
+declare module "*.json" {
+  const value: any;
+  export default value;
+}
 
 type RetroWorkspaceUserType = "owner" | "member";
 interface RetroWorkspace {
@@ -12,8 +15,17 @@ interface RetroWorkspace {
   retroBoards?: {
     [retroBoardId: string]: boolean;
   };
-  plan?: string;
-  isInTrialMode?: boolean;
+  customerId?: string;
+  subscriptionId?: boolean;
+  subscriptionStatus?: string;
+}
+
+interface RetroWorkspaceSubscription {
+  createdBy: RetroUser["uid"];
+  customerId: string;
+  subscriptionId: string;
+  subscriptionStatus: string;
+  trialEnd: number | null;
 }
 
 interface RetroInvitedUser {
