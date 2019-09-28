@@ -13,6 +13,7 @@ import { RetroBoardPage } from "./pages/RetroBoardPage";
 import { PublicOnlyRoute } from "./components/PublicOnlyRoute";
 import { OnboardingPage } from "./pages/OnboardingPage";
 import { WorkspaceMembersPage } from "./pages/WorkspaceMembersPage";
+import { BillingPage } from "./pages/BillingPage";
 
 class App extends React.Component {
   static contextType = UserAuthContext;
@@ -39,8 +40,13 @@ class App extends React.Component {
                   component={DashboardPage}
                 />
                 <PrivateRoute
-                  path="/dashboard/:workspaceId/members/"
+                  path="/dashboard/:workspaceId/members"
                   component={WorkspaceMembersPage}
+                />
+                <PrivateRoute
+                  exact
+                  path={`/dashboard/:workspaceId/billing`}
+                  component={BillingPage}
                 />
                 <PrivateRoute
                   path="/dashboard/:workspaceId/retro-boards/:retroBoardId"

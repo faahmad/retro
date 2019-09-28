@@ -1,6 +1,7 @@
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
+import axios from "axios";
 import { createDefaultRetroBoard } from "../default-data/default-retro-board";
 
 interface FirebaseConfig {
@@ -34,6 +35,7 @@ function createFirebaseApp(firebaseConfig: FirebaseConfig) {
     retroBoards: "retroBoards",
     users: "users",
     workspaces: "workspaces",
+    workspaceSubscriptions: "workspaceSubscriptions",
     invitedUsers: "invitedUsers"
   };
 
@@ -48,6 +50,10 @@ function createFirebaseApp(firebaseConfig: FirebaseConfig) {
   const workspacesCollection = firebaseApp
     .firestore()
     .collection(firestoreCollections.workspaces);
+
+  const workspaceSubscriptionsCollection = firebaseApp
+    .firestore()
+    .collection(firestoreCollections.workspaceSubscriptions);
 
   const invitedUsersCollection = firebaseApp
     .firestore()
@@ -95,6 +101,7 @@ function createFirebaseApp(firebaseConfig: FirebaseConfig) {
       }
     },
     createWorkspace: async (workspaceName: string) => {
+      console.log("createWorkspace", workspaceName);
       try {
         const { currentUser } = firebase.auth();
         if (!currentUser) {
@@ -111,6 +118,10 @@ function createFirebaseApp(firebaseConfig: FirebaseConfig) {
           }
         };
         await workspacesCollection.doc(workspaceId).set(newWorkspace);
+        // TODO: Make this URL dynamic.
+        await axios.patch(
+          `http://localhost:5000/retro-dev-786/us-central1/api/v1/workspaces/${workspaceId}/plan`
+        );
         return workspaceId;
       } catch (error) {
         console.log(`Error creating workspace ${workspaceName}`, error);
@@ -223,6 +234,23 @@ function createFirebaseApp(firebaseConfig: FirebaseConfig) {
         return workspaceSnapshot.data() as Promise<RetroWorkspace>;
       } catch (error) {
         console.log("Error fetching workspace:", error);
+      }
+    },
+    fetchWorkspaceSubscriptionById: async (
+      workspaceId: RetroWorkspace["uid"]
+    ) => {
+      try {
+        const workspaceSubscriptionSnapshot = await workspaceSubscriptionsCollection
+          .doc(workspaceId)
+          .get();
+        const {
+          trialEnd,
+          subscriptionStatus,
+          createdBy
+        } = workspaceSubscriptionSnapshot.data() as RetroWorkspaceSubscription;
+        return { createdBy, subscriptionStatus, trialEnd };
+      } catch (error) {
+        console.log("Error fetching workspace subscription:", error.message);
       }
     },
     fetchUserById: async (userId: firebase.User["uid"] | null) => {
