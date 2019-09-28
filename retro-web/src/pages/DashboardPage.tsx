@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Link, Redirect, Switch } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { Firebase } from "../lib/Firebase";
 import { UserAuthContext } from "../components/UserAuthContext";
 import { Row, Col, Alert } from "reactstrap";
@@ -7,10 +7,6 @@ import { Sidebar } from "../components/SidebarComponent";
 import moment from "moment";
 import { LoadingText } from "../components/LoadingText";
 import Octicon, { Alert as AlertIcon } from "@primer/octicons-react";
-
-import { PrivateRoute } from "../components/PrivateRoute";
-
-import { BillingPage } from "../pages/BillingPage";
 
 interface DashboardPageState {
   isFetchingUser: boolean;
@@ -133,11 +129,8 @@ export class DashboardPage extends React.Component<any, DashboardPageState> {
       !this.state.isFetchingUser &&
       (!this.state.user || !this.state.user.workspaceId)
     ) {
-      console.log("no workspace");
       return <Redirect to="/onboarding" />;
     }
-
-    console.log(this.state);
 
     const user = this.state.user!;
     const {
@@ -148,17 +141,18 @@ export class DashboardPage extends React.Component<any, DashboardPageState> {
       workspaceSubscription
     } = this.state;
 
+    const isWorkspaceOwner =
+      workspace! && workspace!.users[user.uid] === "owner";
+
+    console.log(this.state.workspaceSubscription);
+
     return (
       <div className="dashboard-page container-fluid full-height">
-        <Switch>
-          <PrivateRoute
-            exact
-            path={`/dashboard/:workspaceId/billing`}
-            component={BillingPage}
-          />
-        </Switch>
         <Row>
-          <Col lg="2" className="bg-light full-height py-4 shadow-sm">
+          <Col
+            lg="2"
+            className="bg-light full-height py-4 shadow-sm d-none d-lg-block"
+          >
             <div className="workspace-name">
               <div
                 className={
@@ -176,7 +170,7 @@ export class DashboardPage extends React.Component<any, DashboardPageState> {
             <hr />
             <Sidebar
               workspaceId={user.workspaceId || "workspace"}
-              isWorkspaceOwner={workspace!.users[user.uid] === "owner"}
+              isWorkspaceOwner={isWorkspaceOwner}
             />
           </Col>
           <Col lg="8" className="py-4">
@@ -187,12 +181,14 @@ export class DashboardPage extends React.Component<any, DashboardPageState> {
                   <div className="d-flex ml-3 flex-column small">
                     <span className="font-weight-bold">Account Status</span>
                     <span>
-                      {`Your free 30 day trial ends on ${moment(
+                      {`Your free trial ends on ${moment(
                         workspaceSubscription!.trialEnd!
                       ).calendar()}.`}{" "}
-                      <Link to={`/dashboard/${workspace!.uid}/billing`}>
-                        Click here to upgrade your account.
-                      </Link>
+                      {isWorkspaceOwner && (
+                        <Link to={`/dashboard/${workspace!.uid}/billing`}>
+                          Click here to upgrade your account.
+                        </Link>
+                      )}
                     </span>
                   </div>
                 </div>
@@ -200,7 +196,7 @@ export class DashboardPage extends React.Component<any, DashboardPageState> {
             )}
             <div className="d-flex justify-content-between">
               <h3>Your Retros</h3>
-              {workspace && workspace.users[user.uid] === "owner" && (
+              {isWorkspaceOwner && (
                 <button
                   disabled={isCreatingRetroBoard}
                   className="btn btn-primary font-weight-bold"

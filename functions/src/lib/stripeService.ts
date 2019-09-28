@@ -35,5 +35,8 @@ export const stripeService = {
       items: [{ plan: RETRO_STRIPE.TEST_PLAN_STANDARD_ID }],
       trial_from_plan: true
     });
+  },
+  fetchSubscriptionById: async (subscriptionId: string) => {
+    return stripe.subscriptions.retrieve(subscriptionId);
   }
 };
