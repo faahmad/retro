@@ -1,0 +1,141 @@
+generator photon {
+  provider = "photonjs"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://me:password@localhost:5432/retro_dev?schema=public"
+}
+
+model Retro {
+  id         Int         @id
+  createdAt  DateTime?   @map("created_at")
+  name       String
+  retroItems RetroItem[]
+  team       Team        @map("team_id")
+  updatedAt  DateTime?   @map("updated_at")
+
+  @@map("retros")
+}
+
+model RetroItem {
+  id             Int             @id
+  createdAt      DateTime?       @map("created_at")
+  description    String
+  retro          Retro           @map("retro_id")
+  retroItemVotes RetroItemVote[]
+  status         Int
+  updatedAt      DateTime?       @map("updated_at")
+
+  @@map("retro_items")
+}
+
+model RetroItemVote {
+  id        Int       @id
+  createdAt DateTime? @map("created_at")
+  decision  Int
+  retroItem RetroItem @map("retro_item_id")
+  updatedAt DateTime? @map("updated_at")
+
+  @@map("retro_item_votes")
+}
+
+model Role {
+  id        Int        @id
+  createdAt DateTime?  @map("created_at")
+  roleType  String?    @map("role_type")
+  updatedAt DateTime?  @map("updated_at")
+  userRoles UserRole[]
+
+  @@map("roles")
+}
+
+model Subscription {
+  id                     Int       @id
+  createdAt              DateTime? @map("created_at")
+  stripePlanId           String    @map("stripe_plan_id")
+  stripeSubscriptionId   String    @map("stripe_subscription_id")
+  subscriptionExpiration DateTime  @map("subscription_expiration")
+  subscriptionStart      DateTime  @map("subscription_start")
+  updatedAt              DateTime? @map("updated_at")
+  user                   User      @map("user_id")
+
+  @@map("subscriptions")
+}
+
+model Team {
+  id        Int        @id
+  admin     User       @map("admin_id")
+  createdAt DateTime?  @map("created_at")
+  name      String
+  retros    Retro[]
+  teamUsers TeamUser[]
+  updatedAt DateTime?  @map("updated_at")
+  workspace Workspace  @map("workspace_id")
+
+  @@map("teams")
+}
+
+model TeamUser {
+  id        Int       @id
+  createdAt DateTime? @map("created_at")
+  team      Team      @map("team_id")
+  updatedAt DateTime? @map("updated_at")
+  user      User      @map("user_id")
+
+  @@map("team_users")
+}
+
+model User {
+  id               Int             @id
+  createdAt        DateTime?       @map("created_at")
+  email            String?
+  firstName        String?         @map("first_name")
+  googleAccountId  String          @map("google_account_id")
+  lastName         String?         @map("last_name")
+  phone            String?
+  photoUrl         String?         @map("photo_url")
+  stripeCustomerId String          @map("stripe_customer_id")
+  subscriptions    Subscription[]
+  teams            Team[]
+  teamUsers        TeamUser[]
+  updatedAt        DateTime?       @map("updated_at")
+  userRoles        UserRole[]
+  workspaces       Workspace[]
+  workspaceUsers   WorkspaceUser[]
+
+  @@map("users")
+}
+
+model UserRole {
+  id        Int       @id
+  createdAt DateTime? @map("created_at")
+  role      Role      @map("role_id")
+  updatedAt DateTime? @map("updated_at")
+  user      User      @map("user_id")
+
+  @@map("user_roles")
+}
+
+model Workspace {
+  id             Int             @id
+  admin          User            @map("admin_id")
+  createdAt      DateTime?       @map("created_at")
+  iconUrl        String?         @map("icon_url")
+  name           String
+  teams          Team[]
+  updatedAt      DateTime?       @map("updated_at")
+  workspaceUsers WorkspaceUser[]
+
+  @@map("workspaces")
+}
+
+model WorkspaceUser {
+  id        Int       @id
+  createdAt DateTime? @map("created_at")
+  updatedAt DateTime? @map("updated_at")
+  user      User      @map("user_id")
+  workspace Workspace @map("workspace_id")
+
+  @@map("workspace_users")
+}
