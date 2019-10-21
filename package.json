@@ -1,0 +1,12 @@
+{
+  "name": "retro",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/faahmad/retro.git",
+  "author": "faraz ahmad <farazamiruddin@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "db:create": "bin/db-create.sh",
+    "db:seed": "bin/db-seed.sh"
+  }
+}
