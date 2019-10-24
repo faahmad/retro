@@ -3,24 +3,20 @@ import cors from "cors";
 import express from "express";
 import { ApolloServer } from "apollo-server-express";
 import { schema } from "./schema";
+// import { fieldResolverToCamelCase } from "./utils/fieldResolverToCamelCase";
+import { resolvers } from "./resolvers";
+import { repos } from "./repos";
 
 const app = express();
 app.use(cors());
 
-const resolvers = {
-  Query: {
-    user: (parent, { id }) => {
-      return users[id];
-    },
-    users: () => {
-      return Object.values(users);
-    }
-  }
-};
-
 const server = new ApolloServer({
+  resolvers,
   typeDefs: schema,
-  resolvers
+  // fieldResolver: fieldResolverToCamelCase,
+  context: {
+    repos
+  }
 });
 
 server.applyMiddleware({ app, path: "/graphql" });
