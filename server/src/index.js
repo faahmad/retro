@@ -3,7 +3,6 @@ import cors from "cors";
 import express from "express";
 import { ApolloServer } from "apollo-server-express";
 import { schema } from "./schema";
-import { fieldResolverFromCamelCaseToSnakeCase } from "./utils/fieldResolverFromCamelCaseToSnakeCase";
 import { resolvers } from "./resolvers";
 import { repos } from "./repos";
 
@@ -13,7 +12,6 @@ app.use(cors());
 const server = new ApolloServer({
   resolvers,
   typeDefs: schema,
-  fieldResolver: fieldResolverFromCamelCaseToSnakeCase,
   context: {
     repos
   }

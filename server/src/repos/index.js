@@ -1,4 +1,4 @@
-import { UserRepo } from "./user-repository";
+import { UserRepo } from "./user-repo";
 
 export const repos = {
   user: UserRepo
