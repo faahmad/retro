@@ -8,7 +8,11 @@ export const userSchema = gql`
 
   type User {
     id: ID!
-    first_name: String!
-    last_name: String!
+    email: String!
+    firstName: String!
+    lastName: String!
+    createdAt: Float!
+    updatedAt: Float!
+    googleAccountId: String!
   }
 `;
