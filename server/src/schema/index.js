@@ -1,7 +1,10 @@
 import { gql } from "apollo-server-express";
 import { userSchema } from "./user-schema";
 
-const linkSchema = gql`
+const rootSchema = gql`
+  scalar Date
+  scalar DateTime
+
   type Query {
     _: Boolean
   }
@@ -13,4 +16,4 @@ const linkSchema = gql`
   }
 `;
 
-export const schema = [linkSchema, userSchema];
+export const schema = [rootSchema, userSchema];

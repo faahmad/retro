@@ -7,9 +7,8 @@ export const userSchema = gql`
     googleAccountId: String!
     firstName: String!
     lastName: String!
-    photoUrl: String
-    createdAt: Float!
-    updatedAt: Float!
+    createdAt: Date!
+    updatedAt: Date!
   }
 
   input CreateUserInput {

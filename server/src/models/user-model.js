@@ -1,26 +1,18 @@
 const userModel = (sequelize, DataTypes) => {
-  const User = sequelize.define("users", {
-    email: {
-      type: DataTypes.STRING
-    },
-    googleAccountId: {
-      type: DataTypes.STRING
-    },
-    firstName: {
-      type: DataTypes.STRING
-    },
-    lastName: {
-      type: DataTypes.STRING
-    },
+  return sequelize.define("users", {
+    email: DataTypes.STRING,
+    googleAccountId: DataTypes.STRING,
+    firstName: DataTypes.STRING,
+    lastName: DataTypes.STRING,
     createdAt: {
-      type: DataTypes.FLOAT
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW
     },
     updatedAt: {
-      type: DataTypes.FLOAT
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW
     }
   });
-
-  return User;
 };
 
 export default userModel;

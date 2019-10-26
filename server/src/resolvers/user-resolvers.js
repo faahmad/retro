@@ -9,11 +9,7 @@ export const userResolvers = {
   },
   Mutation: {
     async createUser(parent, { input }, context) {
-      return await context.models.User.create({
-        ...input,
-        createdAt: Date.now(),
-        updatedAt: Date.now()
-      });
+      return await context.models.User.create(input);
     }
   }
 };

@@ -1,3 +1,9 @@
+import { GraphQLDate, GraphQLDateTime } from "graphql-iso-date";
 import { userResolvers } from "./user-resolvers";
 
-export const resolvers = [userResolvers];
+const dateResolvers = {
+  Date: GraphQLDate,
+  DateTime: GraphQLDateTime
+};
+
+export const resolvers = [userResolvers, dateResolvers];
