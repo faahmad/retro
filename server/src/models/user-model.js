@@ -1,5 +1,5 @@
-export const userModel = (sequelize, DataTypes) => {
-  const User = sequelize("users", {
+const userModel = (sequelize, DataTypes) => {
+  const User = sequelize.define("users", {
     email: {
       type: DataTypes.STRING
     },
@@ -22,3 +22,5 @@ export const userModel = (sequelize, DataTypes) => {
 
   return User;
 };
+
+export default userModel;

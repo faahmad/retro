@@ -1,15 +1,19 @@
 export const userResolvers = {
   Query: {
-    user: (parent, args, context) => {
-      return context.repos.user.findById(args.id);
+    async user(parent, args, context) {
+      return await context.models.User.findByPk(args.id);
     },
-    users: (parent, args, context) => {
-      return context.repos.user.all();
+    async users(parent, args, context) {
+      return await context.models.User.findAll();
     }
   },
   Mutation: {
-    createUser(parent, { input }, context) {
-      return context.repos.user.addUser(input);
+    async createUser(parent, { input }, context) {
+      return await context.models.User.create({
+        ...input,
+        createdAt: Date.now(),
+        updatedAt: Date.now()
+      });
     }
   }
 };
