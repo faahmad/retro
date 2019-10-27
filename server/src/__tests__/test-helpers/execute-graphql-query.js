@@ -1,7 +1,7 @@
 import * as request from "supertest";
 import { server } from "../../index";
 
-export const executeQuery = async query => {
+export const executeGraphQLQuery = async query => {
   const response = await request(server)
     .post("/graphql")
     .set("Accept", "application/json")
