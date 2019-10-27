@@ -1,3 +1,3 @@
 module.exports = {
-  "^.+\\.[t|j]sx?$": "babel-jest"
+  setupTestFrameworkScriptFile: "<rootDir>/setupTests.js"
 };
