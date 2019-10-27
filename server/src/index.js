@@ -1,4 +1,4 @@
-import "dotenv/config";
+import "dotenv-flow/config";
 import cors from "cors";
 import express from "express";
 import { ApolloServer } from "apollo-server-express";
@@ -9,7 +9,7 @@ import { models, sequelize } from "./models";
 const app = express();
 app.use(cors());
 
-const server = new ApolloServer({
+export const server = new ApolloServer({
   resolvers,
   typeDefs: schema,
   context: {

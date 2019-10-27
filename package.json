@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "repository": "https://github.com/faahmad/retro.git",
-  "author": "faraz ahmad <farazamiruddin@gmail.com>",
+  "author": "faraz ahmad <faraz@retro.app>",
   "license": "MIT",
   "scripts": {
     "db:create": "bin/db-create.sh",
+    "db:drop": "bin/db-drop.sh",
     "db:seed": "bin/db-seed.sh"
   }
 }

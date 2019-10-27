@@ -1,18 +1,14 @@
 const userModel = (sequelize, DataTypes) => {
-  return sequelize.define("users", {
-    email: DataTypes.STRING,
-    googleAccountId: DataTypes.STRING,
-    firstName: DataTypes.STRING,
-    lastName: DataTypes.STRING,
-    createdAt: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW
+  return sequelize.define(
+    "users",
+    {
+      email: DataTypes.STRING,
+      googleAccountId: DataTypes.STRING,
+      firstName: DataTypes.STRING,
+      lastName: DataTypes.STRING
     },
-    updatedAt: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW
-    }
-  });
+    { timestamps: true }
+  );
 };
 
 export default userModel;
