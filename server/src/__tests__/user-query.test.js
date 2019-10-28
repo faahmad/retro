@@ -17,8 +17,8 @@ describe("user query", () => {
     }
   `;
 
-  describe("when valid", () => {
-    it("should return the user that matches the id", async () => {
+  describe("when given a valid user id", () => {
+    it("should return the user with the matching id", async () => {
       const user = await factory.user();
       const variables = { id: user.id };
 
@@ -34,7 +34,7 @@ describe("user query", () => {
         }
       });
     });
-    it("should return null if user isn't found", async () => {
+    it("should return null if the user isn't found", async () => {
       const variables = { id: 1 };
 
       const queryResult = await executeGraphQLQuery(userQuery, variables);
@@ -46,15 +46,14 @@ describe("user query", () => {
       });
     });
   });
-  describe("when invalid", () => {
-    it("should return an error when id is not provided", async () => {
+  describe("when not given a user id", () => {
+    it("should return an error", async () => {
       const queryResult = await executeGraphQLQuery(userQuery);
 
-      expect(queryResult).toMatchObject({
-        error: {
-          message: null
-        }
-      });
+      expect(queryResult.errors.length).toBe(1);
+      expect(queryResult.errors[0].message).toBe(
+        'Variable "$id" of required type "ID!" was not provided.'
+      );
     });
   });
 });

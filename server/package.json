@@ -13,27 +13,21 @@
     "@babel/node": "^7.6.3",
     "@babel/preset-env": "^7.6.3",
     "eslint": "^6.5.1",
-    "eslint-plugin-jest": "^22.20.1",
+    "faker": "^4.1.0",
     "jest": "^24.9.0",
-    "nodemon": "^1.19.4"
+    "nodemon": "^1.19.4",
+    "supertest": "^4.0.2"
   },
   "dependencies": {
     "apollo-server": "^2.9.6",
     "apollo-server-express": "^2.9.6",
-    "axios": "^0.19.0",
     "cors": "^2.8.5",
-    "dotenv-flow": "^3.1.0",
     "env-cmd": "^10.0.1",
     "express": "^4.17.1",
-    "factory-girl": "^5.0.4",
-    "faker": "^4.1.0",
     "graphql": "^14.5.8",
     "graphql-iso-date": "^3.6.1",
     "lodash": "^4.17.15",
     "pg": "^7.12.1",
-    "sequelize": "^5.21.1",
-    "start-server-and-test": "^1.10.6",
-    "supertest": "^4.0.2",
-    "uuid": "^3.3.3"
+    "sequelize": "^5.21.1"
   }
 }

@@ -10,8 +10,7 @@ node_modules
 /build
 
 # env variables
-.env
-.env.*
+.env-cmdrc
 
 # logs
 npm-debug.log*
