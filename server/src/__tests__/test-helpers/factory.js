@@ -1,13 +1,9 @@
 import faker from "faker";
 import models from "../../models";
 
-class Factory {
-  constructor(models) {
-    this.models = models;
-  }
-
-  user(options) {
-    return this.models.User.create({
+export const factory = {
+  user: options => {
+    return models.User.create({
       email: faker.internet.email(),
       googleAccountId: faker.random.uuid(),
       firstName: faker.name.firstName(),
@@ -15,6 +11,4 @@ class Factory {
       ...options
     });
   }
-}
-
-export const factory = new Factory(models);
+};
