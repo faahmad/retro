@@ -4,7 +4,6 @@ export const userSchema = gql`
   type User {
     id: ID!
     email: String!
-    googleAccountId: String!
     firstName: String!
     lastName: String!
     createdAt: Date!
@@ -13,7 +12,6 @@ export const userSchema = gql`
 
   input CreateUserInput {
     email: String!
-    googleAccountId: String!
     firstName: String!
     lastName: String!
   }

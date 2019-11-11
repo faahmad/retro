@@ -8,7 +8,6 @@ describe("users query", () => {
       users {
         id
         email
-        googleAccountId
         firstName
         lastName
         createdAt
