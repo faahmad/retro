@@ -1,5 +1,6 @@
 import { gql } from "apollo-server-express";
 import { userSchema } from "./user-schema";
+import { workspaceSchema } from "./workspace-schema";
 
 const rootSchema = gql`
   scalar Date
@@ -16,4 +17,4 @@ const rootSchema = gql`
   }
 `;
 
-export const schema = [rootSchema, userSchema];
+export const schema = [rootSchema, userSchema, workspaceSchema];

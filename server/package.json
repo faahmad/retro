@@ -16,6 +16,7 @@
     "faker": "^4.1.0",
     "jest": "^24.9.0",
     "nodemon": "^1.19.4",
+    "sequelize-cli": "^5.5.1",
     "supertest": "^4.0.2"
   },
   "dependencies": {
