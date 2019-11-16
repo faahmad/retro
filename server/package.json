@@ -1,0 +1,34 @@
+{
+  "name": "retro-server",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "env-cmd -e development nodemon --exec babel-node src/index.js",
+    "start:test": "env-cmd -e test nodemon --exec babel-node src/index.js",
+    "test": "env-cmd -e test jest --runInBand"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.6.4",
+    "@babel/node": "^7.6.3",
+    "@babel/preset-env": "^7.6.3",
+    "eslint": "^6.5.1",
+    "faker": "^4.1.0",
+    "jest": "^24.9.0",
+    "nodemon": "^1.19.4",
+    "sequelize-cli": "^5.5.1",
+    "supertest": "^4.0.2"
+  },
+  "dependencies": {
+    "apollo-server": "^2.9.6",
+    "apollo-server-express": "^2.9.6",
+    "cors": "^2.8.5",
+    "env-cmd": "^10.0.1",
+    "express": "^4.17.1",
+    "graphql": "^14.5.8",
+    "graphql-iso-date": "^3.6.1",
+    "lodash": "^4.17.15",
+    "pg": "^7.12.1",
+    "sequelize": "^5.21.1"
+  }
+}
