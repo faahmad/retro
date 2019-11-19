@@ -2,7 +2,7 @@ import React from "react";
 
 const App: React.FC = () => {
   return (
-    <div>
+    <div className="text-xl">
       <h1>Retro</h1>
     </div>
   );
