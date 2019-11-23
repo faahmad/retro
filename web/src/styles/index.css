@@ -11387,6 +11387,10 @@ video {
   z-index: auto;
 }
 
+html {
+  font-family: "Source Code Pro", monospace;
+}
+
 @media (min-width: 640px) {
   .sm\:sr-only {
     position: absolute;

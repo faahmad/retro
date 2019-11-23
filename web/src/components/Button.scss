@@ -1,0 +1,39 @@
+// Colors
+$retroBlack: #000;
+$retroBlue: #11269c;
+$retroGray: #e5e5e5;
+$retroWhite: #fff;
+
+// Variables
+$borderWidthRegular: 0.0625rem;
+$boxShadowOffsetXRegular: 0.25rem;
+$boxShadowOffsetYRegular: 0.25rem;
+$fontSizeRegular: 1.125rem;
+$fontWeightBold: 900;
+
+.button {
+  background-color: $retroWhite;
+  border: $borderWidthRegular solid $retroBlack;
+  box-shadow: $boxShadowOffsetXRegular $boxShadowOffsetYRegular $retroBlack;
+  font-size: $fontSizeRegular;
+  font-weight: $fontWeightBold;
+  height: 3.125rem;
+  max-width: 18.75rem;
+  text-transform: uppercase;
+  width: 100%;
+
+  &.--blue {
+    border-color: $retroBlue;
+    box-shadow: $boxShadowOffsetXRegular $boxShadowOffsetYRegular $retroBlue;
+    color: $retroBlue;
+  }
+
+  &:hover {
+    background-color: $retroGray;
+  }
+
+  &:active {
+    transform: translateX($boxShadowOffsetXRegular / 2)
+      translateY($boxShadowOffsetYRegular / 2);
+  }
+}
