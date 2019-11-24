@@ -1,8 +1,15 @@
 // Colors
-$retroBlack: #000;
 $retroBlue: #11269c;
-$retroGray: #e5e5e5;
+$retroRed: #ff596a;
+$retroPink: #ff94b8;
 $retroWhite: #fff;
+
+// Theme
+$retroPrimary: $retroBlue;
+$retroSecondary: $retroRed;
+// Using rbga because we can't control
+// opactiy using a hex value.
+$retroHoverBackground: rgba(255, 148, 184, 0.5); // $retroPink
 
 // Variables
 $borderWidthRegular: 0.0625rem;
@@ -13,23 +20,25 @@ $fontWeightBold: 900;
 
 .button {
   background-color: $retroWhite;
-  border: $borderWidthRegular solid $retroBlack;
-  box-shadow: $boxShadowOffsetXRegular $boxShadowOffsetYRegular $retroBlack;
+  // border: $borderWidthRegular solid $retroPrimary;
+  box-shadow: $boxShadowOffsetXRegular $boxShadowOffsetYRegular $retroPrimary;
+  color: $retroPrimary;
   font-size: $fontSizeRegular;
   font-weight: $fontWeightBold;
   height: 3.125rem;
-  max-width: 18.75rem;
+  width: 18.75rem;
   text-transform: uppercase;
-  width: 100%;
+  // width: 100%;
 
-  &.--blue {
-    border-color: $retroBlue;
-    box-shadow: $boxShadowOffsetXRegular $boxShadowOffsetYRegular $retroBlue;
-    color: $retroBlue;
+  &.--secondary {
+    border-color: $retroSecondary;
+    box-shadow: $boxShadowOffsetXRegular $boxShadowOffsetYRegular
+      $retroSecondary;
+    color: $retroSecondary;
   }
 
   &:hover {
-    background-color: $retroGray;
+    background-color: $retroHoverBackground;
   }
 
   &:active {

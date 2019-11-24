@@ -563,7 +563,7 @@ pre,
 code,
 kbd,
 samp {
-  font-family: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
 /**
@@ -1063,6 +1063,18 @@ video {
   background-color: #702459;
 }
 
+.bg-blueberry {
+  background-color: #11269c;
+}
+
+.bg-grapefruit {
+  background-color: #ff596a;
+}
+
+.bg-guava {
+  background-color: #ff94b8;
+}
+
 .hover\:bg-transparent:hover {
   background-color: transparent;
 }
@@ -1435,6 +1447,18 @@ video {
   background-color: #702459;
 }
 
+.hover\:bg-blueberry:hover {
+  background-color: #11269c;
+}
+
+.hover\:bg-grapefruit:hover {
+  background-color: #ff596a;
+}
+
+.hover\:bg-guava:hover {
+  background-color: #ff94b8;
+}
+
 .focus\:bg-transparent:focus {
   background-color: transparent;
 }
@@ -1805,6 +1829,18 @@ video {
 
 .focus\:bg-pink-900:focus {
   background-color: #702459;
+}
+
+.focus\:bg-blueberry:focus {
+  background-color: #11269c;
+}
+
+.focus\:bg-grapefruit:focus {
+  background-color: #ff596a;
+}
+
+.focus\:bg-guava:focus {
+  background-color: #ff94b8;
 }
 
 .bg-bottom {
@@ -2259,6 +2295,18 @@ video {
   border-color: #702459;
 }
 
+.border-blueberry {
+  border-color: #11269c;
+}
+
+.border-grapefruit {
+  border-color: #ff596a;
+}
+
+.border-guava {
+  border-color: #ff94b8;
+}
+
 .hover\:border-transparent:hover {
   border-color: transparent;
 }
@@ -2631,6 +2679,18 @@ video {
   border-color: #702459;
 }
 
+.hover\:border-blueberry:hover {
+  border-color: #11269c;
+}
+
+.hover\:border-grapefruit:hover {
+  border-color: #ff596a;
+}
+
+.hover\:border-guava:hover {
+  border-color: #ff94b8;
+}
+
 .focus\:border-transparent:focus {
   border-color: transparent;
 }
@@ -3001,6 +3061,18 @@ video {
 
 .focus\:border-pink-900:focus {
   border-color: #702459;
+}
+
+.focus\:border-blueberry:focus {
+  border-color: #11269c;
+}
+
+.focus\:border-grapefruit:focus {
+  border-color: #ff596a;
+}
+
+.focus\:border-guava:focus {
+  border-color: #ff94b8;
 }
 
 .rounded-none {
@@ -3645,16 +3717,8 @@ video {
   clear: both;
 }
 
-.font-sans {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-}
-
-.font-serif {
-  font-family: Georgia, Cambria, "Times New Roman", Times, serif;
-}
-
-.font-mono {
-  font-family: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+.font-body {
+  font-family: Source Code Pro, monospace;
 }
 
 .font-hairline {
@@ -7719,6 +7783,66 @@ video {
   color: #702459;
 }
 
+.placeholder-blueberry::-webkit-input-placeholder {
+  color: #11269c;
+}
+
+.placeholder-blueberry::-moz-placeholder {
+  color: #11269c;
+}
+
+.placeholder-blueberry:-ms-input-placeholder {
+  color: #11269c;
+}
+
+.placeholder-blueberry::-ms-input-placeholder {
+  color: #11269c;
+}
+
+.placeholder-blueberry::placeholder {
+  color: #11269c;
+}
+
+.placeholder-grapefruit::-webkit-input-placeholder {
+  color: #ff596a;
+}
+
+.placeholder-grapefruit::-moz-placeholder {
+  color: #ff596a;
+}
+
+.placeholder-grapefruit:-ms-input-placeholder {
+  color: #ff596a;
+}
+
+.placeholder-grapefruit::-ms-input-placeholder {
+  color: #ff596a;
+}
+
+.placeholder-grapefruit::placeholder {
+  color: #ff596a;
+}
+
+.placeholder-guava::-webkit-input-placeholder {
+  color: #ff94b8;
+}
+
+.placeholder-guava::-moz-placeholder {
+  color: #ff94b8;
+}
+
+.placeholder-guava:-ms-input-placeholder {
+  color: #ff94b8;
+}
+
+.placeholder-guava::-ms-input-placeholder {
+  color: #ff94b8;
+}
+
+.placeholder-guava::placeholder {
+  color: #ff94b8;
+}
+
 .focus\:placeholder-transparent:focus::-webkit-input-placeholder {
   color: transparent;
 }
@@ -9579,6 +9703,66 @@ video {
   color: #702459;
 }
 
+.focus\:placeholder-blueberry:focus::-webkit-input-placeholder {
+  color: #11269c;
+}
+
+.focus\:placeholder-blueberry:focus::-moz-placeholder {
+  color: #11269c;
+}
+
+.focus\:placeholder-blueberry:focus:-ms-input-placeholder {
+  color: #11269c;
+}
+
+.focus\:placeholder-blueberry:focus::-ms-input-placeholder {
+  color: #11269c;
+}
+
+.focus\:placeholder-blueberry:focus::placeholder {
+  color: #11269c;
+}
+
+.focus\:placeholder-grapefruit:focus::-webkit-input-placeholder {
+  color: #ff596a;
+}
+
+.focus\:placeholder-grapefruit:focus::-moz-placeholder {
+  color: #ff596a;
+}
+
+.focus\:placeholder-grapefruit:focus:-ms-input-placeholder {
+  color: #ff596a;
+}
+
+.focus\:placeholder-grapefruit:focus::-ms-input-placeholder {
+  color: #ff596a;
+}
+
+.focus\:placeholder-grapefruit:focus::placeholder {
+  color: #ff596a;
+}
+
+.focus\:placeholder-guava:focus::-webkit-input-placeholder {
+  color: #ff94b8;
+}
+
+.focus\:placeholder-guava:focus::-moz-placeholder {
+  color: #ff94b8;
+}
+
+.focus\:placeholder-guava:focus:-ms-input-placeholder {
+  color: #ff94b8;
+}
+
+.focus\:placeholder-guava:focus::-ms-input-placeholder {
+  color: #ff94b8;
+}
+
+.focus\:placeholder-guava:focus::placeholder {
+  color: #ff94b8;
+}
+
 .pointer-events-none {
   pointer-events: none;
 }
@@ -10190,6 +10374,18 @@ video {
   color: #702459;
 }
 
+.text-blueberry {
+  color: #11269c;
+}
+
+.text-grapefruit {
+  color: #ff596a;
+}
+
+.text-guava {
+  color: #ff94b8;
+}
+
 .hover\:text-transparent:hover {
   color: transparent;
 }
@@ -10562,6 +10758,18 @@ video {
   color: #702459;
 }
 
+.hover\:text-blueberry:hover {
+  color: #11269c;
+}
+
+.hover\:text-grapefruit:hover {
+  color: #ff596a;
+}
+
+.hover\:text-guava:hover {
+  color: #ff94b8;
+}
+
 .focus\:text-transparent:focus {
   color: transparent;
 }
@@ -10932,6 +11140,18 @@ video {
 
 .focus\:text-pink-900:focus {
   color: #702459;
+}
+
+.focus\:text-blueberry:focus {
+  color: #11269c;
+}
+
+.focus\:text-grapefruit:focus {
+  color: #ff596a;
+}
+
+.focus\:text-guava:focus {
+  color: #ff94b8;
 }
 
 .text-xs {
@@ -11828,6 +12048,18 @@ html {
     background-color: #702459;
   }
 
+  .sm\:bg-blueberry {
+    background-color: #11269c;
+  }
+
+  .sm\:bg-grapefruit {
+    background-color: #ff596a;
+  }
+
+  .sm\:bg-guava {
+    background-color: #ff94b8;
+  }
+
   .sm\:hover\:bg-transparent:hover {
     background-color: transparent;
   }
@@ -12200,6 +12432,18 @@ html {
     background-color: #702459;
   }
 
+  .sm\:hover\:bg-blueberry:hover {
+    background-color: #11269c;
+  }
+
+  .sm\:hover\:bg-grapefruit:hover {
+    background-color: #ff596a;
+  }
+
+  .sm\:hover\:bg-guava:hover {
+    background-color: #ff94b8;
+  }
+
   .sm\:focus\:bg-transparent:focus {
     background-color: transparent;
   }
@@ -12570,6 +12814,18 @@ html {
 
   .sm\:focus\:bg-pink-900:focus {
     background-color: #702459;
+  }
+
+  .sm\:focus\:bg-blueberry:focus {
+    background-color: #11269c;
+  }
+
+  .sm\:focus\:bg-grapefruit:focus {
+    background-color: #ff596a;
+  }
+
+  .sm\:focus\:bg-guava:focus {
+    background-color: #ff94b8;
   }
 
   .sm\:bg-bottom {
@@ -13024,6 +13280,18 @@ html {
     border-color: #702459;
   }
 
+  .sm\:border-blueberry {
+    border-color: #11269c;
+  }
+
+  .sm\:border-grapefruit {
+    border-color: #ff596a;
+  }
+
+  .sm\:border-guava {
+    border-color: #ff94b8;
+  }
+
   .sm\:hover\:border-transparent:hover {
     border-color: transparent;
   }
@@ -13396,6 +13664,18 @@ html {
     border-color: #702459;
   }
 
+  .sm\:hover\:border-blueberry:hover {
+    border-color: #11269c;
+  }
+
+  .sm\:hover\:border-grapefruit:hover {
+    border-color: #ff596a;
+  }
+
+  .sm\:hover\:border-guava:hover {
+    border-color: #ff94b8;
+  }
+
   .sm\:focus\:border-transparent:focus {
     border-color: transparent;
   }
@@ -13766,6 +14046,18 @@ html {
 
   .sm\:focus\:border-pink-900:focus {
     border-color: #702459;
+  }
+
+  .sm\:focus\:border-blueberry:focus {
+    border-color: #11269c;
+  }
+
+  .sm\:focus\:border-grapefruit:focus {
+    border-color: #ff596a;
+  }
+
+  .sm\:focus\:border-guava:focus {
+    border-color: #ff94b8;
   }
 
   .sm\:rounded-none {
@@ -14410,16 +14702,8 @@ html {
     clear: both;
   }
 
-  .sm\:font-sans {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  }
-
-  .sm\:font-serif {
-    font-family: Georgia, Cambria, "Times New Roman", Times, serif;
-  }
-
-  .sm\:font-mono {
-    font-family: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  .sm\:font-body {
+    font-family: Source Code Pro, monospace;
   }
 
   .sm\:font-hairline {
@@ -18484,6 +18768,66 @@ html {
     color: #702459;
   }
 
+  .sm\:placeholder-blueberry::-webkit-input-placeholder {
+    color: #11269c;
+  }
+
+  .sm\:placeholder-blueberry::-moz-placeholder {
+    color: #11269c;
+  }
+
+  .sm\:placeholder-blueberry:-ms-input-placeholder {
+    color: #11269c;
+  }
+
+  .sm\:placeholder-blueberry::-ms-input-placeholder {
+    color: #11269c;
+  }
+
+  .sm\:placeholder-blueberry::placeholder {
+    color: #11269c;
+  }
+
+  .sm\:placeholder-grapefruit::-webkit-input-placeholder {
+    color: #ff596a;
+  }
+
+  .sm\:placeholder-grapefruit::-moz-placeholder {
+    color: #ff596a;
+  }
+
+  .sm\:placeholder-grapefruit:-ms-input-placeholder {
+    color: #ff596a;
+  }
+
+  .sm\:placeholder-grapefruit::-ms-input-placeholder {
+    color: #ff596a;
+  }
+
+  .sm\:placeholder-grapefruit::placeholder {
+    color: #ff596a;
+  }
+
+  .sm\:placeholder-guava::-webkit-input-placeholder {
+    color: #ff94b8;
+  }
+
+  .sm\:placeholder-guava::-moz-placeholder {
+    color: #ff94b8;
+  }
+
+  .sm\:placeholder-guava:-ms-input-placeholder {
+    color: #ff94b8;
+  }
+
+  .sm\:placeholder-guava::-ms-input-placeholder {
+    color: #ff94b8;
+  }
+
+  .sm\:placeholder-guava::placeholder {
+    color: #ff94b8;
+  }
+
   .sm\:focus\:placeholder-transparent:focus::-webkit-input-placeholder {
     color: transparent;
   }
@@ -20344,6 +20688,66 @@ html {
     color: #702459;
   }
 
+  .sm\:focus\:placeholder-blueberry:focus::-webkit-input-placeholder {
+    color: #11269c;
+  }
+
+  .sm\:focus\:placeholder-blueberry:focus::-moz-placeholder {
+    color: #11269c;
+  }
+
+  .sm\:focus\:placeholder-blueberry:focus:-ms-input-placeholder {
+    color: #11269c;
+  }
+
+  .sm\:focus\:placeholder-blueberry:focus::-ms-input-placeholder {
+    color: #11269c;
+  }
+
+  .sm\:focus\:placeholder-blueberry:focus::placeholder {
+    color: #11269c;
+  }
+
+  .sm\:focus\:placeholder-grapefruit:focus::-webkit-input-placeholder {
+    color: #ff596a;
+  }
+
+  .sm\:focus\:placeholder-grapefruit:focus::-moz-placeholder {
+    color: #ff596a;
+  }
+
+  .sm\:focus\:placeholder-grapefruit:focus:-ms-input-placeholder {
+    color: #ff596a;
+  }
+
+  .sm\:focus\:placeholder-grapefruit:focus::-ms-input-placeholder {
+    color: #ff596a;
+  }
+
+  .sm\:focus\:placeholder-grapefruit:focus::placeholder {
+    color: #ff596a;
+  }
+
+  .sm\:focus\:placeholder-guava:focus::-webkit-input-placeholder {
+    color: #ff94b8;
+  }
+
+  .sm\:focus\:placeholder-guava:focus::-moz-placeholder {
+    color: #ff94b8;
+  }
+
+  .sm\:focus\:placeholder-guava:focus:-ms-input-placeholder {
+    color: #ff94b8;
+  }
+
+  .sm\:focus\:placeholder-guava:focus::-ms-input-placeholder {
+    color: #ff94b8;
+  }
+
+  .sm\:focus\:placeholder-guava:focus::placeholder {
+    color: #ff94b8;
+  }
+
   .sm\:pointer-events-none {
     pointer-events: none;
   }
@@ -20955,6 +21359,18 @@ html {
     color: #702459;
   }
 
+  .sm\:text-blueberry {
+    color: #11269c;
+  }
+
+  .sm\:text-grapefruit {
+    color: #ff596a;
+  }
+
+  .sm\:text-guava {
+    color: #ff94b8;
+  }
+
   .sm\:hover\:text-transparent:hover {
     color: transparent;
   }
@@ -21327,6 +21743,18 @@ html {
     color: #702459;
   }
 
+  .sm\:hover\:text-blueberry:hover {
+    color: #11269c;
+  }
+
+  .sm\:hover\:text-grapefruit:hover {
+    color: #ff596a;
+  }
+
+  .sm\:hover\:text-guava:hover {
+    color: #ff94b8;
+  }
+
   .sm\:focus\:text-transparent:focus {
     color: transparent;
   }
@@ -21697,6 +22125,18 @@ html {
 
   .sm\:focus\:text-pink-900:focus {
     color: #702459;
+  }
+
+  .sm\:focus\:text-blueberry:focus {
+    color: #11269c;
+  }
+
+  .sm\:focus\:text-grapefruit:focus {
+    color: #ff596a;
+  }
+
+  .sm\:focus\:text-guava:focus {
+    color: #ff94b8;
   }
 
   .sm\:text-xs {
@@ -22590,6 +23030,18 @@ html {
     background-color: #702459;
   }
 
+  .md\:bg-blueberry {
+    background-color: #11269c;
+  }
+
+  .md\:bg-grapefruit {
+    background-color: #ff596a;
+  }
+
+  .md\:bg-guava {
+    background-color: #ff94b8;
+  }
+
   .md\:hover\:bg-transparent:hover {
     background-color: transparent;
   }
@@ -22962,6 +23414,18 @@ html {
     background-color: #702459;
   }
 
+  .md\:hover\:bg-blueberry:hover {
+    background-color: #11269c;
+  }
+
+  .md\:hover\:bg-grapefruit:hover {
+    background-color: #ff596a;
+  }
+
+  .md\:hover\:bg-guava:hover {
+    background-color: #ff94b8;
+  }
+
   .md\:focus\:bg-transparent:focus {
     background-color: transparent;
   }
@@ -23332,6 +23796,18 @@ html {
 
   .md\:focus\:bg-pink-900:focus {
     background-color: #702459;
+  }
+
+  .md\:focus\:bg-blueberry:focus {
+    background-color: #11269c;
+  }
+
+  .md\:focus\:bg-grapefruit:focus {
+    background-color: #ff596a;
+  }
+
+  .md\:focus\:bg-guava:focus {
+    background-color: #ff94b8;
   }
 
   .md\:bg-bottom {
@@ -23786,6 +24262,18 @@ html {
     border-color: #702459;
   }
 
+  .md\:border-blueberry {
+    border-color: #11269c;
+  }
+
+  .md\:border-grapefruit {
+    border-color: #ff596a;
+  }
+
+  .md\:border-guava {
+    border-color: #ff94b8;
+  }
+
   .md\:hover\:border-transparent:hover {
     border-color: transparent;
   }
@@ -24158,6 +24646,18 @@ html {
     border-color: #702459;
   }
 
+  .md\:hover\:border-blueberry:hover {
+    border-color: #11269c;
+  }
+
+  .md\:hover\:border-grapefruit:hover {
+    border-color: #ff596a;
+  }
+
+  .md\:hover\:border-guava:hover {
+    border-color: #ff94b8;
+  }
+
   .md\:focus\:border-transparent:focus {
     border-color: transparent;
   }
@@ -24528,6 +25028,18 @@ html {
 
   .md\:focus\:border-pink-900:focus {
     border-color: #702459;
+  }
+
+  .md\:focus\:border-blueberry:focus {
+    border-color: #11269c;
+  }
+
+  .md\:focus\:border-grapefruit:focus {
+    border-color: #ff596a;
+  }
+
+  .md\:focus\:border-guava:focus {
+    border-color: #ff94b8;
   }
 
   .md\:rounded-none {
@@ -25172,16 +25684,8 @@ html {
     clear: both;
   }
 
-  .md\:font-sans {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  }
-
-  .md\:font-serif {
-    font-family: Georgia, Cambria, "Times New Roman", Times, serif;
-  }
-
-  .md\:font-mono {
-    font-family: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  .md\:font-body {
+    font-family: Source Code Pro, monospace;
   }
 
   .md\:font-hairline {
@@ -29246,6 +29750,66 @@ html {
     color: #702459;
   }
 
+  .md\:placeholder-blueberry::-webkit-input-placeholder {
+    color: #11269c;
+  }
+
+  .md\:placeholder-blueberry::-moz-placeholder {
+    color: #11269c;
+  }
+
+  .md\:placeholder-blueberry:-ms-input-placeholder {
+    color: #11269c;
+  }
+
+  .md\:placeholder-blueberry::-ms-input-placeholder {
+    color: #11269c;
+  }
+
+  .md\:placeholder-blueberry::placeholder {
+    color: #11269c;
+  }
+
+  .md\:placeholder-grapefruit::-webkit-input-placeholder {
+    color: #ff596a;
+  }
+
+  .md\:placeholder-grapefruit::-moz-placeholder {
+    color: #ff596a;
+  }
+
+  .md\:placeholder-grapefruit:-ms-input-placeholder {
+    color: #ff596a;
+  }
+
+  .md\:placeholder-grapefruit::-ms-input-placeholder {
+    color: #ff596a;
+  }
+
+  .md\:placeholder-grapefruit::placeholder {
+    color: #ff596a;
+  }
+
+  .md\:placeholder-guava::-webkit-input-placeholder {
+    color: #ff94b8;
+  }
+
+  .md\:placeholder-guava::-moz-placeholder {
+    color: #ff94b8;
+  }
+
+  .md\:placeholder-guava:-ms-input-placeholder {
+    color: #ff94b8;
+  }
+
+  .md\:placeholder-guava::-ms-input-placeholder {
+    color: #ff94b8;
+  }
+
+  .md\:placeholder-guava::placeholder {
+    color: #ff94b8;
+  }
+
   .md\:focus\:placeholder-transparent:focus::-webkit-input-placeholder {
     color: transparent;
   }
@@ -31106,6 +31670,66 @@ html {
     color: #702459;
   }
 
+  .md\:focus\:placeholder-blueberry:focus::-webkit-input-placeholder {
+    color: #11269c;
+  }
+
+  .md\:focus\:placeholder-blueberry:focus::-moz-placeholder {
+    color: #11269c;
+  }
+
+  .md\:focus\:placeholder-blueberry:focus:-ms-input-placeholder {
+    color: #11269c;
+  }
+
+  .md\:focus\:placeholder-blueberry:focus::-ms-input-placeholder {
+    color: #11269c;
+  }
+
+  .md\:focus\:placeholder-blueberry:focus::placeholder {
+    color: #11269c;
+  }
+
+  .md\:focus\:placeholder-grapefruit:focus::-webkit-input-placeholder {
+    color: #ff596a;
+  }
+
+  .md\:focus\:placeholder-grapefruit:focus::-moz-placeholder {
+    color: #ff596a;
+  }
+
+  .md\:focus\:placeholder-grapefruit:focus:-ms-input-placeholder {
+    color: #ff596a;
+  }
+
+  .md\:focus\:placeholder-grapefruit:focus::-ms-input-placeholder {
+    color: #ff596a;
+  }
+
+  .md\:focus\:placeholder-grapefruit:focus::placeholder {
+    color: #ff596a;
+  }
+
+  .md\:focus\:placeholder-guava:focus::-webkit-input-placeholder {
+    color: #ff94b8;
+  }
+
+  .md\:focus\:placeholder-guava:focus::-moz-placeholder {
+    color: #ff94b8;
+  }
+
+  .md\:focus\:placeholder-guava:focus:-ms-input-placeholder {
+    color: #ff94b8;
+  }
+
+  .md\:focus\:placeholder-guava:focus::-ms-input-placeholder {
+    color: #ff94b8;
+  }
+
+  .md\:focus\:placeholder-guava:focus::placeholder {
+    color: #ff94b8;
+  }
+
   .md\:pointer-events-none {
     pointer-events: none;
   }
@@ -31717,6 +32341,18 @@ html {
     color: #702459;
   }
 
+  .md\:text-blueberry {
+    color: #11269c;
+  }
+
+  .md\:text-grapefruit {
+    color: #ff596a;
+  }
+
+  .md\:text-guava {
+    color: #ff94b8;
+  }
+
   .md\:hover\:text-transparent:hover {
     color: transparent;
   }
@@ -32089,6 +32725,18 @@ html {
     color: #702459;
   }
 
+  .md\:hover\:text-blueberry:hover {
+    color: #11269c;
+  }
+
+  .md\:hover\:text-grapefruit:hover {
+    color: #ff596a;
+  }
+
+  .md\:hover\:text-guava:hover {
+    color: #ff94b8;
+  }
+
   .md\:focus\:text-transparent:focus {
     color: transparent;
   }
@@ -32459,6 +33107,18 @@ html {
 
   .md\:focus\:text-pink-900:focus {
     color: #702459;
+  }
+
+  .md\:focus\:text-blueberry:focus {
+    color: #11269c;
+  }
+
+  .md\:focus\:text-grapefruit:focus {
+    color: #ff596a;
+  }
+
+  .md\:focus\:text-guava:focus {
+    color: #ff94b8;
   }
 
   .md\:text-xs {
@@ -33352,6 +34012,18 @@ html {
     background-color: #702459;
   }
 
+  .lg\:bg-blueberry {
+    background-color: #11269c;
+  }
+
+  .lg\:bg-grapefruit {
+    background-color: #ff596a;
+  }
+
+  .lg\:bg-guava {
+    background-color: #ff94b8;
+  }
+
   .lg\:hover\:bg-transparent:hover {
     background-color: transparent;
   }
@@ -33724,6 +34396,18 @@ html {
     background-color: #702459;
   }
 
+  .lg\:hover\:bg-blueberry:hover {
+    background-color: #11269c;
+  }
+
+  .lg\:hover\:bg-grapefruit:hover {
+    background-color: #ff596a;
+  }
+
+  .lg\:hover\:bg-guava:hover {
+    background-color: #ff94b8;
+  }
+
   .lg\:focus\:bg-transparent:focus {
     background-color: transparent;
   }
@@ -34094,6 +34778,18 @@ html {
 
   .lg\:focus\:bg-pink-900:focus {
     background-color: #702459;
+  }
+
+  .lg\:focus\:bg-blueberry:focus {
+    background-color: #11269c;
+  }
+
+  .lg\:focus\:bg-grapefruit:focus {
+    background-color: #ff596a;
+  }
+
+  .lg\:focus\:bg-guava:focus {
+    background-color: #ff94b8;
   }
 
   .lg\:bg-bottom {
@@ -34548,6 +35244,18 @@ html {
     border-color: #702459;
   }
 
+  .lg\:border-blueberry {
+    border-color: #11269c;
+  }
+
+  .lg\:border-grapefruit {
+    border-color: #ff596a;
+  }
+
+  .lg\:border-guava {
+    border-color: #ff94b8;
+  }
+
   .lg\:hover\:border-transparent:hover {
     border-color: transparent;
   }
@@ -34920,6 +35628,18 @@ html {
     border-color: #702459;
   }
 
+  .lg\:hover\:border-blueberry:hover {
+    border-color: #11269c;
+  }
+
+  .lg\:hover\:border-grapefruit:hover {
+    border-color: #ff596a;
+  }
+
+  .lg\:hover\:border-guava:hover {
+    border-color: #ff94b8;
+  }
+
   .lg\:focus\:border-transparent:focus {
     border-color: transparent;
   }
@@ -35290,6 +36010,18 @@ html {
 
   .lg\:focus\:border-pink-900:focus {
     border-color: #702459;
+  }
+
+  .lg\:focus\:border-blueberry:focus {
+    border-color: #11269c;
+  }
+
+  .lg\:focus\:border-grapefruit:focus {
+    border-color: #ff596a;
+  }
+
+  .lg\:focus\:border-guava:focus {
+    border-color: #ff94b8;
   }
 
   .lg\:rounded-none {
@@ -35934,16 +36666,8 @@ html {
     clear: both;
   }
 
-  .lg\:font-sans {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  }
-
-  .lg\:font-serif {
-    font-family: Georgia, Cambria, "Times New Roman", Times, serif;
-  }
-
-  .lg\:font-mono {
-    font-family: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  .lg\:font-body {
+    font-family: Source Code Pro, monospace;
   }
 
   .lg\:font-hairline {
@@ -40008,6 +40732,66 @@ html {
     color: #702459;
   }
 
+  .lg\:placeholder-blueberry::-webkit-input-placeholder {
+    color: #11269c;
+  }
+
+  .lg\:placeholder-blueberry::-moz-placeholder {
+    color: #11269c;
+  }
+
+  .lg\:placeholder-blueberry:-ms-input-placeholder {
+    color: #11269c;
+  }
+
+  .lg\:placeholder-blueberry::-ms-input-placeholder {
+    color: #11269c;
+  }
+
+  .lg\:placeholder-blueberry::placeholder {
+    color: #11269c;
+  }
+
+  .lg\:placeholder-grapefruit::-webkit-input-placeholder {
+    color: #ff596a;
+  }
+
+  .lg\:placeholder-grapefruit::-moz-placeholder {
+    color: #ff596a;
+  }
+
+  .lg\:placeholder-grapefruit:-ms-input-placeholder {
+    color: #ff596a;
+  }
+
+  .lg\:placeholder-grapefruit::-ms-input-placeholder {
+    color: #ff596a;
+  }
+
+  .lg\:placeholder-grapefruit::placeholder {
+    color: #ff596a;
+  }
+
+  .lg\:placeholder-guava::-webkit-input-placeholder {
+    color: #ff94b8;
+  }
+
+  .lg\:placeholder-guava::-moz-placeholder {
+    color: #ff94b8;
+  }
+
+  .lg\:placeholder-guava:-ms-input-placeholder {
+    color: #ff94b8;
+  }
+
+  .lg\:placeholder-guava::-ms-input-placeholder {
+    color: #ff94b8;
+  }
+
+  .lg\:placeholder-guava::placeholder {
+    color: #ff94b8;
+  }
+
   .lg\:focus\:placeholder-transparent:focus::-webkit-input-placeholder {
     color: transparent;
   }
@@ -41868,6 +42652,66 @@ html {
     color: #702459;
   }
 
+  .lg\:focus\:placeholder-blueberry:focus::-webkit-input-placeholder {
+    color: #11269c;
+  }
+
+  .lg\:focus\:placeholder-blueberry:focus::-moz-placeholder {
+    color: #11269c;
+  }
+
+  .lg\:focus\:placeholder-blueberry:focus:-ms-input-placeholder {
+    color: #11269c;
+  }
+
+  .lg\:focus\:placeholder-blueberry:focus::-ms-input-placeholder {
+    color: #11269c;
+  }
+
+  .lg\:focus\:placeholder-blueberry:focus::placeholder {
+    color: #11269c;
+  }
+
+  .lg\:focus\:placeholder-grapefruit:focus::-webkit-input-placeholder {
+    color: #ff596a;
+  }
+
+  .lg\:focus\:placeholder-grapefruit:focus::-moz-placeholder {
+    color: #ff596a;
+  }
+
+  .lg\:focus\:placeholder-grapefruit:focus:-ms-input-placeholder {
+    color: #ff596a;
+  }
+
+  .lg\:focus\:placeholder-grapefruit:focus::-ms-input-placeholder {
+    color: #ff596a;
+  }
+
+  .lg\:focus\:placeholder-grapefruit:focus::placeholder {
+    color: #ff596a;
+  }
+
+  .lg\:focus\:placeholder-guava:focus::-webkit-input-placeholder {
+    color: #ff94b8;
+  }
+
+  .lg\:focus\:placeholder-guava:focus::-moz-placeholder {
+    color: #ff94b8;
+  }
+
+  .lg\:focus\:placeholder-guava:focus:-ms-input-placeholder {
+    color: #ff94b8;
+  }
+
+  .lg\:focus\:placeholder-guava:focus::-ms-input-placeholder {
+    color: #ff94b8;
+  }
+
+  .lg\:focus\:placeholder-guava:focus::placeholder {
+    color: #ff94b8;
+  }
+
   .lg\:pointer-events-none {
     pointer-events: none;
   }
@@ -42479,6 +43323,18 @@ html {
     color: #702459;
   }
 
+  .lg\:text-blueberry {
+    color: #11269c;
+  }
+
+  .lg\:text-grapefruit {
+    color: #ff596a;
+  }
+
+  .lg\:text-guava {
+    color: #ff94b8;
+  }
+
   .lg\:hover\:text-transparent:hover {
     color: transparent;
   }
@@ -42851,6 +43707,18 @@ html {
     color: #702459;
   }
 
+  .lg\:hover\:text-blueberry:hover {
+    color: #11269c;
+  }
+
+  .lg\:hover\:text-grapefruit:hover {
+    color: #ff596a;
+  }
+
+  .lg\:hover\:text-guava:hover {
+    color: #ff94b8;
+  }
+
   .lg\:focus\:text-transparent:focus {
     color: transparent;
   }
@@ -43221,6 +44089,18 @@ html {
 
   .lg\:focus\:text-pink-900:focus {
     color: #702459;
+  }
+
+  .lg\:focus\:text-blueberry:focus {
+    color: #11269c;
+  }
+
+  .lg\:focus\:text-grapefruit:focus {
+    color: #ff596a;
+  }
+
+  .lg\:focus\:text-guava:focus {
+    color: #ff94b8;
   }
 
   .lg\:text-xs {
@@ -44114,6 +44994,18 @@ html {
     background-color: #702459;
   }
 
+  .xl\:bg-blueberry {
+    background-color: #11269c;
+  }
+
+  .xl\:bg-grapefruit {
+    background-color: #ff596a;
+  }
+
+  .xl\:bg-guava {
+    background-color: #ff94b8;
+  }
+
   .xl\:hover\:bg-transparent:hover {
     background-color: transparent;
   }
@@ -44486,6 +45378,18 @@ html {
     background-color: #702459;
   }
 
+  .xl\:hover\:bg-blueberry:hover {
+    background-color: #11269c;
+  }
+
+  .xl\:hover\:bg-grapefruit:hover {
+    background-color: #ff596a;
+  }
+
+  .xl\:hover\:bg-guava:hover {
+    background-color: #ff94b8;
+  }
+
   .xl\:focus\:bg-transparent:focus {
     background-color: transparent;
   }
@@ -44856,6 +45760,18 @@ html {
 
   .xl\:focus\:bg-pink-900:focus {
     background-color: #702459;
+  }
+
+  .xl\:focus\:bg-blueberry:focus {
+    background-color: #11269c;
+  }
+
+  .xl\:focus\:bg-grapefruit:focus {
+    background-color: #ff596a;
+  }
+
+  .xl\:focus\:bg-guava:focus {
+    background-color: #ff94b8;
   }
 
   .xl\:bg-bottom {
@@ -45310,6 +46226,18 @@ html {
     border-color: #702459;
   }
 
+  .xl\:border-blueberry {
+    border-color: #11269c;
+  }
+
+  .xl\:border-grapefruit {
+    border-color: #ff596a;
+  }
+
+  .xl\:border-guava {
+    border-color: #ff94b8;
+  }
+
   .xl\:hover\:border-transparent:hover {
     border-color: transparent;
   }
@@ -45682,6 +46610,18 @@ html {
     border-color: #702459;
   }
 
+  .xl\:hover\:border-blueberry:hover {
+    border-color: #11269c;
+  }
+
+  .xl\:hover\:border-grapefruit:hover {
+    border-color: #ff596a;
+  }
+
+  .xl\:hover\:border-guava:hover {
+    border-color: #ff94b8;
+  }
+
   .xl\:focus\:border-transparent:focus {
     border-color: transparent;
   }
@@ -46052,6 +46992,18 @@ html {
 
   .xl\:focus\:border-pink-900:focus {
     border-color: #702459;
+  }
+
+  .xl\:focus\:border-blueberry:focus {
+    border-color: #11269c;
+  }
+
+  .xl\:focus\:border-grapefruit:focus {
+    border-color: #ff596a;
+  }
+
+  .xl\:focus\:border-guava:focus {
+    border-color: #ff94b8;
   }
 
   .xl\:rounded-none {
@@ -46696,16 +47648,8 @@ html {
     clear: both;
   }
 
-  .xl\:font-sans {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  }
-
-  .xl\:font-serif {
-    font-family: Georgia, Cambria, "Times New Roman", Times, serif;
-  }
-
-  .xl\:font-mono {
-    font-family: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  .xl\:font-body {
+    font-family: Source Code Pro, monospace;
   }
 
   .xl\:font-hairline {
@@ -50770,6 +51714,66 @@ html {
     color: #702459;
   }
 
+  .xl\:placeholder-blueberry::-webkit-input-placeholder {
+    color: #11269c;
+  }
+
+  .xl\:placeholder-blueberry::-moz-placeholder {
+    color: #11269c;
+  }
+
+  .xl\:placeholder-blueberry:-ms-input-placeholder {
+    color: #11269c;
+  }
+
+  .xl\:placeholder-blueberry::-ms-input-placeholder {
+    color: #11269c;
+  }
+
+  .xl\:placeholder-blueberry::placeholder {
+    color: #11269c;
+  }
+
+  .xl\:placeholder-grapefruit::-webkit-input-placeholder {
+    color: #ff596a;
+  }
+
+  .xl\:placeholder-grapefruit::-moz-placeholder {
+    color: #ff596a;
+  }
+
+  .xl\:placeholder-grapefruit:-ms-input-placeholder {
+    color: #ff596a;
+  }
+
+  .xl\:placeholder-grapefruit::-ms-input-placeholder {
+    color: #ff596a;
+  }
+
+  .xl\:placeholder-grapefruit::placeholder {
+    color: #ff596a;
+  }
+
+  .xl\:placeholder-guava::-webkit-input-placeholder {
+    color: #ff94b8;
+  }
+
+  .xl\:placeholder-guava::-moz-placeholder {
+    color: #ff94b8;
+  }
+
+  .xl\:placeholder-guava:-ms-input-placeholder {
+    color: #ff94b8;
+  }
+
+  .xl\:placeholder-guava::-ms-input-placeholder {
+    color: #ff94b8;
+  }
+
+  .xl\:placeholder-guava::placeholder {
+    color: #ff94b8;
+  }
+
   .xl\:focus\:placeholder-transparent:focus::-webkit-input-placeholder {
     color: transparent;
   }
@@ -52630,6 +53634,66 @@ html {
     color: #702459;
   }
 
+  .xl\:focus\:placeholder-blueberry:focus::-webkit-input-placeholder {
+    color: #11269c;
+  }
+
+  .xl\:focus\:placeholder-blueberry:focus::-moz-placeholder {
+    color: #11269c;
+  }
+
+  .xl\:focus\:placeholder-blueberry:focus:-ms-input-placeholder {
+    color: #11269c;
+  }
+
+  .xl\:focus\:placeholder-blueberry:focus::-ms-input-placeholder {
+    color: #11269c;
+  }
+
+  .xl\:focus\:placeholder-blueberry:focus::placeholder {
+    color: #11269c;
+  }
+
+  .xl\:focus\:placeholder-grapefruit:focus::-webkit-input-placeholder {
+    color: #ff596a;
+  }
+
+  .xl\:focus\:placeholder-grapefruit:focus::-moz-placeholder {
+    color: #ff596a;
+  }
+
+  .xl\:focus\:placeholder-grapefruit:focus:-ms-input-placeholder {
+    color: #ff596a;
+  }
+
+  .xl\:focus\:placeholder-grapefruit:focus::-ms-input-placeholder {
+    color: #ff596a;
+  }
+
+  .xl\:focus\:placeholder-grapefruit:focus::placeholder {
+    color: #ff596a;
+  }
+
+  .xl\:focus\:placeholder-guava:focus::-webkit-input-placeholder {
+    color: #ff94b8;
+  }
+
+  .xl\:focus\:placeholder-guava:focus::-moz-placeholder {
+    color: #ff94b8;
+  }
+
+  .xl\:focus\:placeholder-guava:focus:-ms-input-placeholder {
+    color: #ff94b8;
+  }
+
+  .xl\:focus\:placeholder-guava:focus::-ms-input-placeholder {
+    color: #ff94b8;
+  }
+
+  .xl\:focus\:placeholder-guava:focus::placeholder {
+    color: #ff94b8;
+  }
+
   .xl\:pointer-events-none {
     pointer-events: none;
   }
@@ -53241,6 +54305,18 @@ html {
     color: #702459;
   }
 
+  .xl\:text-blueberry {
+    color: #11269c;
+  }
+
+  .xl\:text-grapefruit {
+    color: #ff596a;
+  }
+
+  .xl\:text-guava {
+    color: #ff94b8;
+  }
+
   .xl\:hover\:text-transparent:hover {
     color: transparent;
   }
@@ -53613,6 +54689,18 @@ html {
     color: #702459;
   }
 
+  .xl\:hover\:text-blueberry:hover {
+    color: #11269c;
+  }
+
+  .xl\:hover\:text-grapefruit:hover {
+    color: #ff596a;
+  }
+
+  .xl\:hover\:text-guava:hover {
+    color: #ff94b8;
+  }
+
   .xl\:focus\:text-transparent:focus {
     color: transparent;
   }
@@ -53983,6 +55071,18 @@ html {
 
   .xl\:focus\:text-pink-900:focus {
     color: #702459;
+  }
+
+  .xl\:focus\:text-blueberry:focus {
+    color: #11269c;
+  }
+
+  .xl\:focus\:text-grapefruit:focus {
+    color: #ff596a;
+  }
+
+  .xl\:focus\:text-guava:focus {
+    color: #ff94b8;
   }
 
   .xl\:text-xs {
