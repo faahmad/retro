@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
-  font-family: "Source Code Pro", monospace;
+@variants active {
+  .transform-1 {
+    transform: translateX(0.125rem) translateY(0.125rem);
+  }
+}
+
+@variants hover {
+  .bg-pink-1\/2 {
+    background-color: rgba(255, 148, 184, 0.5);
+  }
 }

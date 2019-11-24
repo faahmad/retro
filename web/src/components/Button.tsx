@@ -1,4 +1,3 @@
-import "./Button.scss";
 import React from "react";
 import clsx from "clsx";
 
@@ -15,7 +14,7 @@ export const Button: React.FC<ButtonProps> = ({
   return (
     <button
       className={clsx(
-        "button border border-blueberry focus:outline-none px-4",
+        "h-12 w-64 font-size-lg uppercase border shadow font-black hover:bg-pink-1/2 active:transform-1 focus:outline-none px-4",
         {
           [className]: !!className
         }
