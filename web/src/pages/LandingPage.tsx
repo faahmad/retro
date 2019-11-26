@@ -1,25 +1,23 @@
 import React from "react";
-import { Button } from "../components/Button";
+import retroHeroImage from "../assets/images/retro-hero-image.svg";
+import { Navbar } from "../components/Navbar";
 
 export const LandingPage: React.FC = () => {
   return (
-    <div className="container pt-8">
-      <header>
-        <div className="flex flex-row flex-wrap justify-between w-2/3 mx-auto">
-          <div className="mb-2">
-            <h1 className="text-pink font-black text-3xl">Retro</h1>
-            <p className="text-blue">welcome to new school teamwork.</p>
-          </div>
-          <div className="flex flex-col">
-            <Button className="text-blue mb-2 text-right" onClick={() => {}}>
-              Login
-            </Button>
-            <Button className="text-blue text-right" onClick={() => {}}>
-              <span>Signup With Google</span>
-            </Button>
-          </div>
+    <div className="landing-page flex w-full justify-center h-screen pt-8">
+      <div className="w-4/5 h-12">
+        <Navbar />
+        <div className="flex flex-col lg:text-center m-0">
+          <img
+            className="lg:flex-1 mt-4"
+            src={retroHeroImage}
+            alt="Retro Hero"
+          />
+          <h2 className="text-blue text-3xl">
+            The Retrospective Tool For People That Hate Retros.
+          </h2>
         </div>
-      </header>
+      </div>
     </div>
   );
 };

@@ -8,9 +8,12 @@ module.exports = {
     colors: {
       blue: "#11269c",
       red: "#ff596a",
-      pink: "#ff94b8"
+      pink: "#ff94b8",
+      white: "#ffffff",
+      black: "#000000"
     },
     fontFamily: {
+      display: ["Source Code Pro", "monospace"],
       body: ["Source Code Pro", "monospace"]
     },
     extend: {}
