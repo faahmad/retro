@@ -3,11 +3,18 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { AppRoutes } from "./AppRoutes";
 import * as serviceWorker from "./serviceWorker";
-import { createInstance, OptimizelyProvider } from "@optimizely/react-sdk";
+import {
+  createInstance,
+  OptimizelyProvider,
+  setLogger
+} from "@optimizely/react-sdk";
 
 const optimizely = createInstance({
   sdkKey: process.env.REACT_APP_OPTIMIZELY_SDK_KEY
 });
+if (process.env.NODE_ENV === "production") {
+  setLogger(null);
+}
 
 ReactDOM.render(
   <OptimizelyProvider
