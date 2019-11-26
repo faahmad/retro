@@ -1,6 +1,7 @@
 import React from "react";
 import { animated, useTransition } from "react-spring";
 import { Button } from "./Button";
+import { OptimizelyFeature } from "@optimizely/react-sdk";
 import retroPinkLogo from "../assets/images/retro-pink-logo.svg";
 
 export const Navbar: React.FC = () => {
@@ -49,11 +50,23 @@ const NavbarBrand = () => {
 
 const NavbarAuthButtons = () => (
   <div className="flex flex-col">
-    <Button className="text-blue mb-2 text-right" onClick={() => {}}>
-      Login
-    </Button>
-    <Button className="text-blue text-right" onClick={() => {}}>
-      <span>Signup With Google</span>
-    </Button>
+    <OptimizelyFeature feature="navbar_auth_buttons">
+      {isEnabled =>
+        isEnabled ? (
+          <React.Fragment>
+            <Button className="text-blue mb-2 text-right" onClick={() => {}}>
+              Login
+            </Button>
+            <Button className="text-blue text-right" onClick={() => {}}>
+              <span>Signup With Google</span>
+            </Button>
+          </React.Fragment>
+        ) : (
+          <Button className="text-blue mb-2 text-right" onClick={() => {}}>
+            Coming Soon
+          </Button>
+        )
+      }
+    </OptimizelyFeature>
   </div>
 );

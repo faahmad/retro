@@ -4631,34 +4631,6 @@ body {
   background-color: rgba(255, 148, 184, 0.3);
 }
 
-.animate-move-up {
-  -webkit-transform: translateY(20px);
-  transform: translateY(20px);
-  -webkit-animation: moveUp 0.65s ease forwards;
-  animation: moveUp 0.65s ease forwards;
-}
-
-@-webkit-keyframes moveUp {
-  0% {
-  }
-
-  100% {
-    -webkit-transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-@keyframes moveUp {
-  0% {
-  }
-
-  100% {
-    -webkit-transform: translateY(0);
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
 .transform-1 {
   -webkit-transform: translateX(0.125rem) translateY(0.125rem);
           transform: translateX(0.125rem) translateY(0.125rem);
