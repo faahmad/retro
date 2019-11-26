@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: "Source Code Pro", monospace;
+}
+
+.grid-logo {
+  height: 120px;
+  width: 120px;
+  display: grid;
+  grid-template-columns: repeat(10, 10px);
+  grid-template-rows: repeat(10, 10px);
+  grid-gap: 2px;
+}
+
+.grid-logo-box {
+  height: 10px;
+  width: 10px;
+  /* Pink 30% */
+  background-color: rgba(255, 148, 184, 0.3);
+}
+
+@variants active {
+  .transform-1 {
+    transform: translateX(0.125rem) translateY(0.125rem);
+  }
+}
+
+@variants hover {
+  .bg-pink-1\/2 {
+    /* Pink 50% */
+    background-color: rgba(255, 148, 184, 0.5);
+  }
+}

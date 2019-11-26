@@ -1,0 +1,7 @@
+{
+  "projects": {
+    "default": "retro-dev-786",
+    "dev": "retro-dev-786",
+    "prod": "retro-prod-786"
+  }
+}
