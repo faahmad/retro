@@ -4,9 +4,11 @@
   "main": "src/index.js",
   "license": "MIT",
   "scripts": {
-    "start": "env-cmd -e development nodemon --exec babel-node src/index.js",
+    "dev": "env-cmd -e development nodemon --exec babel-node src/index.js",
     "start:test": "env-cmd -e test nodemon --exec babel-node src/index.js",
-    "test": "env-cmd -e test jest --runInBand"
+    "test": "env-cmd -e test jest --runInBand",
+    "start": "babel-node src/index.js",
+    "deploy:prod": "gcloud app deploy"
   },
   "devDependencies": {
     "@babel/core": "^7.6.4",
