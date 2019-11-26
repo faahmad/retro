@@ -29,7 +29,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "deploy": "yarn run build && firebase deploy"
+    "deploy": "yarn run build && firebase deploy --project prod --only hosting"
   },
   "eslintConfig": {
     "extends": "react-app"
