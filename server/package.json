@@ -7,10 +7,12 @@
     "dev": "env-cmd -e development nodemon --exec babel-node src/index.js",
     "start:test": "env-cmd -e test nodemon --exec babel-node src/index.js",
     "test": "env-cmd -e test jest --runInBand",
-    "start": "babel-node src/index.js",
+    "build": "babel src -d build -s",
+    "start": "node build/index.js",
     "deploy:prod": "gcloud app deploy"
   },
   "devDependencies": {
+    "@babel/cli": "^7.7.4",
     "@babel/core": "^7.6.4",
     "@babel/node": "^7.6.3",
     "@babel/preset-env": "^7.6.3",

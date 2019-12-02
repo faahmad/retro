@@ -1,2 +1,3 @@
-runtime: nodejs10
+runtime: nodejs
 env: flex
+cloud_sql_instances: retro-prod-786:us-east1:retro
