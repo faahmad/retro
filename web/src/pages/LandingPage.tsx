@@ -4,7 +4,7 @@ import { Navbar } from "../components/Navbar";
 
 export const LandingPage: React.FC = () => {
   return (
-    <div className="landing-page flex w-full justify-center h-screen pt-8">
+    <div className="landing-page flex max-w-6xl m-auto w-full justify-center h-screen pt-8">
       <div className="w-4/5 h-12">
         <Navbar />
         <div className="flex flex-col lg:text-center m-0">
