@@ -16,7 +16,11 @@ module.exports = {
       display: ["Source Code Pro", "monospace"],
       body: ["Source Code Pro", "monospace"]
     },
-    extend: {}
+    extend: {
+      maxWidth: {
+        "laptop-lg": "90rem"
+      }
+    }
   },
   variants: {},
   plugins: []
