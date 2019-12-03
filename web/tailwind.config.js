@@ -3,7 +3,14 @@
 module.exports = {
   theme: {
     boxShadow: theme => ({
-      default: `${theme("spacing.1")} ${theme("spacing.1")} currentColor`
+      default: `${theme("spacing.1")} ${theme("spacing.1")} currentColor`,
+      red: `${theme("spacing.1")} ${theme("spacing.1")} ${theme("colors.red")}`,
+      blue: `${theme("spacing.1")} ${theme("spacing.1")} ${theme(
+        "colors.blue"
+      )}`,
+      pink: `${theme("spacing.1")} ${theme("spacing.1")} ${theme(
+        "colors.pink"
+      )}`
     }),
     colors: {
       blue: "#11269c",
@@ -18,7 +25,8 @@ module.exports = {
     },
     extend: {
       maxWidth: {
-        "laptop-lg": "90rem"
+        "7xl": "80rem",
+        "8xl": "88rem"
       }
     }
   },

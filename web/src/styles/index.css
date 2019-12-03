@@ -2973,8 +2973,12 @@ video {
   max-width: 100%;
 }
 
-.max-w-laptop-lg {
-  max-width: 90rem;
+.max-w-7xl {
+  max-width: 80rem;
+}
+
+.max-w-8xl {
+  max-width: 88rem;
 }
 
 .min-h-0 {
@@ -4062,12 +4066,48 @@ video {
   box-shadow: 0.25rem 0.25rem currentColor;
 }
 
+.shadow-red {
+  box-shadow: 0.25rem 0.25rem #ff596a;
+}
+
+.shadow-blue {
+  box-shadow: 0.25rem 0.25rem #11269c;
+}
+
+.shadow-pink {
+  box-shadow: 0.25rem 0.25rem #ff94b8;
+}
+
 .hover\:shadow:hover {
   box-shadow: 0.25rem 0.25rem currentColor;
 }
 
+.hover\:shadow-red:hover {
+  box-shadow: 0.25rem 0.25rem #ff596a;
+}
+
+.hover\:shadow-blue:hover {
+  box-shadow: 0.25rem 0.25rem #11269c;
+}
+
+.hover\:shadow-pink:hover {
+  box-shadow: 0.25rem 0.25rem #ff94b8;
+}
+
 .focus\:shadow:focus {
   box-shadow: 0.25rem 0.25rem currentColor;
+}
+
+.focus\:shadow-red:focus {
+  box-shadow: 0.25rem 0.25rem #ff596a;
+}
+
+.focus\:shadow-blue:focus {
+  box-shadow: 0.25rem 0.25rem #11269c;
+}
+
+.focus\:shadow-pink:focus {
+  box-shadow: 0.25rem 0.25rem #ff94b8;
 }
 
 .fill-current {
@@ -4626,6 +4666,16 @@ body {
   grid-template-columns: repeat(10, 10px);
   grid-template-rows: repeat(10, 10px);
   grid-gap: 2px;
+}
+
+.grid-bg {
+  background-image: linear-gradient(
+    -45deg,
+    transparent 46%,
+    blue,
+    blue,
+    transparent 55%
+  );
 }
 
 .grid-logo-box {
@@ -7002,8 +7052,12 @@ body {
     max-width: 100%;
   }
 
-  .sm\:max-w-laptop-lg {
-    max-width: 90rem;
+  .sm\:max-w-7xl {
+    max-width: 80rem;
+  }
+
+  .sm\:max-w-8xl {
+    max-width: 88rem;
   }
 
   .sm\:min-h-0 {
@@ -8091,12 +8145,48 @@ body {
     box-shadow: 0.25rem 0.25rem currentColor;
   }
 
+  .sm\:shadow-red {
+    box-shadow: 0.25rem 0.25rem #ff596a;
+  }
+
+  .sm\:shadow-blue {
+    box-shadow: 0.25rem 0.25rem #11269c;
+  }
+
+  .sm\:shadow-pink {
+    box-shadow: 0.25rem 0.25rem #ff94b8;
+  }
+
   .sm\:hover\:shadow:hover {
     box-shadow: 0.25rem 0.25rem currentColor;
   }
 
+  .sm\:hover\:shadow-red:hover {
+    box-shadow: 0.25rem 0.25rem #ff596a;
+  }
+
+  .sm\:hover\:shadow-blue:hover {
+    box-shadow: 0.25rem 0.25rem #11269c;
+  }
+
+  .sm\:hover\:shadow-pink:hover {
+    box-shadow: 0.25rem 0.25rem #ff94b8;
+  }
+
   .sm\:focus\:shadow:focus {
     box-shadow: 0.25rem 0.25rem currentColor;
+  }
+
+  .sm\:focus\:shadow-red:focus {
+    box-shadow: 0.25rem 0.25rem #ff596a;
+  }
+
+  .sm\:focus\:shadow-blue:focus {
+    box-shadow: 0.25rem 0.25rem #11269c;
+  }
+
+  .sm\:focus\:shadow-pink:focus {
+    box-shadow: 0.25rem 0.25rem #ff94b8;
   }
 
   .sm\:fill-current {
@@ -10992,8 +11082,12 @@ body {
     max-width: 100%;
   }
 
-  .md\:max-w-laptop-lg {
-    max-width: 90rem;
+  .md\:max-w-7xl {
+    max-width: 80rem;
+  }
+
+  .md\:max-w-8xl {
+    max-width: 88rem;
   }
 
   .md\:min-h-0 {
@@ -12081,12 +12175,48 @@ body {
     box-shadow: 0.25rem 0.25rem currentColor;
   }
 
+  .md\:shadow-red {
+    box-shadow: 0.25rem 0.25rem #ff596a;
+  }
+
+  .md\:shadow-blue {
+    box-shadow: 0.25rem 0.25rem #11269c;
+  }
+
+  .md\:shadow-pink {
+    box-shadow: 0.25rem 0.25rem #ff94b8;
+  }
+
   .md\:hover\:shadow:hover {
     box-shadow: 0.25rem 0.25rem currentColor;
   }
 
+  .md\:hover\:shadow-red:hover {
+    box-shadow: 0.25rem 0.25rem #ff596a;
+  }
+
+  .md\:hover\:shadow-blue:hover {
+    box-shadow: 0.25rem 0.25rem #11269c;
+  }
+
+  .md\:hover\:shadow-pink:hover {
+    box-shadow: 0.25rem 0.25rem #ff94b8;
+  }
+
   .md\:focus\:shadow:focus {
     box-shadow: 0.25rem 0.25rem currentColor;
+  }
+
+  .md\:focus\:shadow-red:focus {
+    box-shadow: 0.25rem 0.25rem #ff596a;
+  }
+
+  .md\:focus\:shadow-blue:focus {
+    box-shadow: 0.25rem 0.25rem #11269c;
+  }
+
+  .md\:focus\:shadow-pink:focus {
+    box-shadow: 0.25rem 0.25rem #ff94b8;
   }
 
   .md\:fill-current {
@@ -14982,8 +15112,12 @@ body {
     max-width: 100%;
   }
 
-  .lg\:max-w-laptop-lg {
-    max-width: 90rem;
+  .lg\:max-w-7xl {
+    max-width: 80rem;
+  }
+
+  .lg\:max-w-8xl {
+    max-width: 88rem;
   }
 
   .lg\:min-h-0 {
@@ -16071,12 +16205,48 @@ body {
     box-shadow: 0.25rem 0.25rem currentColor;
   }
 
+  .lg\:shadow-red {
+    box-shadow: 0.25rem 0.25rem #ff596a;
+  }
+
+  .lg\:shadow-blue {
+    box-shadow: 0.25rem 0.25rem #11269c;
+  }
+
+  .lg\:shadow-pink {
+    box-shadow: 0.25rem 0.25rem #ff94b8;
+  }
+
   .lg\:hover\:shadow:hover {
     box-shadow: 0.25rem 0.25rem currentColor;
   }
 
+  .lg\:hover\:shadow-red:hover {
+    box-shadow: 0.25rem 0.25rem #ff596a;
+  }
+
+  .lg\:hover\:shadow-blue:hover {
+    box-shadow: 0.25rem 0.25rem #11269c;
+  }
+
+  .lg\:hover\:shadow-pink:hover {
+    box-shadow: 0.25rem 0.25rem #ff94b8;
+  }
+
   .lg\:focus\:shadow:focus {
     box-shadow: 0.25rem 0.25rem currentColor;
+  }
+
+  .lg\:focus\:shadow-red:focus {
+    box-shadow: 0.25rem 0.25rem #ff596a;
+  }
+
+  .lg\:focus\:shadow-blue:focus {
+    box-shadow: 0.25rem 0.25rem #11269c;
+  }
+
+  .lg\:focus\:shadow-pink:focus {
+    box-shadow: 0.25rem 0.25rem #ff94b8;
   }
 
   .lg\:fill-current {
@@ -18972,8 +19142,12 @@ body {
     max-width: 100%;
   }
 
-  .xl\:max-w-laptop-lg {
-    max-width: 90rem;
+  .xl\:max-w-7xl {
+    max-width: 80rem;
+  }
+
+  .xl\:max-w-8xl {
+    max-width: 88rem;
   }
 
   .xl\:min-h-0 {
@@ -20061,12 +20235,48 @@ body {
     box-shadow: 0.25rem 0.25rem currentColor;
   }
 
+  .xl\:shadow-red {
+    box-shadow: 0.25rem 0.25rem #ff596a;
+  }
+
+  .xl\:shadow-blue {
+    box-shadow: 0.25rem 0.25rem #11269c;
+  }
+
+  .xl\:shadow-pink {
+    box-shadow: 0.25rem 0.25rem #ff94b8;
+  }
+
   .xl\:hover\:shadow:hover {
     box-shadow: 0.25rem 0.25rem currentColor;
   }
 
+  .xl\:hover\:shadow-red:hover {
+    box-shadow: 0.25rem 0.25rem #ff596a;
+  }
+
+  .xl\:hover\:shadow-blue:hover {
+    box-shadow: 0.25rem 0.25rem #11269c;
+  }
+
+  .xl\:hover\:shadow-pink:hover {
+    box-shadow: 0.25rem 0.25rem #ff94b8;
+  }
+
   .xl\:focus\:shadow:focus {
     box-shadow: 0.25rem 0.25rem currentColor;
+  }
+
+  .xl\:focus\:shadow-red:focus {
+    box-shadow: 0.25rem 0.25rem #ff596a;
+  }
+
+  .xl\:focus\:shadow-blue:focus {
+    box-shadow: 0.25rem 0.25rem #11269c;
+  }
+
+  .xl\:focus\:shadow-pink:focus {
+    box-shadow: 0.25rem 0.25rem #ff94b8;
   }
 
   .xl\:fill-current {
