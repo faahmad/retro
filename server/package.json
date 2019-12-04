@@ -5,23 +5,11 @@
   "license": "MIT",
   "scripts": {
     "dev": "env-cmd -e development nodemon --exec babel-node src/index.js",
-    "start:test": "env-cmd -e test nodemon --exec babel-node src/index.js",
     "test": "env-cmd -e test jest --runInBand",
     "build": "babel src -d build -s",
     "start": "node build/index.js",
-    "deploy:prod": "gcloud app deploy"
-  },
-  "devDependencies": {
-    "@babel/cli": "^7.7.4",
-    "@babel/core": "^7.6.4",
-    "@babel/node": "^7.6.3",
-    "@babel/preset-env": "^7.6.3",
-    "eslint": "^6.5.1",
-    "faker": "^4.1.0",
-    "jest": "^24.9.0",
-    "nodemon": "^1.19.4",
-    "sequelize-cli": "^5.5.1",
-    "supertest": "^4.0.2"
+    "predeploy": "yarn run build",
+    "deploy": "gcloud app deploy"
   },
   "dependencies": {
     "apollo-server": "^2.9.6",
@@ -34,5 +22,17 @@
     "lodash": "^4.17.15",
     "pg": "^7.12.1",
     "sequelize": "^5.21.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.7.4",
+    "@babel/core": "^7.6.4",
+    "@babel/node": "^7.6.3",
+    "@babel/preset-env": "^7.6.3",
+    "eslint": "^6.5.1",
+    "faker": "^4.1.0",
+    "jest": "^24.9.0",
+    "nodemon": "^1.19.4",
+    "sequelize-cli": "^5.5.1",
+    "supertest": "^4.0.2"
   }
 }
