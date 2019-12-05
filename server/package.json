@@ -9,7 +9,8 @@
     "test": "env-cmd -e test jest --runInBand",
     "build": "babel src -d build -s",
     "start": "node build/index.js",
-    "deploy:prod": "gcloud app deploy"
+    "predeploy": "yarn run build",
+    "deploy": "gcloud app deploy"
   },
   "devDependencies": {
     "@babel/cli": "^7.7.4",
