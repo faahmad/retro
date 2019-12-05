@@ -1,13 +1,14 @@
 import Sequelize from "sequelize";
 
-const isProd = process.env.NODE_ENV === "production";
-
 let config = {
   dialect: "postgres"
 };
 
-if (isProd) {
-  const instancePath = `/cloudsql/${process.env.CLOUD_SQL_CONNECTION_NAME}`;
+if (
+  process.env.INSTANCE_CONNECTION_NAME &&
+  process.env.NODE_ENV === "production"
+) {
+  const instancePath = `/cloudsql/${process.env.INSTANCE_CONNECTION_NAME}`;
   config.host = instancePath;
   config.dialectOptions = {
     socketPath: instancePath
@@ -17,6 +18,6 @@ if (isProd) {
 export const sequelize = new Sequelize(
   process.env.DB_NAME,
   process.env.DB_USER,
-  isProd ? process.env.DB_PASSWORD : null,
+  process.env.DB_PASSWORD,
   config
 );

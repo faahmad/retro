@@ -1,13 +1,19 @@
 import "./styles/index.css";
 import React from "react";
 import ReactDOM from "react-dom";
-import { AppRoutes } from "./AppRoutes";
-import * as serviceWorker from "./serviceWorker";
+import ApolloClient from "apollo-boost";
+import { ApolloProvider } from "@apollo/react-hooks";
 import {
   createInstance,
   OptimizelyProvider,
   setLogger
 } from "@optimizely/react-sdk";
+import { AppRoutes } from "./AppRoutes";
+import * as serviceWorker from "./serviceWorker";
+
+const client = new ApolloClient({
+  uri: "http://localhost:8000/graphql"
+});
 
 const optimizely = createInstance({
   sdkKey: process.env.REACT_APP_OPTIMIZELY_SDK_KEY
@@ -23,7 +29,9 @@ ReactDOM.render(
       id: "test_user"
     }}
   >
-    <AppRoutes />
+    <ApolloProvider client={client}>
+      <AppRoutes />
+    </ApolloProvider>
   </OptimizelyProvider>,
   document.getElementById("root")
 );

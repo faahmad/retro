@@ -11,18 +11,6 @@
     "predeploy": "yarn run build",
     "deploy": "gcloud app deploy"
   },
-  "dependencies": {
-    "apollo-server": "^2.9.6",
-    "apollo-server-express": "^2.9.6",
-    "cors": "^2.8.5",
-    "env-cmd": "^10.0.1",
-    "express": "^4.17.1",
-    "graphql": "^14.5.8",
-    "graphql-iso-date": "^3.6.1",
-    "lodash": "^4.17.15",
-    "pg": "^7.12.1",
-    "sequelize": "^5.21.1"
-  },
   "devDependencies": {
     "@babel/cli": "^7.7.4",
     "@babel/core": "^7.6.4",
@@ -34,5 +22,17 @@
     "nodemon": "^1.19.4",
     "sequelize-cli": "^5.5.1",
     "supertest": "^4.0.2"
+  },
+  "dependencies": {
+    "apollo-server": "^2.9.6",
+    "apollo-server-express": "^2.9.6",
+    "cors": "^2.8.5",
+    "env-cmd": "^10.0.1",
+    "express": "^4.17.1",
+    "graphql": "^14.5.8",
+    "graphql-iso-date": "^3.6.1",
+    "lodash": "^4.17.15",
+    "pg": "^7.12.1",
+    "sequelize": "^5.21.1"
   }
 }
