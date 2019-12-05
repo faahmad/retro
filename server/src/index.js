@@ -3,9 +3,9 @@ import { sequelize } from "./lib/sequelize";
 
 (async function(sequelize, app) {
   await sequelize.sync();
-  app.get("/", (request, response) => response.send("sup."));
+  app.get("/", (request, response) => response.send("retro"));
   const PORT = process.env.PORT || 8000;
   app.listen(PORT, () => {
-    console.log("Apollo Server on http://localhost:8000/graphql");
+    console.log(`Apollo Server on port ${PORT}`);
   });
 })(sequelize, app);

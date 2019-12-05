@@ -1,15 +1,22 @@
 import React from "react";
 import clsx from "clsx";
 
-interface ButtonProps {
+// These props are required by us.
+interface RetroButtonProps {
   className?: string;
-  onClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  children: React.ReactNode;
 }
+
+type ButtonProps = RetroButtonProps &
+  React.DetailedHTMLProps<
+    React.ButtonHTMLAttributes<HTMLButtonElement>,
+    HTMLButtonElement
+  >;
 
 export const Button: React.FC<ButtonProps> = ({
   children,
   className = "",
-  onClick
+  ...rest
 }) => {
   return (
     <button
@@ -19,7 +26,7 @@ export const Button: React.FC<ButtonProps> = ({
           [className]: !!className
         }
       )}
-      onClick={onClick}
+      {...rest}
     >
       {children}
     </button>
