@@ -12,7 +12,7 @@ import { AppRoutes } from "./AppRoutes";
 import * as serviceWorker from "./serviceWorker";
 
 const client = new ApolloClient({
-  uri: "http://localhost:8000/graphql"
+  uri: process.env.REACT_APP_GRAPHQL_URI
 });
 
 const optimizely = createInstance({

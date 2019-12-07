@@ -13,8 +13,7 @@ const apolloServer = new ApolloServer({
   typeDefs: schema,
   context: {
     models
-  },
-  playground: true
+  }
 });
 apolloServer.applyMiddleware({ app, path: "/graphql" });
 
