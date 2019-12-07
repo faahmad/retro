@@ -7,7 +7,7 @@ export const AppRoutes: React.FC = () => {
   return (
     <BrowserRouter>
       <Switch>
-        <Route component={LandingPage} />
+        <Route exact path="/" component={LandingPage} />
       </Switch>
     </BrowserRouter>
   );
