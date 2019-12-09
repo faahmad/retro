@@ -23,10 +23,31 @@ export const LandingPage: React.FC = () => {
           <div className="flex items-center justify-center h-16 text-center bg-white text-blue border border-red shadow-red items-center">
             <h3 className="text-2xl font-black">How it Works</h3>
           </div>
-          <div className="mt-10 flex justify-between">
-            <div className="bg-white h-64 w-56 text-blue border border-red shadow-red"></div>
-            <div className="bg-white h-64 w-56 text-blue border border-red shadow-red"></div>
-            <div className="bg-white h-64 w-56 text-blue border border-red shadow-red"></div>
+          <div className="mt-10 flex flex-col lg:flex-row justify-between items-center">
+            <div className="mb-4 lg:mb-0 bg-white h-64 w-56 text-blue border border-red shadow-red flex flex-col items-center p-4 text-center">
+              <div
+                className="bg-pink mb-2"
+                style={{ height: "115px", width: "140px" }}
+              ></div>
+              <p className="text-xl mb-2">Invite</p>
+              <p>Invite your team.</p>
+            </div>
+            <div className="mb-4 lg:mb-0 bg-white h-64 w-56 text-blue border border-red shadow-red flex flex-col items-center p-4 text-center">
+              <div
+                className="bg-pink mb-2"
+                style={{ height: "115px", width: "140px" }}
+              ></div>
+              <p className="text-xl mb-2">Conduct</p>
+              <p>Conduct your retro using our drag and drop interface.</p>
+            </div>
+            <div className="bg-white h-64 w-56 text-blue border border-red shadow-red flex flex-col items-center p-4 text-center">
+              <div
+                className="bg-pink mb-2"
+                style={{ height: "115px", width: "140px" }}
+              ></div>
+              <p className="text-xl mb-2">Analyze</p>
+              <p>Analyze your team's progress.</p>
+            </div>
           </div>
         </div>
       </div>
