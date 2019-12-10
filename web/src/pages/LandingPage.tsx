@@ -26,9 +26,9 @@ export const LandingPage: React.FC = () => {
         </div>
       </div>
       <div></div>
-      <div className="landing-page__how-it-works relative w-full min-h-full vertical-stripes-blue border border-blue mt-8">
+      <div className="landing-page__how-it-works relative w-full min-h-full vertical-stripes-blue border border-blue mt-10">
         <div className="w-full min-h-full -z-1 absolute horizontal-stripes-blue"></div>
-        <div className="w-4/5 m-auto p-8">
+        <div className="sm:w-full lg:w-4/5 m-auto p-8">
           <div className="flex items-center justify-center h-16 text-center bg-white text-blue border border-red shadow-red items-center">
             <h3 className="text-2xl font-black">How it Works</h3>
           </div>
@@ -72,7 +72,7 @@ export const LandingPage: React.FC = () => {
 
 const HowItWorksCard: React.FC = ({ children }) => {
   return (
-    <div className="bg-white h-72 w-64 text-blue border border-red shadow-red flex flex-col items-center p-4 text-center">
+    <div className="bg-white h-72 w-64 text-blue border border-red shadow-red flex flex-col items-center p-4 text-center mb-4">
       {children}
     </div>
   );
