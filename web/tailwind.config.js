@@ -3,7 +3,14 @@
 module.exports = {
   theme: {
     boxShadow: theme => ({
-      default: `${theme("spacing.1")} ${theme("spacing.1")} currentColor`
+      default: `${theme("spacing.1")} ${theme("spacing.1")} currentColor`,
+      red: `${theme("spacing.1")} ${theme("spacing.1")} ${theme("colors.red")}`,
+      blue: `${theme("spacing.1")} ${theme("spacing.1")} ${theme(
+        "colors.blue"
+      )}`,
+      pink: `${theme("spacing.1")} ${theme("spacing.1")} ${theme(
+        "colors.pink"
+      )}`
     }),
     colors: {
       blue: "#11269c",
@@ -16,7 +23,18 @@ module.exports = {
       display: ["Source Code Pro", "monospace"],
       body: ["Source Code Pro", "monospace"]
     },
-    extend: {}
+    extend: {
+      height: {
+        "72": "18rem"
+      },
+      maxWidth: {
+        "7xl": "80rem",
+        "8xl": "88rem"
+      },
+      zIndex: {
+        "-1": "-1"
+      }
+    }
   },
   variants: {},
   plugins: []
