@@ -15,8 +15,12 @@ body {
   grid-gap: 2px;
 }
 
-.grid-bg {
-  background-image: linear-gradient(-45deg, blue, blue);
+.vertical-stripes-blue {
+  background: repeating-linear-gradient(90deg, #11269c, transparent 1px 16px);
+}
+
+.horizontal-stripes-blue {
+  background: repeating-linear-gradient(180deg, #11269c, transparent 1px 16px);
 }
 
 .grid-logo-box {

@@ -1721,6 +1721,10 @@ video {
   height: 16rem;
 }
 
+.h-72 {
+  height: 18rem;
+}
+
 .h-auto {
   height: auto;
 }
@@ -4655,6 +4659,10 @@ video {
   z-index: auto;
 }
 
+.-z-1 {
+  z-index: -1;
+}
+
 body {
   font-family: "Source Code Pro", monospace;
 }
@@ -4668,8 +4676,12 @@ body {
   grid-gap: 2px;
 }
 
-.grid-bg {
-  background-image: linear-gradient(-45deg, blue, blue);
+.vertical-stripes-blue {
+  background: repeating-linear-gradient(90deg, #11269c, transparent 1px 16px);
+}
+
+.horizontal-stripes-blue {
+  background: repeating-linear-gradient(180deg, #11269c, transparent 1px 16px);
 }
 
 .grid-logo-box {
@@ -5792,6 +5804,10 @@ body {
 
   .sm\:h-64 {
     height: 16rem;
+  }
+
+  .sm\:h-72 {
+    height: 18rem;
   }
 
   .sm\:h-auto {
@@ -8727,6 +8743,10 @@ body {
   .sm\:z-auto {
     z-index: auto;
   }
+
+  .sm\:-z-1 {
+    z-index: -1;
+  }
 }
 
 @media (min-width: 768px) {
@@ -9822,6 +9842,10 @@ body {
 
   .md\:h-64 {
     height: 16rem;
+  }
+
+  .md\:h-72 {
+    height: 18rem;
   }
 
   .md\:h-auto {
@@ -12757,6 +12781,10 @@ body {
   .md\:z-auto {
     z-index: auto;
   }
+
+  .md\:-z-1 {
+    z-index: -1;
+  }
 }
 
 @media (min-width: 1024px) {
@@ -13852,6 +13880,10 @@ body {
 
   .lg\:h-64 {
     height: 16rem;
+  }
+
+  .lg\:h-72 {
+    height: 18rem;
   }
 
   .lg\:h-auto {
@@ -16787,6 +16819,10 @@ body {
   .lg\:z-auto {
     z-index: auto;
   }
+
+  .lg\:-z-1 {
+    z-index: -1;
+  }
 }
 
 @media (min-width: 1280px) {
@@ -17882,6 +17918,10 @@ body {
 
   .xl\:h-64 {
     height: 16rem;
+  }
+
+  .xl\:h-72 {
+    height: 18rem;
   }
 
   .xl\:h-auto {
@@ -20816,5 +20856,9 @@ body {
 
   .xl\:z-auto {
     z-index: auto;
+  }
+
+  .xl\:-z-1 {
+    z-index: -1;
   }
 }

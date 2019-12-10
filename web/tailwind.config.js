@@ -24,9 +24,15 @@ module.exports = {
       body: ["Source Code Pro", "monospace"]
     },
     extend: {
+      height: {
+        "72": "18rem"
+      },
       maxWidth: {
         "7xl": "80rem",
         "8xl": "88rem"
+      },
+      zIndex: {
+        "-1": "-1"
       }
     }
   },
