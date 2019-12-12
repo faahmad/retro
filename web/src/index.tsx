@@ -3,36 +3,27 @@ import React from "react";
 import ReactDOM from "react-dom";
 import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "@apollo/react-hooks";
-import {
-  createInstance,
-  OptimizelyProvider,
-  setLogger
-} from "@optimizely/react-sdk";
+import firebase from "firebase/app";
 import { AppRoutes } from "./AppRoutes";
+import { AuthProvider } from "./contexts/AuthContext";
 import * as serviceWorker from "./serviceWorker";
+
+firebase.initializeApp({
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID
+});
 
 const client = new ApolloClient({
   uri: process.env.REACT_APP_GRAPHQL_URI
 });
 
-const optimizely = createInstance({
-  sdkKey: process.env.REACT_APP_OPTIMIZELY_SDK_KEY
-});
-if (process.env.NODE_ENV === "production") {
-  setLogger(null);
-}
-
 ReactDOM.render(
-  <OptimizelyProvider
-    optimizely={optimizely}
-    user={{
-      id: "test_user"
-    }}
-  >
+  <AuthProvider>
     <ApolloProvider client={client}>
       <AppRoutes />
     </ApolloProvider>
-  </OptimizelyProvider>,
+  </AuthProvider>,
   document.getElementById("root")
 );
 

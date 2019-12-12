@@ -2,7 +2,7 @@ import React from "react";
 import { animated, useTransition } from "react-spring";
 import { Button } from "./Button";
 import { OptimizelyFeature } from "@optimizely/react-sdk";
-import retroPinkLogo from "../assets/images/retro-pink-logo.svg";
+import { RetroPinkLogo } from "./RetroPinkLogo";
 
 export const Navbar: React.FC = () => {
   return (
@@ -41,7 +41,7 @@ const NavbarBrand = () => {
         ))}
       </div>
       <div className="z-10 mt-8 sm:ml-0 lg:ml-5">
-        <img src={retroPinkLogo} alt="Retro Pink Logo" />
+        <RetroPinkLogo />
         <p className="text-blue">welcome to new school teamwork.</p>
       </div>
     </div>
