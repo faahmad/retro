@@ -14,7 +14,7 @@ export const LandingPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
 
   return (
-    <div className="landing-page flex flex-col w-full max-w-8xl justify-center my-8">
+    <div className="landing-page flex flex-col w-full justify-center my-8">
       <div className="landing-page__above-the-fold w-4/5 m-auto">
         <Navbar />
         <div className="flex flex-col lg:text-center m-0">
@@ -31,7 +31,7 @@ export const LandingPage: React.FC = () => {
       <div></div>
       <div className="landing-page__how-it-works relative w-full min-h-full vertical-stripes-blue border border-blue mt-10">
         <div className="w-full min-h-full -z-1 absolute horizontal-stripes-blue"></div>
-        <div className="sm:w-full lg:w-4/5 m-auto p-8">
+        <div className="sm:w-full lg:w-4/5 m-auto p-4 py-8">
           <div className="flex items-center justify-center h-16 text-center bg-white text-blue border border-red shadow-red items-center">
             <h3 className="text-2xl font-black">How it Works</h3>
           </div>
