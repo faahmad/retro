@@ -2,6 +2,7 @@ import React from "react";
 
 // components
 import { Navbar } from "../components/Navbar";
+import { LoginModal } from "../components/LoginModal";
 
 // images
 import retroHeroImage from "../assets/images/retro-hero-image.svg";
@@ -10,6 +11,8 @@ import howItWorksConductImage from "../assets/images/how-it-works-conduct-image.
 import howItWorksAnalyzeImage from "../assets/images/how-it-works-analyze-image.svg";
 
 export const LandingPage: React.FC = () => {
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+
   return (
     <div className="landing-page flex flex-col w-full max-w-8xl justify-center my-8">
       <div className="landing-page__above-the-fold w-4/5 m-auto">

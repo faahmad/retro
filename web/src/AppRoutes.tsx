@@ -20,17 +20,20 @@ export const AppRoutes: React.FC = () => {
   const authAccount = useAuthContext();
 
   return (
-    <OptimizelyProvider optimizely={optimizely}>
-      <BrowserRouter>
-        <Switch>
-          {authAccount ? (
+    <BrowserRouter>
+      <Switch>
+        {authAccount ? (
+          <OptimizelyProvider
+            optimizely={optimizely}
+            user={{ id: authAccount.uid }}
+          >
             <AuthenticatedAppRoutes />
-          ) : (
-            <UnauthenticatedAppRoutes />
-          )}
-        </Switch>
-      </BrowserRouter>
-    </OptimizelyProvider>
+          </OptimizelyProvider>
+        ) : (
+          <UnauthenticatedAppRoutes />
+        )}
+      </Switch>
+    </BrowserRouter>
   );
 };
 
