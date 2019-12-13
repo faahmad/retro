@@ -19,7 +19,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
       isOpen={isOpen}
       onRequestClose={onRequestClose}
       style={{
-        content: { width: "420px", height: "390px" },
+        content: { maxWidth: "420px", height: "390px" },
         overlay: { background: "rgba(17, 38, 156, 0.6)" }
       }}
       className="bg-white shadow-red border m-auto absolute inset-0 border-red focus:outline-none"
