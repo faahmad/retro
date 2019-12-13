@@ -2,12 +2,25 @@ import React from "react";
 import { animated, useTransition } from "react-spring";
 import { Button } from "./Button";
 import { RetroPinkLogo } from "./RetroPinkLogo";
+import { GoogleOAuthButton } from "./GoogleOAuthButton";
+import { LoginModal } from "./LoginModal";
 
 export const Navbar: React.FC = () => {
+  const [isOpen, setIsOpen] = React.useState(false);
+
+  const handleOpenModal = () => {
+    setIsOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsOpen(false);
+  };
+
   return (
     <nav className="navbar flex flex-wrap justify-between sm:mb-1 lg:mb-4">
+      <LoginModal isOpen={isOpen} onRequestClose={handleCloseModal} />
       <NavbarBrand />
-      <NavbarAuthButtons />
+      <NavbarAuthButtons onClick={handleOpenModal} />
     </nav>
   );
 };
@@ -47,13 +60,13 @@ const NavbarBrand = () => {
   );
 };
 
-const NavbarAuthButtons = () => (
+const NavbarAuthButtons: React.FC<any> = ({ onClick }) => (
   <div className="flex flex-col">
-    <Button className="text-blue mb-2 text-right" onClick={() => {}}>
+    <Button className="text-blue mb-2 text-right" onClick={onClick}>
       Login
     </Button>
-    <Button className="text-blue text-right" onClick={() => {}}>
-      <span>Signup With Google</span>
-    </Button>
+    <GoogleOAuthButton buttonClassName="text-blue" textClassName="justify-end">
+      Signup With
+    </GoogleOAuthButton>
   </div>
 );
