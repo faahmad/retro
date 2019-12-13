@@ -15,6 +15,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
 }) => {
   return (
     <ReactModal
+      ariaHideApp={false}
       isOpen={isOpen}
       onRequestClose={onRequestClose}
       style={{

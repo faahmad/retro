@@ -1,6 +1,5 @@
 import React from "react";
 import { Switch, BrowserRouter, Route } from "react-router-dom";
-
 import { LandingPage } from "./pages/LandingPage";
 import {
   OptimizelyProvider,
@@ -8,6 +7,21 @@ import {
   setLogger
 } from "@optimizely/react-sdk";
 import { useAuthContext } from "./contexts/AuthContext";
+
+// TODO: Remove these before merging.
+import { Button } from "./components/Button";
+import { AuthService } from "./services/auth-service";
+const _DevelopmentOnlyLoggedInPage = () => {
+  return (
+    <div className="flex flex-col flex-1 h-screen items-center justify-center">
+      <h1 className="mb-2">You're logged in!</h1>
+      <Button className="text-red" onClick={() => AuthService.logOut()}>
+        Log Out
+      </Button>
+    </div>
+  );
+};
+//==================================
 
 const optimizely = createInstance({
   sdkKey: process.env.REACT_APP_OPTIMIZELY_SDK_KEY
@@ -48,7 +62,7 @@ const UnauthenticatedAppRoutes: React.FC = () => {
 const AuthenticatedAppRoutes: React.FC = () => {
   return (
     <React.Fragment>
-      <Route exact path="/" render={() => <div>You're logged in!</div>} />
+      <Route exact path="/" component={_DevelopmentOnlyLoggedInPage} />
     </React.Fragment>
   );
 };
