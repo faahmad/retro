@@ -23,6 +23,7 @@ class AuthProvider extends React.Component<
   }
   handleAuthStateChanged = async (authAccount: firebase.User | null) => {
     if (authAccount) {
+      console.log("handleAuthStateChanged");
       await this.setState({ authAccount });
     } else {
       this.setState({ authAccount: null });

@@ -7,14 +7,33 @@ import {
   setLogger
 } from "@optimizely/react-sdk";
 import { useAuthContext } from "./contexts/AuthContext";
-
 // TODO: Remove these before merging.
+import { gql } from "apollo-boost";
 import { Button } from "./components/Button";
 import { AuthService } from "./services/auth-service";
+import { useQuery } from "@apollo/react-hooks";
+
+const USER_QUERY = gql`
+  query UserQuery($id: ID!) {
+    user(id: $id) {
+      id
+      email
+      createdAt
+      updatedAt
+    }
+  }
+`;
 const _DevelopmentOnlyLoggedInPage = () => {
+  const { data } = useQuery(USER_QUERY, { variables: { id: 1 } });
+
   return (
     <div className="flex flex-col flex-1 h-screen items-center justify-center">
-      <h1 className="mb-2">You're logged in!</h1>
+      <h1>You're logged in!</h1>
+      <div className="bg-white p-4 border border-blue shadow text-blue text-sm my-4">
+        <code>
+          <pre>{JSON.stringify(data, null, 2)}</pre>
+        </code>
+      </div>
       <Button className="text-red" onClick={() => AuthService.logOut()}>
         Log Out
       </Button>
