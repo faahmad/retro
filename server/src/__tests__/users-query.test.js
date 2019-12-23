@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { factory } from "./test-helpers/factory";
 import { executeGraphQLQuery } from "./test-helpers/execute-graphql-query";
 
@@ -8,8 +7,6 @@ describe("users query", () => {
       users {
         id
         email
-        firstName
-        lastName
         createdAt
         updatedAt
       }
@@ -21,28 +18,26 @@ describe("users query", () => {
       const userOne = await factory.user();
       const userTwo = await factory.user();
 
-      const queryResult = await executeGraphQLQuery(usersQuery);
+      const queryResult = await executeGraphQLQuery({ query: usersQuery });
 
       expect(queryResult.data.users.length).toBe(2);
       expect(queryResult).toMatchObject({
         data: {
           users: [
             {
-              email: userOne.email,
-              firstName: userOne.firstName,
-              lastName: userOne.lastName
+              id: userOne.id,
+              email: userOne.email
             },
             {
-              email: userTwo.email,
-              firstName: userTwo.firstName,
-              lastName: userTwo.lastName
+              id: userTwo.id,
+              email: userTwo.email
             }
           ]
         }
       });
     });
     it("should return an empty array if there are no users", async () => {
-      const queryResult = await executeGraphQLQuery(usersQuery);
+      const queryResult = await executeGraphQLQuery({ query: usersQuery });
 
       expect(queryResult).toMatchObject({
         data: {

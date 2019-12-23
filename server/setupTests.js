@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { sequelize } from "./src/lib/sequelize";
 sequelize.options.logging = false;
 

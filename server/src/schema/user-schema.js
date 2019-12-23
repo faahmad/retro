@@ -4,13 +4,12 @@ export const userSchema = gql`
   type User {
     id: ID!
     email: String!
-    firstName: String
-    lastName: String
     createdAt: Date!
     updatedAt: Date!
   }
 
   input CreateUserInput {
+    id: ID!
     email: String!
   }
 
