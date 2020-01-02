@@ -14,8 +14,8 @@ import { AuthService } from "./services/auth-service";
 import { useQuery } from "@apollo/react-hooks";
 
 const USER_QUERY = gql`
-  query UserQuery($id: ID!) {
-    user(id: $id) {
+  query UserQuery {
+    user {
       id
       email
       createdAt
@@ -24,7 +24,7 @@ const USER_QUERY = gql`
   }
 `;
 const _DevelopmentOnlyLoggedInPage = () => {
-  const { data } = useQuery(USER_QUERY, { variables: { id: 1 } });
+  const { data } = useQuery(USER_QUERY);
 
   return (
     <div className="flex flex-col flex-1 h-screen items-center justify-center">
