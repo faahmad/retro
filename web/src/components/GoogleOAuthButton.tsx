@@ -21,7 +21,7 @@ export const GoogleOAuthButton: React.FC<{
   textClassName?: string;
 }> = ({ buttonClassName = "", textClassName = "", children }) => {
   const [idToken, setIdToken] = React.useState<any | null>(null);
-  const [createUser, { data, loading }] = useMutation(CREATE_USER_MUTATION, {
+  const [createUser] = useMutation(CREATE_USER_MUTATION, {
     context: { idToken }
   });
 
