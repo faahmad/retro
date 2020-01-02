@@ -12,7 +12,7 @@ node_modules
 # env variables
 .env-cmdrc
 app.yaml
-serviceAccountKey.*.json
+config
 
 # logs
 npm-debug.log*
