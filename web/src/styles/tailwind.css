@@ -6,6 +6,7 @@ body {
   font-family: "Source Code Pro", monospace;
 }
 
+/* Custom Styles */
 .grid-logo {
   height: 120px;
   width: 120px;
@@ -41,4 +42,18 @@ body {
     /* Pink 50% */
     background-color: rgba(255, 148, 184, 0.5);
   }
+}
+
+/* Overrides */
+.ReactModal__Overlay {
+  opacity: 0;
+  transition: opacity 200ms ease-in-out;
+}
+
+.ReactModal__Overlay--after-open {
+  opacity: 1;
+}
+
+.ReactModal__Overlay--before-close {
+  opacity: 0;
 }

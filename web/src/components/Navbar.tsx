@@ -1,14 +1,26 @@
 import React from "react";
 import { animated, useTransition } from "react-spring";
 import { Button } from "./Button";
-import { OptimizelyFeature } from "@optimizely/react-sdk";
-import retroPinkLogo from "../assets/images/retro-pink-logo.svg";
+import { RetroPinkLogo } from "./RetroPinkLogo";
+import { GoogleOAuthButton } from "./GoogleOAuthButton";
+import { LoginModal } from "./LoginModal";
 
 export const Navbar: React.FC = () => {
+  const [isOpen, setIsOpen] = React.useState(false);
+
+  const handleOpenModal = () => {
+    setIsOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsOpen(false);
+  };
+
   return (
     <nav className="navbar flex flex-wrap justify-between sm:mb-1 lg:mb-4">
+      <LoginModal isOpen={isOpen} onRequestClose={handleCloseModal} />
       <NavbarBrand />
-      <NavbarAuthButtons />
+      <NavbarAuthButtons onClick={handleOpenModal} />
     </nav>
   );
 };
@@ -41,32 +53,20 @@ const NavbarBrand = () => {
         ))}
       </div>
       <div className="z-10 mt-8 sm:ml-0 lg:ml-5">
-        <img src={retroPinkLogo} alt="Retro Pink Logo" />
+        <RetroPinkLogo />
         <p className="text-blue">welcome to new school teamwork.</p>
       </div>
     </div>
   );
 };
 
-const NavbarAuthButtons = () => (
+const NavbarAuthButtons: React.FC<any> = ({ onClick }) => (
   <div className="flex flex-col">
-    <OptimizelyFeature feature="navbar_auth_buttons">
-      {isEnabled =>
-        isEnabled ? (
-          <React.Fragment>
-            <Button className="text-blue mb-2 text-right" onClick={() => {}}>
-              Login
-            </Button>
-            <Button className="text-blue text-right" onClick={() => {}}>
-              <span>Signup With Google</span>
-            </Button>
-          </React.Fragment>
-        ) : (
-          <Button className="text-blue mb-2 text-right" onClick={() => {}}>
-            Coming Soon
-          </Button>
-        )
-      }
-    </OptimizelyFeature>
+    <Button className="text-blue mb-2 text-right" onClick={onClick}>
+      Login
+    </Button>
+    <GoogleOAuthButton buttonClassName="text-blue" textClassName="justify-end">
+      Signup With
+    </GoogleOAuthButton>
   </div>
 );

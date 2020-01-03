@@ -1,4 +1,5 @@
 module.exports = {
   setupFilesAfterEnv: ["<rootDir>/setupTests.js"],
-  testMatch: ["**/?(*.)+(spec|test).[jt]s?(x)"]
+  testMatch: ["**/?(*.)+(spec|test).[jt]s?(x)"],
+  modulePathIgnorePatterns: ["<rootDir>/build/"]
 };

@@ -1,15 +1,12 @@
-/* eslint-disable */
 import { factory } from "./test-helpers/factory";
 import { executeGraphQLQuery } from "./test-helpers/execute-graphql-query";
 
 describe("user query", () => {
   const userQuery = `
-    query($id: ID!) {
-      user(id: $id) {
+    query {
+      user {
         id
         email
-        firstName
-        lastName
         createdAt
         updatedAt
       }
@@ -17,42 +14,34 @@ describe("user query", () => {
   `;
 
   describe("when given a valid user id", () => {
-    it("should return the user with the matching id", async () => {
+    it("should return the current user", async () => {
       const user = await factory.user();
-      const variables = { id: user.id };
 
-      const queryResult = await executeGraphQLQuery(userQuery, variables);
+      const queryResult = await executeGraphQLQuery({
+        query: userQuery,
+        userId: user.id
+      });
 
       expect(queryResult).toMatchObject({
         data: {
           user: {
-            email: user.email,
-            firstName: user.firstName,
-            lastName: user.lastName
+            id: user.id,
+            email: user.email
           }
         }
       });
     });
     it("should return null if the user isn't found", async () => {
-      const variables = { id: 1 };
-
-      const queryResult = await executeGraphQLQuery(userQuery, variables);
+      const queryResult = await executeGraphQLQuery({
+        query: userQuery,
+        userId: "this-id-does-not-exist"
+      });
 
       expect(queryResult).toMatchObject({
         data: {
           user: null
         }
       });
-    });
-  });
-  describe("when not given a user id", () => {
-    it("should return an error", async () => {
-      const queryResult = await executeGraphQLQuery(userQuery);
-
-      expect(queryResult.errors.length).toBe(1);
-      expect(queryResult.errors[0].message).toBe(
-        'Variable "$id" of required type "ID!" was not provided.'
-      );
     });
   });
 });

@@ -12,6 +12,7 @@ node_modules
 # env variables
 .env-cmdrc
 app.yaml
+config
 
 # logs
 npm-debug.log*

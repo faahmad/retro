@@ -4,6 +4,7 @@ module.exports = {
     node: true
   },
   extends: "eslint:recommended",
+  plugins: ["jest"],
   globals: {
     Atomics: "readonly",
     SharedArrayBuffer: "readonly"
