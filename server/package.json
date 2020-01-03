@@ -6,10 +6,12 @@
   "scripts": {
     "dev": "env-cmd -e development nodemon --exec babel-node src/index.js",
     "test": "env-cmd -e test jest --runInBand",
-    "build": "babel src -d build -s",
+    "build": "babel src -d build -s --copy-files",
     "start": "node build/index.js",
     "predeploy": "yarn run build",
-    "deploy": "gcloud app deploy"
+    "deploy": "gcloud app deploy --quiet",
+    "browse": "gcloud app browse",
+    "logs": "gcloud app logs tail -s default"
   },
   "devDependencies": {
     "@babel/cli": "^7.7.4",
