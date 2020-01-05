@@ -9,8 +9,8 @@ describe("createWorkspace mutation", () => {
         id
         name
         url
-        allowedEmailDomains
-        owner
+        allowedEmailDomain
+        ownerId
         createdAt
         updatedAt
       }
@@ -18,14 +18,13 @@ describe("createWorkspace mutation", () => {
   `;
 
   describe("when given valid input", () => {
-    let user;
-    beforeEach(async () => {
-      user = await factory.user();
-    });
     it("should create a workspace", async () => {
-      const name = faker.company.companyName();
-      const url = faker.internet.url();
-      const allowedEmailDomains = [faker.internet.domainName()];
+      const user = await factory.user();
+
+      const companyName = faker.internet.domainWord();
+      const name = companyName.toUpperCase();
+      const url = companyName;
+      const allowedEmailDomain = `@${companyName}.com`;
 
       const { data } = await executeGraphQLQuery({
         query: createWorkspaceMutation,
@@ -34,58 +33,81 @@ describe("createWorkspace mutation", () => {
           input: {
             name,
             url,
-            allowedEmailDomains
+            allowedEmailDomain
           }
         }
       });
 
       expect(data).toMatchObject({
         createWorkspace: {
+          id: "1",
+          ownerId: user.id,
           name,
           url,
-          allowedEmailDomains
+          allowedEmailDomain
         }
       });
     });
   });
   describe("when invalid", () => {
-    xit("should only allow a user to create themselves", async () => {
-      const mockId = faker.random.uuid();
-      const mockEmail = faker.internet.email();
-
+    it("should return an error when no input is given", async () => {
       const { errors } = await executeGraphQLQuery({
-        query: createUserMutation,
-        variables: { input: { id: mockId, email: mockEmail } }
-      });
-
-      expect(errors.length).toBe(1);
-      expect(errors[0].message).toBe("You can only create yourself.");
-    });
-
-    xit("should return an error when no input is given", async () => {
-      const { errors } = await executeGraphQLQuery({
-        query: createUserMutation
+        query: createWorkspaceMutation
       });
 
       expect(errors.length).toBe(1);
       expect(errors[0].message).toBe(
-        'Variable "$input" of required type "CreateUserInput!" was not provided.'
+        'Variable "$input" of required type "CreateWorkspaceInput!" was not provided.'
       );
     });
 
-    xit("should return an error when an email is not given as a variable", async () => {
-      const variables = { input: { id: null, email: null } };
+    it("should not create a workspace if a valid user doesn't exist", async () => {
+      const invalidUserId = faker.random.uuid();
+
+      const companyName = faker.internet.domainWord();
+      const name = companyName.toUpperCase();
+      const url = companyName;
+      const allowedEmailDomain = `@${companyName}.com`;
+
       const { errors } = await executeGraphQLQuery({
-        query: createUserMutation,
-        variables
+        query: createWorkspaceMutation,
+        userId: invalidUserId,
+        variables: {
+          input: {
+            name,
+            url,
+            allowedEmailDomain
+          }
+        }
       });
 
-      expect(errors.length).toBe(2);
+      expect(errors.length).toBe(1);
       expect(errors[0].message).toBe(
-        'Variable "$input" got invalid value null at "input.id"; Expected non-nullable type ID! not to be null.'
+        `Key (ownerId)=(${invalidUserId}) is not present in table "users".`
       );
-      expect(errors[1].message).toBe(
-        'Variable "$input" got invalid value null at "input.email"; Expected non-nullable type String! not to be null.'
+    });
+
+    it("should return an error when an existing url variable is used", async () => {
+      const workspaceOne = await factory.workspace();
+
+      const companyName = await faker.internet.domainWord();
+      const name = companyName.toUpperCase();
+      const allowedEmailDomain = `@${companyName}.com`;
+
+      const { errors } = await executeGraphQLQuery({
+        query: createWorkspaceMutation,
+        variables: {
+          input: {
+            name,
+            allowedEmailDomain,
+            url: workspaceOne.url
+          }
+        }
+      });
+
+      expect(errors.length).toBe(1);
+      expect(errors[0].message).toBe(
+        `Key (url)=(${workspaceOne.url}) already exists.`
       );
     });
   });

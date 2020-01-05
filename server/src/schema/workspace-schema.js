@@ -5,7 +5,7 @@ export const workspaceSchema = gql`
     id: ID!
     name: String!
     url: String
-    allowedEmailDomains: [String]
+    allowedEmailDomain: String
     ownerId: ID!
     createdAt: DateTime!
     updatedAt: DateTime!
@@ -14,7 +14,7 @@ export const workspaceSchema = gql`
   input CreateWorkspaceInput {
     name: String!
     url: String
-    allowedEmailDomains: [String]
+    allowedEmailDomain: String
   }
 
   extend type Query {
