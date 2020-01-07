@@ -17,7 +17,7 @@ export const CreateWorkspacePage = () => {
         <div className="flex flex-col mx-auto max-w-md">
           <div className="flex flex-col mb-8">
             <label htmlFor="name" className="text-sm font-black">
-              WORKSPACE NAME
+              Workspace Name
             </label>
             <div>
               <input
@@ -33,7 +33,7 @@ export const CreateWorkspacePage = () => {
 
           <div className="flex flex-col mb-8">
             <label htmlFor="url" className="text-sm font-black">
-              WORKSPACE URL (OPTIONAL)
+              Workspace URL (Optional)
             </label>
             <div className="flex items-center">
               www.retro.app/
@@ -51,7 +51,7 @@ export const CreateWorkspacePage = () => {
 
           <div className="flex flex-col mb-8">
             <label htmlFor="allowedEmailDomain" className="text-sm font-black">
-              ALLOWED EMAIL DOMAIN (OPTIONAL)
+              Allowed Email Domain (Optional)
             </label>
             <div>
               <input
