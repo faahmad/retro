@@ -1,7 +1,60 @@
 import React from "react";
+import { gql } from "apollo-boost";
+import { useMutation, useQuery } from "@apollo/react-hooks";
 import { Button } from "../components/Button";
+import { Redirect } from "react-router-dom";
 
-export const CreateWorkspacePage = () => {
+const CREATE_WORKSPACE_MUTATION = gql`
+  mutation CreateWorkspace($input: CreateWorkspaceInput!) {
+    createWorkspace(input: $input) {
+      id
+      name
+      url
+    }
+  }
+`;
+
+const USER_QUERY = gql`
+  query User {
+    user {
+      workspace {
+        id
+        url
+      }
+    }
+  }
+`;
+
+export const CreateWorkspacePage: React.FC<any> = ({ history }) => {
+  const userQueryResponse = useQuery(USER_QUERY);
+  const [createWorkspace, { loading }] = useMutation(CREATE_WORKSPACE_MUTATION);
+  const [formState, setFormState] = React.useState({
+    name: "",
+    url: "",
+    allowedEmailDomain: ""
+  });
+
+  if (userQueryResponse.loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (userQueryResponse.data.user.workspace !== null) {
+    return <Redirect to="/" />;
+  }
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFormState({
+      ...formState,
+      [event.target.name]: event.target.value
+    });
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    await createWorkspace({ variables: { input: formState } });
+    history.push("/");
+  };
+
   return (
     <div className="create-workspace-page flex flex-col w-full justify-center my-8 text-blue">
       <div className="landing-page__above-the-fold w-1/2 max-w-6xl m-auto">
@@ -12,18 +65,22 @@ export const CreateWorkspacePage = () => {
           </h3>
         </div>
 
-        <hr className="my-8"></hr>
+        <hr className="mt-4 mb-6"></hr>
 
-        <div className="flex flex-col mx-auto max-w-md">
+        <form
+          className="flex flex-col mx-auto max-w-md"
+          onSubmit={handleSubmit}
+        >
           <div className="flex flex-col mb-8">
             <label htmlFor="name" className="text-sm font-black">
               Workspace Name
             </label>
             <div>
               <input
+                onChange={handleChange}
                 name="name"
                 type="text"
-                className="border border-blue shadow mt-1 mb-2 h-8 w-full max-w-md"
+                className="border border-red my-1 h-8 w-full max-w-md"
               ></input>
             </div>
             <p className="text-xs">
@@ -38,9 +95,10 @@ export const CreateWorkspacePage = () => {
             <div className="flex items-center">
               www.retro.app/
               <input
+                onChange={handleChange}
                 name="url"
                 type="text"
-                className="border border-blue shadow mt-1 mb-2 h-8 flex-1"
+                className="border border-red my-1 h-8 flex-1"
               ></input>
             </div>
             <p className="text-xs">
@@ -53,11 +111,14 @@ export const CreateWorkspacePage = () => {
             <label htmlFor="allowedEmailDomain" className="text-sm font-black">
               Allowed Email Domain (Optional)
             </label>
-            <div>
+            <div className="flex items-center">
+              @
               <input
+                onChange={handleChange}
                 name="allowedEmailDomain"
                 type="text"
-                className="border border-blue shadow mt-1 mb-2 h-8 w-full max-w-md"
+                className="border border-red my-1 h-8 w-full max-w-md"
+                placeholder="example.com"
               ></input>
             </div>
             <p className="text-xs">
@@ -66,8 +127,10 @@ export const CreateWorkspacePage = () => {
             </p>
           </div>
 
-          <Button className="text-blue mb-2">Create Workspace</Button>
-        </div>
+          <Button type="submit" className="text-blue mb-2" disabled={loading}>
+            Create Workspace
+          </Button>
+        </form>
       </div>
     </div>
   );
