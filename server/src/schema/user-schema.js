@@ -6,6 +6,7 @@ export const userSchema = gql`
     email: String!
     createdAt: Date!
     updatedAt: Date!
+    workspace: Workspace
   }
 
   input CreateUserInput {
@@ -14,7 +15,6 @@ export const userSchema = gql`
   }
 
   extend type Query {
-    users: [User!]
     user: User
   }
 

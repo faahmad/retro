@@ -13,5 +13,18 @@ export const userResolvers = {
       }
       return await models.user.create(input);
     }
+  },
+  User: {
+    async workspace(parent, args, { models }) {
+      const workspaceUser = await models.workspaceUser.findOne({
+        where: { userId: parent.id }
+      });
+
+      if (!workspaceUser) {
+        return null;
+      }
+
+      return await models.workspace.findByPk(workspaceUser.workspaceId);
+    }
   }
 };

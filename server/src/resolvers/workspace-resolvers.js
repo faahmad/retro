@@ -9,10 +9,17 @@ export const workspaceResolvers = {
   Mutation: {
     async createWorkspace(parent, { input }, { models, userId }) {
       try {
-        return await models.workspace.create({
+        const workspace = await models.workspace.create({
           ...input,
           ownerId: userId
         });
+
+        await models.workspaceUser.create({
+          workspaceId: workspace.id,
+          userId
+        });
+
+        return workspace;
       } catch (error) {
         throw new ApolloError(error.original.detail);
       }
