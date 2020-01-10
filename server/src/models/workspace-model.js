@@ -3,10 +3,13 @@ const workspaceModel = (sequelize, DataTypes) => {
     "workspaces",
     {
       name: DataTypes.STRING,
-      iconUrl: DataTypes.STRING
+      iconUrl: DataTypes.STRING,
+      url: { type: DataTypes.STRING, unique: true },
+      allowedEmailDomain: DataTypes.STRING
     },
     { timestamps: true }
   );
+
   workspace.associate = models => {
     workspace.belongsTo(models.user, { as: "owner" });
   };
@@ -15,9 +18,3 @@ const workspaceModel = (sequelize, DataTypes) => {
 };
 
 export default workspaceModel;
-
-// has one name
-// has one iconUrl
-// has one Owner (foreign_key)
-// has many Teams
-// has many Retros

@@ -4,14 +4,17 @@ export const workspaceSchema = gql`
   type Workspace {
     id: ID!
     name: String!
-    iconUrl: String!
-    ownerId: String!
-    createdAt: Date!
-    updatedAt: Date!
+    url: String
+    allowedEmailDomain: String
+    ownerId: ID!
+    createdAt: DateTime!
+    updatedAt: DateTime!
   }
 
   input CreateWorkspaceInput {
     name: String!
+    url: String
+    allowedEmailDomain: String
   }
 
   extend type Query {
@@ -19,6 +22,6 @@ export const workspaceSchema = gql`
   }
 
   extend type Mutation {
-    createWorkspace(input: CreateWorkspaceInput): Workspace
+    createWorkspace(input: CreateWorkspaceInput!): Workspace
   }
 `;

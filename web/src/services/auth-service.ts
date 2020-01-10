@@ -1,5 +1,6 @@
 import firebase from "firebase/app";
 import "firebase/auth";
+import { apolloClient } from "../lib/apollo-client";
 
 export class AuthService {
   static async authenticateWithGooglePopUp() {
@@ -17,6 +18,7 @@ export class AuthService {
     }
   }
   static async logOut() {
+    await apolloClient.cache.reset();
     return firebase.auth().signOut();
   }
 }
