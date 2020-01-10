@@ -93,8 +93,7 @@ const CreateWorkspaceForm: React.FC<any> = ({ history }) => {
           }
         }
       });
-
-      history.push("/");
+      window.location.replace("/");
     }
   });
 

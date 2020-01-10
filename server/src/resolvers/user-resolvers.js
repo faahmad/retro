@@ -16,15 +16,14 @@ export const userResolvers = {
   },
   User: {
     async workspace(parent, args, { models }) {
-      const workspaceUser = await models.workspaceUser.findOne({
-        where: { userId: parent.id }
-      });
-
-      if (!workspaceUser) {
+      const user = await models.user.findByPk(parent.id);
+      const workspacesThatUserBelongsTo = await user.getWorkspaces();
+      if (!workspacesThatUserBelongsTo.length === 0) {
         return null;
       }
-
-      return await models.workspace.findByPk(workspaceUser.workspaceId);
+      // Only returning the first workspace because we will only
+      // allow users to be part of one workspace for now.
+      return workspacesThatUserBelongsTo[0];
     }
   }
 };

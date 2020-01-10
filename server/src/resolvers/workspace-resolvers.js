@@ -14,10 +14,8 @@ export const workspaceResolvers = {
           ownerId: userId
         });
 
-        await models.workspaceUser.create({
-          workspaceId: workspace.id,
-          userId
-        });
+        const user = await models.user.findByPk(userId);
+        await user.addWorkspace(workspace.id);
 
         return workspace;
       } catch (error) {

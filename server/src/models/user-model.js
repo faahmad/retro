@@ -1,5 +1,5 @@
 const userModel = (sequelize, DataTypes) => {
-  return sequelize.define(
+  const user = sequelize.define(
     "users",
     {
       id: { type: DataTypes.STRING, primaryKey: true },
@@ -9,6 +9,12 @@ const userModel = (sequelize, DataTypes) => {
     },
     { timestamps: true }
   );
+
+  user.associate = models => {
+    user.belongsToMany(models.workspace, { through: "workspaceUsers" });
+  };
+
+  return user;
 };
 
 export default userModel;

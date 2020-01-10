@@ -1,6 +1,7 @@
 import { executeGraphQLQuery } from "./test-helpers/execute-graphql-query";
 import { factory } from "./test-helpers/factory";
 import faker from "faker";
+import models from "../models";
 
 describe("createWorkspace mutation", () => {
   const createWorkspaceMutation = `
@@ -18,14 +19,21 @@ describe("createWorkspace mutation", () => {
   `;
 
   describe("when given valid input", () => {
+    let user;
+    let workspaceName;
+    let name;
+    let url;
+    let allowedEmailDomain;
+    beforeEach(async () => {
+      user = await factory.user();
+
+      workspaceName = faker.internet.domainWord();
+      name = workspaceName.toUpperCase();
+      url = workspaceName;
+      allowedEmailDomain = `@${workspaceName}.com`;
+    });
+
     it("should create a workspace", async () => {
-      const user = await factory.user();
-
-      const companyName = faker.internet.domainWord();
-      const name = companyName.toUpperCase();
-      const url = companyName;
-      const allowedEmailDomain = `@${companyName}.com`;
-
       const { data } = await executeGraphQLQuery({
         query: createWorkspaceMutation,
         userId: user.id,
@@ -47,6 +55,25 @@ describe("createWorkspace mutation", () => {
           allowedEmailDomain
         }
       });
+    });
+
+    it("should add the user to the newly created workspace", async () => {
+      await executeGraphQLQuery({
+        query: createWorkspaceMutation,
+        userId: user.id,
+        variables: {
+          input: {
+            name,
+            url,
+            allowedEmailDomain
+          }
+        }
+      });
+
+      const u = await models.user.findByPk(user.id);
+      const workspaces = await u.getWorkspaces();
+
+      expect(workspaces[0].workspaceUsers.userId).toBe(user.id);
     });
   });
   describe("when invalid", () => {

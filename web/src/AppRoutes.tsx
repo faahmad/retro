@@ -35,8 +35,14 @@ const _DevelopmentOnlyLoggedInPage = () => {
   if (userQueryResponse.loading) {
     return <LoadingPage />;
   }
-
   const { user } = userQueryResponse.data;
+
+  // Forcing a reload because there is a race condition
+  // when the user first signs up.
+  if (!user) {
+    window.location.replace("/");
+  }
+
   if (!user.workspace) {
     return <Redirect to="/workspace/create" />;
   }

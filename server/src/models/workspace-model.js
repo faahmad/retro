@@ -5,18 +5,14 @@ const workspaceModel = (sequelize, DataTypes) => {
       name: DataTypes.STRING,
       iconUrl: DataTypes.STRING,
       url: { type: DataTypes.STRING, unique: true },
-      allowedEmailDomain: DataTypes.STRING,
-      ownerId: {
-        type: DataTypes.STRING,
-        references: {
-          model: "users",
-          key: "id"
-        },
-        allowNull: false
-      }
+      allowedEmailDomain: DataTypes.STRING
     },
     { timestamps: true }
   );
+
+  workspace.associate = models => {
+    workspace.belongsTo(models.user, { as: "owner" });
+  };
 
   return workspace;
 };
