@@ -17,13 +17,17 @@ class Factory {
 
     const user = await this.user();
 
-    return models.workspace.create({
+    const workspace = await models.workspace.create({
       name,
       url,
       allowedEmailDomain,
       ownerId: user.id,
       ...options
     });
+
+    user.addWorkspace(workspace.id);
+
+    return workspace;
   }
 }
 
