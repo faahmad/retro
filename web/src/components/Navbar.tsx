@@ -4,28 +4,31 @@ import { Button } from "./Button";
 import { RetroPinkLogo } from "./RetroPinkLogo";
 import { GoogleOAuthButton } from "./GoogleOAuthButton";
 import { LoginModal } from "./LoginModal";
+import { AuthContext } from "../contexts/AuthContext";
+import { AuthService } from "../services/auth-service";
 
 export const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = React.useState(false);
 
-  const handleOpenModal = () => {
-    setIsOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsOpen(false);
+  const handleToggleModal = async () => {
+    await setIsOpen(prevIsOpen => !prevIsOpen);
   };
 
   return (
     <nav className="navbar flex flex-wrap justify-between sm:mb-1 lg:mb-4">
-      <LoginModal isOpen={isOpen} onRequestClose={handleCloseModal} />
+      <LoginModal
+        isOpen={isOpen}
+        onRequestClose={handleToggleModal}
+        onClick={handleToggleModal}
+      />
       <NavbarBrand />
-      <NavbarAuthButtons onClick={handleOpenModal} />
+      <NavbarAuthButtons onClick={handleToggleModal} />
     </nav>
   );
 };
 
 const NavbarBrand = () => {
+  const authAccount = React.useContext(AuthContext);
   const [boxes, setBoxes] = React.useState<{ key: number }[]>([]);
 
   React.useEffect(() => {
@@ -54,19 +57,39 @@ const NavbarBrand = () => {
       </div>
       <div className="z-10 mt-8 sm:ml-0 lg:ml-5">
         <RetroPinkLogo />
-        <p className="text-blue">welcome to new school teamwork.</p>
+        {!authAccount && (
+          <p className="text-blue">welcome to new school teamwork.</p>
+        )}
       </div>
     </div>
   );
 };
 
-const NavbarAuthButtons: React.FC<any> = ({ onClick }) => (
-  <div className="flex flex-col">
-    <Button className="text-blue mb-2 text-right" onClick={onClick}>
-      Login
-    </Button>
-    <GoogleOAuthButton buttonClassName="text-blue" textClassName="justify-end">
-      Signup With
-    </GoogleOAuthButton>
-  </div>
-);
+const NavbarAuthButtons: React.FC<any> = ({ onClick }) => {
+  const authAccount = React.useContext(AuthContext);
+
+  return (
+    <div className="flex flex-col">
+      {authAccount ? (
+        <Button
+          className="text-blue text-right"
+          onClick={() => AuthService.logOut()}
+        >
+          Sign Out
+        </Button>
+      ) : (
+        <React.Fragment>
+          <Button className="text-blue mb-2 text-right" onClick={onClick}>
+            Login
+          </Button>
+          <GoogleOAuthButton
+            buttonClassName="text-blue"
+            textClassName="justify-end"
+          >
+            Signup With
+          </GoogleOAuthButton>
+        </React.Fragment>
+      )}
+    </div>
+  );
+};

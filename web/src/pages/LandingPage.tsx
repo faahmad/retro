@@ -1,8 +1,5 @@
 import React from "react";
 
-// components
-import { Navbar } from "../components/Navbar";
-
 // images
 import retroHeroImage from "../assets/images/retro-hero-image.svg";
 import howItWorksInviteImage from "../assets/images/how-it-works-invite-image.svg";
@@ -13,7 +10,6 @@ export const LandingPage: React.FC = () => {
   return (
     <div className="landing-page flex flex-col w-full justify-center my-8">
       <div className="landing-page__above-the-fold w-4/5 max-w-6xl m-auto">
-        <Navbar />
         <div className="flex flex-col lg:text-center m-0">
           <img
             className="lg:flex-1 mt-4"

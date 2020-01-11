@@ -7,11 +7,13 @@ interface LoginModalProps {
   onRequestClose: (
     event: React.MouseEvent<Element, MouseEvent> | React.KeyboardEvent<Element>
   ) => void;
+  onClick?: () => void;
 }
 
 export const LoginModal: React.FC<LoginModalProps> = ({
   isOpen,
-  onRequestClose
+  onRequestClose,
+  onClick
 }) => {
   return (
     <ReactModal
@@ -33,6 +35,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
         <GoogleOAuthButton
           buttonClassName="mt-6"
           textClassName="justify-center"
+          onClick={onClick}
         >
           Continue With
         </GoogleOAuthButton>
