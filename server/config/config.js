@@ -6,7 +6,8 @@ const nonProductionOptions = {
   host: "127.0.0.1",
   dialect: "postgres"
 };
-const productionInstancePath = `/cloudsql/${process.env.INSTANCE_CONNECTION_NAME}`;
+const productionInstancePath =
+  "/cloudsql/" + process.env.INSTANCE_CONNECTION_NAME;
 
 module.exports = {
   development: {
