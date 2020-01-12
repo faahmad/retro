@@ -5,6 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "env-cmd -e development nodemon --exec babel-node src/index.js",
+    "start:test": "env-cmd -e test nodemon --exec babel-node src/index.js",
     "test": "env-cmd -e test jest --runInBand",
     "build": "babel src -d build -s --copy-files",
     "prestart": "sequelize db:migrate",
