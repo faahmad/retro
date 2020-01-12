@@ -2,7 +2,8 @@ import { sequelize } from "../lib/sequelize";
 
 const models = {
   user: sequelize.import("./user-model"),
-  workspace: sequelize.import("./workspace-model")
+  workspace: sequelize.import("./workspace-model"),
+  team: sequelize.import("./team-model")
 };
 
 Object.keys(models).forEach(key => {

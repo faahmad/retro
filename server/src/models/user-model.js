@@ -12,6 +12,7 @@ const userModel = (sequelize, DataTypes) => {
 
   user.associate = models => {
     user.belongsToMany(models.workspace, { through: "workspaceUsers" });
+    user.belongsToMany(models.team, { through: "teamUsers" });
   };
 
   return user;

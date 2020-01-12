@@ -4,9 +4,10 @@ export const userSchema = gql`
   type User {
     id: ID!
     email: String!
-    createdAt: Date!
-    updatedAt: Date!
+    createdAt: DateTime!
+    updatedAt: DateTime!
     workspace: Workspace
+    teams: [Team]
   }
 
   input CreateUserInput {

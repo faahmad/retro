@@ -9,6 +9,7 @@ export const workspaceSchema = gql`
     ownerId: ID!
     createdAt: DateTime!
     updatedAt: DateTime!
+    teams: [Team]
   }
 
   input CreateWorkspaceInput {

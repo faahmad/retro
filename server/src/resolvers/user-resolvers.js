@@ -24,6 +24,11 @@ export const userResolvers = {
       // Only returning the first workspace because we will only
       // allow users to be part of one workspace for now.
       return workspacesThatUserBelongsTo[0];
+    },
+    async teams(parent, args, { models }) {
+      const user = await models.user.findByPk(parent.id);
+      const teamsThatUserBelongsTo = await user.getTeams();
+      return teamsThatUserBelongsTo;
     }
   }
 };
