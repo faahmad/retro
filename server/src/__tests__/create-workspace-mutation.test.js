@@ -14,6 +14,11 @@ describe("createWorkspace mutation", () => {
         ownerId
         createdAt
         updatedAt
+        teams {
+          id
+          name
+          workspaceId
+        }
       }
     }
   `;
@@ -74,6 +79,29 @@ describe("createWorkspace mutation", () => {
       const workspaces = await u.getWorkspaces();
 
       expect(workspaces[0].workspaceUsers.userId).toBe(user.id);
+    });
+    it("should create a default team and add user to that team", async () => {
+      const mutationResult = await executeGraphQLQuery({
+        query: createWorkspaceMutation,
+        userId: user.id,
+        variables: {
+          input: {
+            name,
+            url,
+            allowedEmailDomain
+          }
+        }
+      });
+
+      const u = await models.user.findByPk(user.id);
+      const userTeams = await u.getTeams();
+
+      expect(String(userTeams[0].id)).toBe(
+        mutationResult.data.createWorkspace.teams[0].id
+      );
+      expect(String(userTeams[0].workspaceId)).toBe(
+        mutationResult.data.createWorkspace.teams[0].workspaceId
+      );
     });
   });
   describe("when invalid", () => {
