@@ -13,7 +13,8 @@
     "predeploy": "yarn run build",
     "deploy": "gcloud app deploy --quiet",
     "browse": "gcloud app browse",
-    "logs": "gcloud app logs tail -s default"
+    "logs": "gcloud app logs tail -s default",
+    "lint": "eslint src"
   },
   "devDependencies": {
     "@babel/cli": "^7.7.4",
@@ -21,6 +22,7 @@
     "@babel/node": "^7.6.3",
     "@babel/preset-env": "^7.6.3",
     "eslint": "^6.5.1",
+    "eslint-config-airbnb": "^18.0.1",
     "eslint-plugin-jest": "^23.1.1",
     "faker": "^4.1.0",
     "jest": "^24.9.0",

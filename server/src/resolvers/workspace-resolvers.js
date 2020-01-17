@@ -27,6 +27,19 @@ export const workspaceResolvers = {
       } catch (error) {
         throw new ApolloError(error.original.detail);
       }
+    },
+    async inviteUserToWorkspace(parent, { input }, { models, userId }) {
+      try {
+        const workspaceInvite = await models.workspaceInvite.create({
+          email: input.email,
+          workspaceId: input.workspaceId,
+          invitedById: userId,
+          accepted: false
+        });
+        return workspaceInvite;
+      } catch (error) {
+        throw new ApolloError(error.original.detail);
+      }
     }
   },
   Workspace: {

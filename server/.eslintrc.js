@@ -1,10 +1,10 @@
 module.exports = {
   env: {
     es6: true,
-    node: true
+    node: true,
+    jest: true
   },
   extends: "eslint:recommended",
-  plugins: ["jest"],
   globals: {
     Atomics: "readonly",
     SharedArrayBuffer: "readonly"
