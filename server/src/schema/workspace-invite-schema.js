@@ -22,6 +22,6 @@ export const workspaceInviteSchema = gql`
   }
 
   extend type Mutation {
-    inviteUserToWorkspace(input: InviteUserToWorkspaceInput!): WorkspaceInvite!
+    inviteUserToWorkspace(input: InviteUserToWorkspaceInput!): WorkspaceInvite
   }
 `;
