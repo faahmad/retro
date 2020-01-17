@@ -14,7 +14,8 @@ module.exports = {
     ...nonProductionOptions
   },
   test: {
-    ...nonProductionOptions
+    ...nonProductionOptions,
+    database: "retro_test"
   },
   production: {
     username: process.env.DB_USER,

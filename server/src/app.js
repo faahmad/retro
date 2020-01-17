@@ -15,9 +15,11 @@ const apolloServer = new ApolloServer({
   context: async ({ req }) => {
     const idToken = req.headers["x-retro-auth"];
     const userId = await AuthenticationService.getUserIdFromIdToken(idToken);
+    const user = await models.user.findByPk(userId);
     return {
       models,
-      userId
+      userId,
+      user
     };
   }
 });

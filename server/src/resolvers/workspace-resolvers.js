@@ -1,4 +1,4 @@
-import { ApolloError } from "apollo-server-express";
+import { ApolloError, ForbiddenError } from "apollo-server-express";
 
 export const workspaceResolvers = {
   Query: {
@@ -28,17 +28,39 @@ export const workspaceResolvers = {
         throw new ApolloError(error.original.detail);
       }
     },
-    async inviteUserToWorkspace(parent, { input }, { models, userId }) {
+    async inviteUserToWorkspace(parent, { input }, { models, userId, user }) {
       try {
+        const workspaces = await user.getWorkspaces({
+          where: { id: input.workspaceId }
+        });
+        if (workspaces.length === 0) {
+          throw new ForbiddenError(
+            "You can't invite a user to a workspace that you're not a member of."
+          );
+        }
+
+        // TODO (created 1/17/2020):
+        // Use a database constraint on the email and workspaceId
+        // columns, instead of checking uniqueness manually.
+        const workspaceInvites = await models.workspaceInvite.findAll({
+          where: { email: input.email, workspaceId: input.workspaceId }
+        });
+        if (workspaceInvites.length !== 0) {
+          throw new ForbiddenError(
+            "User has already been invited to this workspace."
+          );
+        }
+
         const workspaceInvite = await models.workspaceInvite.create({
           email: input.email,
           workspaceId: input.workspaceId,
           invitedById: userId,
           accepted: false
         });
+
         return workspaceInvite;
       } catch (error) {
-        throw new ApolloError(error.original.detail);
+        throw new ApolloError(error.message);
       }
     }
   },

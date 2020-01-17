@@ -7,8 +7,12 @@ const workspaceInviteModel = (sequelize, DataTypes) => {
     },
     { timestamps: true },
     {
-      unique: true,
-      fields: ["email", "workspaceId"]
+      indexes: [
+        {
+          unique: true,
+          fields: ["email", "workspaceId"]
+        }
+      ]
     }
   );
 

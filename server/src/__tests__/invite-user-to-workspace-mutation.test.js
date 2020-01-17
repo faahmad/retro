@@ -48,8 +48,67 @@ describe("inviteUserToWorkspace mutation", () => {
     });
   });
   describe("when invalid", () => {
-    xit("should only allow users to invite people to a workspace they are in", () => {});
-    xit("should not allowe a user to be invited to a workspace more than once", () => {});
-    xit("should not allowe a user to be invited to a workspace more than once", () => {});
+    it("should only allow users to invite people to a workspace they are in", async () => {
+      const user = await factory.user();
+      const workspaceOne = await factory.workspace();
+      const workspaceTwo = await factory.workspace();
+      await user.addWorkspace(workspaceOne.id);
+
+      const emailToInvite = faker.internet.email();
+
+      const { errors, data } = await executeGraphQLQuery({
+        query: inviteUserToWorkspaceMutation,
+        variables: {
+          input: {
+            email: emailToInvite,
+            workspaceId: workspaceTwo.id
+          }
+        },
+        userId: user.id
+      });
+
+      expect(data).toBe(null);
+      expect(errors.length).toBe(1);
+      expect(errors[0].message).toBe(
+        "You can't invite a user to a workspace that you're not a member of."
+      );
+    });
+    it("should not allow a user to be invited to a workspace more than once", async () => {
+      const user = await factory.user();
+      const workspace = await factory.workspace();
+      await user.addWorkspace(workspace.id);
+
+      const emailToInvite = faker.internet.email();
+
+      // Invite the user once.
+      await executeGraphQLQuery({
+        query: inviteUserToWorkspaceMutation,
+        variables: {
+          input: {
+            email: emailToInvite,
+            workspaceId: workspace.id
+          }
+        },
+        userId: user.id
+      });
+
+      // Invite the user again.
+      const { data, errors } = await executeGraphQLQuery({
+        query: inviteUserToWorkspaceMutation,
+        variables: {
+          input: {
+            email: emailToInvite,
+            workspaceId: workspace.id
+          }
+        },
+        userId: user.id
+      });
+
+      expect(data).toBe(null);
+      expect(errors.length).toBe(1);
+      expect(errors[0].message).toBe(
+        "User has already been invited to this workspace."
+      );
+    });
   });
 });
