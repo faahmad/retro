@@ -25,7 +25,5 @@ export const workspaceSchema = gql`
 
   extend type Mutation {
     createWorkspace(input: CreateWorkspaceInput!): Workspace
-    joinWorkspaceFromInvite(): WorkspaceUser
-    joinWorkspaceFromAllowedEmailDomain(): WorkspaceUser
   }
 `;

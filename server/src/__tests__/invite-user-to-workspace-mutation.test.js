@@ -67,7 +67,7 @@ describe("inviteUserToWorkspace mutation", () => {
         userId: user.id
       });
 
-      expect(data).toBe(null);
+      expect(data).toMatchObject({ inviteUserToWorkspace: null });
       expect(errors.length).toBe(1);
       expect(errors[0].message).toBe(
         "You can't invite a user to a workspace that you're not a member of."
@@ -104,7 +104,7 @@ describe("inviteUserToWorkspace mutation", () => {
         userId: user.id
       });
 
-      expect(data).toBe(null);
+      expect(data).toMatchObject({ inviteUserToWorkspace: null });
       expect(errors.length).toBe(1);
       expect(errors[0].message).toBe(
         "User has already been invited to this workspace."
