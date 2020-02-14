@@ -20,6 +20,7 @@ export const workspaceSchema = gql`
 
   extend type Query {
     workspace(id: ID!): Workspace
+    getWorkspacesThatUserIsInvitedTo: [Workspace]
     getWorkspacesByAllowedEmailDomain(allowedEmailDomain: String!): [Workspace]
   }
 

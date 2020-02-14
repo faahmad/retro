@@ -29,6 +29,16 @@ class Factory {
 
     return workspace;
   }
+  async workspaceInvite(options) {
+    const workspaceInvite = await models.workspaceInvite.create({
+      email: options.email,
+      workspaceId: options.workspaceId,
+      invitedById: options.invitedById,
+      accepted: false
+    });
+
+    return workspaceInvite;
+  }
 }
 
 export const factory = new Factory();

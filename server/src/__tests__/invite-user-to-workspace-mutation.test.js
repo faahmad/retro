@@ -50,9 +50,10 @@ describe("inviteUserToWorkspace mutation", () => {
   describe("when invalid", () => {
     it("should only allow users to invite people to a workspace they are in", async () => {
       const user = await factory.user();
-      const workspaceOne = await factory.workspace();
-      const workspaceTwo = await factory.workspace();
-      await user.addWorkspace(workspaceOne.id);
+      const workspaceThatUserBelongsTo = await factory.workspace();
+      await user.addWorkspace(workspaceThatUserBelongsTo.id);
+
+      const workspaceThatUserDoesNotBelongTo = await factory.workspace();
 
       const emailToInvite = faker.internet.email();
 
@@ -61,7 +62,7 @@ describe("inviteUserToWorkspace mutation", () => {
         variables: {
           input: {
             email: emailToInvite,
-            workspaceId: workspaceTwo.id
+            workspaceId: workspaceThatUserDoesNotBelongTo.id
           }
         },
         userId: user.id

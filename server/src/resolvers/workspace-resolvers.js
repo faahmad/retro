@@ -1,9 +1,17 @@
 import { ApolloError, ForbiddenError } from "apollo-server-express";
+import { sequelize } from "../lib/sequelize";
 
 export const workspaceResolvers = {
   Query: {
     async workspace(parent, args, { models }) {
       return await models.workspace.findByPk(args.id);
+    },
+    async getWorkspacesThatUserIsInvitedTo(parent, args, { userId, models }) {
+      const user = await models.user.findByPk(userId);
+      const [results] = await sequelize.query(
+        `SELECT * from "workspaces" LEFT JOIN "workspaceInvites" ON "workspaces".id = "workspaceInvites"."workspaceId" WHERE email = '${user.email}';`
+      );
+      return results;
     }
   },
   Mutation: {
@@ -28,8 +36,9 @@ export const workspaceResolvers = {
         throw new ApolloError(error.original.detail);
       }
     },
-    async inviteUserToWorkspace(parent, { input }, { models, userId, user }) {
+    async inviteUserToWorkspace(parent, { input }, { models, userId }) {
       try {
+        const user = await models.user.findByPk(userId);
         const workspaces = await user.getWorkspaces({
           where: { id: input.workspaceId }
         });
