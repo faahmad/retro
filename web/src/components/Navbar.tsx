@@ -73,7 +73,10 @@ const NavbarAuthButtons: React.FC<any> = ({ onClick }) => {
       {authAccount ? (
         <Button
           className="text-blue text-right bg-white z-10"
-          onClick={() => AuthService.logOut()}
+          onClick={async () => {
+            await AuthService.logOut();
+            window.location.replace("/");
+          }}
         >
           Sign Out
         </Button>

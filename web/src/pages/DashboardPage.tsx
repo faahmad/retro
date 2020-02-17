@@ -4,6 +4,7 @@ import { useQuery } from "@apollo/react-hooks";
 import { Redirect } from "react-router-dom";
 import teamMemberEmptyImage from "../assets/images/team-member-empty-image.svg";
 import dashboardFooterImage from "../assets/images/dashboard-footer-image.svg";
+import { ROUTES } from "../constants/routes";
 
 const USER_QUERY = gql`
   query UserQuery {
@@ -29,11 +30,13 @@ export const DashboardPage: React.FC = () => {
   const { user } = userQueryResponse.data;
 
   if (!user) {
-    window.location.replace("/");
+    // If the page has loaded before we fetch the user,
+    // force a refresh.
+    window.location.replace(ROUTES.AUTHENTICATED.DASHBOARD_PAGE);
   }
 
   if (!user.workspace) {
-    return <Redirect to="/workspace/create" />;
+    return <Redirect to={ROUTES.AUTHENTICATED.ONBOARDING_PAGE} />;
   }
 
   return (

@@ -8,8 +8,9 @@ import {
 import { useAuthContext } from "./contexts/AuthContext";
 import { Navbar } from "./components/Navbar";
 import { LandingPage } from "./pages/LandingPage";
-import { CreateWorkspacePage } from "./pages/CreateWorkspacePage";
+import { OnboardingPage } from "./pages/OnboardingPage";
 import { DashboardPage } from "./pages/DashboardPage";
+import { ROUTES } from "./constants/routes";
 
 const optimizely = createInstance({
   sdkKey: process.env.REACT_APP_OPTIMIZELY_SDK_KEY
@@ -45,7 +46,11 @@ export const AppRoutes: React.FC = () => {
 const UnauthenticatedAppRoutes: React.FC = () => {
   return (
     <React.Fragment>
-      <Route exact path="/" component={LandingPage} />
+      <Route
+        exact
+        path={ROUTES.UNAUTHENTICATED.LANDING_PAGE}
+        component={LandingPage}
+      />
     </React.Fragment>
   );
 };
@@ -53,8 +58,16 @@ const UnauthenticatedAppRoutes: React.FC = () => {
 const AuthenticatedAppRoutes: React.FC = () => {
   return (
     <React.Fragment>
-      <Route exact path="/" component={DashboardPage} />
-      <Route exact path="/workspace/create" component={CreateWorkspacePage} />
+      <Route
+        exact
+        path={ROUTES.AUTHENTICATED.DASHBOARD_PAGE}
+        component={DashboardPage}
+      />
+      <Route
+        exact
+        path={ROUTES.AUTHENTICATED.ONBOARDING_PAGE}
+        component={OnboardingPage}
+      />
     </React.Fragment>
   );
 };
