@@ -1,5 +1,6 @@
 import { ApolloError, ForbiddenError } from "apollo-server-express";
 import { sequelize } from "../lib/sequelize";
+import { WorkspaceService } from "../services/workspace-service";
 
 export const workspaceResolvers = {
   Query: {
@@ -15,22 +16,9 @@ export const workspaceResolvers = {
     }
   },
   Mutation: {
-    async createWorkspace(parent, { input }, { models, userId }) {
+    async createWorkspace(parent, { input }, { userId }) {
       try {
-        const workspace = await models.workspace.create({
-          ...input,
-          ownerId: userId
-        });
-
-        const team = await models.team.create({
-          name: "Default",
-          workspaceId: workspace.id
-        });
-
-        const user = await models.user.findByPk(userId);
-        await user.addWorkspace(workspace.id);
-        await user.addTeam(team.id);
-
+        const workspace = await WorkspaceService.createWorkspace(input, userId);
         return workspace;
       } catch (error) {
         throw new ApolloError(error.original.detail);
@@ -68,6 +56,47 @@ export const workspaceResolvers = {
         });
 
         return workspaceInvite;
+      } catch (error) {
+        throw new ApolloError(error.message);
+      }
+    },
+    async joinWorkspace(parent, { workspaceId }, { models, userId }) {
+      try {
+        const user = await models.user.findByPk(userId);
+        const workspace = await models.workspace.findByPk(workspaceId);
+
+        if (!workspace) {
+          throw new ApolloError("Invalid workspace id");
+        }
+
+        const workspaceInvite = await models.workspaceInvite.findOne({
+          where: { workspaceId: workspace.id, email: user.email }
+        });
+
+        if (
+          !workspaceInvite &&
+          !user.email.endsWith(workspace.allowedEmailDomain)
+        ) {
+          throw new ForbiddenError(
+            "User is not allowed to join this workspace."
+          );
+        }
+
+        const defaultTeam = await models.team.findOne({
+          where: { workspaceId: workspace.id }
+        });
+
+        if (workspaceInvite) {
+          await workspaceInvite.update({ accepted: true });
+        }
+        await user.addWorkspace(workspace.id);
+        await user.addTeam(defaultTeam.id);
+
+        return {
+          code: 200,
+          success: true,
+          message: "Successfully added user to workspace."
+        };
       } catch (error) {
         throw new ApolloError(error.message);
       }

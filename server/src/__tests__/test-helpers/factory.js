@@ -1,4 +1,5 @@
 import faker from "faker";
+import { WorkspaceService } from "../../services/workspace-service";
 import models from "../../models";
 
 class Factory {
@@ -8,6 +9,26 @@ class Factory {
       email: faker.internet.email(),
       ...options
     });
+  }
+  // TODO: Make this the main workspace method for the factory.
+  async createWorkspace(options, userId) {
+    const word = faker.internet.domainWord();
+    const name = word.toUpperCase();
+    const url = word;
+    const allowedEmailDomain = `@${word}.com`;
+
+    const workspace = await WorkspaceService.createWorkspace(
+      {
+        name,
+        url,
+        allowedEmailDomain,
+        ownerId: userId,
+        ...options
+      },
+      userId
+    );
+
+    return workspace;
   }
   async workspace(options) {
     const word = faker.internet.domainWord();

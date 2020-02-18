@@ -8,6 +8,12 @@ const rootSchema = gql`
   scalar Date
   scalar DateTime
 
+  type MutationResponse {
+    code: String!
+    success: Boolean!
+    message: String!
+  }
+
   type Query {
     _: Boolean
   }

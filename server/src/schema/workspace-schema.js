@@ -26,5 +26,6 @@ export const workspaceSchema = gql`
 
   extend type Mutation {
     createWorkspace(input: CreateWorkspaceInput!): Workspace
+    joinWorkspace(workspaceId: ID!): MutationResponse!
   }
 `;
