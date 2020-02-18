@@ -11,7 +11,7 @@ class Factory {
     });
   }
   // TODO: Make this the main workspace method for the factory.
-  async createWorkspace(options, userId) {
+  async createWorkspace(options, user) {
     const word = faker.internet.domainWord();
     const name = word.toUpperCase();
     const url = word;
@@ -22,10 +22,10 @@ class Factory {
         name,
         url,
         allowedEmailDomain,
-        ownerId: userId,
+        ownerId: user.id,
         ...options
       },
-      userId
+      user
     );
 
     return workspace;

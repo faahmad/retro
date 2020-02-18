@@ -26,7 +26,7 @@ describe("joinWorkspace mutation", () => {
     const setupWorkspaceInviteTest = async () => {
       // Create a workspace.
       const owner = await factory.user();
-      const workspace = await factory.createWorkspace(null, owner.id);
+      const workspace = await factory.createWorkspace(null, owner);
       await owner.addWorkspace(workspace.id);
 
       // Invite the user to the workspace.
@@ -89,7 +89,7 @@ describe("joinWorkspace mutation", () => {
     });
     it("should add a user to a workspace if they have an allowedEmailDomain", async () => {
       const owner = await factory.user();
-      const workspace = await factory.createWorkspace(null, owner.id);
+      const workspace = await factory.createWorkspace(null, owner);
 
       const newUser = await factory.user({
         email: "test" + workspace.allowedEmailDomain

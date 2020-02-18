@@ -16,12 +16,11 @@ export const workspaceResolvers = {
     }
   },
   Mutation: {
-    async createWorkspace(parent, { input }, { userId }) {
+    async createWorkspace(parent, { input }, { user }) {
       try {
-        const workspace = await WorkspaceService.createWorkspace(input, userId);
-        return workspace;
+        return await WorkspaceService.createWorkspace(input, user);
       } catch (error) {
-        throw new ApolloError(error.original.detail);
+        throw new ApolloError(error.message);
       }
     },
     async inviteUserToWorkspace(parent, { input }, { models, userId }) {
