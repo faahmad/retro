@@ -63,7 +63,7 @@ export const OnboardingPage: React.FC<any> = ({ history }) => {
           }
         />
       ) : (
-        <CreateWorkspaceForm history={history} />
+        <CreateWorkspaceForm />
       )}
       {hasPendingInvites && (
         <div className="text-blue w-1/2 max-w-6xl m-auto my-8">
@@ -104,7 +104,7 @@ const createWorkspaceFormValidationSchema = yup.object().shape({
     )
 });
 
-const CreateWorkspaceForm: React.FC<any> = ({ history }) => {
+const CreateWorkspaceForm: React.FC = () => {
   const [createWorkspace] = useMutation(CREATE_WORKSPACE_MUTATION, {
     refetchQueries: ["user"],
     awaitRefetchQueries: true
@@ -220,6 +220,16 @@ const CreateWorkspaceForm: React.FC<any> = ({ history }) => {
   );
 };
 
+const JOIN_WORKSPACE_MUTATION = gql`
+  mutation JoinWorkspaceMutation($workspaceId: ID!) {
+    joinWorkspace(workspaceId: $workspaceId) {
+      code
+      success
+      message
+    }
+  }
+`;
+
 interface JoinWorkspaceListProps {
   workspaces: any[];
 }
@@ -227,6 +237,8 @@ interface JoinWorkspaceListProps {
 const JoinWorkspaceList: React.FC<JoinWorkspaceListProps> = ({
   workspaces
 }) => {
+  const [joinWorkspace] = useMutation(JOIN_WORKSPACE_MUTATION);
+
   return (
     <div className="flex flex-col w-full justify-center my-8 text-blue">
       <div className="w-1/2 max-w-6xl m-auto">
@@ -242,6 +254,14 @@ const JoinWorkspaceList: React.FC<JoinWorkspaceListProps> = ({
         <ul>
           {workspaces.map(workspace => (
             <li
+              onClick={async () => {
+                await joinWorkspace({
+                  variables: {
+                    workspaceId: workspace.id
+                  }
+                });
+                window.location.replace("/");
+              }}
               className="border border-blue shadow p-4 mb-4 hover:bg-pink-1/2 cursor-pointer active:transform-1"
               key={workspace.id}
             >
