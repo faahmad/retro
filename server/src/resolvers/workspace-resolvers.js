@@ -10,7 +10,7 @@ export const workspaceResolvers = {
     async getWorkspacesThatUserIsInvitedTo(parent, args, { userId, models }) {
       const user = await models.user.findByPk(userId);
       const [results] = await sequelize.query(
-        `SELECT * from "workspaces" w LEFT JOIN "workspaceInvites" wi ON w.id = wi."workspaceId" WHERE email = '${user.email}';`
+        `SELECT w.id, w.name, w.url from "workspaces" w LEFT JOIN "workspaceInvites" wi ON w.id = wi."workspaceId" WHERE email = '${user.email}';`
       );
       return results;
     }
