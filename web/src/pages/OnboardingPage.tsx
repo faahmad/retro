@@ -156,7 +156,7 @@ const CreateWorkspaceForm: React.FC = () => {
                 type="text"
                 onChange={formik.handleChange}
                 value={formik.values.name}
-                className="border border-red my-1 h-8 w-full max-w-md"
+                className="border border-red my-1 h-8 w-full max-w-md outline-none px-1"
               ></input>
             </div>
             <p className="text-xs">
@@ -176,7 +176,7 @@ const CreateWorkspaceForm: React.FC = () => {
                 type="text"
                 onChange={formik.handleChange}
                 value={formik.values.url}
-                className="border border-red my-1 h-8 flex-1"
+                className="border border-red my-1 h-8 flex-1 outline-none px-1"
               ></input>
             </div>
             <p className="text-xs">
@@ -198,7 +198,7 @@ const CreateWorkspaceForm: React.FC = () => {
                 placeholder="example.com"
                 value={formik.values.allowedEmailDomain}
                 onChange={formik.handleChange}
-                className="border border-red my-1 h-8 w-full max-w-md"
+                className="border border-red my-1 h-8 w-full max-w-md outline-none px-1 ml-1"
               ></input>
             </div>
             <p className="text-xs">

@@ -1,6 +1,14 @@
+import { sequelize } from "../lib/sequelize";
 import models from "../models";
 
 export class WorkspaceService {
+  static async getUsers(workspaceId) {
+    const [users] = await sequelize.query(
+      `SELECT u.* FROM "users" u INNER JOIN "workspaceUsers" wu 
+      ON u.id = wu."userId" WHERE "workspaceId" = ${workspaceId}`
+    );
+    return users;
+  }
   static async createWorkspace(input, user) {
     try {
       if (!user) {

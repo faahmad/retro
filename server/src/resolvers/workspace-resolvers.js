@@ -102,8 +102,16 @@ export const workspaceResolvers = {
     }
   },
   Workspace: {
-    async teams(parent, args, { models }) {
+    async teams(parent, _args, { models }) {
       return models.team.findAll({ where: { workspaceId: parent.id } });
+    },
+    async users(parent) {
+      return WorkspaceService.getUsers(parent.id);
+    },
+    async invitedUsers(parent, _args, { models }) {
+      return models.workspaceInvite.findAll({
+        where: { workspaceId: parent.id, accepted: false }
+      });
     }
   }
 };

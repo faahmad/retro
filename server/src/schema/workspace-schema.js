@@ -10,6 +10,8 @@ export const workspaceSchema = gql`
     createdAt: DateTime!
     updatedAt: DateTime!
     teams: [Team]
+    users: [User]
+    invitedUsers: [WorkspaceInvite]
   }
 
   input CreateWorkspaceInput {

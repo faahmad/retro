@@ -59,8 +59,11 @@ const InviteUserToWorkspaceForm: React.FC<{
   workspaceId: string;
   onClick: () => void;
 }> = ({ workspaceId, onClick }) => {
-  const [inviteUserToWorkspace] = useMutation(
-    INVITE_USER_TO_WORKSPACE_MUTATION
+  const [inviteUserToWorkspace, { data }] = useMutation(
+    INVITE_USER_TO_WORKSPACE_MUTATION,
+    {
+      refetchQueries: ["user"]
+    }
   );
   const [submitButtonText, setSubmitButtonText] = React.useState("Send Invite");
   const [isDisabled, setIsDisabled] = React.useState(false);
@@ -82,6 +85,7 @@ const InviteUserToWorkspaceForm: React.FC<{
           }
         }
       });
+      console.log("data", data);
       setSubmitButtonText("Sent!");
       setTimeout(() => {
         onClick();

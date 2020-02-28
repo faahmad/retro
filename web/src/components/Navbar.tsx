@@ -72,7 +72,7 @@ const NavbarAuthButtons: React.FC<any> = ({ onClick }) => {
     <div className="flex flex-col">
       {authAccount ? (
         <Button
-          className="text-blue text-right bg-white"
+          className="text-blue text-right z-10"
           onClick={async () => {
             await AuthService.logOut();
             window.location.replace("/");
