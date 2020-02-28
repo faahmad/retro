@@ -30,7 +30,7 @@ export const InviteUserToWorkspaceModal: React.FC<InviteUserToWorkspaceModalProp
         content: { maxWidth: "420px", height: "530px", padding: "20px" },
         overlay: { background: "rgba(17, 38, 156, 0.6)" }
       }}
-      className="bg-white shadow-red border m-auto absolute inset-0 border-red focus:outline-none"
+      className="bg-white shadow-red border m-auto absolute inset-0 border-red focus:outline-none z-50"
       // IMPORTANT: closeTimeoutMS has to be the same as what is set in the tailwind.css file.
       closeTimeoutMS={200}
     >
@@ -59,10 +59,10 @@ const InviteUserToWorkspaceForm: React.FC<{
   workspaceId: string;
   onClick: () => void;
 }> = ({ workspaceId, onClick }) => {
-  const [inviteUserToWorkspace, { data }] = useMutation(
+  const [inviteUserToWorkspace] = useMutation(
     INVITE_USER_TO_WORKSPACE_MUTATION,
     {
-      refetchQueries: ["user"]
+      refetchQueries: ["UserQuery"]
     }
   );
   const [submitButtonText, setSubmitButtonText] = React.useState("Send Invite");
@@ -72,7 +72,10 @@ const InviteUserToWorkspaceForm: React.FC<{
       email: ""
     },
     validationSchema: yup.object().shape({
-      email: yup.string().required("Workspace name is required.")
+      email: yup
+        .string()
+        .email("Please enter a valid email.")
+        .required("Email address is required.")
     }),
     onSubmit: async values => {
       setIsDisabled(true);
@@ -85,11 +88,8 @@ const InviteUserToWorkspaceForm: React.FC<{
           }
         }
       });
-      console.log("data", data);
       setSubmitButtonText("Sent!");
-      setTimeout(() => {
-        onClick();
-      }, 1000);
+      onClick();
     }
   });
 
@@ -97,15 +97,20 @@ const InviteUserToWorkspaceForm: React.FC<{
     <form onSubmit={formik.handleSubmit}>
       <div className="p-4 mt-4 text-blue">
         <p className="font-black">Add your team member</p>
-        <input
-          id="email"
-          name="email"
-          placeholder="example@email.com"
-          type="text"
-          value={formik.values.email}
-          onChange={formik.handleChange}
-          className="border border-red my-4 h-8 w-full max-w-md"
-        ></input>
+        <div className="my-4">
+          <input
+            id="email"
+            name="email"
+            placeholder="example@email.com"
+            type="text"
+            value={formik.values.email}
+            onChange={formik.handleChange}
+            className="border border-red h-8 w-full max-w-md px-1"
+          />
+          {formik.errors.email && formik.touched.email && (
+            <p className="text-xs text-red">{formik.errors.email}</p>
+          )}
+        </div>
         <div className="flex align-center justify-between mt-8">
           {/* 
             FIXME: 2/18/2020 

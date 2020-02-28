@@ -55,7 +55,7 @@ const NavbarBrand = () => {
           <animated.div key={key} className="grid-logo-box" />
         ))}
       </div>
-      <div className="z-10 mt-8 sm:ml-0 lg:ml-5">
+      <div className="z-0 mt-8 sm:ml-0 lg:ml-5">
         <RetroPinkLogo />
         {!authAccount && (
           <p className="text-blue">welcome to new school teamwork.</p>
@@ -69,10 +69,10 @@ const NavbarAuthButtons: React.FC<any> = ({ onClick }) => {
   const authAccount = React.useContext(AuthContext);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col z-0">
       {authAccount ? (
         <Button
-          className="text-blue text-right z-10"
+          className="text-blue text-right"
           onClick={async () => {
             await AuthService.logOut();
             window.location.replace("/");
