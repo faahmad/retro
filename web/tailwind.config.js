@@ -25,7 +25,10 @@ module.exports = {
     },
     extend: {
       height: {
-        "72": "18rem"
+        "72": "18rem",
+        "80": "20rem",
+        "88": "22rem",
+        "96": "24rem"
       },
       maxWidth: {
         "7xl": "80rem",

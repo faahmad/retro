@@ -105,9 +105,14 @@ describe("createWorkspace mutation", () => {
     });
   });
   describe("when invalid", () => {
+    let user;
+    beforeEach(async () => {
+      user = await factory.user();
+    });
     it("should return an error when no input is given", async () => {
       const { errors } = await executeGraphQLQuery({
-        query: createWorkspaceMutation
+        query: createWorkspaceMutation,
+        userId: user.id
       });
 
       expect(errors.length).toBe(1);
@@ -138,11 +143,12 @@ describe("createWorkspace mutation", () => {
 
       expect(errors.length).toBe(1);
       expect(errors[0].message).toBe(
-        `Key (ownerId)=(${invalidUserId}) is not present in table "users".`
+        "Workspace creation failed: Invalid user."
       );
     });
 
     it("should return an error when an existing url variable is used", async () => {
+      const owner = await factory.user();
       const workspaceOne = await factory.workspace();
 
       const companyName = await faker.internet.domainWord();
@@ -157,7 +163,8 @@ describe("createWorkspace mutation", () => {
             allowedEmailDomain,
             url: workspaceOne.url
           }
-        }
+        },
+        userId: owner.id
       });
 
       expect(errors.length).toBe(1);

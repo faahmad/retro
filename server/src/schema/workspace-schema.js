@@ -10,6 +10,8 @@ export const workspaceSchema = gql`
     createdAt: DateTime!
     updatedAt: DateTime!
     teams: [Team]
+    users: [User]
+    invitedUsers: [WorkspaceInvite]
   }
 
   input CreateWorkspaceInput {
@@ -20,9 +22,12 @@ export const workspaceSchema = gql`
 
   extend type Query {
     workspace(id: ID!): Workspace
+    getWorkspacesThatUserIsInvitedTo: [Workspace]
+    getWorkspacesByAllowedEmailDomain(allowedEmailDomain: String!): [Workspace]
   }
 
   extend type Mutation {
     createWorkspace(input: CreateWorkspaceInput!): Workspace
+    joinWorkspace(workspaceId: ID!): MutationResponse!
   }
 `;

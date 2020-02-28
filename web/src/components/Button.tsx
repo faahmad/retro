@@ -5,6 +5,7 @@ import clsx from "clsx";
 interface RetroButtonProps {
   className?: string;
   children: React.ReactNode;
+  style?: object;
 }
 
 type ButtonProps = RetroButtonProps &
@@ -16,10 +17,12 @@ type ButtonProps = RetroButtonProps &
 export const Button: React.FC<ButtonProps> = ({
   children,
   className = "",
+  style,
   ...rest
 }) => {
   return (
     <button
+      style={style}
       className={clsx(
         "h-12 w-64 font-size-lg uppercase bg-white border shadow font-black hover:bg-pink-1/2 active:transform-1 focus:outline-none px-4",
         {
