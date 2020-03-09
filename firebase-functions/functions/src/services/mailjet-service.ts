@@ -3,7 +3,7 @@ import { mailjet } from "../constants/mailjet";
 import { projectIds } from "../constants/project-ids";
 
 const CONFIG_OPTIONS = {
-  version: "v3.1",
+  version: "v3",
   perform_api_call: process.env.GCLOUD_PROJECT === projectIds.prod
 };
 
