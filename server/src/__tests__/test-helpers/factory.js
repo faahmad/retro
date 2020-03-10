@@ -30,6 +30,7 @@ class Factory {
 
     return workspace;
   }
+  // NOTE: Don't use this anymore.
   async workspace(options) {
     const word = faker.internet.domainWord();
     const name = word.toUpperCase();

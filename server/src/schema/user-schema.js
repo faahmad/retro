@@ -6,7 +6,6 @@ export const userSchema = gql`
     email: String!
     createdAt: DateTime!
     updatedAt: DateTime!
-    workspace: Workspace
     teams: [Team]
   }
 
