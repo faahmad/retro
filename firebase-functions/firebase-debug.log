@@ -1,0 +1,61 @@
+[debug] [2020-03-07T19:26:13.338Z] ----------------------------------------------------------------------
+[debug] [2020-03-07T19:26:13.340Z] Command:       /Users/farazahmad/.nvm/versions/node/v10.16.3/bin/node /Users/farazahmad/.nvm/versions/node/v10.16.3/bin/firebase init
+[debug] [2020-03-07T19:26:13.341Z] CLI Version:   7.14.0
+[debug] [2020-03-07T19:26:13.341Z] Platform:      darwin
+[debug] [2020-03-07T19:26:13.341Z] Node Version:  v10.16.3
+[debug] [2020-03-07T19:26:13.342Z] Time:          Sat Mar 07 2020 14:26:13 GMT-0500 (Eastern Standard Time)
+[debug] [2020-03-07T19:26:13.342Z] ----------------------------------------------------------------------
+[debug] [2020-03-07T19:26:13.342Z] 
+[debug] [2020-03-07T19:26:13.355Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2020-03-07T19:26:13.356Z] > authorizing via signed-in user
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /Users/farazahmad/Workspace/retro/firebase-functions
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[debug] [2020-03-07T19:27:04.980Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2020-03-07T19:27:04.981Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2020-03-07T19:27:05.143Z] <<< HTTP RESPONSE 200
+[debug] [2020-03-07T19:27:05.157Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects?pageSize=100  
+ 
+[debug] [2020-03-07T19:27:05.371Z] <<< HTTP RESPONSE 200
+[info] i  Using project retro-prod-786 (retro-prod)
+[info] 
+=== Functions Setup
+[info] 
+[info] A functions directory will be created in your project with a Node.js
+[info] package pre-configured. Functions can be deployed with firebase deploy.
+[info] 
+[debug] [2020-03-07T19:27:09.616Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2020-03-07T19:27:09.617Z] > authorizing via signed-in user
+[debug] [2020-03-07T19:27:09.617Z] [iam] checking project retro-prod-786 for permissions ["firebase.projects.get"]
+[debug] [2020-03-07T19:27:09.617Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/retro-prod-786:testIamPermissions  
+
+[debug] [2020-03-07T19:27:09.813Z] <<< HTTP RESPONSE 200
+[debug] [2020-03-07T19:27:09.819Z] >>> HTTP REQUEST POST https://serviceusage.googleapis.com/v1/projects/retro-prod-786/services/cloudfunctions.googleapis.com:enable  
+ 
+[debug] [2020-03-07T19:27:09.820Z] >>> HTTP REQUEST POST https://serviceusage.googleapis.com/v1/projects/retro-prod-786/services/runtimeconfig.googleapis.com:enable  
+ 
+[debug] [2020-03-07T19:27:10.402Z] <<< HTTP RESPONSE 200
+[debug] [2020-03-07T19:27:10.403Z] <<< HTTP RESPONSE 200
+[info] ✔  Wrote functions/package.json
+[info] ✔  Wrote functions/tslint.json
+[info] ✔  Wrote functions/tsconfig.json
+[info] ✔  Wrote functions/src/index.ts
+[info] ✔  Wrote functions/.gitignore
+[info] 
+=== Emulators Setup
