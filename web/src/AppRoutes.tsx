@@ -10,7 +10,6 @@ import { Navbar } from "./components/Navbar";
 import { LandingPage } from "./pages/LandingPage";
 import { OnboardingPage } from "./pages/OnboardingPage";
 import { DashboardPage } from "./pages/DashboardPage";
-import { ROUTES } from "./constants/routes";
 import { gql } from "apollo-boost";
 import { useQuery } from "@apollo/react-hooks";
 import { LoadingText } from "./components/LoadingText";
@@ -49,11 +48,7 @@ export const AppRoutes: React.FC = () => {
 const UnauthenticatedAppRoutes: React.FC = () => {
   return (
     <React.Fragment>
-      <Route
-        exact
-        path={ROUTES.UNAUTHENTICATED.LANDING_PAGE}
-        component={LandingPage}
-      />
+      <Route exact path="/" component={LandingPage} />
     </React.Fragment>
   );
 };
