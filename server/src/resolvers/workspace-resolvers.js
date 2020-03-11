@@ -4,8 +4,16 @@ import { WorkspaceService } from "../services/workspace-service";
 
 export const workspaceResolvers = {
   Query: {
-    async workspace(parent, args, { models }) {
-      return await models.workspace.findByPk(args.id);
+    async workspace(parent, { id }, { models, userId }) {
+      const user = await models.user.findByPk(userId);
+      const workspacesThatUserBelongsTo = await user.getWorkspaces();
+      const [workspace] = workspacesThatUserBelongsTo.filter(
+        workspace => String(workspace.id) === String(id)
+      );
+      if (!workspace) {
+        throw new ApolloError("You don't have access to this workspace.");
+      }
+      return workspace;
     },
     async getWorkspacesThatUserIsInvitedTo(parent, args, { userId, models }) {
       const user = await models.user.findByPk(userId);

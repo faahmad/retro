@@ -62,7 +62,7 @@ const InviteUserToWorkspaceForm: React.FC<{
   const [inviteUserToWorkspace] = useMutation(
     INVITE_USER_TO_WORKSPACE_MUTATION,
     {
-      refetchQueries: ["UserQuery"]
+      refetchQueries: ["WorkspaceQuery"]
     }
   );
   const [submitButtonText, setSubmitButtonText] = React.useState("Send Invite");
