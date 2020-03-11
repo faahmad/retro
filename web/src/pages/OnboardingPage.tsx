@@ -5,9 +5,10 @@ import { Button } from "../components/Button";
 import { Redirect } from "react-router-dom";
 import { useFormik } from "formik";
 import * as yup from "yup";
+import { LoadingText } from "../components/LoadingText";
 
 const USER_QUERY = gql`
-  query User {
+  query Workspace {
     user {
       workspace {
         id
@@ -42,11 +43,13 @@ export const OnboardingPage: React.FC<any> = ({ history }) => {
     userQueryResponse.loading ||
     getWorkspacesThatUserIsInvitedToQueryResponse.loading
   ) {
-    return <div>Loading...</div>;
+    return <LoadingText>Loading...</LoadingText>;
   }
 
-  if (userQueryResponse.data.user.workspace !== null) {
-    return <Redirect to="/" />;
+  const workspace = userQueryResponse.data.user.workspace;
+
+  if (workspace !== null) {
+    return <Redirect to={`/workspaces/${workspace.id}`} />;
   }
 
   const hasPendingInvites =

@@ -1,72 +1,55 @@
 import React from "react";
 import { gql } from "apollo-boost";
 import { useQuery } from "@apollo/react-hooks";
-import { Redirect } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import teamMemberEmptyImage from "../assets/images/team-member-empty-image.svg";
 import dashboardFooterImage from "../assets/images/dashboard-footer-image.svg";
-import { ROUTES } from "../constants/routes";
 import { InviteUserToWorkspaceModal } from "../components/InviteUserToWorkspaceModal";
+import { LoadingText } from "../components/LoadingText";
 
-const USER_QUERY = gql`
-  query UserQuery {
-    user {
+const WORKSPACE_QUERY = gql`
+  query WorkspaceQuery($id: ID!) {
+    workspace(id: $id) {
       id
-      email
-      createdAt
-      updatedAt
-      workspace {
+      name
+      url
+      users {
+        __typename
         id
-        name
-        url
-        users {
-          __typename
-          id
-          email
-          createdAt
-        }
-        invitedUsers {
-          __typename
-          id
-          email
-          createdAt
-          accepted
-        }
+        email
+        createdAt
+      }
+      invitedUsers {
+        __typename
+        id
+        email
+        createdAt
+        accepted
       }
     }
   }
 `;
 
 export const DashboardPage: React.FC = () => {
-  const userQueryResponse = useQuery(USER_QUERY);
-  if (userQueryResponse.loading) {
-    return <div>Loading...</div>;
-  }
-  const { user } = userQueryResponse.data;
+  const { workspaceId } = useParams();
+  const { data, loading } = useQuery(WORKSPACE_QUERY, {
+    variables: { id: workspaceId }
+  });
 
-  if (!user) {
-    // If the page has loaded before we fetch the user,
-    // force a refresh.
-    window.location.replace(ROUTES.AUTHENTICATED.DASHBOARD_PAGE);
+  if (loading) {
+    return <LoadingText>Fetching workspace...</LoadingText>;
   }
 
-  if (!user.workspace) {
-    return <Redirect to={ROUTES.AUTHENTICATED.ONBOARDING_PAGE} />;
-  }
-
-  const usersInWorkspace = user.workspace.users;
-  const usersInvitedToWorkspace = user.workspace.invitedUsers;
-
-  console.log("render");
-  console.log(user);
+  const { workspace } = data;
 
   return (
     <div>
       <div className="my-16 w-4/5 max-w-6xl m-auto">
-        <p className="text-blue mb-2 underline">{user.workspace.name}</p>
+        <p className="text-blue mb-2 underline">{workspace.name}</p>
         <h1 className="text-blue font-black text-3xl">Dashboard</h1>
         <TeamMemberOverview
-          workspaceId={user.workspace.id}
-          users={[...usersInWorkspace, ...usersInvitedToWorkspace]}
+          workspaceId={workspace.id}
+          users={[...workspace.users, ...workspace.invitedUsers]}
         />
       </div>
       <img src={dashboardFooterImage} alt="Dashboard Illustration" />
@@ -81,7 +64,6 @@ const TeamMemberOverview: React.FC<{
   workspaceId: string;
   users: any[];
 }> = ({ workspaceId, users }) => {
-  console.log("users", users);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
 
   const handleToggleModal = async () => {
