@@ -46,45 +46,28 @@ describe("createRetro mutation", () => {
       });
     });
   });
-  // describe("when invalid", () => {
-  //   it("should only allow a user to create themselves", async () => {
-  //     const mockId = faker.random.uuid();
-  //     const mockEmail = faker.internet.email();
+  describe("when invalid", () => {
+    it("should only allow a user to create a retro if they belong to that workspace", async () => {
+      const userOne = await factory.user();
+      const workspaceOne = await factory.createWorkspace({}, userOne);
 
-  //     const { errors } = await executeGraphQLQuery({
-  //       query: createUserMutation,
-  //       variables: { input: { id: mockId, email: mockEmail } }
-  //     });
+      const userTwo = await factory.user();
+      await factory.createWorkspace({}, userTwo);
 
-  //     expect(errors.length).toBe(1);
-  //     expect(errors[0].message).toBe("You can only create yourself.");
-  //   });
+      const [team] = await userOne.getTeams({
+        where: { workspaceId: workspaceOne.id }
+      });
 
-  //   it("should return an error when no input is given", async () => {
-  //     const { errors } = await executeGraphQLQuery({
-  //       query: createUserMutation
-  //     });
+      const response = await executeGraphQLQuery({
+        query: createRetroMutation,
+        userId: userTwo.id,
+        variables: { input: { teamId: team.id } }
+      });
 
-  //     expect(errors.length).toBe(1);
-  //     expect(errors[0].message).toBe(
-  //       'Variable "$input" of required type "CreateUserInput!" was not provided.'
-  //     );
-  //   });
-
-  //   it("should return an error when an email is not given as a variable", async () => {
-  //     const variables = { input: { id: null, email: null } };
-  //     const { errors } = await executeGraphQLQuery({
-  //       query: createUserMutation,
-  //       variables
-  //     });
-
-  //     expect(errors.length).toBe(2);
-  //     expect(errors[0].message).toBe(
-  //       'Variable "$input" got invalid value null at "input.id"; Expected non-nullable type ID! not to be null.'
-  //     );
-  //     expect(errors[1].message).toBe(
-  //       'Variable "$input" got invalid value null at "input.email"; Expected non-nullable type String! not to be null.'
-  //     );
-  //   });
-  // });
+      expect(response.errors.length).toBe(1);
+      expect(response.errors[0].message).toBe(
+        "You can't create a retro unless you belong to this team."
+      );
+    });
+  });
 });
