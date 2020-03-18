@@ -15,6 +15,10 @@ export const retroSchema = gql`
     teamId: ID!
   }
 
+  extend type Query {
+    getRetrosByTeamId(teamId: ID!): [Retro]
+  }
+
   extend type Mutation {
     createRetro(input: CreateRetroInput!): Retro
   }
