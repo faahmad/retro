@@ -3,6 +3,7 @@ import { userSchema } from "./user-schema";
 import { workspaceSchema } from "./workspace-schema";
 import { teamSchema } from "./team-schema";
 import { workspaceInviteSchema } from "./workspace-invite-schema";
+import { retroSchema } from "./retro-schema";
 
 const rootSchema = gql`
   scalar Date
@@ -30,5 +31,6 @@ export const schema = [
   userSchema,
   workspaceSchema,
   teamSchema,
-  workspaceInviteSchema
+  workspaceInviteSchema,
+  retroSchema
 ];

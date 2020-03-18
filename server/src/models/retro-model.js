@@ -2,7 +2,6 @@ const retroModel = (sequelize, DataTypes) => {
   const retro = sequelize.define(
     "retros",
     {
-      id: { type: DataTypes.UUIDV4, primaryKey: true },
       name: DataTypes.STRING
     },
     { timestamps: true }
