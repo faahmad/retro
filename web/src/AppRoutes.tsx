@@ -13,6 +13,7 @@ import { DashboardPage } from "./pages/DashboardPage";
 import { gql } from "apollo-boost";
 import { useQuery } from "@apollo/react-hooks";
 import { LoadingText } from "./components/LoadingText";
+import { RetroBoardPage } from "./pages/RetroBoardPage";
 
 const optimizely = createInstance({
   sdkKey: process.env.REACT_APP_OPTIMIZELY_SDK_KEY
@@ -83,6 +84,11 @@ const AuthenticatedAppRoutes: React.FC = () => {
   return (
     <React.Fragment>
       <Route exact path="/onboarding" component={OnboardingPage} />
+      <Route
+        exact
+        path="/workspaces/:workspaceId/teams/:teamId/retros/:retroId"
+        component={RetroBoardPage}
+      />
       <Route exact path="/workspaces/:workspaceId" component={DashboardPage} />
 
       {!workspace && <Redirect to="/onboarding" />}
