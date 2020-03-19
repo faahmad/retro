@@ -113,7 +113,8 @@ const RetroBoardsOverview: React.FC<{
   }, [data]);
 
   const [createRetro] = useMutation(CREATE_RETRO_MUTATION, {
-    refetchQueries: ["WorkspaceQuery"]
+    refetchQueries: ["RetrosByTeam"],
+    awaitRefetchQueries: true
   });
 
   const handleRedirectToRetroPage = (retro: any) => {

@@ -18,7 +18,7 @@ export class RetroService {
       throw new Error("Retro creation failed: invalid user.");
     }
     const defaultTeam = await UserService.getDefaultTeamForUser(user.id);
-    if (input.teamId !== defaultTeam.id) {
+    if (String(input.teamId) !== String(defaultTeam.id)) {
       throw new Error(
         "You can't create a retro unless you belong to this team."
       );
