@@ -4,6 +4,11 @@ import { WorkspaceService } from "../services/workspace-service";
 
 export const retroResolvers = {
   Query: {
+    async retro(parent, { id }, { userId }) {
+      const user = await UserService.getUserById(userId);
+      const retro = await RetroService.getRetroById(id, user);
+      return retro;
+    },
     async getRetrosByTeamId(parent, { teamId }) {
       return WorkspaceService.getRetrosByTeam(teamId);
     }

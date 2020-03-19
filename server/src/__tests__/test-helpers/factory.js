@@ -1,5 +1,7 @@
 import faker from "faker";
 import { WorkspaceService } from "../../services/workspace-service";
+import { RetroService } from "../../services/retro-service";
+import { UserService } from "../../services/user-service";
 import models from "../../models";
 
 class Factory {
@@ -29,6 +31,19 @@ class Factory {
     );
 
     return workspace;
+  }
+  async retro(options, workspaceUser) {
+    const defaultTeam = await UserService.getDefaultTeamForUser(
+      workspaceUser.id
+    );
+    const retro = await RetroService.createRetro(
+      {
+        teamId: defaultTeam.id,
+        ...options
+      },
+      workspaceUser
+    );
+    return retro;
   }
   // NOTE: Don't use this anymore.
   async workspace(options) {

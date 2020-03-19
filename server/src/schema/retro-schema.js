@@ -16,6 +16,7 @@ export const retroSchema = gql`
   }
 
   extend type Query {
+    retro(id: ID!): Retro
     getRetrosByTeamId(teamId: ID!): [Retro]
   }
 
