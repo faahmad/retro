@@ -9,10 +9,13 @@ import { AuthService } from "../services/auth-service";
 
 export const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = React.useState(false);
+  const authAccount = React.useContext(AuthContext);
 
   const handleToggleModal = async () => {
     await setIsOpen(prevIsOpen => !prevIsOpen);
   };
+
+  const isLoggedIn = !!authAccount;
 
   return (
     <nav className="navbar flex flex-wrap justify-between sm:mb-1 lg:mb-4">
@@ -21,14 +24,20 @@ export const Navbar: React.FC = () => {
         onRequestClose={handleToggleModal}
         onClick={handleToggleModal}
       />
-      <NavbarBrand />
-      <NavbarAuthButtons onClick={handleToggleModal} />
+      <div className="flex items-center">
+        <NavbarBrand isLoggedIn={isLoggedIn} />
+        {isLoggedIn && (
+          <div className="ml-8">
+            <NavbarAuthLinks />
+          </div>
+        )}
+      </div>
+      <NavbarAuthButtons isLoggedIn={isLoggedIn} onClick={handleToggleModal} />
     </nav>
   );
 };
 
-const NavbarBrand = () => {
-  const authAccount = React.useContext(AuthContext);
+const NavbarBrand: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   const [boxes, setBoxes] = React.useState<{ key: number }[]>([]);
 
   React.useEffect(() => {
@@ -57,7 +66,7 @@ const NavbarBrand = () => {
       </div>
       <div className="z-0 mt-8 sm:ml-0 lg:ml-5">
         <RetroPinkLogo />
-        {!authAccount && (
+        {!isLoggedIn && (
           <p className="text-blue">welcome to new school teamwork.</p>
         )}
       </div>
@@ -65,12 +74,10 @@ const NavbarBrand = () => {
   );
 };
 
-const NavbarAuthButtons: React.FC<any> = ({ onClick }) => {
-  const authAccount = React.useContext(AuthContext);
-
+const NavbarAuthButtons: React.FC<any> = ({ onClick, isLoggedIn }) => {
   return (
     <div className="flex flex-col z-0">
-      {authAccount ? (
+      {isLoggedIn ? (
         <Button
           className="text-blue text-right"
           onClick={async () => {
@@ -94,5 +101,17 @@ const NavbarAuthButtons: React.FC<any> = ({ onClick }) => {
         </React.Fragment>
       )}
     </div>
+  );
+};
+
+const NavbarAuthLinks = () => {
+  return (
+    <ul className="flex text-blue text-sm">
+      <li>
+        <a className="hover:underline" href="/">
+          Home
+        </a>
+      </li>
+    </ul>
   );
 };

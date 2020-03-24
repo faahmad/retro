@@ -9,6 +9,9 @@ export class WorkspaceService {
     );
     return users;
   }
+  static async getRetrosByTeam(teamId) {
+    return models.retro.findAll({ where: { teamId } });
+  }
   static async createWorkspace(input, user) {
     try {
       if (!user) {
