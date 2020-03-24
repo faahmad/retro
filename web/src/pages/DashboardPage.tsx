@@ -4,10 +4,10 @@ import { useQuery, useMutation } from "@apollo/react-hooks";
 import { useParams, RouteComponentProps } from "react-router-dom";
 import teamMemberEmptyImage from "../assets/images/team-member-empty-image.svg";
 import retroEmptyImage from "../assets/images/retro-empty-image.svg";
-import dashboardFooterImage from "../assets/images/dashboard-footer-image.svg";
 import { InviteUserToWorkspaceModal } from "../components/InviteUserToWorkspaceModal";
 import { LoadingText } from "../components/LoadingText";
 import moment from "moment";
+import { Footer } from "../components/Footer";
 
 const WORKSPACE_QUERY = gql`
   query WorkspaceQuery($id: ID!) {
@@ -60,14 +60,7 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
           users={[...workspace.users, ...workspace.invitedUsers]}
         />
       </div>
-      <img
-        className="w-full"
-        src={dashboardFooterImage}
-        alt="Dashboard Illustration"
-      />
-      <footer className="bg-pink text-blue p-2 text-center">
-        <p className="text-blue">&copy; 2020, Retro Technology</p>
-      </footer>
+      <Footer />
     </div>
   );
 };
