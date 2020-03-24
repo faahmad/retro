@@ -5,11 +5,12 @@ import retroHeroImage from "../assets/images/retro-hero-image.svg";
 import howItWorksInviteImage from "../assets/images/how-it-works-invite-image.svg";
 import howItWorksConductImage from "../assets/images/how-it-works-conduct-image.svg";
 import howItWorksAnalyzeImage from "../assets/images/how-it-works-analyze-image.svg";
+import { PageContainer } from "../components/PageContainer";
 
 export const LandingPage: React.FC = () => {
   return (
     <div className="landing-page flex flex-col w-full justify-center my-8">
-      <div className="landing-page__above-the-fold w-4/5 max-w-6xl m-auto">
+      <PageContainer>
         <div className="flex flex-col lg:text-center m-0">
           <img
             className="lg:flex-1 mt-4"
@@ -20,8 +21,7 @@ export const LandingPage: React.FC = () => {
             The Retrospective Tool For People That Hate Retros.
           </h2>
         </div>
-      </div>
-      <div></div>
+      </PageContainer>
       <div className="landing-page__how-it-works relative w-full min-h-full vertical-stripes-blue border border-blue mt-10">
         <div className="w-full min-h-full -z-1 absolute horizontal-stripes-blue"></div>
         <div className="sm:w-full lg:w-4/5 m-auto p-4 py-8">

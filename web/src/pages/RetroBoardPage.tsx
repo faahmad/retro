@@ -20,6 +20,7 @@ import ReactModal from "react-modal";
 import { Button } from "../components/Button";
 import { ThumbsUpIcon } from "../components/ThumbsUpIcon";
 import pencilIcon from "../assets/icons/pencil.svg";
+import { PageContainer } from "../components/PageContainer";
 
 const RETRO_QUERY = gql`
   query RetroQuery($id: ID!) {
@@ -74,10 +75,6 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
       <Footer />
     </React.Fragment>
   );
-};
-
-const PageContainer: React.FC = ({ children }) => {
-  return <div className="my-16 w-4/5 max-w-6xl m-auto">{children}</div>;
 };
 
 interface RetroItem {

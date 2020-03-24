@@ -8,6 +8,7 @@ import { InviteUserToWorkspaceModal } from "../components/InviteUserToWorkspaceM
 import { LoadingText } from "../components/LoadingText";
 import moment from "moment";
 import { Footer } from "../components/Footer";
+import { PageContainer } from "../components/PageContainer";
 
 const WORKSPACE_QUERY = gql`
   query WorkspaceQuery($id: ID!) {
@@ -51,7 +52,7 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
 
   return (
     <div>
-      <div className="my-16 w-4/5 max-w-6xl m-auto">
+      <PageContainer>
         <p className="text-blue mb-2 underline">{workspace.name}</p>
         <h1 className="text-blue font-black text-3xl">Dashboard</h1>
         <RetroBoardsOverview teamId={defaultTeam.id} history={history} />
@@ -59,7 +60,7 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
           workspaceId={workspace.id}
           users={[...workspace.users, ...workspace.invitedUsers]}
         />
-      </div>
+      </PageContainer>
       <Footer />
     </div>
   );
