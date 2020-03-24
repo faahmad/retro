@@ -7,6 +7,13 @@ body {
 }
 
 /* Custom Styles */
+.retro-board__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 8px;
+  grid-auto-rows: 45vh;
+}
+
 .grid-logo {
   height: 120px;
   width: 120px;

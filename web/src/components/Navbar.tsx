@@ -21,7 +21,12 @@ export const Navbar: React.FC = () => {
         onRequestClose={handleToggleModal}
         onClick={handleToggleModal}
       />
-      <NavbarBrand />
+      <div className="flex items-center">
+        <NavbarBrand />
+        <div className="ml-8">
+          <NavbarAuthLinks />
+        </div>
+      </div>
       <NavbarAuthButtons onClick={handleToggleModal} />
     </nav>
   );
@@ -94,5 +99,17 @@ const NavbarAuthButtons: React.FC<any> = ({ onClick }) => {
         </React.Fragment>
       )}
     </div>
+  );
+};
+
+const NavbarAuthLinks = () => {
+  return (
+    <ul className="flex text-blue text-sm">
+      <li>
+        <a className="hover:underline" href="/">
+          Home
+        </a>
+      </li>
+    </ul>
   );
 };

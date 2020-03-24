@@ -80,7 +80,7 @@ const AuthenticatedAppRoutes: React.FC = () => {
   }
 
   const { workspace } = data.user;
-
+  const defaultLocation = `/workspaces/${data.user.workspace.id}`;
   return (
     <React.Fragment>
       <Route exact path="/onboarding" component={OnboardingPage} />
@@ -92,7 +92,7 @@ const AuthenticatedAppRoutes: React.FC = () => {
       <Route exact path="/workspaces/:workspaceId" component={DashboardPage} />
 
       {!workspace && <Redirect to="/onboarding" />}
-      {workspace && <Redirect to={`/workspaces/${data.user.workspace.id}`} />}
+      {workspace && <Redirect to={defaultLocation} />}
     </React.Fragment>
   );
 };

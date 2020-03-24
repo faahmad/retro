@@ -13,14 +13,6 @@ import {
 } from "reactstrap";
 import Octicon, { Trashcan } from "@primer/octicons-react";
 
-const columnClassNames = {
-  default: "dark",
-  good: "success",
-  bad: "danger",
-  actions: "primary",
-  questions: "info"
-};
-
 interface RetroItemModalProps {
   isOpen: boolean;
   columnType: RetroColumnType | null;
