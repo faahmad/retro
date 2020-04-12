@@ -5,10 +5,11 @@ const models = {
   workspace: sequelize.import("./workspace-model"),
   team: sequelize.import("./team-model"),
   workspaceInvite: sequelize.import("./workspace-invite-model"),
-  retro: sequelize.import("./retro-model")
+  retro: sequelize.import("./retro-model"),
+  retroItem: sequelize.import("./retro-item-model"),
 };
 
-Object.keys(models).forEach(key => {
+Object.keys(models).forEach((key) => {
   if ("associate" in models[key]) {
     models[key].associate(models);
   }
