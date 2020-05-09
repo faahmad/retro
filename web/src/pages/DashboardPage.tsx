@@ -9,6 +9,7 @@ import { LoadingText } from "../components/LoadingText";
 import moment from "moment";
 import { Footer } from "../components/Footer";
 import { PageContainer } from "../components/PageContainer";
+import { createRetroBoardInFirebase } from "../services/retro-board";
 
 const WORKSPACE_QUERY = gql`
   query WorkspaceQuery($id: ID!) {
@@ -40,7 +41,7 @@ const WORKSPACE_QUERY = gql`
 export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
   const { workspaceId } = useParams();
   const { data, loading } = useQuery(WORKSPACE_QUERY, {
-    variables: { id: workspaceId }
+    variables: { id: workspaceId },
   });
 
   if (loading) {
@@ -86,6 +87,7 @@ const CREATE_RETRO_MUTATION = gql`
       id
       teamId
       workspaceId
+      createdById
     }
   }
 `;
@@ -96,7 +98,7 @@ const RetroBoardsOverview: React.FC<{
 }> = ({ history, teamId }) => {
   const [retros, setRetros] = React.useState<any[]>([]);
   const { data } = useQuery(GET_TEAM_RETROS, {
-    variables: { teamId }
+    variables: { teamId },
   });
 
   React.useEffect(() => {
@@ -106,9 +108,9 @@ const RetroBoardsOverview: React.FC<{
     setRetros(data.getRetrosByTeamId);
   }, [data]);
 
-  const [createRetro] = useMutation(CREATE_RETRO_MUTATION, {
+  const [createRetroMutation] = useMutation(CREATE_RETRO_MUTATION, {
     refetchQueries: ["RetrosByTeam"],
-    awaitRefetchQueries: true
+    awaitRefetchQueries: true,
   });
 
   const handleRedirectToRetroPage = (retro: any) => {
@@ -118,10 +120,11 @@ const RetroBoardsOverview: React.FC<{
   };
 
   const handleCreateRetro = async () => {
-    const createRetroResponse = await createRetro({
-      variables: { input: { teamId } }
+    const { data } = await createRetroMutation({
+      variables: { input: { teamId } },
     });
-    return handleRedirectToRetroPage(createRetroResponse.data.createRetro);
+    createRetroBoardInFirebase(data.createRetro);
+    return handleRedirectToRetroPage(data.createRetro);
   };
 
   return (
@@ -140,7 +143,7 @@ const RetroBoardsOverview: React.FC<{
       </div>
       {retros.length !== 0 ? (
         <div className="flex flex-wrap">
-          {retros.map(retro => {
+          {retros.map((retro) => {
             return (
               <div
                 key={retro.id}
@@ -171,7 +174,7 @@ const TeamMemberOverview: React.FC<{
   const [isModalOpen, setIsModalOpen] = React.useState(false);
 
   const handleToggleModal = async () => {
-    await setIsModalOpen(prevIsModalOpen => !prevIsModalOpen);
+    await setIsModalOpen((prevIsModalOpen) => !prevIsModalOpen);
   };
 
   return (
@@ -199,7 +202,7 @@ const TeamMemberOverview: React.FC<{
         </div>
         {users.length !== 0 ? (
           <div className="flex flex-wrap">
-            {users.map(u => {
+            {users.map((u) => {
               const isInvitedUser = u.__typename === "WorkspaceInvite";
               return (
                 <div

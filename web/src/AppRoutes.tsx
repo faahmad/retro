@@ -3,7 +3,7 @@ import { Switch, BrowserRouter, Route, Redirect } from "react-router-dom";
 import {
   OptimizelyProvider,
   createInstance,
-  setLogger
+  setLogger,
 } from "@optimizely/react-sdk";
 import { useAuthContext } from "./contexts/AuthContext";
 import { Navbar } from "./components/Navbar";
@@ -16,7 +16,7 @@ import { LoadingText } from "./components/LoadingText";
 import { RetroBoardPage } from "./pages/RetroBoardPage";
 
 const optimizely = createInstance({
-  sdkKey: process.env.REACT_APP_OPTIMIZELY_SDK_KEY
+  sdkKey: process.env.REACT_APP_OPTIMIZELY_SDK_KEY,
 });
 if (process.env.NODE_ENV === "production") {
   setLogger(null);
@@ -80,7 +80,6 @@ const AuthenticatedAppRoutes: React.FC = () => {
   }
 
   const { workspace } = data.user;
-  const defaultLocation = `/workspaces/${data.user.workspace.id}`;
   return (
     <React.Fragment>
       <Route exact path="/onboarding" component={OnboardingPage} />
@@ -92,7 +91,7 @@ const AuthenticatedAppRoutes: React.FC = () => {
       <Route exact path="/workspaces/:workspaceId" component={DashboardPage} />
 
       {!workspace && <Redirect to="/onboarding" />}
-      {workspace && <Redirect to={defaultLocation} />}
+      {workspace && <Redirect to={`/workspaces/${data.user.workspace.id}`} />}
     </React.Fragment>
   );
 };
