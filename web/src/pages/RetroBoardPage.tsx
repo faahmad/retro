@@ -6,9 +6,9 @@ import {
   DragDropContext,
   DropResult,
   Droppable,
-  Draggable
+  Draggable,
 } from "react-beautiful-dnd";
-import uuidv4 from "uuid/v4";
+import { v4 as uuidV4 } from "uuid";
 import moment from "moment";
 import { AddButton } from "../components/AddButton";
 import { LoadingText } from "../components/LoadingText";
@@ -21,6 +21,16 @@ import { Button } from "../components/Button";
 import { ThumbsUpIcon } from "../components/ThumbsUpIcon";
 import pencilIcon from "../assets/icons/pencil.svg";
 import { PageContainer } from "../components/PageContainer";
+import {
+  RetroBoard as RetroBoardInterface,
+  RetroColumnType,
+  RetroItem,
+  RetroColumn,
+} from "../types";
+import {
+  subscribeToRetroBoardById,
+  updateRetroBoardById,
+} from "../services/retro-board";
 
 const RETRO_QUERY = gql`
   query RetroQuery($id: ID!) {
@@ -39,7 +49,7 @@ const RETRO_QUERY = gql`
 export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
   const params = useParams<{ retroId: string }>();
   const { data, loading, error } = useQuery(RETRO_QUERY, {
-    variables: { id: params.retroId }
+    variables: { id: params.retroId },
   });
 
   if (loading) {
@@ -70,110 +80,63 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
             {moment(retro.createdAt).format("MM.DD.YYYY")}
           </span>
         </h1>
-        <OldRetroBoardPage />
+        <RetroBoard id={params.retroId} />
       </PageContainer>
       <Footer />
     </React.Fragment>
   );
 };
 
-interface RetroItem {
-  id: string;
-  content: string;
-  likedBy: {
-    [userDisplayName: string]: boolean;
-  };
-  likeCount: number;
-  createdByDisplayName: string;
-  createdByUserId: string;
-  createdByPhotoURL?: string;
-  hasBeenEdited?: boolean;
-}
-
-type RetroColumnType = "good" | "bad" | "actions" | "questions";
-
-interface RetroColumn {
-  type: RetroColumnType;
-  title: string;
-  itemIds: RetroItem["id"][];
-}
-
-interface RetroBoard {
-  uid?: string;
-  workspaceId: string;
-  items: { [key: string]: RetroItem };
-  columns: { [key: string]: RetroColumn };
-  columnOrder: RetroColumnType[];
-  createdAt: any;
-}
-
 // import { RetroItemModal } from "../components/RetroItemModal";
-
-interface RetroBoardPageState {
+interface RetroBoardProps {
+  id: RetroBoardInterface["id"];
+}
+interface RetroBoardState {
   lastUpdatedAt: Date;
   isFetching: boolean;
-  retroBoard: RetroBoard;
+  retroBoard: RetroBoardInterface;
   isModalOpen: boolean;
   columnTypeToAddItemTo: RetroColumnType | null;
   initialRetroItem?: RetroItem;
 }
-export class OldRetroBoardPage extends React.Component<
-  any,
-  RetroBoardPageState
+export class RetroBoard extends React.Component<
+  RetroBoardProps,
+  RetroBoardState
 > {
   static contextType = AuthContext;
+  unsubscribeFromRetroBoardFn: any;
   // TODO: Fix this typing.
   constructor(props: any) {
     super(props);
     this.state = {
-      lastUpdatedAt: new Date() as RetroBoardPageState["lastUpdatedAt"],
-      isFetching: true as RetroBoardPageState["isFetching"],
+      lastUpdatedAt: new Date() as RetroBoardState["lastUpdatedAt"],
+      isFetching: true as RetroBoardState["isFetching"],
       retroBoard: null as any,
-      isModalOpen: false as RetroBoardPageState["isModalOpen"],
-      columnTypeToAddItemTo: null as RetroBoardPageState["columnTypeToAddItemTo"],
-      initialRetroItem: undefined
+      isModalOpen: false as RetroBoardState["isModalOpen"],
+      columnTypeToAddItemTo: null as RetroBoardState["columnTypeToAddItemTo"],
+      initialRetroItem: undefined,
     };
+    this.unsubscribeFromRetroBoardFn = null;
   }
 
   async componentDidMount() {
-    const retroBoard: any = this.handleInitializeRetroBoard();
-    await this.setState({ retroBoard, isFetching: false });
-    // this.handleAddItemToColumn("Testing...", "good");
+    this.unsubscribeFromRetroBoardFn = subscribeToRetroBoardById(
+      this.props.id,
+      this.handleSetRetroBoardState
+    );
+    await this.setState({ isFetching: false });
     return;
   }
 
-  handleInitializeRetroBoard = () => {
-    return {
-      workspaceId: uuidv4(),
-      createdAt: new Date(),
-      items: {},
-      columns: {
-        good: {
-          type: "good",
-          title: "What went well?",
-          itemIds: []
-        },
-        bad: {
-          type: "bad",
-          title: "What can be improved?",
-          itemIds: []
-        },
-        actions: {
-          type: "actions",
-          title: "What do we need to do?",
-          itemIds: []
-        },
-        questions: {
-          type: "questions",
-          title: "What do we have questions on?",
-          itemIds: []
-        }
-      },
-      columnOrder: ["good", "bad", "actions", "questions"]
-    };
-  };
+  componentWillUnmount() {
+    if (this.unsubscribeFromRetroBoardFn) {
+      this.unsubscribeFromRetroBoardFn();
+    }
+  }
 
-  handleSetRetroBoardState = async (retroBoard: RetroBoard | undefined) => {
+  handleSetRetroBoardState = async (
+    retroBoard: RetroBoardInterface | undefined
+  ) => {
     if (!retroBoard) {
       return;
     }
@@ -186,23 +149,23 @@ export class OldRetroBoardPage extends React.Component<
   ) => {
     const newItem: RetroItem = {
       content,
-      id: uuidv4(),
+      id: uuidV4(),
       likedBy: {},
       likeCount: 0,
       createdByDisplayName: this.context.displayName,
       createdByUserId: this.context.uid,
-      createdByPhotoURL: this.context.photoURL
+      createdByPhotoURL: this.context.photoURL,
     };
 
     const prevColumn = this.state.retroBoard.columns[column];
     const newItemIds = [...prevColumn.itemIds, newItem.id];
     const newColumn: RetroColumn = {
       ...prevColumn,
-      itemIds: newItemIds
+      itemIds: newItemIds,
     };
 
     // YUCK! FIXME! DRY ME!
-    await this.setState(prevState => ({
+    await this.setState((prevState) => ({
       retroBoard: {
         ...prevState.retroBoard,
         items: { ...prevState.retroBoard.items, [newItem.id]: newItem },
@@ -210,22 +173,28 @@ export class OldRetroBoardPage extends React.Component<
           ...prevState.retroBoard.columns,
           [newColumn.type]: {
             ...prevColumn,
-            itemIds: newItemIds
-          }
-        }
-      }
+            itemIds: newItemIds,
+          },
+        },
+      },
     }));
+
+    await updateRetroBoardById(this.state.retroBoard.id, this.state.retroBoard);
 
     return;
   };
 
   handleEditItem = async (item: RetroItem, _columnType: any) => {
-    await this.setState(prevState => ({
+    await this.setState((prevState) => ({
       retroBoard: {
         ...prevState.retroBoard,
-        items: { ...prevState.retroBoard.items, [item.id]: item }
-      }
+        items: { ...prevState.retroBoard.items, [item.id]: item },
+      },
     }));
+
+    await updateRetroBoardById(this.state.retroBoard.id, this.state.retroBoard);
+
+    return;
   };
 
   handleDeleteItem = async (
@@ -238,9 +207,9 @@ export class OldRetroBoardPage extends React.Component<
     delete items[itemId];
 
     const prevColumn = retroBoard.columns[columnType];
-    const newItemIds = prevColumn.itemIds.filter(id => id !== itemId);
+    const newItemIds = prevColumn.itemIds.filter((id) => id !== itemId);
 
-    await this.setState(prevState => ({
+    await this.setState((prevState) => ({
       initialRetroItem: undefined,
       retroBoard: {
         ...prevState.retroBoard,
@@ -249,51 +218,55 @@ export class OldRetroBoardPage extends React.Component<
           ...prevState.retroBoard.columns,
           [columnType]: {
             ...prevColumn,
-            itemIds: newItemIds
-          }
-        }
-      }
+            itemIds: newItemIds,
+          },
+        },
+      },
     }));
+
+    await updateRetroBoardById(this.state.retroBoard.id, this.state.retroBoard);
+
+    return;
   };
 
   handleOnClickLike = async (itemId: RetroItem["id"]) => {
-    const { displayName } = this.context;
+    const { id } = this.context;
     const item = this.state.retroBoard.items[itemId];
 
     let newLikedBy = item.likedBy;
-    if (item.likedBy[displayName]) {
-      delete newLikedBy[displayName];
+    if (item.likedBy[id]) {
+      delete newLikedBy[id];
     } else {
-      item.likedBy[displayName] = true;
+      item.likedBy[id] = true;
     }
 
     const newItem = {
       ...item,
-      likedBy: newLikedBy
+      likedBy: newLikedBy,
     };
 
-    await this.setState(prevState => ({
+    await this.setState((prevState) => ({
       retroBoard: {
         ...(prevState.retroBoard || {}),
         items: {
           ...prevState.retroBoard.items,
           [newItem.id]: {
             ...newItem,
-            likeCount: Object.keys(newItem.likedBy).length
-          }
-        }
-      }
+            likeCount: Object.keys(newItem.likedBy).length,
+          },
+        },
+      },
     }));
+
+    updateRetroBoardById(this.state.retroBoard.id, this.state.retroBoard);
 
     return;
   };
 
   handleOnDragEnd = async (dropResult: DropResult) => {
     const { destination, source, draggableId } = dropResult;
-    console.log(dropResult);
 
     if (!destination) {
-      console.log("no destination!");
       return;
     }
 
@@ -301,7 +274,6 @@ export class OldRetroBoardPage extends React.Component<
       destination.droppableId === source.droppableId &&
       destination.index === source.index
     ) {
-      console.log("start and finish are the same!");
       return;
     }
 
@@ -315,57 +287,60 @@ export class OldRetroBoardPage extends React.Component<
 
       const newColumn = {
         ...start,
-        itemIds: newItemIds
+        itemIds: newItemIds,
       };
 
-      await this.setState(prevState => ({
+      await this.setState((prevState) => ({
         ...prevState,
         retroBoard: {
           ...prevState.retroBoard,
           columns: {
             ...prevState.retroBoard.columns,
-            [newColumn.type]: newColumn
-          }
-        }
+            [newColumn.type]: newColumn,
+          },
+        },
       }));
     } else {
       const startItemIds = [...start.itemIds];
       startItemIds.splice(source.index, 1);
       const newStart = {
         ...start,
-        itemIds: startItemIds
+        itemIds: startItemIds,
       };
 
       const finishItemIds = [...finish.itemIds];
       finishItemIds.splice(destination.index, 0, draggableId);
       const newFinish = {
         ...finish,
-        itemIds: finishItemIds
+        itemIds: finishItemIds,
       };
 
-      await this.setState(prevState => ({
+      await this.setState((prevState) => ({
         ...prevState,
         retroBoard: {
           ...prevState.retroBoard,
           columns: {
             ...prevState.retroBoard.columns,
             [newStart.type]: newStart,
-            [newFinish.type]: newFinish
-          }
-        }
+            [newFinish.type]: newFinish,
+          },
+        },
       }));
     }
+
+    updateRetroBoardById(this.state.retroBoard.id, this.state.retroBoard);
+
     return;
   };
 
   handleOnClickEdit = (
     columnType: RetroColumnType,
-    initialRetroItem: RetroBoardPageState["initialRetroItem"]
+    initialRetroItem: RetroBoardState["initialRetroItem"]
   ) => {
     this.setState({
       initialRetroItem,
       isModalOpen: true,
-      columnTypeToAddItemTo: columnType
+      columnTypeToAddItemTo: columnType,
     });
   };
 
@@ -373,7 +348,7 @@ export class OldRetroBoardPage extends React.Component<
     this.setState({
       isModalOpen: false,
       columnTypeToAddItemTo: null,
-      initialRetroItem: undefined
+      initialRetroItem: undefined,
     });
   };
 
@@ -383,7 +358,7 @@ export class OldRetroBoardPage extends React.Component<
       retroBoard,
       isModalOpen,
       columnTypeToAddItemTo,
-      initialRetroItem
+      initialRetroItem,
     } = this.state;
 
     return (
@@ -420,7 +395,7 @@ export class OldRetroBoardPage extends React.Component<
                         handleOnClickAdd={() =>
                           this.setState({
                             isModalOpen: true,
-                            columnTypeToAddItemTo: columnType
+                            columnTypeToAddItemTo: columnType,
                           })
                         }
                         handleOnClickLike={this.handleOnClickLike}
@@ -456,7 +431,7 @@ export const RetroList: React.FC<RetroListProps> = ({
   items,
   handleOnClickAdd,
   handleOnClickLike,
-  handleOnClickEdit
+  handleOnClickEdit,
 }) => {
   return (
     <div className="flex flex-col border border-red shadow shadow-red">
@@ -465,7 +440,7 @@ export const RetroList: React.FC<RetroListProps> = ({
         <AddButton className="self-end" onClick={handleOnClickAdd} />
       </div>
       <Droppable droppableId={type}>
-        {provided => {
+        {(provided) => {
           return (
             <ul
               ref={provided.innerRef}
@@ -474,7 +449,7 @@ export const RetroList: React.FC<RetroListProps> = ({
             >
               {items.map((item: RetroItem, index) => {
                 return (
-                  <RetroItem
+                  <RetroListItem
                     key={item.id}
                     index={index}
                     handleOnClickLike={handleOnClickLike}
@@ -492,7 +467,7 @@ export const RetroList: React.FC<RetroListProps> = ({
   );
 };
 
-export const RetroItem: React.FC<RetroItem & {
+export const RetroListItem: React.FC<RetroItem & {
   index: number;
   handleOnClickLike: (itemId: RetroItem["id"]) => void;
   handleOnClickEdit: () => void;
@@ -506,7 +481,7 @@ export const RetroItem: React.FC<RetroItem & {
   createdByPhotoURL,
   handleOnClickLike,
   handleOnClickEdit,
-  index
+  index,
 }) => {
   const authAccount: any = React.useContext(AuthContext);
 
@@ -559,7 +534,7 @@ export const RetroItem: React.FC<RetroItem & {
               <LikeButton
                 likeCount={likeCount}
                 likedBy={likedBy}
-                currentUserDisplayName={authAccount.displayName}
+                currentUserId={authAccount.displayName}
                 onClick={() => handleOnClickLike(id)}
               />
             </div>
@@ -573,15 +548,15 @@ export const RetroItem: React.FC<RetroItem & {
 interface LikeButtonProps {
   likeCount: number;
   likedBy: RetroItem["likedBy"];
-  currentUserDisplayName: string;
+  currentUserId: string;
   onClick: () => void;
 }
 
 const LikeButton = ({
   likeCount,
   likedBy,
-  currentUserDisplayName,
-  onClick
+  currentUserId,
+  onClick,
 }: LikeButtonProps) => {
   return (
     <div className="flex items-center content-center">
@@ -591,7 +566,7 @@ const LikeButton = ({
         onClick={onClick}
       >
         <div className="flex content-center items-center">
-          <ThumbsUpIcon filled={likedBy[currentUserDisplayName]} />
+          <ThumbsUpIcon filled={likedBy[currentUserId]} />
         </div>
       </button>
     </div>
@@ -646,7 +621,7 @@ export class RetroItemModal extends React.Component<
     this.state = {
       columnType: props.columnType || "",
       content: props.initialRetroItem ? props.initialRetroItem.content : "",
-      isSubmitting: false
+      isSubmitting: false,
     };
   }
   handleSubmit = async () => {
@@ -694,9 +669,9 @@ export class RetroItemModal extends React.Component<
             maxWidth: "420px",
             height: "530px",
             padding: "20px",
-            width: "100%"
+            width: "100%",
           },
-          overlay: { background: "rgba(17, 38, 156, 0.6)" }
+          overlay: { background: "rgba(17, 38, 156, 0.6)" },
         }}
         className="bg-white shadow-red border m-auto absolute inset-0 border-red focus:outline-none z-50"
         // IMPORTANT: closeTimeoutMS has to be the same as what is set in the tailwind.css file.
@@ -728,7 +703,7 @@ export class RetroItemModal extends React.Component<
                 rows={10}
                 name="content"
                 value={content}
-                onChange={e => this.setState({ content: e.target.value })}
+                onChange={(e) => this.setState({ content: e.target.value })}
               />
             </div>
           </div>
