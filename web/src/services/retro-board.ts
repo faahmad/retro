@@ -19,23 +19,23 @@ export const createRetroBoardInFirebase = async (
   }
 };
 
-// export const fetchRetroBoardById = async (retroBoardId: RetroBoard["id"]) => {
-//   const retroBoardDoc = await retroBoardsCollection.doc(retroBoardId).get();
-//   return { ...retroBoardDoc.data(), uid: retroBoardDoc.id };
+// export const fetchRetroBoardById = async (id: RetroBoard["id"]) => {
+//   const retroBoardDoc = await retroBoardsCollection.doc(id).get();
+//   return retroBoardDoc.data();
 // };
 
-// export const subscribeToRetroBoardById = (
-//   retroBoardId: RetroBoard["id"],
-//   onSnapshotCallback: (retroBoard: RetroBoard) => void
-// ) => {
-//   return retroBoardsCollection.doc(retroBoardId).onSnapshot((retroBoardDoc) => {
-//     onSnapshotCallback((retroBoardDoc.data() as unknown) as RetroBoard);
-//   });
-// };
+export const subscribeToRetroBoardById = (
+  id: RetroBoard["id"],
+  onSnapshotCallback: (retroBoard: RetroBoard) => void
+) => {
+  return retroBoardsCollection.doc(id).onSnapshot((retroBoardDoc) => {
+    onSnapshotCallback((retroBoardDoc.data() as unknown) as RetroBoard);
+  });
+};
 
-// export const updateRetroBoardById = (
-//   retroBoardId: RetroBoard["id"],
-//   retroBoard: RetroBoard
-// ) => {
-//   return retroBoardsCollection.doc(retroBoardId).set(retroBoard);
-// };
+export const updateRetroBoardById = (
+  id: RetroBoard["id"],
+  retroBoard: RetroBoard
+) => {
+  return retroBoardsCollection.doc(id).set(retroBoard);
+};

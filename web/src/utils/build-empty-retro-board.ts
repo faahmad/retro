@@ -15,22 +15,22 @@ export function buildEmptyRetroBoard({
     columns: {
       good: {
         type: "good",
-        title: "Good",
+        title: "What went well?",
         itemIds: [],
       },
       bad: {
         type: "bad",
-        title: "Bad",
+        title: "What can be improved?",
         itemIds: [],
       },
       actions: {
         type: "actions",
-        title: "Actions",
+        title: "What do we need to do?",
         itemIds: [],
       },
       questions: {
         type: "questions",
-        title: "Questions",
+        title: "What do we have questions on?",
         itemIds: [],
       },
     },
