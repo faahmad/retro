@@ -1,7 +1,6 @@
 import React from "react";
 
-// images
-import retroHeroImage from "../assets/images/retro-hero-image.svg";
+import { HeroImage } from "../images/HeroImage";
 import howItWorksInviteImage from "../assets/images/how-it-works-invite-image.svg";
 import howItWorksConductImage from "../assets/images/how-it-works-conduct-image.svg";
 import howItWorksAnalyzeImage from "../assets/images/how-it-works-analyze-image.svg";
@@ -11,12 +10,10 @@ export const LandingPage: React.FC = () => {
   return (
     <div className="landing-page flex flex-col w-full justify-center my-8">
       <PageContainer>
-        <div className="flex flex-col lg:text-center m-0">
-          <img
-            className="lg:flex-1 mt-4"
-            src={retroHeroImage}
-            alt="Retro Hero"
-          />
+        <div className="flex flex-col items-center lg:text-center m-0">
+          <div className="lg:flex-1 mt-4" aria-label="Retro Hero Image">
+            <HeroImage />
+          </div>
           <h2 className="text-blue text-3xl">
             The Retrospective Tool For People That Hate Retros.
           </h2>
