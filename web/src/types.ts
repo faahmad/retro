@@ -4,7 +4,7 @@ export interface RetroItem {
   id: Id;
   content: string;
   likedBy: {
-    [userDisplayName: string]: boolean;
+    [userId: string]: boolean;
   };
   likeCount: number;
   createdByDisplayName: string;
