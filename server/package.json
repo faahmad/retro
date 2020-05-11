@@ -13,7 +13,9 @@
     "deploy": "gcloud app deploy --quiet",
     "browse": "gcloud app browse",
     "logs": "gcloud app logs tail -s default",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "db:drop": "sequelize db:drop",
+    "db:create": "sequelize db:create"
   },
   "devDependencies": {
     "@babel/cli": "^7.7.4",

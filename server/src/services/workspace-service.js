@@ -41,6 +41,7 @@ export class WorkspaceService {
           url: workspace.url,
           allowedEmailDomain: workspace.allowedEmailDomain,
           ownerId: workspace.ownerId,
+          ownerEmail: user.email,
           teamIds: [String(team.id)],
           userIds: [workspace.ownerId],
           createdAt: workspace.createdAt,
