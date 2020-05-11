@@ -1,5 +1,6 @@
 import { sequelize } from "../lib/sequelize";
 import models from "../models";
+import firebaseAdmin from "../lib/firebase-admin";
 
 export class WorkspaceService {
   static async getUsers(workspaceId) {
@@ -19,16 +20,32 @@ export class WorkspaceService {
       }
       const workspace = await models.workspace.create({
         ...input,
-        ownerId: user.id
+        ownerId: user.id,
       });
 
       const team = await models.team.create({
         name: "Default",
-        workspaceId: workspace.id
+        workspaceId: workspace.id,
       });
 
       await user.addWorkspace(workspace.id);
       await user.addTeam(team.id);
+
+      firebaseAdmin
+        .firestore()
+        .collection("workspaces")
+        .doc(String(workspace.id))
+        .set({
+          id: String(workspace.id),
+          name: workspace.name,
+          url: workspace.url,
+          allowedEmailDomain: workspace.allowedEmailDomain,
+          ownerId: workspace.ownerId,
+          teamIds: [String(team.id)],
+          userIds: [workspace.ownerId],
+          createdAt: workspace.createdAt,
+          updatedAt: workspace.updatedAt,
+        });
 
       return workspace;
     } catch (error) {
