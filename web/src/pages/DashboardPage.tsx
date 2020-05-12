@@ -10,6 +10,9 @@ import moment from "moment";
 import { Footer } from "../components/Footer";
 import { PageContainer } from "../components/PageContainer";
 import { createRetroBoardInFirebase } from "../services/retro-board";
+import { PawIcon } from "../images/PawIcon";
+import { Button } from "../components/Button";
+import { Link } from "react-router-dom";
 
 const WORKSPACE_QUERY = gql`
   query WorkspaceQuery($id: ID!) {
@@ -34,6 +37,10 @@ const WORKSPACE_QUERY = gql`
         createdAt
         accepted
       }
+      subscription {
+        status
+        trialEnd
+      }
     }
   }
 `;
@@ -49,13 +56,36 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
   }
 
   const { workspace } = data;
+  debugger;
   const defaultTeam = workspace.teams[0];
+
+  const isInTrialMode = workspace.subscription.status === "trialing";
 
   return (
     <div>
       <PageContainer>
         <p className="text-blue mb-2 underline">{workspace.name}</p>
         <h1 className="text-blue font-black text-3xl">Dashboard</h1>
+        {isInTrialMode && (
+          <div className="flex justify-between items-center text-blue my-2 p-4 bg-white border shadow flex-wrap">
+            <div className="flex flex-wrap items-center">
+              <PawIcon />
+              <div className="pl-2">
+                <p className="font-black">Upgrade to PRO</p>
+                <p className="text-sm">
+                  Your free trial ends{" "}
+                  {moment.unix(workspace.subscription.trialEnd).fromNow()}.
+                  Upgrade to PRO to keep leveling up your team.
+                </p>
+              </div>
+            </div>
+            <Link to={`/workspaces/${workspace.id}/settings`}>
+              <Button className="text-red" style={{ maxWidth: "8rem" }}>
+                Upgrade
+              </Button>
+            </Link>
+          </div>
+        )}
         <RetroBoardsOverview teamId={defaultTeam.id} history={history} />
         <TeamMemberOverview
           workspaceId={workspace.id}
