@@ -14,6 +14,7 @@ import { gql } from "apollo-boost";
 import { useQuery } from "@apollo/react-hooks";
 import { LoadingText } from "./components/LoadingText";
 import { RetroBoardPage } from "./pages/RetroBoardPage";
+import { SettingsPage } from "./pages/SettingsPage";
 
 const optimizely = createInstance({
   sdkKey: process.env.REACT_APP_OPTIMIZELY_SDK_KEY,
@@ -87,6 +88,11 @@ const AuthenticatedAppRoutes: React.FC = () => {
         exact
         path="/workspaces/:workspaceId/teams/:teamId/retros/:retroId"
         component={RetroBoardPage}
+      />
+      <Route
+        exact
+        path="/workspaces/:workspaceId/settings"
+        component={SettingsPage}
       />
       <Route exact path="/workspaces/:workspaceId" component={DashboardPage} />
 

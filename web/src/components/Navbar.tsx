@@ -12,7 +12,7 @@ export const Navbar: React.FC = () => {
   const authAccount = React.useContext(AuthContext);
 
   const handleToggleModal = async () => {
-    await setIsOpen(prevIsOpen => !prevIsOpen);
+    await setIsOpen((prevIsOpen) => !prevIsOpen);
   };
 
   const isLoggedIn = !!authAccount;
@@ -44,17 +44,17 @@ const NavbarBrand: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
     let timeoutId: any;
     [...Array(100)].map((_, index) => {
       return (timeoutId = setTimeout(() => {
-        setBoxes(prevBoxes => [...prevBoxes, { key: prevBoxes.length + 1 }]);
+        setBoxes((prevBoxes) => [...prevBoxes, { key: prevBoxes.length + 1 }]);
       }, 40 * index));
     });
 
     return () => clearTimeout(timeoutId);
   }, []);
 
-  const transitions = useTransition(boxes, box => box.key, {
+  const transitions = useTransition(boxes, (box) => box.key, {
     from: { transform: "translate3d(0,-40px,0)" },
     enter: { transform: "translate3d(0,0px,0)" },
-    leave: { transform: "translate3d(0,-40px,0)" }
+    leave: { transform: "translate3d(0,-40px,0)" },
   });
 
   return (
