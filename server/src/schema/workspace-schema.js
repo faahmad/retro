@@ -12,6 +12,29 @@ export const workspaceSchema = gql`
     teams: [Team]
     users: [User]
     invitedUsers: [WorkspaceInvite]
+    subscription: StripeSubscription
+  }
+
+  type StripeSubscription {
+    id: ID!
+    status: String!
+    trialStart: Float!
+    trialEnd: Float!
+    startDate: Float!
+    createdAt: Float!
+    currentPeriodStart: Float!
+    currentPeriodEnd: Float!
+    customerId: String!
+    plan: StripeSubscriptionPlan!
+  }
+
+  type StripeSubscriptionPlan {
+    id: ID!
+    active: Boolean!
+    amount: Int!
+    currency: String!
+    interval: String!
+    productId: String!
   }
 
   input CreateWorkspaceInput {

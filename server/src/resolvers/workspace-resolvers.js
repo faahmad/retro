@@ -1,6 +1,7 @@
 import { ApolloError, ForbiddenError } from "apollo-server-express";
 import { sequelize } from "../lib/sequelize";
 import { WorkspaceService } from "../services/workspace-service";
+import { getWorkspaceSubscription } from "../services/subscription";
 
 export const workspaceResolvers = {
   Query: {
@@ -8,7 +9,7 @@ export const workspaceResolvers = {
       const user = await models.user.findByPk(userId);
       const workspacesThatUserBelongsTo = await user.getWorkspaces();
       const [workspace] = workspacesThatUserBelongsTo.filter(
-        workspace => String(workspace.id) === String(id)
+        (workspace) => String(workspace.id) === String(id)
       );
       if (!workspace) {
         throw new ApolloError("You don't have access to this workspace.");
@@ -21,7 +22,7 @@ export const workspaceResolvers = {
         `SELECT w.id, w.name, w.url from "workspaces" w LEFT JOIN "workspaceInvites" wi ON w.id = wi."workspaceId" WHERE email = '${user.email}';`
       );
       return results;
-    }
+    },
   },
   Mutation: {
     async createWorkspace(parent, { input }, { user }) {
@@ -35,7 +36,7 @@ export const workspaceResolvers = {
       try {
         const user = await models.user.findByPk(userId);
         const workspaces = await user.getWorkspaces({
-          where: { id: input.workspaceId }
+          where: { id: input.workspaceId },
         });
         if (workspaces.length === 0) {
           throw new ForbiddenError(
@@ -47,7 +48,7 @@ export const workspaceResolvers = {
         // Use a database constraint on the email and workspaceId
         // columns, instead of checking uniqueness manually.
         const workspaceInvites = await models.workspaceInvite.findAll({
-          where: { email: input.email, workspaceId: input.workspaceId }
+          where: { email: input.email, workspaceId: input.workspaceId },
         });
         if (workspaceInvites.length !== 0) {
           throw new ForbiddenError(
@@ -59,7 +60,7 @@ export const workspaceResolvers = {
           email: input.email,
           workspaceId: input.workspaceId,
           invitedById: userId,
-          accepted: false
+          accepted: false,
         });
 
         return workspaceInvite;
@@ -77,7 +78,7 @@ export const workspaceResolvers = {
         }
 
         const workspaceInvite = await models.workspaceInvite.findOne({
-          where: { workspaceId: workspace.id, email: user.email }
+          where: { workspaceId: workspace.id, email: user.email },
         });
 
         if (
@@ -90,7 +91,7 @@ export const workspaceResolvers = {
         }
 
         const defaultTeam = await models.team.findOne({
-          where: { workspaceId: workspace.id }
+          where: { workspaceId: workspace.id },
         });
 
         if (workspaceInvite) {
@@ -102,12 +103,12 @@ export const workspaceResolvers = {
         return {
           code: 200,
           success: true,
-          message: "Successfully added user to workspace."
+          message: "Successfully added user to workspace.",
         };
       } catch (error) {
         throw new ApolloError(error.message);
       }
-    }
+    },
   },
   Workspace: {
     async teams(parent, _args, { models }) {
@@ -118,8 +119,14 @@ export const workspaceResolvers = {
     },
     async invitedUsers(parent, _args, { models }) {
       return models.workspaceInvite.findAll({
-        where: { workspaceId: parent.id, accepted: false }
+        where: { workspaceId: parent.id, accepted: false },
       });
-    }
-  }
+    },
+    async subscription(workspace, _args, { userId }) {
+      if (userId !== workspace.ownerId) {
+        return null;
+      }
+      return getWorkspaceSubscription(String(workspace.id));
+    },
+  },
 };
