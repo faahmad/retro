@@ -1,9 +1,7 @@
 import { ApolloError, ForbiddenError } from "apollo-server-express";
 import { sequelize } from "../lib/sequelize";
-import {
-  WorkspaceService,
-  getWorkspaceSubscription,
-} from "../services/workspace-service";
+import { WorkspaceService } from "../services/workspace-service";
+import { getWorkspaceSubscription } from "../services/subscription";
 
 export const workspaceResolvers = {
   Query: {

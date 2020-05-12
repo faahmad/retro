@@ -3,6 +3,8 @@ sequelize.options.logging = false;
 import { AuthenticationService } from "./src/services/authentication-service";
 
 jest.mock("./src/services/firestore");
+jest.mock("./src/services/stripe");
+jest.mock("./src/services/subscription");
 jest.mock("./src/services/authentication-service");
 
 const mockedGetUserIdFromIdToken = jest
@@ -14,6 +16,10 @@ AuthenticationService.getUserIdFromIdToken = mockedGetUserIdFromIdToken.bind(
 
 beforeEach(async () => {
   await sequelize.sync({ force: true });
+});
+
+afterEach(() => {
+  jest.clearAllMocks();
 });
 
 afterAll(async () => {

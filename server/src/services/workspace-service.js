@@ -1,10 +1,7 @@
 import { sequelize } from "../lib/sequelize";
 import models from "../models";
-import {
-  addWorkspaceToFirestore,
-  getWorkspaceFromFirestore,
-} from "./firestore";
-import { getStripeSubscription } from "./stripe";
+import { addWorkspaceToFirestore } from "./firestore";
+
 export class WorkspaceService {
   static async getUsers(workspaceId) {
     const [users] = await sequelize.query(
@@ -55,9 +52,4 @@ export class WorkspaceService {
       throw new Error(errorMessage);
     }
   }
-}
-
-export async function getWorkspaceSubscription(workspaceId) {
-  const workspace = await getWorkspaceFromFirestore(workspaceId);
-  return getStripeSubscription(workspace.subscriptionId);
 }
