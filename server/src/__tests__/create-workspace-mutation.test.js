@@ -2,6 +2,7 @@ import { executeGraphQLQuery } from "./test-helpers/execute-graphql-query";
 import { factory } from "./test-helpers/factory";
 import faker from "faker";
 import models from "../models";
+import { addWorkspaceToFirestore } from "../services/firestore";
 
 describe("createWorkspace mutation", () => {
   const createWorkspaceMutation = `
@@ -46,9 +47,9 @@ describe("createWorkspace mutation", () => {
           input: {
             name,
             url,
-            allowedEmailDomain
-          }
-        }
+            allowedEmailDomain,
+          },
+        },
       });
 
       expect(data).toMatchObject({
@@ -57,8 +58,8 @@ describe("createWorkspace mutation", () => {
           ownerId: user.id,
           name,
           url,
-          allowedEmailDomain
-        }
+          allowedEmailDomain,
+        },
       });
     });
 
@@ -70,9 +71,9 @@ describe("createWorkspace mutation", () => {
           input: {
             name,
             url,
-            allowedEmailDomain
-          }
-        }
+            allowedEmailDomain,
+          },
+        },
       });
 
       const u = await models.user.findByPk(user.id);
@@ -88,9 +89,9 @@ describe("createWorkspace mutation", () => {
           input: {
             name,
             url,
-            allowedEmailDomain
-          }
-        }
+            allowedEmailDomain,
+          },
+        },
       });
 
       const u = await models.user.findByPk(user.id);
@@ -103,6 +104,21 @@ describe("createWorkspace mutation", () => {
         mutationResult.data.createWorkspace.teams[0].workspaceId
       );
     });
+    it("should add the workspace to firestore", async () => {
+      await executeGraphQLQuery({
+        query: createWorkspaceMutation,
+        userId: user.id,
+        variables: {
+          input: {
+            name,
+            url,
+            allowedEmailDomain,
+          },
+        },
+      });
+
+      expect(addWorkspaceToFirestore).toHaveBeenCalled();
+    });
   });
   describe("when invalid", () => {
     let user;
@@ -112,7 +128,7 @@ describe("createWorkspace mutation", () => {
     it("should return an error when no input is given", async () => {
       const { errors } = await executeGraphQLQuery({
         query: createWorkspaceMutation,
-        userId: user.id
+        userId: user.id,
       });
 
       expect(errors.length).toBe(1);
@@ -136,9 +152,9 @@ describe("createWorkspace mutation", () => {
           input: {
             name,
             url,
-            allowedEmailDomain
-          }
-        }
+            allowedEmailDomain,
+          },
+        },
       });
 
       expect(errors.length).toBe(1);
@@ -161,10 +177,10 @@ describe("createWorkspace mutation", () => {
           input: {
             name,
             allowedEmailDomain,
-            url: workspaceOne.url
-          }
+            url: workspaceOne.url,
+          },
         },
-        userId: owner.id
+        userId: owner.id,
       });
 
       expect(errors.length).toBe(1);
