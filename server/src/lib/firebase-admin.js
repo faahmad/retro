@@ -7,6 +7,7 @@ function getServiceAccountKey(env) {
     case "production":
       return prodServiceAccountKey;
     case "development":
+      return devServiceAccountKey;
     case "test":
       return devServiceAccountKey;
   }
