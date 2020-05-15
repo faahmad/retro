@@ -37,6 +37,10 @@ const WORKSPACE_QUERY = gql`
         createdAt
         accepted
       }
+      subscription {
+        status
+        trialEnd
+      }
     }
   }
 `;
@@ -53,8 +57,7 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
 
   const { workspace } = data;
   const defaultTeam = workspace.teams[0];
-  // const isInTrialMode = workspace.subscription.status === "trialing";
-  const isInTrialMode = false;
+  const isInTrialMode = workspace?.subscription?.status === "trialing";
 
   return (
     <div>
