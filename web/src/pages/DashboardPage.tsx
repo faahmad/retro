@@ -13,6 +13,7 @@ import { createRetroBoardInFirebase } from "../services/retro-board";
 import { PawIcon } from "../images/PawIcon";
 import { Button } from "../components/Button";
 import { Link } from "react-router-dom";
+import { useAuthContext } from "../contexts/AuthContext";
 
 const WORKSPACE_QUERY = gql`
   query WorkspaceQuery($id: ID!) {
@@ -46,6 +47,7 @@ const WORKSPACE_QUERY = gql`
 `;
 
 export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
+  const authAccount = useAuthContext();
   const { workspaceId } = useParams();
   const { data, loading } = useQuery(WORKSPACE_QUERY, {
     variables: { id: workspaceId },
@@ -56,8 +58,11 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
   }
 
   const { workspace } = data;
-  const defaultTeam = workspace.teams[0];
   const isInTrialMode = workspace?.subscription?.status === "trialing";
+  const defaultTeam = workspace.teams[0];
+  const users = [...workspace.users, ...workspace.invitedUsers].filter(
+    (user) => user.id !== authAccount?.uid
+  );
 
   return (
     <div>
@@ -85,10 +90,7 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
           </div>
         )}
         <RetroBoardsOverview teamId={defaultTeam.id} history={history} />
-        <TeamMemberOverview
-          workspaceId={workspace.id}
-          users={[...workspace.users, ...workspace.invitedUsers]}
-        />
+        <TeamMemberOverview workspaceId={workspace.id} users={users} />
       </PageContainer>
       <Footer />
     </div>
