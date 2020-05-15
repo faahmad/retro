@@ -10,16 +10,27 @@ const dummyData = {
 };
 
 export const SettingsPage = () => {
-  const handleOnClick = async () => {
+  const [checkoutSession, setCheckoutSession] = React.useState(null);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const handleFetchCheckoutSession = async () => {
+    setIsLoading(true);
     const response = await createStripeCheckoutSession(dummyData);
-    debugger;
+    setCheckoutSession(response.data);
+    setIsLoading(false);
     return;
   };
 
   return (
     <PageContainer>
-      <h1 className="text-2xl font-black text-blue mb-2">Settings</h1>
-      <Button onClick={handleOnClick}>Upgrade to PRO</Button>
+      {isLoading && <p>Loading...</p>}
+      {!isLoading && !checkoutSession && (
+        <Button onClick={handleFetchCheckoutSession}>Upgrade to PRO</Button>
+      )}
+      {!isLoading && checkoutSession && (
+        <code>
+          <pre>{JSON.stringify(checkoutSession, null, 2)}</pre>
+        </code>
+      )}
     </PageContainer>
   );
 };
