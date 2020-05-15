@@ -243,7 +243,7 @@ const TeamMemberOverview: React.FC<{
                   >
                     {u.email[0]}
                   </div>
-                  <div className="flex flex-col flex-shrink ml-1">
+                  <div className="flex flex-col flex-shrink ml-2">
                     <p className="text-blue text-sm font-light">{u.email}</p>
                     <p className="uppercase text-pink text-xs font-black">
                       {isInvitedUser ? "invited" : "member"}

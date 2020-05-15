@@ -4,61 +4,115 @@ import { HeroImage } from "../images/HeroImage";
 import howItWorksInviteImage from "../assets/images/how-it-works-invite-image.svg";
 import howItWorksConductImage from "../assets/images/how-it-works-conduct-image.svg";
 import howItWorksAnalyzeImage from "../assets/images/how-it-works-analyze-image.svg";
+import applicationScreenshotImage from "../assets/images/screenshot@2x.png";
+import landingFooterImage from "../assets/images/landing-page-footer.svg";
+
+
+import { GoogleOAuthButton } from "../components/GoogleOAuthButton";
 import { PageContainer } from "../components/PageContainer";
 
 export const LandingPage: React.FC = () => {
   return (
-    <div className="landing-page flex flex-col w-full justify-center my-8">
-      <PageContainer>
-        <div className="flex flex-col items-center lg:text-center m-0">
-          <div className="lg:flex-1 mt-4" aria-label="Retro Hero Image">
-            <HeroImage />
+    <div>
+      <div className="landing-page flex flex-col w-full justify-center my-8">
+        <PageContainer>
+          <div className="flex flex-col items-center lg:text-center m-0">
+            <div className="lg:flex-1 mt-4" aria-label="Retro Hero Image">
+              <HeroImage />
+            </div>
+            <h2 className="text-blue text-3xl">
+              The Retrospective Tool For People That Hate Retros.
+            </h2>
           </div>
-          <h2 className="text-blue text-3xl">
-            The Retrospective Tool For People That Hate Retros.
-          </h2>
+        </PageContainer>
+        <div className="landing-page__how-it-works relative w-full min-h-full vertical-stripes-blue border border-blue mt-10">
+          <div className="w-full min-h-full -z-1 absolute horizontal-stripes-blue"></div>
+          <div className="sm:w-full lg:w-4/5 m-auto p-4 py-8">
+            <div className="flex items-center justify-center h-16 text-center bg-white text-blue border border-red shadow-red items-center max-w-6xl m-auto">
+              <h3 className="text-3xl font-black">How it Works</h3>
+            </div>
+            <div className="mt-10 flex flex-col lg:flex-row justify-between max-w-6xl items-center z-10 m-auto">
+              <HowItWorksCard>
+                <img
+                  alt="Invite"
+                  src={howItWorksInviteImage}
+                  className="bg-white mb-2"
+                  style={{ height: "115px", width: "140px" }}
+                />
+                <p className="text-xl mb-2">Invite</p>
+                <p>Invite your team.</p>
+              </HowItWorksCard>
+              <HowItWorksCard>
+                <img
+                  alt="Conduct"
+                  src={howItWorksConductImage}
+                  className="bg-white mb-2"
+                  style={{ height: "115px", width: "140px" }}
+                />
+                <p className="text-xl mb-2">Conduct</p>
+                <p>Conduct your retro using our drag and drop interface.</p>
+              </HowItWorksCard>
+              <HowItWorksCard>
+                <img
+                  alt="Conduct"
+                  src={howItWorksAnalyzeImage}
+                  className="bg-white mb-2"
+                  style={{ height: "115px", width: "140px" }}
+                />
+                <p className="text-xl mb-2">Analyze</p>
+                <p>Analyze your team's progress.</p>
+              </HowItWorksCard>
+            </div>
+          </div>
         </div>
-      </PageContainer>
-      <div className="landing-page__how-it-works relative w-full min-h-full vertical-stripes-blue border border-blue mt-10">
-        <div className="w-full min-h-full -z-1 absolute horizontal-stripes-blue"></div>
-        <div className="sm:w-full lg:w-4/5 m-auto p-4 py-8">
-          <div className="flex items-center justify-center h-16 text-center bg-white text-blue border border-red shadow-red items-center max-w-6xl m-auto">
-            <h3 className="text-2xl font-black">How it Works</h3>
-          </div>
-          <div className="mt-10 flex flex-col lg:flex-row justify-between max-w-6xl items-center z-10 m-auto">
-            <HowItWorksCard>
+        <div className="mt-20 mb-20 flex flex-col lg:flex-row max-w-6xl items-center m-auto">
+            <div className="w-2/3">
               <img
-                alt="Invite"
-                src={howItWorksInviteImage}
-                className="bg-white mb-2"
-                style={{ height: "115px", width: "140px" }}
-              />
-              <p className="text-xl mb-2">Invite</p>
-              <p>Invite your team.</p>
-            </HowItWorksCard>
-            <HowItWorksCard>
-              <img
-                alt="Conduct"
-                src={howItWorksConductImage}
-                className="bg-white mb-2"
-                style={{ height: "115px", width: "140px" }}
-              />
-              <p className="text-xl mb-2">Conduct</p>
-              <p>Conduct your retro using our drag and drop interface.</p>
-            </HowItWorksCard>
-            <HowItWorksCard>
-              <img
-                alt="Conduct"
-                src={howItWorksAnalyzeImage}
-                className="bg-white mb-2"
-                style={{ height: "115px", width: "140px" }}
-              />
-              <p className="text-xl mb-2">Analyze</p>
-              <p>Analyze your team's progress.</p>
-            </HowItWorksCard>
-          </div>
+                  alt="Screenshot"
+                  src={applicationScreenshotImage}
+                  className="bg-white mb-2"
+                  style={{ maxWidth: "750px" }}
+                />
+            </div>
+            <div className="w-1/3 ml-4">
+              <h3 className="text-3xl text-blue font-black mb-3">Pain-Free Interface, Short and Sweet Retros.</h3>
+              <p className="text-xl text-blue">We’re on a mission to take over each team’s most dreaded weekly activity and turn it into a fast win for everyone.</p>
+              <GoogleOAuthButton
+                  buttonClassName="mt-4 text-blue bg-pink"
+                  textClassName="justify-end"
+                  useGoogleIcon={false}
+                >
+                  30 day free trial
+              </GoogleOAuthButton>
+            </div>
+        </div>
+        <hr className="flex flex-col justify-center self-center w-3/5 mt-12 mb-12" style={{borderTop: "2px dashed #11269C"}}/>
+        <div className="mt-20 mb-20 flex flex-col lg:flex-row max-w-6xl items-center m-auto">
+            <div className="w-1/3">
+              <GoogleOAuthButton
+                  buttonClassName="text-blue bg-pink"
+                  textClassName="justify-end"
+                  useGoogleIcon={false}
+                >
+                  Free Trial Inside
+              </GoogleOAuthButton>
+            </div>
+            <div className="w-2/3 ml-4">
+              <h3 className="text-3xl text-blue  text-right font-black mb-3">Play Now!</h3>
+              <p className="text-xl text-right text-blue">No fees for your first 30 days. Retro is guaranteed to make your team feel more productive. This tool is awesome. We promise.</p>
+            </div>
         </div>
       </div>
+      <div>
+        <img
+          className="w-full"
+          src={landingFooterImage}
+          alt="Landing Page Footer Illustration"
+        />
+      </div>
+      <footer className="bg-pink text-blue p-2 text-center">
+        <p className="text-blue">&copy; 2020, Retro Technology</p>
+      </footer>
     </div>
   );
 };
