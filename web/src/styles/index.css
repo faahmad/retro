@@ -7207,6 +7207,13 @@ body {
   background-color: rgba(255, 148, 184, 0.5);
 }
 
+.text-break {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
 /* Overrides */
 
 .ReactModal__Overlay {

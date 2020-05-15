@@ -19,8 +19,9 @@ const CREATE_USER_MUTATION = gql`
 export const GoogleOAuthButton: React.FC<{
   buttonClassName?: string;
   textClassName?: string;
+  useGoogleIcon?: boolean;
   onClick?: () => void;
-}> = ({ buttonClassName = "", textClassName = "", children, onClick }) => {
+}> = ({ buttonClassName = "", textClassName = "", useGoogleIcon=true, children, onClick }) => {
   const [idToken, setIdToken] = React.useState<any | null>(null);
   const [createUser] = useMutation(CREATE_USER_MUTATION, {
     context: { idToken }
@@ -66,7 +67,7 @@ export const GoogleOAuthButton: React.FC<{
     <Button className={buttonClassName} onClick={handleClick}>
       <div className={`flex items-center ${textClassName}`}>
         <span>{children}</span>
-        <img alt="Google" className="h-10 pl-1 mt-1" src={googleLogo} />
+        {useGoogleIcon ? <img alt="Google" className="h-10 pl-1 mt-1" src={googleLogo} /> : null}
       </div>
     </Button>
   );
