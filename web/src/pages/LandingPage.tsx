@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 import { HeroImage } from "../images/HeroImage";
 import howItWorksInviteImage from "../assets/images/how-it-works-invite-image.svg";
@@ -98,17 +99,17 @@ export const LandingPage: React.FC = () => {
               </GoogleOAuthButton>
             </div>
             <div className="w-2/3 ml-4">
-              <h3 className="text-3xl text-blue  text-right font-black mb-3">Play Now!</h3>
+              <h3 className="text-3xl text-blue text-right font-black mb-3">Play Now!</h3>
               <p className="text-xl text-right text-blue">No fees for your first 30 days. Retro is guaranteed to make your team feel more productive. This tool is awesome. We promise.</p>
             </div>
         </div>
       </div>
-      <div>
-        <img
-          className="w-full"
-          src={landingFooterImage}
-          alt="Landing Page Footer Illustration"
-        />
+      <div style={{ 
+          backgroundImage:`url(${landingFooterImage})`, 
+          backgroundSize: "cover",
+          minHeight: "300px"
+        }} className="w-full flex justify-center items-center">
+        <Link to="/faq"><h2 className="text-5xl text-pink p-2 text-center">FAQ</h2></Link>
       </div>
       <footer className="bg-pink text-blue p-2 text-center">
         <p className="text-blue">&copy; 2020, Retro Technology</p>

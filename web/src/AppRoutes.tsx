@@ -7,6 +7,7 @@ import {
 } from "@optimizely/react-sdk";
 import { useAuthContext } from "./contexts/AuthContext";
 import { Navbar } from "./components/Navbar";
+import { FAQPage } from "./pages/FAQPage";
 import { LandingPage } from "./pages/LandingPage";
 import { OnboardingPage } from "./pages/OnboardingPage";
 import { DashboardPage } from "./pages/DashboardPage";
@@ -51,6 +52,7 @@ const UnauthenticatedAppRoutes: React.FC = () => {
   return (
     <React.Fragment>
       <Route exact path="/" component={LandingPage} />
+      <Route exact path="/faq" component={FAQPage} />
     </React.Fragment>
   );
 };
