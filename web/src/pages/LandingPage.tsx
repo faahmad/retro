@@ -72,7 +72,7 @@ export const LandingPage: React.FC = () => {
                   alt="Screenshot"
                   src={applicationScreenshotImage}
                   className="bg-white mb-2"
-                  style={{ maxWidth: "750px" }}
+                  style={{ maxWidth: "650px" }}
                 />
             </div>
             <div className="w-1/3 ml-4">
