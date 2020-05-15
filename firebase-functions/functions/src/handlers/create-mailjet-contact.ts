@@ -1,7 +1,7 @@
 import { app, auth } from "firebase-admin";
 import { addUserToDefaultContactList } from "../services/mailjet-service";
 
-export const handleAuthOnCreate = (firebaseAdmin: app.App) => async (
+export const handleCreateMailjetContact = (firebaseAdmin: app.App) => async (
   user: auth.UserRecord
 ) => {
   console.log("New user!");
