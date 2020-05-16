@@ -12,11 +12,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@master
-      - name: cd into Web
-        run: cd web
       - name: Installing node modules
-        run: npm install
+        run: |
+        cd web
+        npm install
       - name: Run Lint
-        run: npm run lint
+        run: |
+        cd web
+        npm run lint
       - name: Running Tests
-        run: npm run test
+        run: |
+        cd web
+        npm run test
