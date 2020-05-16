@@ -18,7 +18,7 @@ export const FAQPage: React.FC = () => {
               How much does Retro cost?
             </h3>
             <p className="text-xl text-blue">
-              Retro is free for the first 30 days, then it is $20 per month.
+              Retro is free for the first 30 days, then it is $39.99 per month.
             </p>
           </div>
           <div className="mt-20 mb-20">
