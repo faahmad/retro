@@ -1,12 +1,12 @@
-import * as React from "react";
-import { PageContainer } from "../components/PageContainer";
-import { Button } from "../components/Button";
-import { createStripeCheckoutSession } from "../services/stripe";
+import * as React from 'react';
+import { PageContainer } from '../components/PageContainer';
+import { Button } from '../components/Button';
+import { createStripeCheckoutSession } from '../services/stripe';
 
 const dummyData = {
-  workspaceId: "1",
-  successUrl: "http://localhost:3000/workspace/1",
-  cancelUrl: "http://localhost:3000/workspace/1/settings",
+  workspaceId: '1',
+  successUrl: 'http://localhost:3000/workspace/1',
+  cancelUrl: 'http://localhost:3000/workspace/1/settings'
 };
 
 export const SettingsPage = () => {

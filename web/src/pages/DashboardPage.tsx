@@ -1,19 +1,19 @@
-import React from "react";
-import { gql } from "apollo-boost";
-import { useQuery, useMutation } from "@apollo/react-hooks";
-import { useParams, RouteComponentProps } from "react-router-dom";
-import teamMemberEmptyImage from "../assets/images/team-member-empty-image.svg";
-import retroEmptyImage from "../assets/images/retro-empty-image.svg";
-import { InviteUserToWorkspaceModal } from "../components/InviteUserToWorkspaceModal";
-import { LoadingText } from "../components/LoadingText";
-import moment from "moment";
-import { Footer } from "../components/Footer";
-import { PageContainer } from "../components/PageContainer";
-import { createRetroBoardInFirebase } from "../services/retro-board";
-import { PawIcon } from "../images/PawIcon";
-import { Button } from "../components/Button";
-import { Link } from "react-router-dom";
-import { useAuthContext } from "../contexts/AuthContext";
+import React from 'react';
+import { gql } from 'apollo-boost';
+import { useQuery, useMutation } from '@apollo/react-hooks';
+import { useParams, RouteComponentProps } from 'react-router-dom';
+import teamMemberEmptyImage from '../assets/images/team-member-empty-image.svg';
+import retroEmptyImage from '../assets/images/retro-empty-image.svg';
+import { InviteUserToWorkspaceModal } from '../components/InviteUserToWorkspaceModal';
+import { LoadingText } from '../components/LoadingText';
+import moment from 'moment';
+import { Footer } from '../components/Footer';
+import { PageContainer } from '../components/PageContainer';
+import { createRetroBoardInFirebase } from '../services/retro-board';
+import { PawIcon } from '../images/PawIcon';
+import { Button } from '../components/Button';
+import { Link } from 'react-router-dom';
+import { useAuthContext } from '../contexts/AuthContext';
 
 const WORKSPACE_QUERY = gql`
   query WorkspaceQuery($id: ID!) {
@@ -50,7 +50,7 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
   const authAccount = useAuthContext();
   const { workspaceId } = useParams();
   const { data, loading } = useQuery(WORKSPACE_QUERY, {
-    variables: { id: workspaceId },
+    variables: { id: workspaceId }
   });
 
   if (loading || !data) {
@@ -58,7 +58,7 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
   }
 
   const { workspace } = data;
-  const isInTrialMode = workspace?.subscription?.status === "trialing";
+  const isInTrialMode = workspace?.subscription?.status === 'trialing';
   const defaultTeam = workspace?.teams[0];
   const users = [...workspace.users, ...workspace.invitedUsers].filter(
     (user) => user.id !== authAccount?.uid
@@ -76,14 +76,14 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
               <div className="pl-2">
                 <p className="font-black">Upgrade to PRO</p>
                 <p className="text-sm">
-                  Your free trial ends{" "}
-                  {moment.unix(workspace.subscription.trialEnd).fromNow()}.
-                  Upgrade to PRO to keep leveling up your team.
+                  Your free trial ends{' '}
+                  {moment.unix(workspace.subscription.trialEnd).fromNow()}. Upgrade to PRO
+                  to keep leveling up your team.
                 </p>
               </div>
             </div>
             <Link to={`/workspaces/${workspace.id}/settings`}>
-              <Button className="text-red" style={{ maxWidth: "8rem" }}>
+              <Button className="text-red" style={{ maxWidth: '8rem' }}>
                 Upgrade
               </Button>
             </Link>
@@ -124,11 +124,11 @@ const CREATE_RETRO_MUTATION = gql`
 
 const RetroBoardsOverview: React.FC<{
   teamId: string;
-  history: RouteComponentProps["history"];
+  history: RouteComponentProps['history'];
 }> = ({ history, teamId }) => {
   const [retros, setRetros] = React.useState<any[]>([]);
   const { data } = useQuery(GET_TEAM_RETROS, {
-    variables: { teamId },
+    variables: { teamId }
   });
 
   React.useEffect(() => {
@@ -139,8 +139,8 @@ const RetroBoardsOverview: React.FC<{
   }, [data]);
 
   const [createRetroMutation] = useMutation(CREATE_RETRO_MUTATION, {
-    refetchQueries: ["RetrosByTeam"],
-    awaitRefetchQueries: true,
+    refetchQueries: ['RetrosByTeam'],
+    awaitRefetchQueries: true
   });
 
   const handleRedirectToRetroPage = (retro: any) => {
@@ -151,7 +151,7 @@ const RetroBoardsOverview: React.FC<{
 
   const handleCreateRetro = async () => {
     const { data } = await createRetroMutation({
-      variables: { input: { teamId } },
+      variables: { input: { teamId } }
     });
     createRetroBoardInFirebase(data.createRetro);
     return handleRedirectToRetroPage(data.createRetro);
@@ -183,7 +183,7 @@ const RetroBoardsOverview: React.FC<{
                 <div className="flex flex-col flex-shrink ml-1 bg-pink p-4 cursor-pointer hover:bg-pink-1/2 hover:shadow-blue">
                   <p className="text-xs text-blue">#{retro.id}</p>
                   <p className="text-blue text-sm font-light">
-                    {retro.name || moment(retro.createdAt).format("LLLL")}
+                    {retro.name || moment(retro.createdAt).format('LLLL')}
                   </p>
                 </div>
               </div>
@@ -219,9 +219,7 @@ const TeamMemberOverview: React.FC<{
         <div className="flex justify-between items-center">
           <p className="text-red text-xl font-black">Team Members</p>
           <div className="flex items-center">
-            <p className="text-blue font-black hidden lg:block">
-              Invite Member
-            </p>
+            <p className="text-blue font-black hidden lg:block">Invite Member</p>
             <button
               onClick={handleToggleModal}
               className="h-10 w-10 bg-blue text-white ml-3 border border-red shadow shadow-red text-2xl hover:bg-pink-1/2 active:transform-1 focus:outline-none"
@@ -233,7 +231,7 @@ const TeamMemberOverview: React.FC<{
         {users.length !== 0 ? (
           <div className="flex flex-wrap">
             {users.map((u) => {
-              const isInvitedUser = u.__typename === "WorkspaceInvite";
+              const isInvitedUser = u.__typename === 'WorkspaceInvite';
               return (
                 <div
                   key={u.id}
@@ -241,9 +239,7 @@ const TeamMemberOverview: React.FC<{
                 >
                   <div
                     className={`flex h-12 w-12 rounded-full text-white items-center justify-center border border-red text-xl flex-shrink-0 ${
-                      isInvitedUser
-                        ? "bg-pink-1/2 text-blue"
-                        : "bg-blue text-white"
+                      isInvitedUser ? 'bg-pink-1/2 text-blue' : 'bg-blue text-white'
                     }`}
                   >
                     {u.email[0]}
@@ -251,7 +247,7 @@ const TeamMemberOverview: React.FC<{
                   <div className="flex flex-col flex-shrink ml-2">
                     <p className="text-blue text-sm font-light">{u.email}</p>
                     <p className="uppercase text-pink text-xs font-black">
-                      {isInvitedUser ? "invited" : "member"}
+                      {isInvitedUser ? 'invited' : 'member'}
                     </p>
                   </div>
                 </div>
@@ -259,11 +255,7 @@ const TeamMemberOverview: React.FC<{
             })}
           </div>
         ) : (
-          <img
-            className="mt-4"
-            src={teamMemberEmptyImage}
-            alt="No Team Members"
-          />
+          <img className="mt-4" src={teamMemberEmptyImage} alt="No Team Members" />
         )}
       </div>
     </React.Fragment>

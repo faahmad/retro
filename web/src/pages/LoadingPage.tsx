@@ -1,5 +1,5 @@
-import React from "react";
-import { RetroPinkLogo } from "../components/RetroPinkLogo";
+import React from 'react';
+import { RetroPinkLogo } from '../components/RetroPinkLogo';
 
 export const LoadingPage = () => {
   return (
