@@ -18,7 +18,7 @@ export const LandingPage: React.FC = () => {
       <div className="landing-page flex flex-col w-full justify-center my-8">
         <PageContainer>
           <div className="flex flex-col items-center lg:text-center m-0">
-            <div className="lg:flex-1 mt-4" aria-label="Retro Hero Image">
+            <div className="w-full sm:w-full md:flex-1 lg:flex-1 mt-4" aria-label="Retro Hero Image">
               <HeroImage />
             </div>
             <h2 className="text-blue text-3xl">
@@ -66,30 +66,31 @@ export const LandingPage: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className="mt-20 mb-20 flex flex-col lg:flex-row max-w-6xl items-center m-auto">
-            <div className="w-2/3">
-              <img
-                  alt="Screenshot"
-                  src={applicationScreenshotImage}
-                  className="bg-white mb-2"
-                  style={{ maxWidth: "650px" }}
-                />
-            </div>
-            <div className="w-1/3 ml-4">
-              <h3 className="text-3xl text-blue font-black mb-3">Pain-Free Interface, Short and Sweet Retros.</h3>
-              <p className="text-xl text-blue">We’re on a mission to take over each team’s most dreaded weekly activity and turn it into a fast win for everyone.</p>
-              <GoogleOAuthButton
-                  buttonClassName="mt-4 text-blue bg-pink"
-                  textClassName="justify-end"
-                  useGoogleIcon={false}
-                >
-                  30 day free trial
-              </GoogleOAuthButton>
-            </div>
-        </div>
+        <PageContainer>
+          <div className="mt-20 mb-20 flex flex-col lg:flex-row max-w-6xl items-center m-auto">
+              <div className="w-full sm:w-2/3 md:w-2/3 lg:w-2/3">
+                <img
+                    alt="Screenshot"
+                    src={applicationScreenshotImage}
+                    className="bg-white mb-2"/>
+              </div>
+              <div className="w-full sm:w-1/3 md:w-1/3 lg:w-1/3 sm:ml-4 md:ml-4 lg:w-ml-4">
+                <h3 className="text-3xl text-blue font-black mb-3">Pain-Free Interface, Short and Sweet Retros.</h3>
+                <p className="text-xl text-blue">We’re on a mission to take over each team’s most dreaded weekly activity and turn it into a fast win for everyone.</p>
+                <GoogleOAuthButton
+                    buttonClassName="mt-4 text-blue bg-pink"
+                    textClassName="justify-end"
+                    useGoogleIcon={false}
+                  >
+                    30 day free trial
+                </GoogleOAuthButton>
+              </div>
+          </div>
+        </PageContainer>
         <hr className="flex flex-col justify-center self-center w-3/5 mt-12 mb-12" style={{borderTop: "2px dashed #11269C"}}/>
-        <div className="mt-20 mb-20 flex flex-col lg:flex-row max-w-6xl items-center m-auto">
-            <div className="w-1/3">
+        <PageContainer>
+          <div className="mt-20 mb-20 flex flex-col lg:flex-row max-w-6xl items-center m-auto">
+            <div className="hidden w-full sm:block md:block lg:block sm:w-1/3 md:w-1/3 lg:w-1/3">
               <GoogleOAuthButton
                   buttonClassName="text-blue bg-pink"
                   textClassName="justify-end"
@@ -98,11 +99,22 @@ export const LandingPage: React.FC = () => {
                   Free Trial Inside
               </GoogleOAuthButton>
             </div>
-            <div className="w-2/3 ml-4">
-              <h3 className="text-3xl text-blue text-right font-black mb-3">Play Now!</h3>
-              <p className="text-xl text-right text-blue">No fees for your first 30 days. Retro is guaranteed to make your team feel more productive. This tool is awesome. We promise.</p>
+            <div className="w-full sm:w-2/3 md:w-2/3 lg:w-2/3 sm:ml-4 md:ml-4 lg:w-ml-4">
+              <h3 className="text-3xl text-blue sm:text-right  md:text-right  lg:text-right font-black mb-3">Play Now!</h3>
+              <p className="text-xl sm:text-right  md:text-right  lg:text-right  text-blue">No fees for your first 30 days. Retro is guaranteed to make your team feel more productive. This tool is awesome. We promise.</p>
             </div>
-        </div>
+            <div className="block w-full sm:hidden md:hidden lg:hidden sm:w-1/3 md:w-1/3 lg:w-1/3">
+              <GoogleOAuthButton
+                  buttonClassName="mt-4 text-blue bg-pink"
+                  textClassName="justify-end"
+                  useGoogleIcon={false}
+                >
+                  Free Trial Inside
+              </GoogleOAuthButton>
+            </div>
+
+          </div>
+        </PageContainer>
       </div>
       <div style={{ 
           backgroundImage:`url(${landingFooterImage})`, 
