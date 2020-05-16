@@ -14,13 +14,13 @@ jobs:
         uses: actions/checkout@master
       - name: Installing node modules
         run: |
-        cd web
-        npm install
+          cd web
+          npm install
       - name: Run Lint
         run: |
-        cd web
-        npm run lint
+          cd web
+          npm run lint
       - name: Running Tests
         run: |
-        cd web
-        npm run test
+          cd web
+          npm run test
