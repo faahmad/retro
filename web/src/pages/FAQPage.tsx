@@ -59,6 +59,17 @@ export const FAQPage: React.FC = () => {
               from retro.
             </p>
           </div>
+          <div className="mt-20 mb-20">
+            <h3 className="text-blue font-bold text-2xl">
+              Why this style of art and design?            
+            </h3>
+            <p className="text-xl text-blue">
+              Glad you asked!
+              <Link to="/design">
+                <span className="text-pink hover:underline"> Come see why.</span>
+              </Link>
+            </p>
+          </div>
         </PageContainer>
         <hr
           className="flex flex-col justify-center self-center w-3/5 mt-12 mb-12"
