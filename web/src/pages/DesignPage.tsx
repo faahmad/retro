@@ -16,23 +16,14 @@ export const DesignPage: React.FC = () => {
     <div>
       <div className="flex flex-col w-full justify-center my-8">
         <PageContainer>
-<<<<<<< HEAD
           <div className="flex flex-col max-w-6xl m-auto">
             <div className="mt-20 mb-10 sm:w-full md:w-1/2 lg:w-1/2">
-=======
-          <div className="flex flex-colmax-w-6xl m-auto">
-            <div className="mt-20 mb-10 w-1/2">
->>>>>>> master
               <img
                     alt="Team"
                     src={retroTeamImage}
                   />
             </div>
-<<<<<<< HEAD
             <div className="mt-20 mb-10 w-full sm:w-full md:w-1/2 lg:w-1/2">
-=======
-            <div className="mt-20 mb-10 w-1/2">
->>>>>>> master
               <h3 className="mb-2 text-blue font-bold text-3xl">
                 Getting Inspired
               </h3>
@@ -43,13 +34,8 @@ export const DesignPage: React.FC = () => {
         </PageContainer>
         <hr className="flex flex-col justify-center self-center w-2/5 mt-12 mb-12" style={{borderTop: "2px dashed #FF94B8"}}/>
         <PageContainer>
-<<<<<<< HEAD
           <div className="flex flex-col max-w-6xl m-auto">
             <div className="mt-10 mb-10 w-full sm:w-full md:w-1/2 lg:w-1/2">
-=======
-          <div className="flex flex-colmax-w-6xl m-auto">
-            <div className="mt-10 mb-10 w-1/2">
->>>>>>> master
               <h3 className="mb-2 text-blue font-bold text-3xl">
                 Creating the Style
               </h3>
@@ -58,11 +44,7 @@ export const DesignPage: React.FC = () => {
               <p className="text-xl text-blue mb-5">We experimented with mixing up different lines, shapes, and patterns until 
               we found something that felt special.</p>
             </div>
-<<<<<<< HEAD
             <div className="mt-10 mb-10 sm:ml-20 md:ml-20 lg:ml-20 w-full sm:w-full md:w-1/2 lg:w-1/2">
-=======
-            <div className="mt-10 mb-10 ml-20 w-1/2">
->>>>>>> master
               <img
                     alt="Getting Inspired"
                     className="self-center"
@@ -71,24 +53,15 @@ export const DesignPage: React.FC = () => {
               <span className="block mt-2 text-md text-blue">Character art exploration.</span>
             </div>
           </div>
-<<<<<<< HEAD
           <div className="flex flex-col max-w-6xl  m-auto">
             <div className="mt-10 mb-20 w-full sm:w-full md:w-1/2 lg:w-1/2">
-=======
-          <div className="flex flex-colmax-w-6xl m-auto">
-            <div className="mt-10 mb-20 w-1/2">
->>>>>>> master
               <img
                     alt="Early Exploration One"
                     src={earlyExplorationOneImage}
                   />
               <span className="block mt-2 text-md text-blue">Early design exploration.</span>
             </div>
-<<<<<<< HEAD
             <div className="mt-10 mb-20 sm:ml-20 md:ml-20 lg:ml-20 w-full sm:w-full md:w-1/2 lg:w-1/22">
-=======
-            <div className="mt-10 mb-20 ml-20 w-1/2">
->>>>>>> master
               <img
                     alt="Early Exploration Two"
                     src={earlyExplorationTwoImage}
