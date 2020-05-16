@@ -41,7 +41,7 @@ export const createCheckoutSession = ({
         subscription_id: subscriptionId,
       },
     },
-    success_url: successUrl,
+    success_url: successUrl + "?session_id={CHECKOUT_SESSION_ID}",
     cancel_url: cancelUrl,
   };
   return stripe.checkout.sessions.create(params);

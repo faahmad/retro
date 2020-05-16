@@ -8,7 +8,6 @@ import { loadStripe } from "@stripe/stripe-js";
 const stripePromise = loadStripe(
   process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY || ""
 );
-// Idle => Creating Checkout Session => Redirecting to Stripe Checkout => Success
 
 interface UpgradeToProBannerProps {
   trialEnd: number;
@@ -19,7 +18,6 @@ export const UpgradeToProBanner: React.FC<UpgradeToProBannerProps> = ({
   workspaceId,
 }) => {
   const [isLoading, setIsLoading] = React.useState(false);
-  // const [errorMessage, setErrorMessage] = React.useState("");
 
   const handleOpenStripeCheckSession = async () => {
     setIsLoading(true);
@@ -28,6 +26,7 @@ export const UpgradeToProBanner: React.FC<UpgradeToProBannerProps> = ({
       successUrl: `http://localhost:3000/workspaces/${workspaceId}`,
       cancelUrl: `http://localhost:3000/workspaces/${workspaceId}`,
     });
+    debugger;
     const sessionId = data.id;
     const stripe = await stripePromise;
     const response = await stripe?.redirectToCheckout({
