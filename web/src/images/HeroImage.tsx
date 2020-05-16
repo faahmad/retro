@@ -3,8 +3,6 @@ import * as React from "react";
 export const HeroImage: React.FC = () => {
   return (
     <svg
-      width="868"
-      height="379"
       viewBox="0 0 868 379"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

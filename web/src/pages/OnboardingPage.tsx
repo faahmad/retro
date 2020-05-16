@@ -6,6 +6,8 @@ import { Redirect } from "react-router-dom";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { LoadingText } from "../components/LoadingText";
+import { PageContainer } from "../components/PageContainer";
+
 
 const USER_QUERY = gql`
   query Workspace {
@@ -135,8 +137,9 @@ const CreateWorkspaceForm: React.FC = () => {
 
   return (
     <div className="create-workspace-page flex flex-col w-full justify-center my-8 text-blue">
-      <div className="w-1/2 max-w-6xl m-auto">
-        <div className="text-center">
+      <PageContainer>
+      <div className="sm:w-1/2 md:w-1/2 lg:w-4/5 w-full max-w-6xl m-auto">
+        <div className="sm:text-center md:text-center lg:text-center">
           <h1 className="text-2xl">Let's set up a home for all your retros</h1>
           <h3 className="text-lg">
             You can always create another workspace later.
@@ -149,7 +152,7 @@ const CreateWorkspaceForm: React.FC = () => {
           onSubmit={formik.handleSubmit}
         >
           <div className="flex flex-col mb-8">
-            <label htmlFor="name" className="text-sm font-black">
+            <label htmlFor="name" className="text-md sm:text-sm  md:text-sm lg:text-sm font-black">
               Workspace Name
             </label>
             <div>
@@ -159,16 +162,16 @@ const CreateWorkspaceForm: React.FC = () => {
                 type="text"
                 onChange={formik.handleChange}
                 value={formik.values.name}
-                className="border border-red my-1 h-8 w-full max-w-md outline-none px-1"
+                className="border border-red my-1 h-12 sm:h-8 md:h-8 lg:h-8 w-full max-w-md outline-none px-1"
               ></input>
             </div>
-            <p className="text-xs">
+            <p className="text-sm sm:text-xs md:text-xs lg:text-xs">
               The name of your workspace. Keep it simple.
             </p>
           </div>
 
           <div className="flex flex-col mb-8">
-            <label htmlFor="url" className="text-sm font-black">
+            <label htmlFor="url" className="text-md sm:text-sm md:text-sm lg:text-sm font-black">
               Workspace URL (Optional)
             </label>
             <div className="flex items-center">
@@ -179,17 +182,17 @@ const CreateWorkspaceForm: React.FC = () => {
                 type="text"
                 onChange={formik.handleChange}
                 value={formik.values.url}
-                className="border border-red my-1 h-8 flex-1 outline-none px-1"
+                className="border border-red my-1 h-12 sm:h-8 md:h-8 lg:h-8 flex-1 outline-none px-1"
               ></input>
             </div>
-            <p className="text-xs">
+            <p className="text-sm sm:text-xs md:text-xs lg:text-xs">
               Share this link to add anyone with an allowed email domain to your
               workspace.
             </p>
           </div>
 
           <div className="flex flex-col mb-8">
-            <label htmlFor="allowedEmailDomain" className="text-sm font-black">
+            <label htmlFor="allowedEmailDomain" className="text-md sm:text-sm md:text-sm lg:text-sm font-black">
               Allowed Email Domain (Optional)
             </label>
             <div className="flex items-center">
@@ -201,10 +204,10 @@ const CreateWorkspaceForm: React.FC = () => {
                 placeholder="example.com"
                 value={formik.values.allowedEmailDomain}
                 onChange={formik.handleChange}
-                className="border border-red my-1 h-8 w-full max-w-md outline-none px-1 ml-1"
+                className="border border-red my-1 h-12 sm:h-8 md:h-8 lg:h-8 w-full max-w-md outline-none px-1 ml-1"
               ></input>
             </div>
-            <p className="text-xs">
+            <p className="text-sm sm:text-xs md:text-xs lg:text-xs">
               Anyone with an email address at this domain can automatically join
               your workspace.
             </p>
@@ -219,6 +222,7 @@ const CreateWorkspaceForm: React.FC = () => {
           </Button>
         </form>
       </div>
+      </PageContainer>
     </div>
   );
 };
