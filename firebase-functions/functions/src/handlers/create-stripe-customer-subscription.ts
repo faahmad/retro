@@ -1,13 +1,12 @@
-import { app } from "firebase-admin";
 import * as functions from "firebase-functions";
 import { createCustomer, subscribeCustomerToProPlan } from "../services/stripe";
 import { updateWorkspace } from "../services/firebase-admin";
 
 const logger = console;
 
-export const handleCreateStripeCustomerSubscription = (
-  firebaseAdmin: app.App
-) => async (snapshot: functions.firestore.DocumentSnapshot) => {
+export const handleCreateStripeCustomerSubscription = async (
+  snapshot: functions.firestore.DocumentSnapshot
+) => {
   const workspace = snapshot.data();
   if (!workspace) {
     logger.log("Workspace in undefined.");

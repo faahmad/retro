@@ -1,22 +1,22 @@
-import { app, auth } from "firebase-admin";
+import { auth } from "firebase-admin";
 import { addUserToDefaultContactList } from "../services/mailjet-service";
 
-export const handleCreateMailjetContact = (firebaseAdmin: app.App) => async (
-  user: auth.UserRecord
-) => {
-  console.log("New user!");
-  console.log(user);
-  console.log("\n");
+const logger = console;
+
+export const handleCreateMailjetContact = async (user: auth.UserRecord) => {
+  logger.log("New user!");
+  logger.log(user);
+  logger.log("\n");
 
   const createContactResponse: any = await addUserToDefaultContactList(
     user.email!,
     user.displayName!
   );
-  console.log(
+  logger.log(
     `${user.email!} has been added to the All Users contact list in Mailjet.`
   );
-  console.log(createContactResponse.body);
-  console.log("\n");
+  logger.log(createContactResponse.body);
+  logger.log("\n");
 
   return;
 };
