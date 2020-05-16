@@ -24,7 +24,7 @@ export const DesignPage: React.FC = () => {
                   />
             </div>
             <div className="mt-20 mb-10 w-1/2">
-              <h3 className="text-blue font-bold text-3xl">
+              <h3 className="mb-2 text-blue font-bold text-3xl">
                 Getting Inspired
               </h3>
               <p className="text-xl text-blue mb-5">Our design team immediately fell in love with the concept of using nostalgic art for a retro app.</p>
@@ -36,7 +36,7 @@ export const DesignPage: React.FC = () => {
         <PageContainer>
           <div className="flex flex-colmax-w-6xl m-auto">
             <div className="mt-10 mb-10 w-1/2">
-              <h3 className="text-blue font-bold text-3xl">
+              <h3 className="mb-2 text-blue font-bold text-3xl">
                 Creating the Style
               </h3>
               <p className="text-xl text-blue mb-5">In order to keep things light and imaginative, we selected our 
@@ -73,7 +73,7 @@ export const DesignPage: React.FC = () => {
         <hr className="flex flex-col justify-center self-center w-2/5 mt-12 mb-12" style={{borderTop: "2px dashed #FF94B8"}}/>
         <PageContainer>
           <div className="mt-10 mb-10 w-full">
-            <h3 className="text-blue font-bold text-3xl">
+            <h3 className="mb-2 text-blue font-bold text-3xl">
               Spreading Good Vibes
             </h3>
             <p className="text-xl text-blue mb-5">Ultimately, we don’t want our retrospectives to feel like a chore. They truly can provide so much value to teams when conducted well. 
