@@ -59,7 +59,7 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
 
   const { workspace } = data;
   const isInTrialMode = workspace?.subscription?.status === "trialing";
-  const defaultTeam = workspace.teams[0];
+  const defaultTeam = workspace?.teams[0];
   const users = [...workspace.users, ...workspace.invitedUsers].filter(
     (user) => user.id !== authAccount?.uid
   );
