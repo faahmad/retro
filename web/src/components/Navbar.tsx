@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { animated, useTransition } from 'react-spring';
 import { Button } from './Button';
 import { RetroPinkLogo } from './RetroPinkLogo';
@@ -59,15 +60,17 @@ const NavbarBrand: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
 
   return (
     <div className="mb-10">
-      <div className="absolute z-0 grid-logo">
-        {transitions.map(({ item, props, key }) => (
-          <animated.div key={key} className="grid-logo-box" />
-        ))}
-      </div>
-      <div className="z-0 mt-8 sm:ml-0 lg:ml-5">
-        <RetroPinkLogo />
-        {!isLoggedIn && <p className="text-blue">welcome to new school teamwork.</p>}
-      </div>
+      <Link to="/">
+        <div className="absolute z-0 grid-logo">
+          {transitions.map(({ item, props, key }) => (
+            <animated.div key={key} className="grid-logo-box" />
+          ))}
+        </div>
+        <div className="z-0 mt-8 sm:ml-0 lg:ml-5">
+          <RetroPinkLogo />
+          {!isLoggedIn && <p className="text-blue">welcome to new school teamwork.</p>}
+        </div>
+      </Link>
     </div>
   );
 };

@@ -140,7 +140,9 @@ export const LandingPage: React.FC = () => {
         className="w-full flex justify-center items-center"
       >
         <Link to="/faq">
-          <h2 className="text-5xl text-pink p-2 text-center">FAQ</h2>
+          <h2 className="text-5xl text-pink p-4 sm: p-2 md: p-2 lg:p-2 text-center bg-blue">
+            FAQ
+          </h2>
         </Link>
       </div>
       <footer className="bg-pink text-blue p-2 text-center">

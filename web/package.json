@@ -12,7 +12,7 @@
         "prestart": "yarn run build:css",
         "deploy:prod": "yarn run build && firebase deploy --project prod --only hosting",
         "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
-        "prettier": "prettier 'src/**/*.js' 'src/**/*.ts' 'src/**/*.tsx' --write"
+        "prettier": "prettier 'src/**/*.ts' 'src/**/*.tsx' --write"
     },
     "dependencies": {
         "@apollo/react-hooks": "^3.1.3",
