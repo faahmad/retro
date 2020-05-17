@@ -1,11 +1,11 @@
-import React from "react";
-import { animated, useTransition } from "react-spring";
-import { Button } from "./Button";
-import { RetroPinkLogo } from "./RetroPinkLogo";
-import { GoogleOAuthButton } from "./GoogleOAuthButton";
-import { LoginModal } from "./LoginModal";
-import { AuthContext } from "../contexts/AuthContext";
-import { AuthService } from "../services/auth-service";
+import React from 'react';
+import { animated, useTransition } from 'react-spring';
+import { Button } from './Button';
+import { RetroPinkLogo } from './RetroPinkLogo';
+import { GoogleOAuthButton } from './GoogleOAuthButton';
+import { LoginModal } from './LoginModal';
+import { AuthContext } from '../contexts/AuthContext';
+import { AuthService } from '../services/auth-service';
 
 export const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -52,9 +52,9 @@ const NavbarBrand: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   }, []);
 
   const transitions = useTransition(boxes, (box) => box.key, {
-    from: { transform: "translate3d(0,-40px,0)" },
-    enter: { transform: "translate3d(0,0px,0)" },
-    leave: { transform: "translate3d(0,-40px,0)" },
+    from: { transform: 'translate3d(0,-40px,0)' },
+    enter: { transform: 'translate3d(0,0px,0)' },
+    leave: { transform: 'translate3d(0,-40px,0)' }
   });
 
   return (
@@ -66,9 +66,7 @@ const NavbarBrand: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
       </div>
       <div className="z-0 mt-8 sm:ml-0 lg:ml-5">
         <RetroPinkLogo />
-        {!isLoggedIn && (
-          <p className="text-blue">welcome to new school teamwork.</p>
-        )}
+        {!isLoggedIn && <p className="text-blue">welcome to new school teamwork.</p>}
       </div>
     </div>
   );
@@ -82,7 +80,7 @@ const NavbarAuthButtons: React.FC<any> = ({ onClick, isLoggedIn }) => {
           className="mt-10 sm:mt-0 md:mt-0 lg:mt-0 text-blue text-right"
           onClick={async () => {
             await AuthService.logOut();
-            window.location.replace("/");
+            window.location.replace('/');
           }}
         >
           Sign Out
@@ -92,10 +90,7 @@ const NavbarAuthButtons: React.FC<any> = ({ onClick, isLoggedIn }) => {
           <Button className="text-blue mb-2 text-right" onClick={onClick}>
             Login
           </Button>
-          <GoogleOAuthButton
-            buttonClassName="text-blue"
-            textClassName="justify-end"
-          >
+          <GoogleOAuthButton buttonClassName="text-blue" textClassName="justify-end">
             Signup With
           </GoogleOAuthButton>
         </React.Fragment>

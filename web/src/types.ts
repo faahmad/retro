@@ -13,12 +13,12 @@ export interface RetroItem {
   hasBeenEdited?: boolean;
 }
 
-export type RetroColumnType = "good" | "bad" | "actions" | "questions";
+export type RetroColumnType = 'good' | 'bad' | 'actions' | 'questions';
 
 export interface RetroColumn {
   type: RetroColumnType;
   title: string;
-  itemIds: RetroItem["id"][];
+  itemIds: RetroItem['id'][];
 }
 
 export interface CreateRetroBoardInput {

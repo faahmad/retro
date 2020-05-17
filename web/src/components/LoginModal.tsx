@@ -1,7 +1,7 @@
-import React from "react";
-import ReactModal from "react-modal";
-import loginModalImage from "../assets/images/login-modal-image.svg";
-import { GoogleOAuthButton } from "./GoogleOAuthButton";
+import React from 'react';
+import ReactModal from 'react-modal';
+import loginModalImage from '../assets/images/login-modal-image.svg';
+import { GoogleOAuthButton } from './GoogleOAuthButton';
 interface LoginModalProps {
   isOpen: boolean;
   onRequestClose: (
@@ -21,8 +21,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({
       isOpen={isOpen}
       onRequestClose={onRequestClose}
       style={{
-        content: { maxWidth: "420px", height: "390px" },
-        overlay: { background: "rgba(17, 38, 156, 0.6)" }
+        content: { maxWidth: '420px', height: '390px' },
+        overlay: { background: 'rgba(17, 38, 156, 0.6)' }
       }}
       className="bg-white shadow-red border m-auto absolute inset-0 border-red focus:outline-none"
       // IMPORTANT: closeTimeoutMS has to be the same as what is set in the tailwind.css file.

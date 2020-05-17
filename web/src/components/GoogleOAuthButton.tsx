@@ -1,10 +1,10 @@
-import React from "react";
-import { Button } from "./Button";
-import googleLogo from "../assets/images/google-logo.svg";
-import { AuthService } from "../services/auth-service";
-import { gql } from "apollo-boost";
-import { useMutation } from "@apollo/react-hooks";
-import analytics from "analytics.js";
+import React from 'react';
+import { Button } from './Button';
+import googleLogo from '../assets/images/google-logo.svg';
+import { AuthService } from '../services/auth-service';
+import { gql } from 'apollo-boost';
+import { useMutation } from '@apollo/react-hooks';
+import analytics from 'analytics.js';
 
 const CREATE_USER_MUTATION = gql`
   mutation CreateUserMutation($input: CreateUserInput!) {
@@ -21,7 +21,13 @@ export const GoogleOAuthButton: React.FC<{
   textClassName?: string;
   useGoogleIcon?: boolean;
   onClick?: () => void;
-}> = ({ buttonClassName = "", textClassName = "", useGoogleIcon=true, children, onClick }) => {
+}> = ({
+  buttonClassName = '',
+  textClassName = '',
+  useGoogleIcon = true,
+  children,
+  onClick
+}) => {
   const [idToken, setIdToken] = React.useState<any | null>(null);
   const [createUser] = useMutation(CREATE_USER_MUTATION, {
     context: { idToken }
@@ -50,9 +56,9 @@ export const GoogleOAuthButton: React.FC<{
         }
       });
       analytics.identify(uid);
-      analytics.track("User Signed Up", {
-        type: "organic",
-        provider: "google"
+      analytics.track('User Signed Up', {
+        type: 'organic',
+        provider: 'google'
       });
     }
 
@@ -67,7 +73,9 @@ export const GoogleOAuthButton: React.FC<{
     <Button className={buttonClassName} onClick={handleClick}>
       <div className={`flex items-center ${textClassName}`}>
         <span>{children}</span>
-        {useGoogleIcon ? <img alt="Google" className="h-10 pl-1 mt-1" src={googleLogo} /> : null}
+        {useGoogleIcon ? (
+          <img alt="Google" className="h-10 pl-1 mt-1" src={googleLogo} />
+        ) : null}
       </div>
     </Button>
   );
