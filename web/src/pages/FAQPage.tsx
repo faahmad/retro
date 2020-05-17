@@ -94,7 +94,9 @@ export const FAQPage: React.FC = () => {
         className="w-full flex justify-center items-center"
       >
         <Link to="/">
-          <h2 className="text-5xl text-pink p-2 text-center">Home</h2>
+          <h2 className="text-5xl text-pink p-4 sm: p-2 md: p-2 lg:p-2 text-center bg-blue">
+            Home
+          </h2>
         </Link>
       </div>
       <footer className="bg-pink text-blue p-2 text-center">
