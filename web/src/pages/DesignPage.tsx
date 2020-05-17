@@ -15,11 +15,11 @@ export const DesignPage: React.FC = () => {
     <div>
       <div className="flex flex-col w-full justify-center my-8">
         <PageContainer>
-          <div className="flex flex-col max-w-6xl m-auto">
-            <div className="mt-20 mb-10 sm:w-full md:w-1/2 lg:w-1/2">
+          <div className="flex flex-col max-w-6xl sm:flex-row md:flex-row lg:flex-row m-auto">
+            <div className="mt-20 mb-10 w-full sm:w-1/2 md:w-1/2 lg:w-w-1/2">
               <img alt="Team" src={retroTeamImage} />
             </div>
-            <div className="mt-20 mb-10 w-full sm:w-full md:w-1/2 lg:w-1/2">
+            <div className="mt-20 mb-10 w-full sm:w-1/2 md:w-1/2 lg:w-1/2">
               <h3 className="mb-2 text-blue font-bold text-3xl">Getting Inspired</h3>
               <p className="text-xl text-blue mb-5">
                 Our design team immediately fell in love with the concept of using
@@ -37,7 +37,7 @@ export const DesignPage: React.FC = () => {
           style={{ borderTop: '2px dashed #FF94B8' }}
         />
         <PageContainer>
-          <div className="flex flex-col max-w-6xl m-auto">
+          <div className="flex flex-col max-w-6xl sm:flex-row md:flex-row lg:flex-row m-auto">
             <div className="mt-10 mb-10 w-full sm:w-full md:w-1/2 lg:w-1/2">
               <h3 className="mb-2 text-blue font-bold text-3xl">Creating the Style</h3>
               <p className="text-xl text-blue mb-5">
@@ -60,7 +60,7 @@ export const DesignPage: React.FC = () => {
               </span>
             </div>
           </div>
-          <div className="flex flex-col max-w-6xl  m-auto">
+          <div className="flex flex-col max-w-6xl sm:flex-row md:flex-row lg:flex-row m-auto">
             <div className="mt-10 mb-20 w-full sm:w-full md:w-1/2 lg:w-1/2">
               <img alt="Early Exploration One" src={earlyExplorationOneImage} />
               <span className="block mt-2 text-md text-blue">
