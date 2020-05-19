@@ -3,8 +3,6 @@ module.exports = {
   extends: [
     'react-app',
     'eslint:recommended',
-    // NOTE: Prettier has to be last, so that it can override other configs.
-    'plugin:prettier/recommended'
   ],
   rules: {
     'no-console': 'error'
