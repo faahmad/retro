@@ -8,13 +8,11 @@
     "build": "react-scripts build",
     "build:css": "tailwind build src/styles/tailwind.css -o src/styles/index.css",
     "test": "react-scripts test",
-    "test:precommit": "jest --findRelatedTests",
     "prebuild": "yarn run build:css",
     "prestart": "yarn run build:css",
     "deploy:prod": "yarn run build && firebase deploy --project prod --only hosting",
     "lint": "eslint 'src/**/*.{js,jsx,json,ts,tsx}' --quiet --fix",
-    "prettier": "prettier \"src/**/*.{js,jsx,json,css,ts,tsx,scss}\" --write",
-    "pre-commit": "lint-staged"
+    "prettier": "prettier \"src/**/*.{js,jsx,json,css,ts,tsx,scss}\" --write"
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.3",

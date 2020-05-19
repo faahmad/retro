@@ -12,10 +12,7 @@
     "lint": "yarn workspaces run lint",
     "prettier": "yarn workspaces run prettier"
   },
-  "devDependencies": {
-    "husky": "^4.2.5",
-    "lint-staged": "^10.2.4"
-  },
+  "devDependencies": {},
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"

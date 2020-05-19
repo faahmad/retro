@@ -32,8 +32,6 @@
     "@types/node-mailjet": "^3.3.3",
     "firebase-functions-test": "^0.1.6",
     "firebase-tools": "^7.14.0",
-    "husky": "^4.2.5",
-    "lint-staged": "^10.2.4",
     "prettier": "^2.0.5",
     "tslint": "^5.12.0",
     "typescript": "^3.2.2"

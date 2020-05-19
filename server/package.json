@@ -8,7 +8,6 @@
     "dev": "env-cmd -e development nodemon --exec babel-node src/index.js",
     "start:test": "env-cmd -e test nodemon --exec babel-node src/index.js",
     "test": "env-cmd -e test jest --runInBand",
-    "test:precommit": "env-cmd -e test jest --runInBand --findRelatedTests",
     "build": "babel src -d build -s --copy-files",
     "start": "node build/index.js",
     "predeploy": "yarn run build",
@@ -18,8 +17,7 @@
     "lint": "eslint src",
     "prettier": "prettier \"src/**/*.{js,json,ts}\" --write",
     "db:drop": "sequelize db:drop",
-    "db:create": "sequelize db:create",
-    "pre-commit": "lint-staged"
+    "db:create": "sequelize db:create"
   },
   "devDependencies": {
     "@babel/cli": "^7.7.4",
@@ -30,9 +28,7 @@
     "eslint-config-airbnb": "^18.0.1",
     "eslint-plugin-jest": "^23.1.1",
     "faker": "^4.1.0",
-    "husky": "^4.2.5",
     "jest": "^24.9.0",
-    "lint-staged": "^10.2.4",
     "nodemon": "^1.19.4",
     "prettier": "^2.0.5",
     "supertest": "^4.0.2"
