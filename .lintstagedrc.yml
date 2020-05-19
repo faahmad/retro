@@ -5,7 +5,7 @@
   # admin-tool/src/**/*.{js,jsx,json,html,ts,tsx,css,scss}:
   #   - yarn workspace shogigs-admin run prettier --write
   #   - git add
-web/src/**/*.{js,jsx,ts,tsx}:
+web/src/**/*.tsx:
   - yarn workspace shogigs-web run lint
   - yarn workspace shogigs-web run test:precommit
 web/src/**/*.{js,jsx,json,html,ts,tsx,css,scss}:
