@@ -2,7 +2,7 @@ import * as React from 'react';
 import { RouteComponentProps, useParams } from 'react-router-dom';
 import { gql } from 'apollo-boost';
 import { useQuery } from '@apollo/react-hooks';
-import { DragDropContext, DropResult, Droppable, Draggable } from 'react-beautiful-dnd';
+import { DragDropContext, Draggable, DropResult, Droppable } from 'react-beautiful-dnd';
 import { v4 as uuidV4 } from 'uuid';
 import moment from 'moment';
 import { AddButton } from '../components/AddButton';
@@ -18,9 +18,9 @@ import pencilIcon from '../assets/icons/pencil.svg';
 import { PageContainer } from '../components/PageContainer';
 import {
   RetroBoard as RetroBoardInterface,
+  RetroColumn,
   RetroColumnType,
-  RetroItem,
-  RetroColumn
+  RetroItem
 } from '../types';
 import { subscribeToRetroBoardById, updateRetroBoardById } from '../services/retro-board';
 
@@ -601,11 +601,9 @@ export class RetroItemModal extends React.Component<
     const { content, columnType } = this.state;
     const { initialRetroItem } = this.props;
     if (!content) {
-      console.log("Content can't be empty.");
       return;
     }
     if (!columnType) {
-      console.log("Column can't be empty.");
       return;
     }
     this.setState({ isSubmitting: true });

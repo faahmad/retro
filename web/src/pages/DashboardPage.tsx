@@ -1,7 +1,7 @@
 import React from 'react';
 import { gql } from 'apollo-boost';
-import { useQuery, useMutation } from '@apollo/react-hooks';
-import { useParams, RouteComponentProps } from 'react-router-dom';
+import { useMutation, useQuery } from '@apollo/react-hooks';
+import { RouteComponentProps, useParams } from 'react-router-dom';
 import teamMemberEmptyImage from '../assets/images/team-member-empty-image.svg';
 import retroEmptyImage from '../assets/images/retro-empty-image.svg';
 import { InviteUserToWorkspaceModal } from '../components/InviteUserToWorkspaceModal';

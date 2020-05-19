@@ -20,7 +20,6 @@ export const Button: React.FC<ButtonProps> = ({
   style,
   ...rest
 }) => {
-  console.log(className);
   return (
     <button
       style={style}

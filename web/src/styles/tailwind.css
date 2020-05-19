@@ -2,75 +2,73 @@
 @tailwind components;
 @tailwind utilities;
 body {
-    font-family: "Source Code Pro", monospace;
+  font-family: 'Source Code Pro', monospace;
 }
-
 
 /* Custom Styles */
 
 .retro-board__grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 8px;
-    grid-auto-rows: 45vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 8px;
+  grid-auto-rows: 45vh;
 }
 
 .grid-logo {
-    height: 120px;
-    width: 120px;
-    display: grid;
-    grid-template-columns: repeat(10, 10px);
-    grid-template-rows: repeat(10, 10px);
-    grid-gap: 2px;
+  height: 120px;
+  width: 120px;
+  display: grid;
+  grid-template-columns: repeat(10, 10px);
+  grid-template-rows: repeat(10, 10px);
+  grid-gap: 2px;
 }
 
 .vertical-stripes-blue {
-    background: repeating-linear-gradient(90deg, #11269c, transparent 1px 16px);
+  background: repeating-linear-gradient(90deg, #11269c, transparent 1px 16px);
 }
 
 .horizontal-stripes-blue {
-    background: repeating-linear-gradient(180deg, #11269c, transparent 1px 16px);
+  background: repeating-linear-gradient(180deg, #11269c, transparent 1px 16px);
 }
 
 .grid-logo-box {
-    height: 10px;
-    width: 10px;
-    /* Pink 30% */
-    background-color: rgba(255, 148, 184, 0.3);
+  height: 10px;
+  width: 10px;
+  /* Pink 30% */
+  background-color: rgba(255, 148, 184, 0.3);
 }
 
 @variants active {
-    .transform-1 {
-        transform: translateX(0.125rem) translateY(0.125rem);
-    }
+  .transform-1 {
+    transform: translateX(0.125rem) translateY(0.125rem);
+  }
 }
 
 @variants hover {
-    .bg-pink-1\/2 {
-        /* Pink 50% */
-        background-color: rgba(255, 148, 184, 0.5);
-    }
+  .bg-pink-1\/2 {
+    /* Pink 50% */
+    background-color: rgba(255, 148, 184, 0.5);
+  }
 }
 
 .text-break {
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
 }
-
 
 /* Overrides */
 
 .ReactModal__Overlay {
-    opacity: 0;
-    transition: opacity 200ms ease-in-out;
+  opacity: 0;
+  transition: opacity 200ms ease-in-out;
 }
 
 .ReactModal__Overlay--after-open {
-    opacity: 1;
+  opacity: 1;
 }
 
 .ReactModal__Overlay--before-close {
-    opacity: 0;
+  opacity: 0;
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, BrowserRouter, Route, Redirect } from 'react-router-dom';
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import { OptimizelyProvider, createInstance, setLogger } from '@optimizely/react-sdk';
 import { useAuthContext } from './contexts/AuthContext';
 import { Navbar } from './components/Navbar';

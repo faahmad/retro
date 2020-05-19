@@ -1,4 +1,4 @@
-import { RetroBoard, CreateRetroBoardInput } from '../types';
+import { CreateRetroBoardInput, RetroBoard } from '../types';
 
 export function buildEmptyRetroBoard({
   id,
