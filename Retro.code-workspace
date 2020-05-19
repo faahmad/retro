@@ -1,19 +1,7 @@
 {
   "folders": [
     {
-      "name": "Firebase Functions",
-      "path": "firebase-functions"
-    },
-    {
-      "name": "Server",
-      "path": "server"
-    },
-    {
-      "name": "Web",
-      "path": "web"
-    },
-    {
-      "name": "root",
+      "name": "Retro",
       "path": "./"
     }
   ],

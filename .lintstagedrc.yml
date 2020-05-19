@@ -1,0 +1,19 @@
+
+  # admin-tool/src/**/*.{js,jsx,ts,tsx}:
+  #   - yarn workspace shogigs-admin run lint
+  #   - yarn workspace shogigs-admin run test:precommit
+  # admin-tool/src/**/*.{js,jsx,json,html,ts,tsx,css,scss}:
+  #   - yarn workspace shogigs-admin run prettier --write
+  #   - git add
+web/src/**/*.{js,jsx,ts,tsx}:
+  - yarn workspace shogigs-web run lint
+  - yarn workspace shogigs-web run test:precommit
+web/src/**/*.{js,jsx,json,html,ts,tsx,css,scss}:
+  - yarn workspace shogigs-web run prettier --write
+  - git add
+  # functions/src/**/*.{js,ts}:
+  #   - yarn workspace shogigs-functions run lint
+  #   - yarn workspace shogigs-functions run test:precommit
+  # functions/src/**/*.{js,ts,html,json}:
+  #   - yarn workspace shogigs-functions run prettier --write
+  #   - git add
