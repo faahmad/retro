@@ -90,7 +90,7 @@ const AuthenticatedAppRoutes: React.FC = () => {
       <Route exact path="/workspaces/:workspaceId" component={DashboardPage} />
 
       {!workspace && <Redirect to="/onboarding" />}
-      {/* {workspace && <Redirect to={`/workspaces/${data.user.workspace.id}`} />} */}
+      {workspace && <Redirect to={`/workspaces/${data.user.workspace.id}`} />}
     </React.Fragment>
   );
 };
