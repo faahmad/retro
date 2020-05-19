@@ -1,5 +1,5 @@
 {
-  "src/**/*.{js,jsx,ts,tsx,json,css}": [
+  "**/src/*.{js,jsx,ts,tsx,json,css}": [
     "yarn workspaces run lint",
     "yarn workspaces run test:precommit"
   ]
