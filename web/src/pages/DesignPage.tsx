@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-<<<<<<< HEAD
 import retroTeamImage from '../assets/images/retro-team.svg';
 import gettingInspiredImage from '../assets/images/getting-inspired@2x.png';
 import earlyExplorationOneImage from '../assets/images/early-exploration-one@2x.png';
@@ -10,23 +9,12 @@ import goodVibesImage from '../assets/images/good-vibes.svg';
 import landingFooterImage from '../assets/images/landing-page-footer.svg';
 
 import { PageContainer } from '../components/PageContainer';
-=======
-import retroTeamImage from "../assets/images/retro-team.svg";
-import gettingInspiredImage from "../assets/images/getting-inspired@2x.png";
-import earlyExplorationOneImage from "../assets/images/early-exploration-one@2x.png";
-import earlyExplorationTwoImage from "../assets/images/early-exploration-two@2x.png";
-import goodVibesImage from "../assets/images/good-vibes.svg";
-import landingFooterImage from "../assets/images/landing-page-footer.svg";
-
-import { PageContainer } from "../components/PageContainer";
->>>>>>> Add the Why this design page. (#82)
 
 export const DesignPage: React.FC = () => {
   return (
     <div>
       <div className="flex flex-col w-full justify-center my-8">
         <PageContainer>
-<<<<<<< HEAD
           <div className="flex flex-col max-w-6xl sm:flex-row md:flex-row lg:flex-row m-auto">
             <div className="mt-20 mb-10 w-full sm:w-1/2 md:w-1/2 lg:w-w-1/2">
               <img alt="Team" src={retroTeamImage} />
@@ -40,39 +28,17 @@ export const DesignPage: React.FC = () => {
               <p className="text-xl text-blue">
                 We also knew early on that we wanted bright colors and minimal interface.
                 The first step was finding references.
-=======
-          <div className="flex flex-col max-w-6xl m-auto">
-            <div className="mt-20 mb-10 sm:w-full md:w-1/2 lg:w-1/2">
-              <img alt="Team" src={retroTeamImage} />
-            </div>
-            <div className="mt-20 mb-10 w-full sm:w-full md:w-1/2 lg:w-1/2">
-              <h3 className="mb-2 text-blue font-bold text-3xl">
-                Getting Inspired
-              </h3>
-              <p className="text-xl text-blue mb-5">
-                Our design team immediately fell in love with the concept of
-                using nostalgic art for a retro app.
-              </p>
-              <p className="text-xl text-blue">
-                We also knew early on that we wanted bright colors and minimal
-                interface. The first step was finding references.
->>>>>>> Add the Why this design page. (#82)
               </p>
             </div>
           </div>
         </PageContainer>
         <hr
           className="flex flex-col justify-center self-center w-2/5 mt-12 mb-12"
-<<<<<<< HEAD
           style={{ borderTop: '2px dashed #FF94B8' }}
-=======
-          style={{ borderTop: "2px dashed #FF94B8" }}
->>>>>>> Add the Why this design page. (#82)
         />
         <PageContainer>
           <div className="flex flex-col max-w-6xl sm:flex-row md:flex-row lg:flex-row m-auto">
             <div className="mt-10 mb-10 w-full sm:w-full md:w-1/2 lg:w-1/2">
-<<<<<<< HEAD
               <h3 className="mb-2 text-blue font-bold text-3xl">Creating the Style</h3>
               <p className="text-xl text-blue mb-5">
                 In order to keep things light and imaginative, we selected our favorite
@@ -81,19 +47,6 @@ export const DesignPage: React.FC = () => {
               <p className="text-xl text-blue mb-5">
                 We experimented with mixing up different lines, shapes, and patterns until
                 we found something that felt special.
-=======
-              <h3 className="mb-2 text-blue font-bold text-3xl">
-                Creating the Style
-              </h3>
-              <p className="text-xl text-blue mb-5">
-                In order to keep things light and imaginative, we selected our
-                favorite visual elements from classic animation, games, and old
-                software.
-              </p>
-              <p className="text-xl text-blue mb-5">
-                We experimented with mixing up different lines, shapes, and
-                patterns until we found something that felt special.
->>>>>>> Add the Why this design page. (#82)
               </p>
             </div>
             <div className="mt-10 mb-10 sm:ml-20 md:ml-20 lg:ml-20 w-full sm:w-full md:w-1/2 lg:w-1/2">
@@ -124,7 +77,6 @@ export const DesignPage: React.FC = () => {
         </PageContainer>
         <hr
           className="flex flex-col justify-center self-center w-2/5 mt-12 mb-12"
-<<<<<<< HEAD
           style={{ borderTop: '2px dashed #FF94B8' }}
         />
         <PageContainer>
@@ -140,25 +92,6 @@ export const DesignPage: React.FC = () => {
               We hope that our house blend of nostalgia provides a funky little palate
               cleanser from the rest of your work day and gives your team a little boost
               of energy to kick more butt together.
-=======
-          style={{ borderTop: "2px dashed #FF94B8" }}
-        />
-        <PageContainer>
-          <div className="mt-10 mb-10 w-full">
-            <h3 className="mb-2 text-blue font-bold text-3xl">
-              Spreading Good Vibes
-            </h3>
-            <p className="text-xl text-blue mb-5">
-              Ultimately, we don’t want our retrospectives to feel like a chore.
-              They truly can provide so much value to teams when conducted well.
-              Using playful imagery and gentle primary colors was our visual
-              answer to breaking the tedium.
-            </p>
-            <p className="text-xl text-blue mb-5">
-              We hope that our house blend of nostalgia provides a funky little
-              palate cleanser from the rest of your work day and gives your team
-              a little boost of energy to kick more butt together.
->>>>>>> Add the Why this design page. (#82)
             </p>
           </div>
         </PageContainer>
@@ -169,24 +102,15 @@ export const DesignPage: React.FC = () => {
       <div
         style={{
           backgroundImage: `url(${landingFooterImage})`,
-<<<<<<< HEAD
           backgroundSize: 'cover',
           minHeight: '300px'
-=======
-          backgroundSize: "cover",
-          minHeight: "300px",
->>>>>>> Add the Why this design page. (#82)
         }}
         className="w-full flex justify-center items-center"
       >
         <Link to="/">
-<<<<<<< HEAD
           <h2 className="text-5xl text-pink p-4 sm: p-2 md: p-2 lg:p-2 text-center bg-blue">
             Home
           </h2>
-=======
-          <h2 className="text-5xl text-pink p-2 text-center">Home</h2>
->>>>>>> Add the Why this design page. (#82)
         </Link>
       </div>
       <footer className="bg-pink text-blue p-2 text-center">

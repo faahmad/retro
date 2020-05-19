@@ -2,12 +2,8 @@ import * as React from "react";
 import moment from "moment";
 import { PawIcon } from "../images/PawIcon";
 import { Button } from "./Button";
-import { createStripeCheckoutSession } from "../services/stripe";
-import { loadStripe } from "@stripe/stripe-js";
-
-const stripePromise = loadStripe(
-  process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY || ""
-);
+import { createStripeBillingPortalSession } from "../services/stripe";
+import { useRouteMatch } from "react-router-dom";
 
 interface UpgradeToProBannerProps {
   trialEnd: number;
@@ -18,21 +14,16 @@ export const UpgradeToProBanner: React.FC<UpgradeToProBannerProps> = ({
   workspaceId,
 }) => {
   const [isLoading, setIsLoading] = React.useState(false);
+  const match = useRouteMatch();
 
   const handleOpenStripeCheckSession = async () => {
     setIsLoading(true);
-    const { data } = await createStripeCheckoutSession({
+
+    const { data } = await createStripeBillingPortalSession({
       workspaceId,
-      successUrl: `http://localhost:3000/workspaces/${workspaceId}`,
-      cancelUrl: `http://localhost:3000/workspaces/${workspaceId}`,
+      returnUrl: `${process.env.REACT_APP_RETRO_BASE_URL}${match.url}`,
     });
-    debugger;
-    const sessionId = data.id;
-    const stripe = await stripePromise;
-    const response = await stripe?.redirectToCheckout({
-      sessionId,
-    });
-    console.log(response);
+    window.location.replace(data.url);
     setIsLoading(false);
     return;
   };

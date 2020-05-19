@@ -1,9 +1,9 @@
 import * as functions from "firebase-functions";
 import { getUserIdFromIdToken, getWorkspace } from "../services/firebase-admin";
-import { createCheckoutSession } from "../services/stripe";
+import { createBillingPortalSession } from "../services/stripe";
 import { cors } from "../lib/cors";
 
-export const handleCreateStripeCheckoutSession = (
+export const handleCreateStripeBillingPortalSession = (
   req: functions.https.Request,
   res: functions.Response
 ) => {
@@ -14,8 +14,8 @@ export const handleCreateStripeCheckoutSession = (
         throw new Error("Invalid Auth Header.");
       }
 
-      const { workspaceId, successUrl, cancelUrl } = req.body;
-      if (!workspaceId || !successUrl || !cancelUrl) {
+      const { workspaceId, returnUrl } = req.body;
+      if (!workspaceId || !returnUrl) {
         throw new Error("Invalid Request Body.");
       }
 
@@ -25,14 +25,12 @@ export const handleCreateStripeCheckoutSession = (
         throw new Error("Unauthorized.");
       }
 
-      const checkoutSession = await createCheckoutSession({
+      const billingPortalSession = await createBillingPortalSession({
         customerId: workspace.customerId,
-        subscriptionId: workspace.subscriptionId,
-        successUrl,
-        cancelUrl,
+        returnUrl,
       });
 
-      return res.status(200).json(checkoutSession);
+      return res.status(200).json(billingPortalSession);
     } catch ({ message }) {
       console.log(message);
       return res.status(500).json({ error: message });
