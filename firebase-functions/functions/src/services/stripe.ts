@@ -5,7 +5,7 @@ import { StripeSubscriptionPlans } from "../constants/stripe";
 export const createCustomer = (name: string, email: string) => {
   const params: Stripe.CustomerCreateParams = {
     name,
-    email,
+    email
   };
   return stripe.customers.create(params);
 };
@@ -14,7 +14,7 @@ export const subscribeCustomerToProPlan = (customerId: string) => {
   const params: Stripe.SubscriptionCreateParams = {
     customer: customerId,
     items: [{ plan: StripeSubscriptionPlans.PRO }],
-    trial_from_plan: true,
+    trial_from_plan: true
   };
   return stripe.subscriptions.create(params);
 };
@@ -29,7 +29,7 @@ export const createCheckoutSession = ({
   customerId,
   subscriptionId,
   successUrl,
-  cancelUrl,
+  cancelUrl
 }: CreateCheckoutSessionParams) => {
   const params: Stripe.Checkout.SessionCreateParams = {
     payment_method_types: ["card"],
@@ -38,11 +38,11 @@ export const createCheckoutSession = ({
     setup_intent_data: {
       metadata: {
         customer_id: customerId,
-        subscription_id: subscriptionId,
-      },
+        subscription_id: subscriptionId
+      }
     },
     success_url: successUrl,
-    cancel_url: cancelUrl,
+    cancel_url: cancelUrl
   };
   return stripe.checkout.sessions.create(params);
 };

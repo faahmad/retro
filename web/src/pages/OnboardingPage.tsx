@@ -1,12 +1,12 @@
-import React from 'react';
-import { gql } from 'apollo-boost';
-import { useMutation, useQuery } from '@apollo/react-hooks';
-import { Button } from '../components/Button';
-import { Redirect } from 'react-router-dom';
-import { useFormik } from 'formik';
-import * as yup from 'yup';
-import { LoadingText } from '../components/LoadingText';
-import { PageContainer } from '../components/PageContainer';
+import React from "react";
+import { gql } from "apollo-boost";
+import { useMutation, useQuery } from "@apollo/react-hooks";
+import { Button } from "../components/Button";
+import { Redirect } from "react-router-dom";
+import { useFormik } from "formik";
+import * as yup from "yup";
+import { LoadingText } from "../components/LoadingText";
+import { PageContainer } from "../components/PageContainer";
 
 const USER_QUERY = gql`
   query Workspace {
@@ -72,9 +72,9 @@ export const OnboardingPage: React.FC<any> = ({ history }) => {
       {hasPendingInvites && (
         <div className="text-blue w-1/2 max-w-6xl m-auto my-8">
           <div className="text-sm">
-            Or{' '}
+            Or{" "}
             <button className="underline" onClick={handleToggleForm}>
-              {showForm ? 'join your teammates' : 'create a new workspace'}
+              {showForm ? "join your teammates" : "create a new workspace"}
             </button>
           </div>
         </div>
@@ -94,27 +94,27 @@ const CREATE_WORKSPACE_MUTATION = gql`
 `;
 
 const createWorkspaceFormValidationSchema = yup.object().shape({
-  name: yup.string().required('Workspace name is required.'),
+  name: yup.string().required("Workspace name is required."),
   url: yup
     .string()
     .lowercase()
-    .matches(/[A-Za-z0-9-]+/, 'Please only use letters, numbers, and dashes.'),
+    .matches(/[A-Za-z0-9-]+/, "Please only use letters, numbers, and dashes."),
   allowedEmailDomain: yup
     .string()
     .lowercase()
-    .matches(/[A-Za-z0-9.]+/, 'Please only use letters, numbers, and extension.')
+    .matches(/[A-Za-z0-9.]+/, "Please only use letters, numbers, and extension.")
 });
 
 const CreateWorkspaceForm: React.FC = () => {
   const [createWorkspace] = useMutation(CREATE_WORKSPACE_MUTATION, {
-    refetchQueries: ['user'],
+    refetchQueries: ["user"],
     awaitRefetchQueries: true
   });
   const formik = useFormik({
     initialValues: {
-      name: '',
-      url: '',
-      allowedEmailDomain: ''
+      name: "",
+      url: "",
+      allowedEmailDomain: ""
     },
     validationSchema: createWorkspaceFormValidationSchema,
     onSubmit: async (values) => {
@@ -127,7 +127,7 @@ const CreateWorkspaceForm: React.FC = () => {
           }
         }
       });
-      window.location.replace('/');
+      window.location.replace("/");
     }
   });
 
@@ -251,7 +251,7 @@ const JoinWorkspaceList: React.FC<JoinWorkspaceListProps> = ({ workspaces }) => 
           <h1 className="text-2xl">Join your teammates on Retro</h1>
           <h3 className="text-lg">{`You've been invited to ${
             workspaces.length
-          } workspace${workspaces.length > 1 ? 's' : ''}.`}</h3>
+          } workspace${workspaces.length > 1 ? "s" : ""}.`}</h3>
         </div>
 
         <hr className="mt-4 mb-6"></hr>
@@ -265,14 +265,14 @@ const JoinWorkspaceList: React.FC<JoinWorkspaceListProps> = ({ workspaces }) => 
                     workspaceId: workspace.id
                   }
                 });
-                window.location.replace('/');
+                window.location.replace("/");
               }}
               className="border border-blue shadow p-4 mb-4 hover:bg-pink-1/2 cursor-pointer active:transform-1"
               key={workspace.id}
             >
               <span role="img" aria-label="team">
                 👯‍♀
-              </span>{' '}
+              </span>{" "}
               Join <span className="font-black">{workspace.name}</span> >
             </li>
           ))}

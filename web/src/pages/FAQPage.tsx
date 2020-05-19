@@ -1,9 +1,9 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Link } from "react-router-dom";
 
-import landingFooterImage from '../assets/images/landing-page-footer.svg';
+import landingFooterImage from "../assets/images/landing-page-footer.svg";
 
-import { PageContainer } from '../components/PageContainer';
+import { PageContainer } from "../components/PageContainer";
 
 export const FAQPage: React.FC = () => {
   return (
@@ -64,7 +64,7 @@ export const FAQPage: React.FC = () => {
         </PageContainer>
         <hr
           className="flex flex-col justify-center self-center w-3/5 mt-12 mb-12"
-          style={{ borderTop: '2px dashed #11269C' }}
+          style={{ borderTop: "2px dashed #11269C" }}
         />
         <div className="mt-20 mb-20 flex flex-col lg:flex-row max-w-6xl items-center m-auto">
           <div>
@@ -72,7 +72,7 @@ export const FAQPage: React.FC = () => {
               Got a question?
             </h3>
             <p className="text-2xl text-center text-blue">
-              Reach out to us at{' '}
+              Reach out to us at{" "}
               <a
                 href="mailto:hi@retro.app"
                 className="text-pink hover:underline"
@@ -88,8 +88,8 @@ export const FAQPage: React.FC = () => {
       <div
         style={{
           backgroundImage: `url(${landingFooterImage})`,
-          backgroundSize: 'cover',
-          minHeight: '300px'
+          backgroundSize: "cover",
+          minHeight: "300px"
         }}
         className="w-full flex justify-center items-center"
       >

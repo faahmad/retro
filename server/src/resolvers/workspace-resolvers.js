@@ -22,7 +22,7 @@ export const workspaceResolvers = {
         `SELECT w.id, w.name, w.url from "workspaces" w LEFT JOIN "workspaceInvites" wi ON w.id = wi."workspaceId" WHERE email = '${user.email}';`
       );
       return results;
-    },
+    }
   },
   Mutation: {
     async createWorkspace(parent, { input }, { user }) {
@@ -36,7 +36,7 @@ export const workspaceResolvers = {
       try {
         const user = await models.user.findByPk(userId);
         const workspaces = await user.getWorkspaces({
-          where: { id: input.workspaceId },
+          where: { id: input.workspaceId }
         });
         if (workspaces.length === 0) {
           throw new ForbiddenError(
@@ -48,19 +48,17 @@ export const workspaceResolvers = {
         // Use a database constraint on the email and workspaceId
         // columns, instead of checking uniqueness manually.
         const workspaceInvites = await models.workspaceInvite.findAll({
-          where: { email: input.email, workspaceId: input.workspaceId },
+          where: { email: input.email, workspaceId: input.workspaceId }
         });
         if (workspaceInvites.length !== 0) {
-          throw new ForbiddenError(
-            "User has already been invited to this workspace."
-          );
+          throw new ForbiddenError("User has already been invited to this workspace.");
         }
 
         const workspaceInvite = await models.workspaceInvite.create({
           email: input.email,
           workspaceId: input.workspaceId,
           invitedById: userId,
-          accepted: false,
+          accepted: false
         });
 
         return workspaceInvite;
@@ -78,20 +76,15 @@ export const workspaceResolvers = {
         }
 
         const workspaceInvite = await models.workspaceInvite.findOne({
-          where: { workspaceId: workspace.id, email: user.email },
+          where: { workspaceId: workspace.id, email: user.email }
         });
 
-        if (
-          !workspaceInvite &&
-          !user.email.endsWith(workspace.allowedEmailDomain)
-        ) {
-          throw new ForbiddenError(
-            "User is not allowed to join this workspace."
-          );
+        if (!workspaceInvite && !user.email.endsWith(workspace.allowedEmailDomain)) {
+          throw new ForbiddenError("User is not allowed to join this workspace.");
         }
 
         const defaultTeam = await models.team.findOne({
-          where: { workspaceId: workspace.id },
+          where: { workspaceId: workspace.id }
         });
 
         if (workspaceInvite) {
@@ -103,12 +96,12 @@ export const workspaceResolvers = {
         return {
           code: 200,
           success: true,
-          message: "Successfully added user to workspace.",
+          message: "Successfully added user to workspace."
         };
       } catch (error) {
         throw new ApolloError(error.message);
       }
-    },
+    }
   },
   Workspace: {
     async teams(parent, _args, { models }) {
@@ -119,7 +112,7 @@ export const workspaceResolvers = {
     },
     async invitedUsers(parent, _args, { models }) {
       return models.workspaceInvite.findAll({
-        where: { workspaceId: parent.id, accepted: false },
+        where: { workspaceId: parent.id, accepted: false }
       });
     },
     async subscription(workspace, _args, { userId }) {
@@ -127,6 +120,6 @@ export const workspaceResolvers = {
         return null;
       }
       return getWorkspaceSubscription(String(workspace.id));
-    },
-  },
+    }
+  }
 };

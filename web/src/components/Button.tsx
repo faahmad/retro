@@ -1,5 +1,5 @@
-import React from 'react';
-import clsx from 'clsx';
+import React from "react";
+import clsx from "clsx";
 
 // These props are required by us.
 interface RetroButtonProps {
@@ -16,16 +16,15 @@ type ButtonProps = RetroButtonProps &
 
 export const Button: React.FC<ButtonProps> = ({
   children,
-  className = '',
+  className = "",
   style,
   ...rest
 }) => {
-  console.log(className);
   return (
     <button
       style={style}
       className={clsx(
-        'h-12 w-64 font-size-lg uppercase cursor-pointer border shadow font-black hover:bg-pink-1/2 active:transform-1 focus:outline-none px-4',
+        "h-12 w-64 font-size-lg uppercase cursor-pointer border shadow font-black hover:bg-pink-1/2 active:transform-1 focus:outline-none px-4",
         {
           [className]: !!className
         }

@@ -1,28 +1,28 @@
-import * as React from 'react';
-import { RouteComponentProps, useParams } from 'react-router-dom';
-import { gql } from 'apollo-boost';
-import { useQuery } from '@apollo/react-hooks';
-import { DragDropContext, DropResult, Droppable, Draggable } from 'react-beautiful-dnd';
-import { v4 as uuidV4 } from 'uuid';
-import moment from 'moment';
-import { AddButton } from '../components/AddButton';
-import { LoadingText } from '../components/LoadingText';
-import { AuthContext } from '../contexts/AuthContext';
-import Octicon, { Question } from '@primer/octicons-react';
-import Linkify from 'react-linkify';
-import { Footer } from '../components/Footer';
-import ReactModal from 'react-modal';
-import { Button } from '../components/Button';
-import { ThumbsUpIcon } from '../components/ThumbsUpIcon';
-import pencilIcon from '../assets/icons/pencil.svg';
-import { PageContainer } from '../components/PageContainer';
+import * as React from "react";
+import { RouteComponentProps, useParams } from "react-router-dom";
+import { gql } from "apollo-boost";
+import { useQuery } from "@apollo/react-hooks";
+import { DragDropContext, Draggable, DropResult, Droppable } from "react-beautiful-dnd";
+import { v4 as uuidV4 } from "uuid";
+import moment from "moment";
+import { AddButton } from "../components/AddButton";
+import { LoadingText } from "../components/LoadingText";
+import { AuthContext } from "../contexts/AuthContext";
+import Octicon, { Question } from "@primer/octicons-react";
+import Linkify from "react-linkify";
+import { Footer } from "../components/Footer";
+import ReactModal from "react-modal";
+import { Button } from "../components/Button";
+import { ThumbsUpIcon } from "../components/ThumbsUpIcon";
+import pencilIcon from "../assets/icons/pencil.svg";
+import { PageContainer } from "../components/PageContainer";
 import {
   RetroBoard as RetroBoardInterface,
+  RetroColumn,
   RetroColumnType,
-  RetroItem,
-  RetroColumn
-} from '../types';
-import { subscribeToRetroBoardById, updateRetroBoardById } from '../services/retro-board';
+  RetroItem
+} from "../types";
+import { subscribeToRetroBoardById, updateRetroBoardById } from "../services/retro-board";
 
 const RETRO_QUERY = gql`
   query RetroQuery($id: ID!) {
@@ -67,9 +67,9 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
     <React.Fragment>
       <PageContainer>
         <h1 className="text-blue text-4xl font-bold mb-8">
-          {retro.name || 'Retro Board'} -{' '}
+          {retro.name || "Retro Board"} -{" "}
           <span className="font-normal">
-            {moment(retro.createdAt).format('MM.DD.YYYY')}
+            {moment(retro.createdAt).format("MM.DD.YYYY")}
           </span>
         </h1>
         <RetroBoard id={params.retroId} />
@@ -81,7 +81,7 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
 
 // import { RetroItemModal } from "../components/RetroItemModal";
 interface RetroBoardProps {
-  id: RetroBoardInterface['id'];
+  id: RetroBoardInterface["id"];
 }
 interface RetroBoardState {
   lastUpdatedAt: Date;
@@ -98,11 +98,11 @@ export class RetroBoard extends React.Component<RetroBoardProps, RetroBoardState
   constructor(props: any) {
     super(props);
     this.state = {
-      lastUpdatedAt: new Date() as RetroBoardState['lastUpdatedAt'],
-      isFetching: true as RetroBoardState['isFetching'],
+      lastUpdatedAt: new Date() as RetroBoardState["lastUpdatedAt"],
+      isFetching: true as RetroBoardState["isFetching"],
       retroBoard: null as any,
-      isModalOpen: false as RetroBoardState['isModalOpen'],
-      columnTypeToAddItemTo: null as RetroBoardState['columnTypeToAddItemTo'],
+      isModalOpen: false as RetroBoardState["isModalOpen"],
+      columnTypeToAddItemTo: null as RetroBoardState["columnTypeToAddItemTo"],
       initialRetroItem: undefined
     };
     this.unsubscribeFromRetroBoardFn = null;
@@ -131,7 +131,7 @@ export class RetroBoard extends React.Component<RetroBoardProps, RetroBoardState
   };
 
   handleAddItemToColumn = async (
-    content: RetroItem['content'],
+    content: RetroItem["content"],
     column: RetroColumnType
   ) => {
     const newItem: RetroItem = {
@@ -184,7 +184,7 @@ export class RetroBoard extends React.Component<RetroBoardProps, RetroBoardState
     return;
   };
 
-  handleDeleteItem = async (itemId: RetroItem['id'], columnType: RetroColumnType) => {
+  handleDeleteItem = async (itemId: RetroItem["id"], columnType: RetroColumnType) => {
     const { retroBoard } = this.state;
 
     const items = retroBoard.items;
@@ -213,7 +213,7 @@ export class RetroBoard extends React.Component<RetroBoardProps, RetroBoardState
     return;
   };
 
-  handleOnClickLike = async (itemId: RetroItem['id']) => {
+  handleOnClickLike = async (itemId: RetroItem["id"]) => {
     const { id } = this.context;
     const item = this.state.retroBoard.items[itemId];
 
@@ -319,7 +319,7 @@ export class RetroBoard extends React.Component<RetroBoardProps, RetroBoardState
 
   handleOnClickEdit = (
     columnType: RetroColumnType,
-    initialRetroItem: RetroBoardState['initialRetroItem']
+    initialRetroItem: RetroBoardState["initialRetroItem"]
   ) => {
     this.setState({
       initialRetroItem,
@@ -350,7 +350,7 @@ export class RetroBoard extends React.Component<RetroBoardProps, RetroBoardState
         {isFetching && <LoadingText />}
         {isModalOpen && (
           <RetroItemModal
-            column={retroBoard.columns[columnTypeToAddItemTo || 'good']}
+            column={retroBoard.columns[columnTypeToAddItemTo || "good"]}
             isOpen={isModalOpen}
             columnType={columnTypeToAddItemTo}
             initialRetroItem={initialRetroItem}
@@ -364,10 +364,10 @@ export class RetroBoard extends React.Component<RetroBoardProps, RetroBoardState
           <React.Fragment>
             <div className="retro-board__grid">
               <DragDropContext onDragEnd={this.handleOnDragEnd}>
-                {retroBoard.columnOrder.map((columnType: RetroColumn['type']) => {
+                {retroBoard.columnOrder.map((columnType: RetroColumn["type"]) => {
                   const column = retroBoard.columns[columnType];
                   const items = column.itemIds.map(
-                    (itemId: RetroItem['id']) => retroBoard.items[itemId]
+                    (itemId: RetroItem["id"]) => retroBoard.items[itemId]
                   );
                   return (
                     <RetroList
@@ -396,11 +396,11 @@ export class RetroBoard extends React.Component<RetroBoardProps, RetroBoardState
 }
 
 interface RetroListProps {
-  title: RetroColumn['title'];
-  type: RetroColumn['type'];
+  title: RetroColumn["title"];
+  type: RetroColumn["type"];
   items: any[];
   handleOnClickAdd: () => void;
-  handleOnClickLike: (itemId: RetroItem['id']) => void;
+  handleOnClickLike: (itemId: RetroItem["id"]) => void;
   handleOnClickEdit: (columnType: RetroColumnType, initialRetroItem: RetroItem) => void;
 }
 
@@ -449,7 +449,7 @@ export const RetroList: React.FC<RetroListProps> = ({
 export const RetroListItem: React.FC<
   RetroItem & {
     index: number;
-    handleOnClickLike: (itemId: RetroItem['id']) => void;
+    handleOnClickLike: (itemId: RetroItem["id"]) => void;
     handleOnClickEdit: () => void;
   }
 > = ({
@@ -474,8 +474,8 @@ export const RetroListItem: React.FC<
             ref={provided.innerRef}
             className={`retro-list-item flex content-center justify-between p-2 mb-1 mx-2 bg-white text-blue text-sm active:outline-none focus:outline-none ${
               snapshot.isDragging
-                ? 'shadow shadow-blue border border-blue bg-pink-1/2'
-                : 'border border-red'
+                ? "shadow shadow-blue border border-blue bg-pink-1/2"
+                : "border border-red"
             }`}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
@@ -528,7 +528,7 @@ export const RetroListItem: React.FC<
 
 interface LikeButtonProps {
   likeCount: number;
-  likedBy: RetroItem['likedBy'];
+  likedBy: RetroItem["likedBy"];
   currentUserId: string;
   onClick: () => void;
 }
@@ -573,15 +573,15 @@ interface RetroItemModalProps {
   column: RetroColumn;
   columnType: RetroColumnType | null;
   onToggle: () => void;
-  onSubmit: (content: RetroItem['content'], column: RetroColumnType) => Promise<void>;
+  onSubmit: (content: RetroItem["content"], column: RetroColumnType) => Promise<void>;
   initialRetroItem?: RetroItem;
   onEdit: (item: RetroItem, column: RetroColumnType) => Promise<void>;
-  onDelete: (itemId: RetroItem['id'], column: RetroColumnType) => Promise<void>;
+  onDelete: (itemId: RetroItem["id"], column: RetroColumnType) => Promise<void>;
 }
 
 interface RetroItemModalState {
-  columnType: RetroColumnType | '';
-  content: RetroItem['content'];
+  columnType: RetroColumnType | "";
+  content: RetroItem["content"];
   isSubmitting: boolean;
 }
 
@@ -592,8 +592,8 @@ export class RetroItemModal extends React.Component<
   constructor(props: RetroItemModalProps) {
     super(props);
     this.state = {
-      columnType: props.columnType || '',
-      content: props.initialRetroItem ? props.initialRetroItem.content : '',
+      columnType: props.columnType || "",
+      content: props.initialRetroItem ? props.initialRetroItem.content : "",
       isSubmitting: false
     };
   }
@@ -601,11 +601,9 @@ export class RetroItemModal extends React.Component<
     const { content, columnType } = this.state;
     const { initialRetroItem } = this.props;
     if (!content) {
-      console.log("Content can't be empty.");
       return;
     }
     if (!columnType) {
-      console.log("Column can't be empty.");
       return;
     }
     this.setState({ isSubmitting: true });
@@ -639,12 +637,12 @@ export class RetroItemModal extends React.Component<
         onRequestClose={onToggle}
         style={{
           content: {
-            maxWidth: '420px',
-            height: '530px',
-            padding: '20px',
-            width: '100%'
+            maxWidth: "420px",
+            height: "530px",
+            padding: "20px",
+            width: "100%"
           },
-          overlay: { background: 'rgba(17, 38, 156, 0.6)' }
+          overlay: { background: "rgba(17, 38, 156, 0.6)" }
         }}
         className="bg-white shadow-red border m-auto absolute inset-0 border-red focus:outline-none z-50"
         // IMPORTANT: closeTimeoutMS has to be the same as what is set in the tailwind.css file.
@@ -688,17 +686,17 @@ export class RetroItemModal extends React.Component<
               onClick={onToggle}
               disabled={isSubmitting}
               className="text-red border-none shadow-none"
-              style={{ width: '6rem', boxShadow: 'none' }}
+              style={{ width: "6rem", boxShadow: "none" }}
             >
               Cancel
             </Button>
             <Button
               className="text-blue"
-              style={{ width: '10rem' }}
+              style={{ width: "10rem" }}
               disabled={isSubmitting}
               onClick={this.handleSubmit}
             >
-              {isSubmitting ? 'Submitting...' : 'Submit'}
+              {isSubmitting ? "Submitting..." : "Submit"}
             </Button>
           </div>
         </div>

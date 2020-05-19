@@ -33,9 +33,7 @@ class Factory {
     return workspace;
   }
   async retro(options, workspaceUser) {
-    const defaultTeam = await UserService.getDefaultTeamForUser(
-      workspaceUser.id
-    );
+    const defaultTeam = await UserService.getDefaultTeamForUser(workspaceUser.id);
     const retro = await RetroService.createRetro(
       {
         teamId: defaultTeam.id,

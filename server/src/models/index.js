@@ -6,7 +6,7 @@ const models = {
   team: sequelize.import("./team-model"),
   workspaceInvite: sequelize.import("./workspace-invite-model"),
   retro: sequelize.import("./retro-model"),
-  retroItem: sequelize.import("./retro-item-model"),
+  retroItem: sequelize.import("./retro-item-model")
 };
 
 Object.keys(models).forEach((key) => {

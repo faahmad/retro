@@ -8,7 +8,7 @@ const teamModel = (sequelize, DataTypes) => {
     { timestamps: true }
   );
 
-  team.associate = models => {
+  team.associate = (models) => {
     team.belongsTo(models.workspace);
   };
 

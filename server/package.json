@@ -1,4 +1,5 @@
 {
+  "private": true,
   "name": "retro-server",
   "version": "1.0.0",
   "main": "src/index.js",
@@ -14,6 +15,7 @@
     "browse": "gcloud app browse",
     "logs": "gcloud app logs tail -s default",
     "lint": "eslint src",
+    "prettier": "prettier \"src/**/*.{js,json,ts}\" --write",
     "db:drop": "sequelize db:drop",
     "db:create": "sequelize db:create"
   },
@@ -28,6 +30,7 @@
     "faker": "^4.1.0",
     "jest": "^24.9.0",
     "nodemon": "^1.19.4",
+    "prettier": "^2.0.5",
     "supertest": "^4.0.2"
   },
   "dependencies": {

@@ -1,15 +1,15 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Link } from "react-router-dom";
 
-import { HeroImage } from '../images/HeroImage';
-import howItWorksInviteImage from '../assets/images/how-it-works-invite-image.svg';
-import howItWorksConductImage from '../assets/images/how-it-works-conduct-image.svg';
-import howItWorksAnalyzeImage from '../assets/images/how-it-works-analyze-image.svg';
-import applicationScreenshotImage from '../assets/images/screenshot@2x.png';
-import landingFooterImage from '../assets/images/landing-page-footer.svg';
+import { HeroImage } from "../images/HeroImage";
+import howItWorksInviteImage from "../assets/images/how-it-works-invite-image.svg";
+import howItWorksConductImage from "../assets/images/how-it-works-conduct-image.svg";
+import howItWorksAnalyzeImage from "../assets/images/how-it-works-analyze-image.svg";
+import applicationScreenshotImage from "../assets/images/screenshot@2x.png";
+import landingFooterImage from "../assets/images/landing-page-footer.svg";
 
-import { GoogleOAuthButton } from '../components/GoogleOAuthButton';
-import { PageContainer } from '../components/PageContainer';
+import { GoogleOAuthButton } from "../components/GoogleOAuthButton";
+import { PageContainer } from "../components/PageContainer";
 
 export const LandingPage: React.FC = () => {
   return (
@@ -40,7 +40,7 @@ export const LandingPage: React.FC = () => {
                   alt="Invite"
                   src={howItWorksInviteImage}
                   className="bg-white mb-2"
-                  style={{ height: '115px', width: '140px' }}
+                  style={{ height: "115px", width: "140px" }}
                 />
                 <p className="text-xl mb-2">Invite</p>
                 <p>Invite your team.</p>
@@ -50,7 +50,7 @@ export const LandingPage: React.FC = () => {
                   alt="Conduct"
                   src={howItWorksConductImage}
                   className="bg-white mb-2"
-                  style={{ height: '115px', width: '140px' }}
+                  style={{ height: "115px", width: "140px" }}
                 />
                 <p className="text-xl mb-2">Conduct</p>
                 <p>Conduct your retro using our drag and drop interface.</p>
@@ -60,7 +60,7 @@ export const LandingPage: React.FC = () => {
                   alt="Conduct"
                   src={howItWorksAnalyzeImage}
                   className="bg-white mb-2"
-                  style={{ height: '115px', width: '140px' }}
+                  style={{ height: "115px", width: "140px" }}
                 />
                 <p className="text-xl mb-2">Analyze</p>
                 <p>Analyze your team's progress.</p>
@@ -97,7 +97,7 @@ export const LandingPage: React.FC = () => {
         </PageContainer>
         <hr
           className="flex flex-col justify-center self-center w-3/5 mt-12 mb-12"
-          style={{ borderTop: '2px dashed #11269C' }}
+          style={{ borderTop: "2px dashed #11269C" }}
         />
         <PageContainer>
           <div className="mt-20 mb-20 flex flex-col lg:flex-row max-w-6xl items-center m-auto">
@@ -134,8 +134,8 @@ export const LandingPage: React.FC = () => {
       <div
         style={{
           backgroundImage: `url(${landingFooterImage})`,
-          backgroundSize: 'cover',
-          minHeight: '300px'
+          backgroundSize: "cover",
+          minHeight: "300px"
         }}
         className="w-full flex justify-center items-center"
       >

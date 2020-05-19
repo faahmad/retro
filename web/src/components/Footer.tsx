@@ -1,5 +1,5 @@
-import * as React from 'react';
-import dashboardFooterImage from '../assets/images/dashboard-footer-image.svg';
+import * as React from "react";
+import dashboardFooterImage from "../assets/images/dashboard-footer-image.svg";
 
 export const Footer = () => {
   return (
