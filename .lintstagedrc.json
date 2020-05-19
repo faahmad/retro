@@ -1,6 +1,6 @@
 {
-  "web/src/**/*.tsx": [
-    "yarn workspace web run lint",
-    "yarn workspace shogigs-admin run test:precommit"
+  "src/**/*.{js,jsx,ts,tsx,json,css}": [
+    "yarn workspaces run lint",
+    "yarn workspaces run test:precommit"
   ]
 }
