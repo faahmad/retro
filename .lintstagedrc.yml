@@ -10,7 +10,6 @@ web/src/**/*.{js,jsx,ts,tsx}:
   - yarn workspace shogigs-web run test:precommit
 web/src/**/*.{js,jsx,json,html,ts,tsx,css,scss}:
   - yarn workspace shogigs-web run prettier --write
-  - git add
   # functions/src/**/*.{js,ts}:
   #   - yarn workspace shogigs-functions run lint
   #   - yarn workspace shogigs-functions run test:precommit
