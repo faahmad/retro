@@ -13,12 +13,12 @@ export async function getStripeSubscription(subscriptionId) {
       amount: subscription.plan.amount,
       currency: subscription.plan.currency,
       interval: subscription.plan.interval,
-      productId: subscription.plan.product,
+      productId: subscription.plan.product
     },
     trialStart: subscription.trial_start,
     trialEnd: subscription.trial_end,
     startDate: subscription.start_date,
     currentPeriodStart: subscription.current_period_start,
-    currentPeriodEnd: subscription.current_period_end,
+    currentPeriodEnd: subscription.current_period_end
   };
 }

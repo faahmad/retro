@@ -1,9 +1,9 @@
-import * as React from 'react';
+import * as React from "react";
 
 export const AddButton: React.FC<React.DetailedHTMLProps<
   React.ButtonHTMLAttributes<HTMLButtonElement>,
   HTMLButtonElement
->> = ({ onClick, className, children = '+', ...rest }) => {
+>> = ({ onClick, className, children = "+", ...rest }) => {
   return (
     <button
       onClick={onClick}

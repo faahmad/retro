@@ -25,7 +25,7 @@ describe("workspace query", () => {
     const queryResult = await executeGraphQLQuery({
       query: workspaceQuery,
       userId: user.id,
-      variables: { id: workspace.id },
+      variables: { id: workspace.id }
     });
 
     expect(queryResult).toMatchObject({
@@ -35,9 +35,9 @@ describe("workspace query", () => {
           name: workspace.name,
           url: workspace.url,
           allowedEmailDomain: workspace.allowedEmailDomain,
-          ownerId: workspace.ownerId,
-        },
-      },
+          ownerId: workspace.ownerId
+        }
+      }
     });
   });
   it("should throw an error if the user does not belong to the workspace", async () => {
@@ -49,11 +49,11 @@ describe("workspace query", () => {
     const { data, errors } = await executeGraphQLQuery({
       query: workspaceQuery,
       userId: outsideUser.id,
-      variables: { id: workspace.id },
+      variables: { id: workspace.id }
     });
 
     expect(data).toMatchObject({
-      workspace: null,
+      workspace: null
     });
     expect(errors.length).toBe(1);
     expect(errors[0].message).toBe("You don't have access to this workspace.");
@@ -65,7 +65,7 @@ describe("workspace query", () => {
     await executeGraphQLQuery({
       query: workspaceQuery,
       userId: user.id,
-      variables: { id: workspace.id },
+      variables: { id: workspace.id }
     });
 
     expect(getWorkspaceSubscription).toHaveBeenCalledWith(String(workspace.id));
@@ -79,7 +79,7 @@ describe("workspace query", () => {
     await executeGraphQLQuery({
       query: workspaceQuery,
       userId: regularUser.id,
-      variables: { id: workspace.id },
+      variables: { id: workspace.id }
     });
 
     expect(getWorkspaceSubscription).not.toHaveBeenCalled();

@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 body {
-  font-family: 'Source Code Pro', monospace;
+  font-family: "Source Code Pro", monospace;
 }
 
 /* Custom Styles */

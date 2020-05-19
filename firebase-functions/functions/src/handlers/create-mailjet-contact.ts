@@ -12,9 +12,7 @@ export const handleCreateMailjetContact = async (user: auth.UserRecord) => {
     user.email!,
     user.displayName!
   );
-  logger.log(
-    `${user.email!} has been added to the All Users contact list in Mailjet.`
-  );
+  logger.log(`${user.email!} has been added to the All Users contact list in Mailjet.`);
   logger.log(createContactResponse.body);
   logger.log("\n");
 

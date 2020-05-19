@@ -1,14 +1,14 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Link } from "react-router-dom";
 
-import retroTeamImage from '../assets/images/retro-team.svg';
-import gettingInspiredImage from '../assets/images/getting-inspired@2x.png';
-import earlyExplorationOneImage from '../assets/images/early-exploration-one@2x.png';
-import earlyExplorationTwoImage from '../assets/images/early-exploration-two@2x.png';
-import goodVibesImage from '../assets/images/good-vibes.svg';
-import landingFooterImage from '../assets/images/landing-page-footer.svg';
+import retroTeamImage from "../assets/images/retro-team.svg";
+import gettingInspiredImage from "../assets/images/getting-inspired@2x.png";
+import earlyExplorationOneImage from "../assets/images/early-exploration-one@2x.png";
+import earlyExplorationTwoImage from "../assets/images/early-exploration-two@2x.png";
+import goodVibesImage from "../assets/images/good-vibes.svg";
+import landingFooterImage from "../assets/images/landing-page-footer.svg";
 
-import { PageContainer } from '../components/PageContainer';
+import { PageContainer } from "../components/PageContainer";
 
 export const DesignPage: React.FC = () => {
   return (
@@ -34,7 +34,7 @@ export const DesignPage: React.FC = () => {
         </PageContainer>
         <hr
           className="flex flex-col justify-center self-center w-2/5 mt-12 mb-12"
-          style={{ borderTop: '2px dashed #FF94B8' }}
+          style={{ borderTop: "2px dashed #FF94B8" }}
         />
         <PageContainer>
           <div className="flex flex-col max-w-6xl sm:flex-row md:flex-row lg:flex-row m-auto">
@@ -77,7 +77,7 @@ export const DesignPage: React.FC = () => {
         </PageContainer>
         <hr
           className="flex flex-col justify-center self-center w-2/5 mt-12 mb-12"
-          style={{ borderTop: '2px dashed #FF94B8' }}
+          style={{ borderTop: "2px dashed #FF94B8" }}
         />
         <PageContainer>
           <div className="mt-10 mb-10 w-full">
@@ -102,8 +102,8 @@ export const DesignPage: React.FC = () => {
       <div
         style={{
           backgroundImage: `url(${landingFooterImage})`,
-          backgroundSize: 'cover',
-          minHeight: '300px'
+          backgroundSize: "cover",
+          minHeight: "300px"
         }}
         className="w-full flex justify-center items-center"
       >

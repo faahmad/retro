@@ -1,7 +1,10 @@
 {
   "name": "functions",
+  "private": true,
+  "version": "1.0.0",
   "scripts": {
     "lint": "tslint --project tsconfig.json",
+    "prettier": "prettier \"src/**/*.{js,json,ts}\" --write",
     "build": "tsc",
     "dev": "npm run build && firebase emulators:start --project dev --only functions,auth",
     "shell": "npm run build && firebase functions:shell",
@@ -11,7 +14,7 @@
     "logs": "firebase functions:log"
   },
   "engines": {
-    "node": "8"
+    "node": "10"
   },
   "main": "lib/index.js",
   "dependencies": {
@@ -27,8 +30,8 @@
     "@types/node-mailjet": "^3.3.3",
     "firebase-functions-test": "^0.1.6",
     "firebase-tools": "^7.14.0",
+    "prettier": "^2.0.5",
     "tslint": "^5.12.0",
     "typescript": "^3.2.2"
-  },
-  "private": true
+  }
 }

@@ -4,10 +4,7 @@ let config = {
   dialect: "postgres"
 };
 
-if (
-  process.env.INSTANCE_CONNECTION_NAME &&
-  process.env.NODE_ENV === "production"
-) {
+if (process.env.INSTANCE_CONNECTION_NAME && process.env.NODE_ENV === "production") {
   const instancePath = `/cloudsql/${process.env.INSTANCE_CONNECTION_NAME}`;
   config.host = instancePath;
   config.dialectOptions = {

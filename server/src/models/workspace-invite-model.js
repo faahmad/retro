@@ -16,7 +16,7 @@ const workspaceInviteModel = (sequelize, DataTypes) => {
     }
   );
 
-  workspaceInvite.associate = models => {
+  workspaceInvite.associate = (models) => {
     workspaceInvite.belongsTo(models.workspace);
     workspaceInvite.belongsTo(models.user, { as: "invitedBy" });
   };

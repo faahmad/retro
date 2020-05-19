@@ -1,11 +1,11 @@
-import React from 'react';
-import ReactModal from 'react-modal';
-import addTeamMemberImage from '../assets/images/add-team-member-image.svg';
-import { Button } from './Button';
-import { useFormik } from 'formik';
-import * as yup from 'yup';
-import { gql } from 'apollo-boost';
-import { useMutation } from '@apollo/react-hooks';
+import React from "react";
+import ReactModal from "react-modal";
+import addTeamMemberImage from "../assets/images/add-team-member-image.svg";
+import { Button } from "./Button";
+import { useFormik } from "formik";
+import * as yup from "yup";
+import { gql } from "apollo-boost";
+import { useMutation } from "@apollo/react-hooks";
 interface InviteUserToWorkspaceModalProps {
   isOpen: boolean;
   onRequestClose: (
@@ -27,8 +27,8 @@ export const InviteUserToWorkspaceModal: React.FC<InviteUserToWorkspaceModalProp
       isOpen={isOpen}
       onRequestClose={onRequestClose}
       style={{
-        content: { maxWidth: '420px', height: '530px', padding: '20px' },
-        overlay: { background: 'rgba(17, 38, 156, 0.6)' }
+        content: { maxWidth: "420px", height: "530px", padding: "20px" },
+        overlay: { background: "rgba(17, 38, 156, 0.6)" }
       }}
       className="bg-white shadow-red border m-auto absolute inset-0 border-red focus:outline-none z-50"
       // IMPORTANT: closeTimeoutMS has to be the same as what is set in the tailwind.css file.
@@ -56,23 +56,23 @@ const InviteUserToWorkspaceForm: React.FC<{
   onClick: () => void;
 }> = ({ workspaceId, onClick }) => {
   const [inviteUserToWorkspace] = useMutation(INVITE_USER_TO_WORKSPACE_MUTATION, {
-    refetchQueries: ['WorkspaceQuery']
+    refetchQueries: ["WorkspaceQuery"]
   });
-  const [submitButtonText, setSubmitButtonText] = React.useState('Send Invite');
+  const [submitButtonText, setSubmitButtonText] = React.useState("Send Invite");
   const [isDisabled, setIsDisabled] = React.useState(false);
   const formik = useFormik({
     initialValues: {
-      email: ''
+      email: ""
     },
     validationSchema: yup.object().shape({
       email: yup
         .string()
-        .email('Please enter a valid email.')
-        .required('Email address is required.')
+        .email("Please enter a valid email.")
+        .required("Email address is required.")
     }),
     onSubmit: async (values) => {
       setIsDisabled(true);
-      setSubmitButtonText('Sending...');
+      setSubmitButtonText("Sending...");
       await inviteUserToWorkspace({
         variables: {
           input: {
@@ -81,7 +81,7 @@ const InviteUserToWorkspaceForm: React.FC<{
           }
         }
       });
-      setSubmitButtonText('Sent!');
+      setSubmitButtonText("Sent!");
       onClick();
     }
   });
@@ -115,11 +115,11 @@ const InviteUserToWorkspaceForm: React.FC<{
             onClick={onClick}
             disabled={isDisabled}
             className="text-red border-none shadow-none"
-            style={{ width: '6rem', boxShadow: 'none' }}
+            style={{ width: "6rem", boxShadow: "none" }}
           >
             Cancel
           </Button>
-          <Button style={{ width: '10rem' }} type="submit" disabled={isDisabled}>
+          <Button style={{ width: "10rem" }} type="submit" disabled={isDisabled}>
             {submitButtonText}
           </Button>
         </div>

@@ -19,7 +19,7 @@ export const handleCreateStripeCustomerSubscription = async (
     logger.log("Subscribed customer to PRO plan.", subscription.id);
     await updateWorkspace(workspace.id, {
       customerId: customer.id,
-      subscriptionId: subscription.id,
+      subscriptionId: subscription.id
     });
     logger.log("Added stripe data to firestore.");
   } catch (error) {

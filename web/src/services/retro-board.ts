@@ -1,8 +1,8 @@
-import firebase from '../lib/firebase';
-import { CreateRetroBoardInput, RetroBoard } from '../types';
-import { buildEmptyRetroBoard } from '../utils/build-empty-retro-board';
+import firebase from "../lib/firebase";
+import { CreateRetroBoardInput, RetroBoard } from "../types";
+import { buildEmptyRetroBoard } from "../utils/build-empty-retro-board";
 
-const retroBoardsCollection = firebase.firestore().collection('retroBoards');
+const retroBoardsCollection = firebase.firestore().collection("retroBoards");
 
 export const createRetroBoardInFirebase = async (input: CreateRetroBoardInput) => {
   if (!input.id || !input.workspaceId || !input.teamId || !input.createdById) {
@@ -19,7 +19,7 @@ export const createRetroBoardInFirebase = async (input: CreateRetroBoardInput) =
 // };
 
 export const subscribeToRetroBoardById = (
-  id: RetroBoard['id'],
+  id: RetroBoard["id"],
   onSnapshotCallback: (retroBoard: RetroBoard) => void
 ) => {
   return retroBoardsCollection.doc(id).onSnapshot((retroBoardDoc) => {
@@ -27,6 +27,6 @@ export const subscribeToRetroBoardById = (
   });
 };
 
-export const updateRetroBoardById = (id: RetroBoard['id'], retroBoard: RetroBoard) => {
+export const updateRetroBoardById = (id: RetroBoard["id"], retroBoard: RetroBoard) => {
   return retroBoardsCollection.doc(id).set(retroBoard);
 };

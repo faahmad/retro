@@ -29,7 +29,7 @@ export const handleCreateStripeCheckoutSession = (
         customerId: workspace.customerId,
         subscriptionId: workspace.subscriptionId,
         successUrl,
-        cancelUrl,
+        cancelUrl
       });
 
       return res.status(200).json(checkoutSession);
