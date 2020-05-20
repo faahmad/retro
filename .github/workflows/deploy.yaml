@@ -9,6 +9,9 @@ jobs:
    # This code builds the server and then deploys to app engine
   deploy-server:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./server
 
     steps:
     - name: Checkout repository.
@@ -31,12 +34,10 @@ jobs:
     
     - name: Install server dependencies.
       run: |
-        cd server
         npm install
     
     - name: Create server build.
       run: |
-        cd server
         npm run build
     
     - name: Initialize Google Cloud SDK.
@@ -57,13 +58,14 @@ jobs:
   deploy-firebase-functions:
     needs: deploy-server
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./firebase-functions
+    
     steps:
       - name: Checkout repository.
         uses: actions/checkout@master
 
-      - name: Navigate to firebase-functions .
-        run: cd firebase-functions
-      
       - name: Deploy to functions to Firebase.
         uses: w9jds/firebase-action@master
         with:
@@ -75,6 +77,10 @@ jobs:
   build-web-application:
     needs: deploy-firebase-functions
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./web
+
     steps:
       - name: Checkout repository.
         uses: actions/checkout@master
@@ -93,12 +99,10 @@ jobs:
       
       - name: Install web dependencies.
         run: |
-          cd web
           npm install
       
       - name: Build web application.
         run: |
-          cd web
           npm run build
         env:
           REACT_APP_FIREBASE_API_KEY: ${{ secrets.REACT_APP_FIREBASE_API_KEY }}
@@ -124,12 +128,13 @@ jobs:
   deploy-web-application:
     needs: build-web-application
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./web
+    
     steps:
       - name: Checkout repository.
         uses: actions/checkout@master
-      
-      - name: Navigate to web
-        run: cd web
 
       - name: Download web application artifact.
         uses: actions/download-artifact@master
