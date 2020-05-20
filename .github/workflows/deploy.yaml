@@ -41,7 +41,7 @@ jobs:
         npm run build
     
     - name: Initialize Google Cloud SDK.
-      uses: zxyle/publish-gae-action@v2.3
+      uses: jovincroninwilesmith/publish-gae-action@master
       with:
         service_account_email: ${{ secrets.GCP_SA_EMAIL }}
         service_account_key: ${{ secrets.GCP_SA_KEY }}
