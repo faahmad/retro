@@ -30,10 +30,14 @@ jobs:
       uses: actions/setup-node@v1
     
     - name: Install server dependencies.
-      run:  npm install
+      run: |
+        cd server
+        npm install
     
     - name: Create server build.
-      run:  npm run build
+      run: |
+        cd server
+        npm run build
     
     - name: Initialize Google Cloud SDK.
       uses: zxyle/publish-gae-action@master
@@ -56,6 +60,9 @@ jobs:
     steps:
       - name: Checkout repository.
         uses: actions/checkout@master
+
+      - name: Navigate to firebase-functions .
+        run: cd firebase-functions
       
       - name: Deploy to functions to Firebase.
         uses: w9jds/firebase-action@master
@@ -85,10 +92,14 @@ jobs:
             ${{ runner.os }}-
       
       - name: Install web dependencies.
-        run: npm install
+        run: |
+          cd web
+          npm install
       
       - name: Build web application.
-        run: npm run build
+        run: |
+          cd web
+          npm run build
         env:
           REACT_APP_FIREBASE_API_KEY: ${{ secrets.REACT_APP_FIREBASE_API_KEY }}
           REACT_APP_FIREBASE_AUTH_DOMAIN: ${{ secrets.REACT_APP_FIREBASE_AUTH_DOMAIN }}
@@ -117,6 +128,9 @@ jobs:
       - name: Checkout repository.
         uses: actions/checkout@master
       
+      - name: Navigate to web
+        run: cd web
+
       - name: Download web application artifact.
         uses: actions/download-artifact@master
         with:
