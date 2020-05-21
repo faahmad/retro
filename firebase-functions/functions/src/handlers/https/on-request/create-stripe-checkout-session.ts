@@ -1,12 +1,14 @@
 import * as functions from "firebase-functions";
-import { getUserIdFromIdToken, getWorkspace } from "../services/firebase-admin";
-import { createCheckoutSession } from "../services/stripe";
-import { cors } from "../lib/cors";
+import { getUserIdFromIdToken, getWorkspace } from "../../../services/firebase-admin";
+import { createCheckoutSession } from "../../../services/stripe";
+import { cors } from "../../../lib/cors";
+import { logger } from "../../../lib/logger";
 
-export const handleCreateStripeCheckoutSession = (
-  req: functions.https.Request,
-  res: functions.Response
-) => {
+/**
+ * This function creates a Stripe Checkout Session
+ * when invoked via a POST request.
+ */
+export const createStripeCheckoutSession = functions.https.onRequest((req, res) => {
   cors(req, res, async () => {
     try {
       const idToken = req.headers["x-retro-auth"];
@@ -34,8 +36,8 @@ export const handleCreateStripeCheckoutSession = (
 
       return res.status(200).json(checkoutSession);
     } catch ({ message }) {
-      console.log(message);
+      logger.log(message);
       return res.status(500).json({ error: message });
     }
   });
-};
+});
