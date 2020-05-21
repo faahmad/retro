@@ -1,2 +1,2 @@
 # Retro
-Improve your team with honest retros.
+The retrospective tool for people who hate retros.
