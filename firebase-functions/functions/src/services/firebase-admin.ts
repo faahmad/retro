@@ -1,8 +1,10 @@
-import { firebaseAdmin } from "../lib/firebase-admin";
+import * as admin from "firebase-admin";
+
+const db = admin.firestore();
 
 export async function getUserIdFromIdToken(idToken: string) {
   try {
-    const decodedIdToken = await firebaseAdmin.auth().verifyIdToken(idToken);
+    const decodedIdToken = await admin.auth().verifyIdToken(idToken);
     return decodedIdToken.uid;
   } catch (error) {
     throw new Error("Invalid Id token.");
@@ -14,18 +16,10 @@ interface UpdateWorkspaceParams {
   subscriptionId?: string;
 }
 export function updateWorkspace(id: string, params: UpdateWorkspaceParams) {
-  return firebaseAdmin
-    .firestore()
-    .collection("workspaces")
-    .doc(id)
-    .set(params, { merge: true });
+  return db.collection("workspaces").doc(id).set(params, { merge: true });
 }
 
 export async function getWorkspace(id: string) {
-  const workspaceDoc = await firebaseAdmin
-    .firestore()
-    .collection("workspaces")
-    .doc(id)
-    .get();
+  const workspaceDoc = await db.collection("workspaces").doc(id).get();
   return workspaceDoc.data();
 }

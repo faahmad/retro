@@ -1,8 +1,8 @@
 import * as functions from "firebase-functions";
-import { firebaseAdmin } from "../../../lib/firebase-admin";
+import * as admin from "firebase-admin";
 import { CreateUserParams } from "../../../types/user";
 
-const db = firebaseAdmin.firestore();
+const db = admin.firestore();
 
 /**
  * When an auth user is created,
