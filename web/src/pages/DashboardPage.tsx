@@ -1,19 +1,17 @@
-import React from "react";
-import { gql } from "apollo-boost";
-import { useMutation, useQuery } from "@apollo/react-hooks";
-import { RouteComponentProps, useParams } from "react-router-dom";
-import teamMemberEmptyImage from "../assets/images/team-member-empty-image.svg";
-import retroEmptyImage from "../assets/images/retro-empty-image.svg";
-import { InviteUserToWorkspaceModal } from "../components/InviteUserToWorkspaceModal";
-import { LoadingText } from "../components/LoadingText";
-import moment from "moment";
-import { Footer } from "../components/Footer";
-import { PageContainer } from "../components/PageContainer";
-import { createRetroBoardInFirebase } from "../services/retro-board";
-import { PawIcon } from "../images/PawIcon";
-import { Button } from "../components/Button";
-import { Link } from "react-router-dom";
-import { useAuthContext } from "../contexts/AuthContext";
+import React from 'react';
+import { gql } from 'apollo-boost';
+import { useQuery, useMutation } from '@apollo/react-hooks';
+import { useParams, RouteComponentProps } from 'react-router-dom';
+import teamMemberEmptyImage from '../assets/images/team-member-empty-image.svg';
+import retroEmptyImage from '../assets/images/retro-empty-image.svg';
+import { InviteUserToWorkspaceModal } from '../components/InviteUserToWorkspaceModal';
+import { LoadingText } from '../components/LoadingText';
+import moment from 'moment';
+import { Footer } from '../components/Footer';
+import { PageContainer } from '../components/PageContainer';
+import { createRetroBoardInFirebase } from '../services/retro-board';
+import { UpgradeToProBanner } from '../components/UpgradeToProBanner';
+import { useAuthContext } from '../contexts/AuthContext';
 
 const WORKSPACE_QUERY = gql`
   query WorkspaceQuery($id: ID!) {
@@ -70,24 +68,10 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
         <p className="text-blue mb-2 underline">{workspace.name}</p>
         <h1 className="text-blue font-black text-3xl">Dashboard</h1>
         {isInTrialMode && (
-          <div className="flex justify-between items-center text-blue my-2 p-4 bg-white border shadow flex-wrap">
-            <div className="flex flex-wrap items-center">
-              <PawIcon />
-              <div className="pl-2">
-                <p className="font-black">Upgrade to PRO</p>
-                <p className="text-sm">
-                  Your free trial ends{" "}
-                  {moment.unix(workspace.subscription.trialEnd).fromNow()}. Upgrade to PRO
-                  to keep leveling up your team.
-                </p>
-              </div>
-            </div>
-            <Link to={`/workspaces/${workspace.id}/settings`}>
-              <Button className="text-red" style={{ maxWidth: "8rem" }}>
-                Upgrade
-              </Button>
-            </Link>
-          </div>
+          <UpgradeToProBanner
+            workspaceId={workspace.id}
+            trialEnd={workspace.subscription.trialEnd}
+          />
         )}
         <RetroBoardsOverview teamId={defaultTeam.id} history={history} />
         <TeamMemberOverview workspaceId={workspace.id} users={users} />

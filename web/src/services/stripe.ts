@@ -1,11 +1,12 @@
 import { axios } from "../lib/axios";
 
-interface CreateStripeCheckoutSessionParams {
+interface CreateStripeBillingPortalSessionParams {
   workspaceId: string;
-  successUrl: string;
-  cancelUrl: string;
+  returnUrl: string;
 }
-export function createStripeCheckoutSession(params: CreateStripeCheckoutSessionParams) {
+export function createStripeBillingPortalSession(
+  params: CreateStripeBillingPortalSessionParams
+) {
   const baseUrl = process.env.REACT_APP_FIREBASE_CLOUD_FUNCTIONS_URL;
-  return axios.post(baseUrl + "/createStripeCheckoutSession", params);
+  return axios.post(baseUrl + '/createStripeBillingPortalSession', params);
 }
