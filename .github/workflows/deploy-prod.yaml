@@ -90,7 +90,7 @@ jobs:
         with:
           args: deploy --project prod --only functions
         env:
-          FIREBASE_TOKEN: ${{ secrets.PROD_FIREBASE_TOKEN }}
+          GCP_SA_KEY: ${{ secrets.PROD_GCP_FB_SA_KEY }}
           PROJECT_PATH: ./firebase-functions
   
   # This builds the web application and uploads an artifact.
@@ -166,7 +166,7 @@ jobs:
         with:
           args: deploy --project prod --only hosting
         env:
-          FIREBASE_TOKEN: ${{ secrets.PROD_FIREBASE_TOKEN }}
+          GCP_SA_KEY: ${{ secrets.PROD_GCP_FB_SA_KEY }}
           PROJECT_PATH: ./web
 
 
