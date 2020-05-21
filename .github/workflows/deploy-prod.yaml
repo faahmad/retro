@@ -74,6 +74,7 @@ jobs:
           args: deploy --project prod --only functions
         env:
           FIREBASE_TOKEN: ${{ secrets.PROD_FIREBASE_TOKEN }}
+          PROJECT_PATH: ./firebase-functions
   
   # This builds the web application and uploads an artifact.
   build-web-application:
