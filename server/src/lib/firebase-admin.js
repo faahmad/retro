@@ -1,16 +1,22 @@
 import admin from "firebase-admin";
-import devServiceAccountKey from "../config/service-account-key.dev.json";
-import prodServiceAccountKey from "../config/service-account-key.prod.json";
+
+const B64_DEV_SERVICE_ACCOUNT_KEY = process.env.B64_DEV_SERVICE_ACCOUNT_KEY
+const devServiceAccountKey = Buffer.from(B64_DEV_SERVICE_ACCOUNT_KEY, 'base64').toString('utf-8');
+const devSAK = JSON.parse(devServiceAccountKey)
+
+const B64_PROD_SERVICE_ACCOUNT_KEY = process.env.B64_PROD_SERVICE_ACCOUNT_KEY
+const prodServiceAccountKey = Buffer.from(B64_PROD_SERVICE_ACCOUNT_KEY, 'base64').toString('utf-8');
+const prodSAK = JSON.parse(prodServiceAccountKey)
 
 function getServiceAccountKey(env) {
-  switch (env) {
-    case "production":
-      return prodServiceAccountKey;
-    case "development":
-      return devServiceAccountKey;
-    case "test":
-      return devServiceAccountKey;
-  }
+    switch (env) {
+        case "production":
+            return prodSAK;
+        case "development":
+            return devSAK;
+        case "test":
+            return devSAK;
+    }
 }
 
 const serviceAccountKey = getServiceAccountKey(process.env.NODE_ENV);

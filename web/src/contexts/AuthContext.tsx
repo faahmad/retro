@@ -1,7 +1,7 @@
-import * as React from 'react';
-import firebase from 'firebase/app';
-import 'firebase/auth';
-import { LoadingPage } from '../pages/LoadingPage';
+import * as React from "react";
+import firebase from "firebase/app";
+import "firebase/auth";
+import { LoadingPage } from "../pages/LoadingPage";
 
 type AuthContextValue = firebase.User | null;
 
@@ -24,10 +24,10 @@ class AuthProvider extends React.Component<
   handleAuthStateChanged = async (authAccount: firebase.User | null) => {
     if (authAccount) {
       const idToken = await authAccount.getIdToken();
-      localStorage.setItem('idToken', idToken);
+      localStorage.setItem("idToken", idToken);
       await this.setState({ authAccount });
     } else {
-      localStorage.removeItem('idToken');
+      localStorage.removeItem("idToken");
       this.setState({ authAccount: null });
     }
     this.setState({ isFetchingAuth: false });

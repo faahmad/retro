@@ -19,9 +19,7 @@ export class RetroService {
     }
     const defaultTeam = await UserService.getDefaultTeamForUser(user.id);
     if (String(input.teamId) !== String(defaultTeam.id)) {
-      throw new Error(
-        "You can't create a retro unless you belong to this team."
-      );
+      throw new Error("You can't create a retro unless you belong to this team.");
     }
     return await models.retro.create({
       name: "",

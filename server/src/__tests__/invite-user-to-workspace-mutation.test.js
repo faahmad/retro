@@ -107,9 +107,7 @@ describe("inviteUserToWorkspace mutation", () => {
 
       expect(data).toMatchObject({ inviteUserToWorkspace: null });
       expect(errors.length).toBe(1);
-      expect(errors[0].message).toBe(
-        "User has already been invited to this workspace."
-      );
+      expect(errors[0].message).toBe("User has already been invited to this workspace.");
     });
   });
 });

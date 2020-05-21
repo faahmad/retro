@@ -7,7 +7,7 @@ const retroModel = (sequelize, DataTypes) => {
     { timestamps: true }
   );
 
-  retro.associate = models => {
+  retro.associate = (models) => {
     retro.belongsTo(models.team);
     retro.belongsTo(models.workspace);
     retro.belongsTo(models.user, { as: "createdBy" });

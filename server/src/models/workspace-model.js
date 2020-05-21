@@ -10,7 +10,7 @@ const workspaceModel = (sequelize, DataTypes) => {
     { timestamps: true }
   );
 
-  workspace.associate = models => {
+  workspace.associate = (models) => {
     workspace.belongsTo(models.user, { as: "owner" });
     workspace.belongsToMany(models.user, { through: "workspaceUsers" });
   };

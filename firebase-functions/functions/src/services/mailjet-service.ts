@@ -9,10 +9,7 @@ const CONFIG_OPTIONS = {
 
 export const addUserToDefaultContactList = (email: string, name: string) => {
   return client
-    .post(
-      `contactslist/${mailjet.contactLists.ALL_USERS}/managecontact`,
-      CONFIG_OPTIONS
-    )
+    .post(`contactslist/${mailjet.contactLists.ALL_USERS}/managecontact`, CONFIG_OPTIONS)
     .request({
       Email: email,
       Name: name,

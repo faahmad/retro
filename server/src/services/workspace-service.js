@@ -20,12 +20,12 @@ export class WorkspaceService {
       }
       const workspace = await models.workspace.create({
         ...input,
-        ownerId: user.id,
+        ownerId: user.id
       });
 
       const team = await models.team.create({
         name: "Default",
-        workspaceId: workspace.id,
+        workspaceId: workspace.id
       });
 
       await user.addWorkspace(workspace.id);
@@ -36,19 +36,17 @@ export class WorkspaceService {
         name: workspace.name,
         url: workspace.url,
         allowedEmailDomain: workspace.allowedEmailDomain,
-        ownerId: workspace.ownerId,
-        ownerEmail: user.email,
-        teamIds: [String(team.id)],
-        userIds: [workspace.ownerId],
+        owner: {
+          id: workspace.ownerId,
+          email: user.email
+        },
         createdAt: workspace.createdAt,
-        updatedAt: workspace.updatedAt,
+        updatedAt: workspace.updatedAt
       });
 
       return workspace;
     } catch (error) {
-      const errorMessage = error.original
-        ? error.original.detail
-        : error.message;
+      const errorMessage = error.original ? error.original.detail : error.message;
       throw new Error(errorMessage);
     }
   }

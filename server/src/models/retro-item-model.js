@@ -3,7 +3,7 @@ const retroItemModel = (sequelize, DataTypes) => {
     "retroItems",
     {
       type: DataTypes.ENUM(["GOOD", "BAD", "ACTION", "QUESTION"]),
-      text: DataTypes.STRING,
+      text: DataTypes.STRING
     },
     { timestamps: true }
   );

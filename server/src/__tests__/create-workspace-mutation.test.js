@@ -47,9 +47,9 @@ describe("createWorkspace mutation", () => {
           input: {
             name,
             url,
-            allowedEmailDomain,
-          },
-        },
+            allowedEmailDomain
+          }
+        }
       });
 
       expect(data).toMatchObject({
@@ -58,8 +58,8 @@ describe("createWorkspace mutation", () => {
           ownerId: user.id,
           name,
           url,
-          allowedEmailDomain,
-        },
+          allowedEmailDomain
+        }
       });
     });
 
@@ -71,9 +71,9 @@ describe("createWorkspace mutation", () => {
           input: {
             name,
             url,
-            allowedEmailDomain,
-          },
-        },
+            allowedEmailDomain
+          }
+        }
       });
 
       const u = await models.user.findByPk(user.id);
@@ -89,9 +89,9 @@ describe("createWorkspace mutation", () => {
           input: {
             name,
             url,
-            allowedEmailDomain,
-          },
-        },
+            allowedEmailDomain
+          }
+        }
       });
 
       const u = await models.user.findByPk(user.id);
@@ -112,9 +112,9 @@ describe("createWorkspace mutation", () => {
           input: {
             name,
             url,
-            allowedEmailDomain,
-          },
-        },
+            allowedEmailDomain
+          }
+        }
       });
 
       expect(addWorkspaceToFirestore).toHaveBeenCalled();
@@ -128,7 +128,7 @@ describe("createWorkspace mutation", () => {
     it("should return an error when no input is given", async () => {
       const { errors } = await executeGraphQLQuery({
         query: createWorkspaceMutation,
-        userId: user.id,
+        userId: user.id
       });
 
       expect(errors.length).toBe(1);
@@ -152,15 +152,13 @@ describe("createWorkspace mutation", () => {
           input: {
             name,
             url,
-            allowedEmailDomain,
-          },
-        },
+            allowedEmailDomain
+          }
+        }
       });
 
       expect(errors.length).toBe(1);
-      expect(errors[0].message).toBe(
-        "Workspace creation failed: Invalid user."
-      );
+      expect(errors[0].message).toBe("Workspace creation failed: Invalid user.");
     });
 
     it("should return an error when an existing url variable is used", async () => {
@@ -177,16 +175,14 @@ describe("createWorkspace mutation", () => {
           input: {
             name,
             allowedEmailDomain,
-            url: workspaceOne.url,
-          },
+            url: workspaceOne.url
+          }
         },
-        userId: owner.id,
+        userId: owner.id
       });
 
       expect(errors.length).toBe(1);
-      expect(errors[0].message).toBe(
-        `Key (url)=(${workspaceOne.url}) already exists.`
-      );
+      expect(errors[0].message).toBe(`Key (url)=(${workspaceOne.url}) already exists.`);
     });
   });
 });
