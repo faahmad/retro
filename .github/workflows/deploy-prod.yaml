@@ -7,95 +7,95 @@ on:
 
 jobs:
    # This code builds the server and then deploys to app engine
-  deploy-server:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./server
+  # deploy-server:
+  #   runs-on: ubuntu-latest
+  #   defaults:
+  #     run:
+  #       working-directory: ./server
 
-    steps:
-    - name: Checkout repository.
-      uses: actions/checkout@master
+  #   steps:
+  #   - name: Checkout repository.
+  #     uses: actions/checkout@master
 
-    - name: Cache node modules
-      uses: actions/cache@v1
-      env:
-        cache-name: cache-node-modules
-      with:
-        path: ~/.npm # npm cache files are stored in `~/.npm` on Linux/macOS
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-build-${{ env.cache-name }}-
-          ${{ runner.os }}-build-
-          ${{ runner.os }}-
+  #   - name: Cache node modules
+  #     uses: actions/cache@v1
+  #     env:
+  #       cache-name: cache-node-modules
+  #     with:
+  #       path: ~/.npm # npm cache files are stored in `~/.npm` on Linux/macOS
+  #       key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+  #       restore-keys: |
+  #         ${{ runner.os }}-build-${{ env.cache-name }}-
+  #         ${{ runner.os }}-build-
+  #         ${{ runner.os }}-
     
-    - name: Setup Node.
-      uses: actions/setup-node@v1
+  #   - name: Setup Node.
+  #     uses: actions/setup-node@v1
     
-    - name: Install server dependencies.
-      run: |
-        npm install
+  #   - name: Install server dependencies.
+  #     run: |
+  #       npm install
     
-    - name: Create server build.
-      run: |
-        npm run build
+  #   - name: Create server build.
+  #     run: |
+  #       npm run build
     
-    - name: Initialize Google Cloud SDK.
-      uses: jovincroninwilesmith/publish-gae-action@master
-      with:
-        service_account_email: ${{ secrets.PROD_GCP_SA_EMAIL }}
-        service_account_key: ${{ secrets.PROD_GCP_SA_KEY }}
-        project_id: ${{ secrets.PROD_GCP_PROJECT_ID }}
-        gae_variables: ${{ secrets.PROD_GAE_VARIABLES }}
-        gae_config_path: ./server/app.yaml
+  #   - name: Initialize Google Cloud SDK.
+  #     uses: jovincroninwilesmith/publish-gae-action@master
+  #     with:
+  #       service_account_email: ${{ secrets.PROD_GCP_SA_EMAIL }}
+  #       service_account_key: ${{ secrets.PROD_GCP_SA_KEY }}
+  #       project_id: ${{ secrets.PROD_GCP_PROJECT_ID }}
+  #       gae_variables: ${{ secrets.PROD_GAE_VARIABLES }}
+  #       gae_config_path: ./server/app.yaml
 
-    - name: Publish app to Google App Engine.
-      run: |
-        echo "${{ secrets.PROD_GCP_SA_KEY }}"| base64 -d > client-secret.json
-        gcloud auth activate-service-account ${{ secrets.PROD_GCP_SA_EMAIL }} --key-file=client-secret.json
-        gcloud config set project ${{ secrets.PROD_GCP_PROJECT_ID }}
-        gcloud -q app deploy app.yaml --promote
+  #   - name: Publish app to Google App Engine.
+  #     run: |
+  #       echo "${{ secrets.PROD_GCP_SA_KEY }}"| base64 -d > client-secret.json
+  #       gcloud auth activate-service-account ${{ secrets.PROD_GCP_SA_EMAIL }} --key-file=client-secret.json
+  #       gcloud config set project ${{ secrets.PROD_GCP_PROJECT_ID }}
+  #       gcloud -q app deploy app.yaml --promote
 
-  # This code builds and deploys the firebase functions
-  deploy-firebase-functions:
-    needs: deploy-server
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./firebase-functions
+  # # This code builds and deploys the firebase functions
+  # deploy-firebase-functions:
+  #   needs: deploy-server
+  #   runs-on: ubuntu-latest
+  #   defaults:
+  #     run:
+  #       working-directory: ./firebase-functions
     
-    steps:
-      - name: Checkout repository.
-        uses: actions/checkout@master
+  #   steps:
+  #     - name: Checkout repository.
+  #       uses: actions/checkout@master
 
-      - name: Cache node modules
-        uses: actions/cache@v1
-        env:
-          cache-name: cache-node-modules
-        with:
-          path: ~/.npm # npm cache files are stored in `~/.npm` on Linux/macOS
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
+  #     - name: Cache node modules
+  #       uses: actions/cache@v1
+  #       env:
+  #         cache-name: cache-node-modules
+  #       with:
+  #         path: ~/.npm # npm cache files are stored in `~/.npm` on Linux/macOS
+  #         key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+  #         restore-keys: |
+  #           ${{ runner.os }}-build-${{ env.cache-name }}-
+  #           ${{ runner.os }}-build-
+  #           ${{ runner.os }}-
 
-      - name: Install server dependencies.
-        run: |
-          cd functions
-          npm install
+  #     - name: Install server dependencies.
+  #       run: |
+  #         cd functions
+  #         npm install
 
-      - name: Deploy to functions to Firebase.
-        uses: w9jds/firebase-action@master
-        with:
-          args: deploy --project prod --only functions
-        env:
-          GCP_SA_KEY: ${{ secrets.PROD_GCP_FB_SA_KEY }}
-          PROJECT_PATH: ./firebase-functions
+  #     - name: Deploy to functions to Firebase.
+  #       uses: w9jds/firebase-action@master
+  #       with:
+  #         args: deploy --project prod --only functions
+  #       env:
+  #         GCP_SA_KEY: ${{ secrets.PROD_GCP_FB_SA_KEY }}
+  #         PROJECT_PATH: ./firebase-functions
   
   # This builds the web application and uploads an artifact.
   build-web-application:
-    needs: deploy-firebase-functions
+    # needs: deploy-firebase-functions
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -142,7 +142,7 @@ jobs:
         uses: actions/upload-artifact@master
         with:
           name: build
-          path: build
+          path: ./web/build
   
   # This deploys the web application to Firebase Hosting.
   deploy-web-application:
