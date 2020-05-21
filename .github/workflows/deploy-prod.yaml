@@ -160,6 +160,7 @@ jobs:
         uses: actions/download-artifact@master
         with:
           name: build
+          path: ./web/build
       
       - name: Deploy to web app to firebase hosting.
         uses: w9jds/firebase-action@master
