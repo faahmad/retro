@@ -1,12 +1,10 @@
 import * as functions from "firebase-functions";
-import { getUserIdFromIdToken, getWorkspace } from "../services/firebase-admin";
-import { createBillingPortalSession } from "../services/stripe";
-import { cors } from "../lib/cors";
+import { getUserIdFromIdToken, getWorkspace } from "../../../services/firebase-admin";
+import { createBillingPortalSession } from "../../../services/stripe";
+import { cors } from "../../../lib/cors";
+import { logger } from "../../../lib/logger";
 
-export const handleCreateStripeBillingPortalSession = (
-  req: functions.https.Request,
-  res: functions.Response
-) => {
+export const createStripeBillingPortalSession = functions.https.onRequest((req, res) => {
   cors(req, res, async () => {
     try {
       const idToken = req.headers["x-retro-auth"];
@@ -27,13 +25,13 @@ export const handleCreateStripeBillingPortalSession = (
 
       const billingPortalSession = await createBillingPortalSession({
         customerId: workspace.customerId,
-        returnUrl,
+        returnUrl
       });
 
       return res.status(200).json(billingPortalSession);
     } catch ({ message }) {
-      console.log(message);
+      logger.log(message);
       return res.status(500).json({ error: message });
     }
   });
-};
+});
