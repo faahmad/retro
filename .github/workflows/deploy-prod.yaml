@@ -82,6 +82,7 @@ jobs:
 
       - name: Install server dependencies.
         run: |
+          cd functions
           npm install
 
       - name: Deploy to functions to Firebase.
