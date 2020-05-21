@@ -12,8 +12,8 @@ export const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = React.useState(false);
   const authAccount = React.useContext(AuthContext);
 
-  const handleToggleModal = async () => {
-    await setIsOpen((prevIsOpen) => !prevIsOpen);
+  const handleToggleModal = () => {
+    setIsOpen((prevIsOpen) => !prevIsOpen);
   };
 
   const isLoggedIn = !!authAccount;

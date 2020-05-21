@@ -1,14 +1,10 @@
 import * as functions from "firebase-functions";
 import { getUserIdFromIdToken, getWorkspace } from "../../../services/firebase-admin";
-import { createCheckoutSession } from "../../../services/stripe";
+import { createBillingPortalSession } from "../../../services/stripe";
 import { cors } from "../../../lib/cors";
 import { logger } from "../../../lib/logger";
 
-/**
- * This function creates a Stripe Checkout Session
- * when invoked via a POST request.
- */
-export const createStripeCheckoutSession = functions.https.onRequest((req, res) => {
+export const createStripeBillingPortalSession = functions.https.onRequest((req, res) => {
   cors(req, res, async () => {
     try {
       const idToken = req.headers["x-retro-auth"];
@@ -16,8 +12,8 @@ export const createStripeCheckoutSession = functions.https.onRequest((req, res) 
         throw new Error("Invalid Auth Header.");
       }
 
-      const { workspaceId, successUrl, cancelUrl } = req.body;
-      if (!workspaceId || !successUrl || !cancelUrl) {
+      const { workspaceId, returnUrl } = req.body;
+      if (!workspaceId || !returnUrl) {
         throw new Error("Invalid Request Body.");
       }
 
@@ -27,14 +23,12 @@ export const createStripeCheckoutSession = functions.https.onRequest((req, res) 
         throw new Error("Unauthorized.");
       }
 
-      const checkoutSession = await createCheckoutSession({
+      const billingPortalSession = await createBillingPortalSession({
         customerId: workspace.customerId,
-        subscriptionId: workspace.subscriptionId,
-        successUrl,
-        cancelUrl
+        returnUrl
       });
 
-      return res.status(200).json(checkoutSession);
+      return res.status(200).json(billingPortalSession);
     } catch ({ message }) {
       logger.log(message);
       return res.status(500).json({ error: message });

@@ -19,30 +19,17 @@ export const subscribeCustomerToProPlan = (customerId: string) => {
   return stripe.subscriptions.create(params);
 };
 
-interface CreateCheckoutSessionParams {
+interface CreateBillingPortalSessionParams {
   customerId: Stripe.Customer["id"];
-  subscriptionId: Stripe.Subscription["id"];
-  successUrl: Stripe.Checkout.Session["success_url"];
-  cancelUrl: Stripe.Checkout.Session["cancel_url"];
+  returnUrl: Stripe.BillingPortal.Session["return_url"];
 }
-export const createCheckoutSession = ({
+export function createBillingPortalSession({
   customerId,
-  subscriptionId,
-  successUrl,
-  cancelUrl
-}: CreateCheckoutSessionParams) => {
-  const params: Stripe.Checkout.SessionCreateParams = {
-    payment_method_types: ["card"],
-    mode: "setup",
+  returnUrl,
+}: CreateBillingPortalSessionParams) {
+  const params: Stripe.BillingPortal.SessionCreateParams = {
     customer: customerId,
-    setup_intent_data: {
-      metadata: {
-        customer_id: customerId,
-        subscription_id: subscriptionId
-      }
-    },
-    success_url: successUrl,
-    cancel_url: cancelUrl
+    return_url: returnUrl,
   };
-  return stripe.checkout.sessions.create(params);
-};
+  return stripe.billingPortal.sessions.create(params);
+}
