@@ -73,7 +73,7 @@ jobs:
         with:
           args: deploy --project prod --only functions
         env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          FIREBASE_TOKEN: ${{ secrets.PROD_FIREBASE_TOKEN }}
   
   # This builds the web application and uploads an artifact.
   build-web-application:
@@ -107,18 +107,18 @@ jobs:
         run: |
           npm run build
         env:
-          REACT_APP_FIREBASE_API_KEY: ${{ secrets.REACT_APP_FIREBASE_API_KEY }}
-          REACT_APP_FIREBASE_AUTH_DOMAIN: ${{ secrets.REACT_APP_FIREBASE_AUTH_DOMAIN }}
-          REACT_APP_FIREBASE_DATABASE_URL: ${{ secrets.REACT_APP_FIREBASE_DATABASE_URL }}
-          REACT_APP_FIREBASE_PROJECT_ID: ${{ secrets.REACT_APP_FIREBASE_PROJECT_ID }}
-          REACT_APP_FIREBASE_STORAGE_BUCKET: ${{ secrets.REACT_APP_FIREBASE_STORAGE_BUCKET}}
-          REACT_APP_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.REACT_APP_FIREBASE_MESSAGING_SENDER_ID }}
-          REACT_APP_FIREBASE_APP_ID: ${{ secrets.REACT_APP_FIREBASE_APP_ID }} 
-          REACT_APP_FIREBASE_CLOUD_FUNCTIONS_URL: ${{ secrets.REACT_APP_FIREBASE_CLOUD_FUNCTIONS_URL }}
-          REACT_APP_GRAPHQL_URI: ${{ secrets.REACT_APP_GRAPHQL_URI }}
-          REACT_APP_STRIPE_PUBLISHABLE_KEY: ${{ secrets.REACT_APP_STRIPE_PUBLISHABLE_KEY }}
-          REACT_APP_AMPLITUDE_API_KEY: ${{ secrets.REACT_APP_AMPLITUDE_API_KEY }}
-          REACT_APP_OPTIMIZELY_SDK_KEY: ${{ secrets.REACT_APP_OPTIMIZELY_SDK_KEY }}
+          REACT_APP_FIREBASE_API_KEY: ${{ secrets.REACT_APP_PROD_FIREBASE_API_KEY }}
+          REACT_APP_FIREBASE_AUTH_DOMAIN: ${{ secrets.REACT_APP_PROD_FIREBASE_AUTH_DOMAIN }}
+          REACT_APP_FIREBASE_DATABASE_URL: ${{ secrets.REACT_APP_PROD_FIREBASE_DATABASE_URL }}
+          REACT_APP_FIREBASE_PROJECT_ID: ${{ secrets.REACT_APP_PROD_FIREBASE_PROJECT_ID }}
+          REACT_APP_FIREBASE_STORAGE_BUCKET: ${{ secrets.REACT_APP_PROD_FIREBASE_STORAGE_BUCKET}}
+          REACT_APP_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.REACT_APP_PROD_FIREBASE_MESSAGING_SENDER_ID }}
+          REACT_APP_FIREBASE_APP_ID: ${{ secrets.REACT_APP_PROD_FIREBASE_APP_ID }} 
+          REACT_APP_FIREBASE_CLOUD_FUNCTIONS_URL: ${{ secrets.REACT_APP_PROD_FIREBASE_CLOUD_FUNCTIONS_URL }}
+          REACT_APP_GRAPHQL_URI: ${{ secrets.REACT_APP_PROD_GRAPHQL_URI }}
+          REACT_APP_STRIPE_PUBLISHABLE_KEY: ${{ secrets.REACT_APP_PROD_STRIPE_PUBLISHABLE_KEY }}
+          REACT_APP_AMPLITUDE_API_KEY: ${{ secrets.REACT_APP_PROD_AMPLITUDE_API_KEY }}
+          REACT_APP_OPTIMIZELY_SDK_KEY: ${{ secrets.REACT_APP_PROD_OPTIMIZELY_SDK_KEY }}
       
       - name: Archive web application artifact.
         uses: actions/upload-artifact@master
@@ -146,9 +146,9 @@ jobs:
       - name: Deploy to web app to firebase hosting.
         uses: w9jds/firebase-action@master
         with:
-          args: deploy --project prod --only functions
+          args: deploy --project prod --only hosting
         env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          FIREBASE_TOKEN: ${{ secrets.PROD_FIREBASE_TOKEN }}
 
 
 
