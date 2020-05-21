@@ -3,6 +3,8 @@ import { handleCreateMailjetContact } from "./handlers/create-mailjet-contact";
 import { handleCreateStripeCustomerSubscription } from "./handlers/create-stripe-customer-subscription";
 import { handleCreateStripeCheckoutSession } from "./handlers/create-stripe-checkout-session";
 
+export * from "./handlers";
+
 export const createMailjetContact = functions.auth
   .user()
   .onCreate(handleCreateMailjetContact);
