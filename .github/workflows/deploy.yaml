@@ -43,16 +43,16 @@ jobs:
     - name: Initialize Google Cloud SDK.
       uses: jovincroninwilesmith/publish-gae-action@master
       with:
-        service_account_email: ${{ secrets.GCP_SA_EMAIL }}
-        service_account_key: ${{ secrets.GCP_SA_KEY }}
-        project_id: ${{ secrets.PROJECT_ID }}
-        gae_variables: ${{ secrets.GAE_VARIABLES }}
+        service_account_email: ${{ secrets.PROD_GCP_SA_EMAIL }}
+        service_account_key: ${{ secrets.PROD_GCP_SA_KEY }}
+        project_id: ${{ secrets.PROD_GCP_PROJECT_ID }}
+        gae_variables: ${{ secrets.PROD_GAE_VARIABLES }}
         gae_config_path: ./server/app.yaml
 
     - name: Publish app to Google App Engine.
       run: |
-        gcloud auth activate-service-account ${{ secrets.GCP_SA_EMAIL }} --key-file=client-secret.json
-        gcloud config set project ${{ secrets.PROJECT_ID }}
+        gcloud auth activate-service-account ${{ secrets.PROD_GCP_SA_EMAIL }} --key-file=client-secret.json
+        gcloud config set project ${{ secrets.PROD_GCP_PROJECT_ID }}
         gcloud -q app deploy app.yaml --promote
 
   # This code builds and deploys the firebase functions
