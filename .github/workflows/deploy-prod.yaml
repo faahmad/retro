@@ -68,6 +68,22 @@ jobs:
       - name: Checkout repository.
         uses: actions/checkout@master
 
+      - name: Cache node modules
+        uses: actions/cache@v1
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm # npm cache files are stored in `~/.npm` on Linux/macOS
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - name: Install server dependencies.
+        run: |
+          npm install
+
       - name: Deploy to functions to Firebase.
         uses: w9jds/firebase-action@master
         with:
@@ -150,6 +166,8 @@ jobs:
           args: deploy --project prod --only hosting
         env:
           FIREBASE_TOKEN: ${{ secrets.PROD_FIREBASE_TOKEN }}
+          PROJECT_PATH: ./web
+
 
 
 
