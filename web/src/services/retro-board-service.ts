@@ -13,11 +13,6 @@ export const createRetroBoardInFirebase = async (input: CreateRetroBoardInput) =
   return;
 };
 
-// export const fetchRetroBoardById = async (id: RetroBoard["id"]) => {
-//   const retroBoardDoc = await retroBoardsCollection.doc(id).get();
-//   return retroBoardDoc.data();
-// };
-
 export const subscribeToRetroBoardById = (
   id: RetroBoard["id"],
   onSnapshotCallback: (retroBoard: RetroBoard) => void

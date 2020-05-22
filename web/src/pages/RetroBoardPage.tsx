@@ -22,7 +22,10 @@ import {
   RetroColumnType,
   RetroItem
 } from "../types";
-import { subscribeToRetroBoardById, updateRetroBoardById } from "../services/retro-board";
+import {
+  subscribeToRetroBoardById,
+  updateRetroBoardById
+} from "../services/retro-board-service";
 
 const RETRO_QUERY = gql`
   query RetroQuery($id: ID!) {

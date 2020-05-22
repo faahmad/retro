@@ -2,7 +2,7 @@ import * as React from "react";
 import moment from "moment";
 import { PawIcon } from "../images/PawIcon";
 import { Button } from "./Button";
-import { createStripeBillingPortalSession } from "../services/stripe";
+import { createStripeBillingPortalSession } from "../services/stripe-service";
 import { useRouteMatch } from "react-router-dom";
 
 interface UpgradeToProBannerProps {
