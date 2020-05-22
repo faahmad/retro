@@ -5,7 +5,7 @@ import { HeroImage } from "../images/HeroImage";
 import howItWorksInviteImage from "../assets/images/how-it-works-invite-image.svg";
 import howItWorksConductImage from "../assets/images/how-it-works-conduct-image.svg";
 import howItWorksAnalyzeImage from "../assets/images/how-it-works-analyze-image.svg";
-import applicationScreenshotImage from "../assets/images/screenshot@2x.png";
+import applicationScreenshotImage from "../assets/images/ui@2x.png";
 import landingFooterImage from "../assets/images/landing-page-footer.svg";
 
 import { GoogleOAuthButton } from "../components/GoogleOAuthButton";
@@ -74,7 +74,7 @@ export const LandingPage: React.FC = () => {
               <img
                 alt="Screenshot"
                 src={applicationScreenshotImage}
-                className="bg-white mb-2"
+                className="bg-white mb-2 sm:p-10 md:p-10 lg:p-10"
               />
             </div>
             <div className="w-full sm:w-1/3 md:w-1/3 lg:w-1/3 sm:ml-4 md:ml-4 lg:w-ml-4">
