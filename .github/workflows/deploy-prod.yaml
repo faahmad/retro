@@ -95,7 +95,7 @@ jobs:
   
   # This builds & deploys the web application and uploads an artifact.
   deploy-web-application:
-    #needs: deploy-firebase-functions
+    needs: deploy-firebase-functions
     runs-on: ubuntu-latest
     defaults:
       run:
