@@ -1,3 +1,4 @@
+<!-- prettier-ignore -->
 <svg
   width="368"
   height="253"
@@ -452,4 +453,4 @@
     />
     <path d="M124.192 244.52L164.686 246.919" stroke="white" />
   </g>
-</svg>;
+</svg>

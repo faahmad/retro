@@ -1,3 +1,4 @@
+<!-- prettier-ignore -->
 <svg
   width="1440"
   height="323"
@@ -848,4 +849,4 @@
     stroke-linecap="round"
     stroke-linejoin="round"
   />
-</svg>;
+</svg>

@@ -8,5 +8,5 @@ export function createStripeBillingPortalSession(
   params: CreateStripeBillingPortalSessionParams
 ) {
   const baseUrl = process.env.REACT_APP_FIREBASE_CLOUD_FUNCTIONS_URL;
-  return axios.post(baseUrl + '/createStripeBillingPortalSession', params);
+  return axios.post(baseUrl + "/createStripeBillingPortalSession", params);
 }

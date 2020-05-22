@@ -11,7 +11,7 @@ interface UpgradeToProBannerProps {
 }
 export const UpgradeToProBanner: React.FC<UpgradeToProBannerProps> = ({
   trialEnd,
-  workspaceId,
+  workspaceId
 }) => {
   const [isLoading, setIsLoading] = React.useState(false);
   const match = useRouteMatch();
@@ -21,7 +21,7 @@ export const UpgradeToProBanner: React.FC<UpgradeToProBannerProps> = ({
 
     const { data } = await createStripeBillingPortalSession({
       workspaceId,
-      returnUrl: `${process.env.REACT_APP_RETRO_BASE_URL}${match.url}`,
+      returnUrl: `${process.env.REACT_APP_RETRO_BASE_URL}${match.url}`
     });
     window.location.replace(data.url);
     setIsLoading(false);
@@ -35,8 +35,8 @@ export const UpgradeToProBanner: React.FC<UpgradeToProBannerProps> = ({
         <div className="pl-2">
           <p className="font-black">Upgrade to PRO</p>
           <p className="text-sm">
-            Your free trial ends {moment.unix(trialEnd).fromNow()}. Upgrade to
-            PRO to keep leveling up your team.
+            Your free trial ends {moment.unix(trialEnd).fromNow()}. Upgrade to PRO to keep
+            leveling up your team.
           </p>
         </div>
       </div>

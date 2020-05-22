@@ -1,17 +1,17 @@
-import React from 'react';
-import { gql } from 'apollo-boost';
-import { useQuery, useMutation } from '@apollo/react-hooks';
-import { useParams, RouteComponentProps } from 'react-router-dom';
-import teamMemberEmptyImage from '../assets/images/team-member-empty-image.svg';
-import retroEmptyImage from '../assets/images/retro-empty-image.svg';
-import { InviteUserToWorkspaceModal } from '../components/InviteUserToWorkspaceModal';
-import { LoadingText } from '../components/LoadingText';
-import moment from 'moment';
-import { Footer } from '../components/Footer';
-import { PageContainer } from '../components/PageContainer';
-import { createRetroBoardInFirebase } from '../services/retro-board';
-import { UpgradeToProBanner } from '../components/UpgradeToProBanner';
-import { useAuthContext } from '../contexts/AuthContext';
+import React from "react";
+import { gql } from "apollo-boost";
+import { useQuery, useMutation } from "@apollo/react-hooks";
+import { useParams, RouteComponentProps } from "react-router-dom";
+import teamMemberEmptyImage from "../assets/images/team-member-empty-image.svg";
+import retroEmptyImage from "../assets/images/retro-empty-image.svg";
+import { InviteUserToWorkspaceModal } from "../components/InviteUserToWorkspaceModal";
+import { LoadingText } from "../components/LoadingText";
+import moment from "moment";
+import { Footer } from "../components/Footer";
+import { PageContainer } from "../components/PageContainer";
+import { createRetroBoardInFirebase } from "../services/retro-board";
+import { UpgradeToProBanner } from "../components/UpgradeToProBanner";
+import { useAuthContext } from "../contexts/AuthContext";
 
 const WORKSPACE_QUERY = gql`
   query WorkspaceQuery($id: ID!) {

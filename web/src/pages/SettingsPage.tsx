@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { PageContainer } from '../components/PageContainer';
+import * as React from "react";
+import { PageContainer } from "../components/PageContainer";
 
 export const SettingsPage = () => {
   return (

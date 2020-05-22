@@ -1,3 +1,4 @@
+<!-- prettier-ignore -->
 <svg
   width="1440"
   height="234"
@@ -59,4 +60,4 @@
       stroke-dasharray="5 10"
     />
   </g>
-</svg>;
+</svg>
