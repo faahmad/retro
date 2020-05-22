@@ -74,7 +74,9 @@ const AuthenticatedAppRoutes: React.FC = () => {
   // in the database before we hit this page. In that case, we simply
   // refresh the browswer and the user should be created by then.
   if (!data || !data.user) {
-    window.location.replace("/");
+    return (
+      <LoadingText>Oops, something went wrong. Please refresh your browser.</LoadingText>
+    );
   }
 
   const { workspace } = data.user;
