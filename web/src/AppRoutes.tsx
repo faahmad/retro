@@ -25,20 +25,26 @@ export const AppRoutes: React.FC = () => {
   const authAccount = useAuthContext();
 
   return (
-    <BrowserRouter>
-      <div className="mt-8 w-4/5 max-w-6xl m-auto">
-        <Navbar />
-      </div>
-      <Switch>
-        {authAccount ? (
-          <OptimizelyProvider optimizely={optimizely} user={{ id: authAccount.uid }}>
-            <AuthenticatedAppRoutes />
-          </OptimizelyProvider>
-        ) : (
-          <UnauthenticatedAppRoutes />
-        )}
-      </Switch>
-    </BrowserRouter>
+    <OptimizelyProvider
+      optimizely={optimizely}
+      /**
+       * 🤔
+       * (property) id: string
+       * Type 'string | null' is not assignable to type 'string'.
+       * Type 'null' is not assignable to type 'string'. ts(2322)
+       */
+      // @ts-ignore
+      user={{ id: authAccount ? authAccount.uid : null }}
+    >
+      <BrowserRouter>
+        <div className="mt-8 w-4/5 max-w-6xl m-auto">
+          <Navbar />
+        </div>
+        <Switch>
+          {authAccount ? <AuthenticatedAppRoutes /> : <UnauthenticatedAppRoutes />}
+        </Switch>
+      </BrowserRouter>
+    </OptimizelyProvider>
   );
 };
 
