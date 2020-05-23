@@ -7,6 +7,9 @@ import { GoogleOAuthButton } from "./GoogleOAuthButton";
 import { LoginModal } from "./LoginModal";
 import { AuthContext } from "../contexts/AuthContext";
 import { AuthService } from "../services/auth-service";
+import { useFeature } from "@optimizely/react-sdk";
+import { FeatureFlags } from "../constants/feature-flags";
+import { JoinWaitlistButton } from "./JoinWaitlistButton";
 
 export const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -76,6 +79,17 @@ const NavbarBrand: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
 };
 
 const NavbarAuthButtons: React.FC<any> = ({ onClick, isLoggedIn }) => {
+  const isSignUpEnabled = useFeature(FeatureFlags.SIGN_UP);
+
+  if (!isSignUpEnabled) {
+    return (
+      <div className="flex flex-col z-0">
+        <p className="text-blue mb-2">Coming soon.</p>
+        <JoinWaitlistButton />
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col z-0">
       {isLoggedIn ? (

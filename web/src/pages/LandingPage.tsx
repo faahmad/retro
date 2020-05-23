@@ -10,8 +10,13 @@ import landingFooterImage from "../assets/images/landing-page-footer.svg";
 
 import { GoogleOAuthButton } from "../components/GoogleOAuthButton";
 import { PageContainer } from "../components/PageContainer";
+import { useFeature } from "@optimizely/react-sdk";
+import { FeatureFlags } from "../constants/feature-flags";
+import { JoinWaitlistButton } from "../components/JoinWaitlistButton";
 
 export const LandingPage: React.FC = () => {
+  const isSignUpEnabled = useFeature(FeatureFlags.SIGN_UP);
+
   return (
     <div>
       <div className="landing-page flex flex-col w-full justify-center my-8">
@@ -85,13 +90,19 @@ export const LandingPage: React.FC = () => {
                 We’re on a mission to take over each team’s most dreaded weekly activity
                 and turn it into a fast win for everyone.
               </p>
-              <GoogleOAuthButton
-                buttonClassName="mt-4 text-blue bg-pink"
-                textClassName="justify-end"
-                useGoogleIcon={false}
-              >
-                30 day free trial
-              </GoogleOAuthButton>
+              {isSignUpEnabled ? (
+                <GoogleOAuthButton
+                  buttonClassName="mt-4 text-blue bg-pink"
+                  textClassName="justify-end"
+                  useGoogleIcon={false}
+                >
+                  30 day free trial
+                </GoogleOAuthButton>
+              ) : (
+                <div className="mt-4">
+                  <JoinWaitlistButton />
+                </div>
+              )}
             </div>
           </div>
         </PageContainer>
@@ -102,31 +113,40 @@ export const LandingPage: React.FC = () => {
         <PageContainer>
           <div className="mt-20 mb-20 flex flex-col lg:flex-row max-w-6xl items-center m-auto">
             <div className="hidden w-full sm:block md:block lg:block sm:w-1/3 md:w-1/3 lg:w-1/3">
-              <GoogleOAuthButton
-                buttonClassName="text-blue bg-pink"
-                textClassName="justify-end"
-                useGoogleIcon={false}
-              >
-                Free Trial Inside
-              </GoogleOAuthButton>
+              {isSignUpEnabled ? (
+                <GoogleOAuthButton
+                  buttonClassName="text-blue bg-pink"
+                  textClassName="justify-end"
+                  useGoogleIcon={false}
+                >
+                  Free Trial Inside
+                </GoogleOAuthButton>
+              ) : (
+                <JoinWaitlistButton />
+              )}
             </div>
             <div className="w-full sm:w-2/3 md:w-2/3 lg:w-2/3 sm:ml-4 md:ml-4 lg:w-ml-4">
               <h3 className="text-3xl text-blue sm:text-right  md:text-right  lg:text-right font-black mb-3">
-                Play Now!
+                {isSignUpEnabled ? "Play Now!" : "Get Extra Lives for Free."}
               </h3>
               <p className="text-xl sm:text-right  md:text-right  lg:text-right  text-blue">
-                No fees for your first 30 days. Retro is guaranteed to make your team feel
-                more productive. This tool is awesome. We promise.
+                {isSignUpEnabled
+                  ? "No fees for your first 30 days. Retro is guaranteed to make your team feel more productive. This tool is awesome. We promise."
+                  : "We will be launching soon. Get 2 months free when you join our waitlist. No payment information required."}
               </p>
             </div>
             <div className="block w-full sm:hidden md:hidden lg:hidden sm:w-1/3 md:w-1/3 lg:w-1/3">
-              <GoogleOAuthButton
-                buttonClassName="mt-4 text-blue bg-pink"
-                textClassName="justify-end"
-                useGoogleIcon={false}
-              >
-                Free Trial Inside
-              </GoogleOAuthButton>
+              {isSignUpEnabled ? (
+                <GoogleOAuthButton
+                  buttonClassName="mt-4 text-blue bg-pink"
+                  textClassName="justify-end"
+                  useGoogleIcon={false}
+                >
+                  Free Trial Inside
+                </GoogleOAuthButton>
+              ) : (
+                <JoinWaitlistButton />
+              )}
             </div>
           </div>
         </PageContainer>
