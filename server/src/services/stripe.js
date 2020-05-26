@@ -1,4 +1,13 @@
 import { stripe } from "../lib/stripe";
+import { get } from "lodash";
+
+export async function getStripeCustomer(customerId) {
+  const customer = await stripe.customers.retrieve(customerId);
+  return {
+    id: customer.id,
+    defaultPaymentMethod: get(customer, "invoice_settings.default_payment_method", null)
+  };
+}
 
 export async function getStripeSubscription(subscriptionId) {
   const subscription = await stripe.subscriptions.retrieve(subscriptionId);
