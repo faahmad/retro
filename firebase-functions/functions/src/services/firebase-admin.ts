@@ -23,3 +23,8 @@ export async function getWorkspace(id: string) {
   const workspaceDoc = await db.collection("workspaces").doc(id).get();
   return workspaceDoc.data();
 }
+
+export async function getWorkspaceUsers(workspaceId: string) {
+  const workspaceUsersDoc = await db.collection("workspaceUsers").doc(workspaceId).get();
+  return workspaceUsersDoc.data();
+}

@@ -22,7 +22,11 @@ import {
   RetroColumnType,
   RetroItem
 } from "../types";
-import { subscribeToRetroBoardById, updateRetroBoardById } from "../services/retro-board";
+import {
+  subscribeToRetroBoardById,
+  updateRetroBoardById
+} from "../services/retro-board-service";
+import { useSubscriptionStatusContext } from "../contexts/SubscriptionStatusContext";
 
 const RETRO_QUERY = gql`
   query RetroQuery($id: ID!) {
@@ -43,8 +47,9 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
   const { data, loading, error } = useQuery(RETRO_QUERY, {
     variables: { id: params.retroId }
   });
+  let { isActive, isLoading } = useSubscriptionStatusContext();
 
-  if (loading) {
+  if (loading || isLoading) {
     return (
       <PageContainer>
         <p className="text-blue">Fetching retro...</p>
@@ -72,7 +77,7 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
             {moment(retro.createdAt).format("MM.DD.YYYY")}
           </span>
         </h1>
-        <RetroBoard id={params.retroId} />
+        <RetroBoard id={params.retroId} isActive={isActive} />
       </PageContainer>
       <Footer />
     </React.Fragment>
@@ -82,6 +87,7 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
 // import { RetroItemModal } from "../components/RetroItemModal";
 interface RetroBoardProps {
   id: RetroBoardInterface["id"];
+  isActive: boolean | null;
 }
 interface RetroBoardState {
   lastUpdatedAt: Date;
@@ -134,6 +140,10 @@ export class RetroBoard extends React.Component<RetroBoardProps, RetroBoardState
     content: RetroItem["content"],
     column: RetroColumnType
   ) => {
+    if (!this.props.isActive) {
+      return;
+    }
+
     const newItem: RetroItem = {
       content,
       id: uuidV4(),
@@ -172,6 +182,10 @@ export class RetroBoard extends React.Component<RetroBoardProps, RetroBoardState
   };
 
   handleEditItem = async (item: RetroItem, _columnType: any) => {
+    if (!this.props.isActive) {
+      return;
+    }
+
     await this.setState((prevState) => ({
       retroBoard: {
         ...prevState.retroBoard,
@@ -185,6 +199,10 @@ export class RetroBoard extends React.Component<RetroBoardProps, RetroBoardState
   };
 
   handleDeleteItem = async (itemId: RetroItem["id"], columnType: RetroColumnType) => {
+    if (!this.props.isActive) {
+      return;
+    }
+
     const { retroBoard } = this.state;
 
     const items = retroBoard.items;
@@ -214,6 +232,10 @@ export class RetroBoard extends React.Component<RetroBoardProps, RetroBoardState
   };
 
   handleOnClickLike = async (itemId: RetroItem["id"]) => {
+    if (!this.props.isActive) {
+      return;
+    }
+
     const { id } = this.context;
     const item = this.state.retroBoard.items[itemId];
 
@@ -248,6 +270,10 @@ export class RetroBoard extends React.Component<RetroBoardProps, RetroBoardState
   };
 
   handleOnDragEnd = async (dropResult: DropResult) => {
+    if (!this.props.isActive) {
+      return;
+    }
+
     const { destination, source, draggableId } = dropResult;
 
     if (!destination) {
@@ -321,6 +347,10 @@ export class RetroBoard extends React.Component<RetroBoardProps, RetroBoardState
     columnType: RetroColumnType,
     initialRetroItem: RetroBoardState["initialRetroItem"]
   ) => {
+    if (!this.props.isActive) {
+      return;
+    }
+
     this.setState({
       initialRetroItem,
       isModalOpen: true,
@@ -329,6 +359,9 @@ export class RetroBoard extends React.Component<RetroBoardProps, RetroBoardState
   };
 
   handleToggleModal = () => {
+    if (!this.props.isActive) {
+      return;
+    }
     this.setState({
       isModalOpen: false,
       columnTypeToAddItemTo: null,
@@ -375,12 +408,16 @@ export class RetroBoard extends React.Component<RetroBoardProps, RetroBoardState
                       key={columnType}
                       type={columnType}
                       items={items}
-                      handleOnClickAdd={() =>
+                      handleOnClickAdd={() => {
+                        if (!this.props.isActive) {
+                          return;
+                        }
                         this.setState({
                           isModalOpen: true,
                           columnTypeToAddItemTo: columnType
-                        })
-                      }
+                        });
+                        return;
+                      }}
                       handleOnClickLike={this.handleOnClickLike}
                       handleOnClickEdit={this.handleOnClickEdit}
                     />

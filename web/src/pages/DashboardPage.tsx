@@ -9,9 +9,10 @@ import { LoadingText } from "../components/LoadingText";
 import moment from "moment";
 import { Footer } from "../components/Footer";
 import { PageContainer } from "../components/PageContainer";
-import { createRetroBoardInFirebase } from "../services/retro-board";
+import { createRetroBoardInFirebase } from "../services/retro-board-service";
 import { UpgradeToProBanner } from "../components/UpgradeToProBanner";
 import { useAuthContext } from "../contexts/AuthContext";
+import { useSubscriptionStatusContext } from "../contexts/SubscriptionStatusContext";
 
 const WORKSPACE_QUERY = gql`
   query WorkspaceQuery($id: ID!) {
@@ -114,6 +115,7 @@ const RetroBoardsOverview: React.FC<{
   const { data } = useQuery(GET_TEAM_RETROS, {
     variables: { teamId }
   });
+  const { isActive } = useSubscriptionStatusContext();
 
   React.useEffect(() => {
     if (!data) {
@@ -134,6 +136,9 @@ const RetroBoardsOverview: React.FC<{
   };
 
   const handleCreateRetro = async () => {
+    if (!isActive) {
+      return;
+    }
     const { data } = await createRetroMutation({
       variables: { input: { teamId } }
     });
@@ -148,6 +153,7 @@ const RetroBoardsOverview: React.FC<{
         <div className="flex items-center">
           <p className="text-blue font-black hidden lg:block">Create Retro</p>
           <button
+            disabled={!isActive}
             onClick={handleCreateRetro}
             className="h-10 w-10 bg-blue text-white ml-3 border border-red shadow shadow-red text-2xl hover:bg-pink-1/2 active:transform-1 focus:outline-none"
           >
@@ -186,6 +192,7 @@ const TeamMemberOverview: React.FC<{
   users: any[];
 }> = ({ workspaceId, users }) => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const { isActive } = useSubscriptionStatusContext();
 
   const handleToggleModal = async () => {
     await setIsModalOpen((prevIsModalOpen) => !prevIsModalOpen);
@@ -205,6 +212,7 @@ const TeamMemberOverview: React.FC<{
           <div className="flex items-center">
             <p className="text-blue font-black hidden lg:block">Invite Member</p>
             <button
+              disabled={!isActive}
               onClick={handleToggleModal}
               className="h-10 w-10 bg-blue text-white ml-3 border border-red shadow shadow-red text-2xl hover:bg-pink-1/2 active:transform-1 focus:outline-none"
             >
