@@ -1,19 +1,83 @@
 import * as React from "react";
-import { getWorkspace } from "../services/workspace-service";
+import { getStripeSubscriptionStatus } from "../services/stripe-service";
 
-const SubscriptionStatusContext = React.createContext<{
+interface SubscriptionStatusState {
   isLoading: boolean;
   isActive: boolean | null;
-}>({
-  isLoading: true,
-  isActive: null
-});
+  status: string | null;
+}
 
-export function SubscriptionStatusProvider({ workspaceId, children }) {
-  const [isLoading, setIsLoading] = React.useState(true);
-  const [isActive, setIsActive] = React.useState<boolean | null>(null);
+const subscriptionStatusStateInitialValues = {
+  isLoading: true,
+  isActive: null,
+  status: null
+};
+
+const SubscriptionStatusContext = React.createContext<SubscriptionStatusState>(
+  subscriptionStatusStateInitialValues
+);
+
+enum SubscriptionStatusActionTypes {
+  LOADING = "loading",
+  SUCCESS = "success"
+}
+
+interface SubscriptionStatusAction {
+  type: SubscriptionStatusActionTypes;
+  status: string | null;
+}
+
+function subscriptionStatusReducer(
+  state: SubscriptionStatusState,
+  action: SubscriptionStatusAction
+) {
+  switch (action.type) {
+    case SubscriptionStatusActionTypes.LOADING: {
+      return { ...state, isLoading: true, isActive: null, status: null };
+    }
+    case SubscriptionStatusActionTypes.SUCCESS: {
+      return {
+        ...state,
+        isLoading: false,
+        isActive: action.status === "active" || action.status === "trialing",
+        status: action.status
+      };
+    }
+  }
+}
+
+export const SubscriptionStatusProvider: React.FC<{ workspaceId: string }> = ({
+  workspaceId,
+  children
+}) => {
+  const [state, dispatch] = React.useReducer(
+    subscriptionStatusReducer,
+    subscriptionStatusStateInitialValues
+  );
 
   React.useEffect(() => {
-    const handleGetSubscriptionStatus = async (workspaceId) => {};
+    if (!workspaceId) {
+      return;
+    }
+    const handleGetSubscriptionStatus = async (workspaceId: string) => {
+      dispatch({ type: SubscriptionStatusActionTypes.LOADING, status: null });
+      const { data } = await getStripeSubscriptionStatus(workspaceId);
+      dispatch({ type: SubscriptionStatusActionTypes.SUCCESS, status: data.status });
+      return;
+    };
+    handleGetSubscriptionStatus(workspaceId);
+    return;
   }, [workspaceId]);
-}
+
+  console.log("\n");
+  console.log(state);
+
+  return (
+    <SubscriptionStatusContext.Provider value={state}>
+      {children}
+    </SubscriptionStatusContext.Provider>
+  );
+};
+
+export const useSubscriptionStatusContext = () =>
+  React.useContext(SubscriptionStatusContext);

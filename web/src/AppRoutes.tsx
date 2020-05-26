@@ -13,6 +13,7 @@ import { useQuery } from "@apollo/react-hooks";
 import { LoadingText } from "./components/LoadingText";
 import { RetroBoardPage } from "./pages/RetroBoardPage";
 import { SettingsPage } from "./pages/SettingsPage";
+import { SubscriptionStatusProvider } from "./contexts/SubscriptionStatusContext";
 
 const optimizely = createInstance({
   sdkKey: process.env.REACT_APP_OPTIMIZELY_SDK_KEY
@@ -78,7 +79,7 @@ const AuthenticatedAppRoutes: React.FC = () => {
 
   // Sometimes we have a race condition where the user isn't created
   // in the database before we hit this page. In that case, we simply
-  // refresh the browswer and the user should be created by then.
+  // refresh the browser and the user should be created by then.
   if (!data || !data.user) {
     return (
       <LoadingText>Oops, something went wrong. Please refresh your browser.</LoadingText>
@@ -87,7 +88,7 @@ const AuthenticatedAppRoutes: React.FC = () => {
 
   const { workspace } = data.user;
   return (
-    <React.Fragment>
+    <SubscriptionStatusProvider workspaceId={workspace.id}>
       <Route exact path="/onboarding" component={OnboardingPage} />
       <Route
         exact
@@ -99,6 +100,6 @@ const AuthenticatedAppRoutes: React.FC = () => {
 
       {!workspace && <Redirect to="/onboarding" />}
       {workspace && <Redirect to={`/workspaces/${data.user.workspace.id}`} />}
-    </React.Fragment>
+    </SubscriptionStatusProvider>
   );
 };
