@@ -41,6 +41,9 @@ const WORKSPACE_QUERY = gql`
         status
         trialEnd
       }
+      customer {
+        defaultPaymentMethod
+      }
     }
   }
 `;
@@ -57,7 +60,9 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
   }
 
   const { workspace } = data;
-  const isInTrialMode = workspace?.subscription?.status === "trialing";
+  const isInTrialMode =
+    workspace?.subscription?.status === "trialing" &&
+    workspace?.customer?.defaultPaymentMethod === null;
   const defaultTeam = workspace?.teams[0];
   const users = [...workspace.users, ...workspace.invitedUsers].filter(
     (user) => user.id !== authAccount?.uid
