@@ -69,9 +69,6 @@ export const SubscriptionStatusProvider: React.FC<{ workspaceId: string }> = ({
     return;
   }, [workspaceId]);
 
-  console.log("\n");
-  console.log(state);
-
   return (
     <SubscriptionStatusContext.Provider value={state}>
       {children}
