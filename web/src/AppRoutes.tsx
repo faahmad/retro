@@ -14,6 +14,9 @@ import { LoadingText } from "./components/LoadingText";
 import { RetroBoardPage } from "./pages/RetroBoardPage";
 import { SettingsPage } from "./pages/SettingsPage";
 import { SubscriptionStatusProvider } from "./contexts/SubscriptionStatusContext";
+import { PageContainer } from "./components/PageContainer";
+import { Button } from "./components/Button";
+import { ErrorBoundary, FallbackProps } from "react-error-boundary";
 
 const optimizely = createInstance({
   sdkKey: process.env.REACT_APP_OPTIMIZELY_SDK_KEY
@@ -37,14 +40,16 @@ export const AppRoutes: React.FC = () => {
       // @ts-ignore
       user={{ id: authAccount ? authAccount.uid : null }}
     >
-      <BrowserRouter>
-        <div className="mt-8 w-4/5 max-w-6xl m-auto">
-          <Navbar />
-        </div>
-        <Switch>
-          {authAccount ? <AuthenticatedAppRoutes /> : <UnauthenticatedAppRoutes />}
-        </Switch>
-      </BrowserRouter>
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
+        <BrowserRouter>
+          <div className="mt-8 w-4/5 max-w-6xl m-auto">
+            <Navbar />
+          </div>
+          <Switch>
+            {authAccount ? <AuthenticatedAppRoutes /> : <UnauthenticatedAppRoutes />}
+          </Switch>
+        </BrowserRouter>
+      </ErrorBoundary>
     </OptimizelyProvider>
   );
 };
@@ -81,14 +86,12 @@ const AuthenticatedAppRoutes: React.FC = () => {
   // in the database before we hit this page. In that case, we simply
   // refresh the browser and the user should be created by then.
   if (!data || !data.user) {
-    return (
-      <LoadingText>Oops, something went wrong. Please refresh your browser.</LoadingText>
-    );
+    return <ErrorFallback resetErrorBoundary={() => {}} />;
   }
 
   const { workspace } = data.user;
   return (
-    <SubscriptionStatusProvider workspaceId={workspace.id}>
+    <SubscriptionStatusProvider workspaceId={workspace?.id}>
       <Route exact path="/onboarding" component={OnboardingPage} />
       <Route
         exact
@@ -101,5 +104,26 @@ const AuthenticatedAppRoutes: React.FC = () => {
       {!workspace && <Redirect to="/onboarding" />}
       {workspace && <Redirect to={`/workspaces/${data.user.workspace.id}`} />}
     </SubscriptionStatusProvider>
+  );
+};
+
+const ErrorFallback: React.FC<FallbackProps> = ({ resetErrorBoundary }) => {
+  const handleOnClick = () => {
+    resetErrorBoundary();
+    window.location.reload();
+    return;
+  };
+
+  return (
+    <PageContainer>
+      <div className="text-center text-red">
+        <LoadingText>
+          Oops, something went wrong. Please refresh your browser.
+        </LoadingText>
+        <Button className="shadow border" onClick={handleOnClick}>
+          Refresh
+        </Button>
+      </div>
+    </PageContainer>
   );
 };
