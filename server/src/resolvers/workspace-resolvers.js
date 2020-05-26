@@ -2,6 +2,7 @@ import { ApolloError, ForbiddenError } from "apollo-server-express";
 import { sequelize } from "../lib/sequelize";
 import { WorkspaceService } from "../services/workspace-service";
 import { getWorkspaceSubscription } from "../services/subscription";
+import { getWorkspaceCustomer } from "../services/customer";
 
 export const workspaceResolvers = {
   Query: {
@@ -120,6 +121,12 @@ export const workspaceResolvers = {
         return null;
       }
       return getWorkspaceSubscription(String(workspace.id));
+    },
+    async customer(workspace, _args, { userId }) {
+      if (userId !== workspace.ownerId) {
+        return null;
+      }
+      return getWorkspaceCustomer(String(workspace.id));
     }
   }
 };

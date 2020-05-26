@@ -13,6 +13,7 @@ export const workspaceSchema = gql`
     users: [User]
     invitedUsers: [WorkspaceInvite]
     subscription: StripeSubscription
+    customer: StripeCustomer
   }
 
   type StripeSubscription {
@@ -35,6 +36,11 @@ export const workspaceSchema = gql`
     currency: String!
     interval: String!
     productId: String!
+  }
+
+  type StripeCustomer {
+    id: ID!
+    defaultPaymentMethod: String
   }
 
   input CreateWorkspaceInput {
