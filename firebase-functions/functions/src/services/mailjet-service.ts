@@ -18,7 +18,7 @@ export const addUserToDefaultContactList = (email: string, name: string) => {
 };
 
 export const sendInvitationMailer = (email: string, senderFirstName: string) => {
-  return client.post("send", CONFIG_OPTIONS).request({
+  return client.post("send", { ...CONFIG_OPTIONS, perform_api_call: true }).request({
     Messages: [
       {
         To: [

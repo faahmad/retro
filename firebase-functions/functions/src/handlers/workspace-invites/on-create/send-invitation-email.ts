@@ -10,6 +10,5 @@ export const sendInvitationEmail = functions.firestore
   .document("workspaces/{workspaceId}/{workspaceInviteId}")
   .onCreate(async (snapshot) => {
     const workspaceInvite = snapshot.data() as WorkspaceInvite;
-    const invitedByFirstName = workspaceInvite.invitedByName.split(" ")[0];
-    return sendInvitationMailer(workspaceInvite.email, invitedByFirstName);
+    return sendInvitationMailer(workspaceInvite.email, workspaceInvite.invitedByName);
   });

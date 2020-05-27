@@ -3,6 +3,7 @@ import { sequelize } from "../lib/sequelize";
 import { WorkspaceService } from "../services/workspace-service";
 import { getWorkspaceSubscription } from "../services/subscription";
 import { getWorkspaceCustomer } from "../services/customer";
+import { addWorkspaceInviteToFirestore } from "../services/firestore";
 
 export const workspaceResolvers = {
   Query: {
@@ -60,6 +61,17 @@ export const workspaceResolvers = {
           workspaceId: input.workspaceId,
           invitedById: userId,
           accepted: false
+        });
+
+        const workspace = workspaces[0];
+
+        await addWorkspaceInviteToFirestore({
+          id: workspaceInvite.id,
+          email: workspaceInvite.email,
+          workspaceId: workspace.id,
+          workspaceName: workspace.name,
+          invitedById: userId,
+          invitedByName: user.firstName
         });
 
         return workspaceInvite;
