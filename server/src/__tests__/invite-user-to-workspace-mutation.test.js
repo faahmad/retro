@@ -1,6 +1,7 @@
 import { executeGraphQLQuery } from "./test-helpers/execute-graphql-query";
 import { factory } from "./test-helpers/factory";
 import faker from "faker";
+import { addWorkspaceInviteToFirestore } from "../services/firestore";
 
 describe("inviteUserToWorkspace mutation", () => {
   const inviteUserToWorkspaceMutation = `
@@ -45,6 +46,34 @@ describe("inviteUserToWorkspace mutation", () => {
           accepted: false
         }
       });
+    });
+    it("should add the workspaceInvite to Firestore", async () => {
+      const user = await factory.user();
+      const workspace = await factory.workspace();
+      await user.addWorkspace(workspace.id);
+
+      const emailToInvite = faker.internet.email();
+
+      await executeGraphQLQuery({
+        query: inviteUserToWorkspaceMutation,
+        variables: {
+          input: {
+            email: emailToInvite,
+            workspaceId: workspace.id
+          }
+        },
+        userId: user.id
+      });
+
+      expect(addWorkspaceInviteToFirestore).toHaveBeenCalledWith(
+        expect.objectContaining({
+          email: emailToInvite,
+          invitedById: user.id,
+          invitedByName: null,
+          workspaceId: workspace.id,
+          workspaceName: workspace.name
+        })
+      );
     });
   });
   describe("when invalid", () => {
