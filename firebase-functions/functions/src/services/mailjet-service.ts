@@ -16,3 +16,23 @@ export const addUserToDefaultContactList = (email: string, name: string) => {
       Action: "addnoforce"
     });
 };
+
+export const sendInvitationMailer = (email: string, senderFirstName: string) => {
+  return client.post("send", CONFIG_OPTIONS).request({
+    Messages: [
+      {
+        To: [
+          {
+            Email: email
+          }
+        ],
+        TemplateID: mailjet.templateIds.INVITATION_RECEIVED,
+        TemplateLanguage: true,
+        Variables: {
+          email,
+          firstname: senderFirstName
+        }
+      }
+    ]
+  });
+};
