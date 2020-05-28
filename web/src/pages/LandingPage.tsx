@@ -106,10 +106,34 @@ export const LandingPage: React.FC = () => {
             </div>
           </div>
         </PageContainer>
-        <hr
+        {/* <hr
           className="flex flex-col justify-center self-center w-3/5 mt-12 mb-12"
           style={{ borderTop: "2px dashed #11269C" }}
-        />
+        /> */}
+        <div className="bg-red text-white p-12">
+          <PageContainer>
+            <div className="mt-20 mb-20 flex flex-col lg:flex-row max-w-6xl m-auto">
+              <div className="w-full sm:w-1/2 md:w-1/2 lg:w-1/2 sm:ml-4 md:ml-4 lg:w-ml-4">
+                <h3 className="text-3xl text-white font-black mb-3">
+                  Try it for free for a month, then simple pricing forever.
+                </h3>
+                <p className="text-xl text-white">
+                  Our pricing is dead simple. Pay the same price forever regardless of how
+                  your team and company grows.
+                </p>
+              </div>
+              <div className="w-full mt-10 sm:w-1/2 md:w-1/2 lg:w-1/2 sm:mt-0 md:mt-0 lg:mt-0 sm:ml-4 md:ml-4 lg:w-ml-4 sm:text-right  md:text-right  lg:text-right">
+                <h2 className="text-5xl text-white font-black mb-3">
+                  $39.99<span className="text-xl font-normal text-white"> Per Month</span>
+                </h2>
+                <p className="text-xl text-white">
+                  <b>Includes:</b> <br /> One Workspace <br /> Unlimited Teams <br />{" "}
+                  Unlimited Boards <br /> Unlimited Team Members
+                </p>
+              </div>
+            </div>
+          </PageContainer>
+        </div>
         <PageContainer>
           <div className="mt-20 mb-20 flex flex-col lg:flex-row max-w-6xl items-center m-auto">
             <div className="hidden w-full sm:block md:block lg:block sm:w-1/3 md:w-1/3 lg:w-1/3">
