@@ -1,3 +1,7 @@
+export interface WorkspaceInvitesCollection {
+  [key: string]: WorkspaceInvite;
+}
+
 export interface WorkspaceInvite {
   id: string;
   email: string;
