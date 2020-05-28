@@ -13,6 +13,8 @@ import { useQuery } from "@apollo/react-hooks";
 import { LoadingText } from "./components/LoadingText";
 import { RetroBoardPage } from "./pages/RetroBoardPage";
 import { SettingsPage } from "./pages/SettingsPage";
+import { PrivacyPolicyPage } from "./pages/PrivacyPolicyPage";
+import { TermsOfServicePage } from "./pages/TermsOfServicePage";
 import { SubscriptionStatusProvider } from "./contexts/SubscriptionStatusContext";
 import { PageContainer } from "./components/PageContainer";
 import { Button } from "./components/Button";
@@ -46,6 +48,10 @@ export const AppRoutes: React.FC = () => {
             <Navbar />
           </div>
           <Switch>
+            <Route exact path="/privacy" component={PrivacyPolicyPage} />
+            <Route exact path="/terms" component={TermsOfServicePage} />
+            <Route exact path="/faq" component={FAQPage} />
+            <Route exact path="/design" component={DesignPage} />
             {authAccount ? <AuthenticatedAppRoutes /> : <UnauthenticatedAppRoutes />}
           </Switch>
         </BrowserRouter>
@@ -58,8 +64,6 @@ const UnauthenticatedAppRoutes: React.FC = () => {
   return (
     <React.Fragment>
       <Route exact path="/" component={LandingPage} />
-      <Route exact path="/faq" component={FAQPage} />
-      <Route exact path="/design" component={DesignPage} />
     </React.Fragment>
   );
 };
