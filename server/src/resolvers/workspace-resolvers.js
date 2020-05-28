@@ -40,6 +40,7 @@ export const workspaceResolvers = {
         const workspaces = await user.getWorkspaces({
           where: { id: input.workspaceId }
         });
+
         if (workspaces.length === 0) {
           throw new ForbiddenError(
             "You can't invite a user to a workspace that you're not a member of."
@@ -68,7 +69,7 @@ export const workspaceResolvers = {
         await addWorkspaceInviteToFirestore({
           id: workspaceInvite.id,
           email: workspaceInvite.email,
-          workspaceId: workspace.id,
+          workspaceId: String(workspace.id),
           workspaceName: workspace.name,
           invitedById: userId,
           invitedByName: user.firstName
