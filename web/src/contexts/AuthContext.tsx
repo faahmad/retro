@@ -2,6 +2,7 @@ import * as React from "react";
 import firebase from "firebase/app";
 import "firebase/auth";
 import { LoadingPage } from "../pages/LoadingPage";
+import { axios } from "../lib/axios";
 
 type AuthContextValue = firebase.User | null;
 
@@ -25,9 +26,11 @@ class AuthProvider extends React.Component<
     if (authAccount) {
       const idToken = await authAccount.getIdToken();
       localStorage.setItem("idToken", idToken);
+      axios.defaults.headers.common["x-retro-auth"] = idToken;
       await this.setState({ authAccount });
     } else {
       localStorage.removeItem("idToken");
+      axios.defaults.headers.common["x-retro-auth"] = undefined;
       this.setState({ authAccount: null });
     }
     this.setState({ isFetchingAuth: false });
