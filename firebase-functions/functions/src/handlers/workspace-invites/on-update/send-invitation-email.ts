@@ -22,5 +22,12 @@ export const sendInvitationEmail = functions.firestore
     // We are destructuring because difference returns an array of keys.
     const [newlyAddedInviteKey] = difference(nextInviteKeys, originalInviteKeys);
     const workspaceInvite = nextInvites[newlyAddedInviteKey];
-    return sendInvitationMailer(workspaceInvite.email, workspaceInvite.invitedByName);
+    logger.prettyPrint(workspaceInvite);
+    return sendInvitationMailer(
+      workspaceInvite.email,
+      workspaceInvite.invitedByName
+    ).then(
+      (value) => logger.prettyPrint(value),
+      (reason) => logger.prettyPrint(reason)
+    );
   });
