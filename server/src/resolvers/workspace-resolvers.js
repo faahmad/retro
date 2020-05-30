@@ -3,7 +3,10 @@ import { sequelize } from "../lib/sequelize";
 import { WorkspaceService } from "../services/workspace-service";
 import { getWorkspaceSubscription } from "../services/subscription";
 import { getWorkspaceCustomer } from "../services/customer";
-import { addWorkspaceInviteToFirestore } from "../services/firestore";
+import {
+  addWorkspaceInviteToFirestore,
+  addUserToWorkspaceUsersInFirestore
+} from "../services/firestore";
 
 export const workspaceResolvers = {
   Query: {
@@ -106,6 +109,13 @@ export const workspaceResolvers = {
         }
         await user.addWorkspace(workspace.id);
         await user.addTeam(defaultTeam.id);
+
+        await addUserToWorkspaceUsersInFirestore({
+          workspaceId: String(workspace.id),
+          id: String(user.id),
+          email: user.email,
+          displayName: ""
+        });
 
         return {
           code: 200,

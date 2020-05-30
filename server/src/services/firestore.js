@@ -25,3 +25,19 @@ export function addWorkspaceInviteToFirestore(params) {
       { merge: true }
     );
 }
+
+export async function addUserToWorkspaceUsersInFirestore(params) {
+  const workspaceUsersRef = db.collection("workspaceUsers").doc(params.workspaceId);
+  const workspaceUsersSnapshot = await workspaceUsersRef.get();
+  const workspaceUsers = workspaceUsersSnapshot.data();
+
+  const updatedWorkspaceUsers = {
+    ...workspaceUsers.users,
+    [params.id]: {
+      ...params,
+      joinedAt: firebaseAdmin.firestore.FieldValue.serverTimestamp()
+    }
+  };
+
+  return workspaceUsersRef.set({ users: updatedWorkspaceUsers }, { merge: true });
+}
