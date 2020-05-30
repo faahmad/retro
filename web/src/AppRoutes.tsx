@@ -86,13 +86,6 @@ const AuthenticatedAppRoutes: React.FC = () => {
     return <LoadingText>Loading...</LoadingText>;
   }
 
-  // Sometimes we have a race condition where the user isn't created
-  // in the database before we hit this page. In that case, we simply
-  // refresh the browser and the user should be created by then.
-  if (!data || !data.user) {
-    return <ErrorFallback resetErrorBoundary={() => {}} />;
-  }
-
   const { workspace } = data.user;
   return (
     <SubscriptionStatusProvider workspaceId={workspace?.id}>
