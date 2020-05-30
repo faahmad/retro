@@ -2,7 +2,7 @@ import React from "react";
 import { gql } from "apollo-boost";
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import { Button } from "../components/Button";
-import { Redirect } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { LoadingText } from "../components/LoadingText";
@@ -243,6 +243,7 @@ interface JoinWorkspaceListProps {
 
 const JoinWorkspaceList: React.FC<JoinWorkspaceListProps> = ({ workspaces }) => {
   const [joinWorkspace] = useMutation(JOIN_WORKSPACE_MUTATION);
+  const history = useHistory();
 
   return (
     <div className="flex flex-col w-full justify-center my-8 text-blue">
@@ -265,7 +266,8 @@ const JoinWorkspaceList: React.FC<JoinWorkspaceListProps> = ({ workspaces }) => 
                     workspaceId: workspace.id
                   }
                 });
-                window.location.replace("/");
+                history.push(`/workspaces/${workspace.id}`);
+                return;
               }}
               className="border border-blue shadow p-4 mb-4 hover:bg-pink-1/2 cursor-pointer active:transform-1"
               key={workspace.id}

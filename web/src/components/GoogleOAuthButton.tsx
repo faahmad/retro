@@ -5,6 +5,7 @@ import { AuthService } from "../services/auth-service";
 import { gql } from "apollo-boost";
 import { useMutation } from "@apollo/react-hooks";
 import analytics from "analytics.js";
+import { useHistory } from "react-router-dom";
 
 const CREATE_USER_MUTATION = gql`
   mutation CreateUserMutation($input: CreateUserInput!) {
@@ -12,6 +13,10 @@ const CREATE_USER_MUTATION = gql`
       id
       email
       createdAt
+      workspace {
+        id
+        url
+      }
     }
   }
 `;
@@ -32,6 +37,7 @@ export const GoogleOAuthButton: React.FC<{
   const [createUser] = useMutation(CREATE_USER_MUTATION, {
     context: { idToken }
   });
+  const history = useHistory();
 
   const handleClick = async () => {
     const userCredential = await AuthService.authenticateWithGooglePopUp();
@@ -50,22 +56,24 @@ export const GoogleOAuthButton: React.FC<{
       // Note: We have to await setting the idToken otherwise
       // the mutation will not have the correct context.
       await setIdToken(newIdToken);
-      await createUser({
+      const { data } = await createUser({
         variables: {
           input: { id: uid, email: email }
         }
       });
+      debugger;
       analytics.identify(uid);
       analytics.track("User Signed Up", {
         type: "organic",
         provider: "google"
       });
+      if (onClick) {
+        onClick();
+      }
+      const workspace = data?.createUser?.workspace;
+      const redirectUrl = workspace ? `/workspaces/${workspace.id}` : "/onboarding";
+      history.push(redirectUrl);
     }
-
-    if (onClick) {
-      onClick();
-    }
-
     return;
   };
 
