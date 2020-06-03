@@ -61,7 +61,6 @@ export const GoogleOAuthButton: React.FC<{
           input: { id: uid, email: email }
         }
       });
-      debugger;
       analytics.identify(uid);
       analytics.track("User Signed Up", {
         type: "organic",
