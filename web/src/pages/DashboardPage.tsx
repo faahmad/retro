@@ -13,6 +13,7 @@ import { createRetroBoardInFirebase } from "../services/retro-board-service";
 import { UpgradeToProBanner } from "../components/UpgradeToProBanner";
 import { useAuthContext } from "../contexts/AuthContext";
 import { useSubscriptionStatusContext } from "../contexts/SubscriptionStatusContext";
+import analytics from "analytics.js";
 
 const WORKSPACE_QUERY = gql`
   query WorkspaceQuery($id: ID!) {
@@ -135,6 +136,7 @@ const RetroBoardsOverview: React.FC<{
   });
 
   const handleRedirectToRetroPage = (retro: any) => {
+    analytics.track("Retro Opened", { ...retro });
     return history.push(
       `/workspaces/${retro.workspaceId}/teams/${retro.teamId}/retros/${retro.id}`
     );
@@ -148,6 +150,7 @@ const RetroBoardsOverview: React.FC<{
       variables: { input: { teamId } }
     });
     createRetroBoardInFirebase(data.createRetro);
+    analytics.track("Retro Created", { ...data.createRetro });
     return handleRedirectToRetroPage(data.createRetro);
   };
 
