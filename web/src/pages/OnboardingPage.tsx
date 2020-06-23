@@ -7,6 +7,7 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import { LoadingText } from "../components/LoadingText";
 import { PageContainer } from "../components/PageContainer";
+import analytics from "analytics.js";
 
 const USER_QUERY = gql`
   query Workspace {
@@ -245,6 +246,15 @@ const JoinWorkspaceList: React.FC<JoinWorkspaceListProps> = ({ workspaces }) => 
   const [joinWorkspace] = useMutation(JOIN_WORKSPACE_MUTATION);
   const history = useHistory();
 
+  const handleJoinWorkspace = async (workspace: any) => {
+    await joinWorkspace({
+      variables: { workspaceId: workspace.id }
+    });
+    analytics.track("Workspace Joined", { ...workspace });
+    history.push(`/workspaces/${workspace.id}`);
+    return;
+  };
+
   return (
     <div className="flex flex-col w-full justify-center my-8 text-blue">
       <div className="w-1/2 max-w-6xl m-auto">
@@ -260,22 +270,14 @@ const JoinWorkspaceList: React.FC<JoinWorkspaceListProps> = ({ workspaces }) => 
         <ul>
           {workspaces.map((workspace) => (
             <li
-              onClick={async () => {
-                await joinWorkspace({
-                  variables: {
-                    workspaceId: workspace.id
-                  }
-                });
-                history.push(`/workspaces/${workspace.id}`);
-                return;
-              }}
+              onClick={() => handleJoinWorkspace(workspace)}
               className="border border-blue shadow p-4 mb-4 hover:bg-pink-1/2 cursor-pointer active:transform-1"
               key={workspace.id}
             >
               <span role="img" aria-label="team">
                 👯‍♀
               </span>{" "}
-              Join <span className="font-black">{workspace.name}</span> >
+              Join <span className="font-black">{workspace.name}</span>
             </li>
           ))}
         </ul>

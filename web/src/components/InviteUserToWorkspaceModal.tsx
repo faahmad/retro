@@ -6,6 +6,7 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import { gql } from "apollo-boost";
 import { useMutation } from "@apollo/react-hooks";
+import analytics from "analytics.js";
 interface InviteUserToWorkspaceModalProps {
   isOpen: boolean;
   onRequestClose: (
@@ -60,6 +61,26 @@ const InviteUserToWorkspaceForm: React.FC<{
   });
   const [submitButtonText, setSubmitButtonText] = React.useState("Send Invite");
   const [isDisabled, setIsDisabled] = React.useState(false);
+
+  const handleSubmit = async (values: any) => {
+    setIsDisabled(true);
+    setSubmitButtonText("Sending...");
+    await inviteUserToWorkspace({
+      variables: {
+        input: {
+          workspaceId,
+          email: values.email
+        }
+      }
+    });
+    setSubmitButtonText("Sent!");
+    analytics.track("User Invited", {
+      ...values
+    });
+    onClick();
+    return;
+  };
+
   const formik = useFormik({
     initialValues: {
       email: ""
@@ -70,20 +91,7 @@ const InviteUserToWorkspaceForm: React.FC<{
         .email("Please enter a valid email.")
         .required("Email address is required.")
     }),
-    onSubmit: async (values) => {
-      setIsDisabled(true);
-      setSubmitButtonText("Sending...");
-      await inviteUserToWorkspace({
-        variables: {
-          input: {
-            workspaceId,
-            email: values.email
-          }
-        }
-      });
-      setSubmitButtonText("Sent!");
-      onClick();
-    }
+    onSubmit: handleSubmit
   });
 
   return (

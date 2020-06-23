@@ -27,6 +27,7 @@ import {
   updateRetroBoardById
 } from "../services/retro-board-service";
 import { useSubscriptionStatusContext } from "../contexts/SubscriptionStatusContext";
+import analytics from "analytics.js";
 
 const RETRO_QUERY = gql`
   query RetroQuery($id: ID!) {
@@ -178,6 +179,8 @@ export class RetroBoard extends React.Component<RetroBoardProps, RetroBoardState
 
     await updateRetroBoardById(this.state.retroBoard.id, this.state.retroBoard);
 
+    analytics.track("Retro Item Added", { content, column });
+
     return;
   };
 
@@ -194,6 +197,8 @@ export class RetroBoard extends React.Component<RetroBoardProps, RetroBoardState
     }));
 
     await updateRetroBoardById(this.state.retroBoard.id, this.state.retroBoard);
+
+    analytics.track("Retro Item Edited", { ...item });
 
     return;
   };
@@ -227,6 +232,8 @@ export class RetroBoard extends React.Component<RetroBoardProps, RetroBoardState
     }));
 
     await updateRetroBoardById(this.state.retroBoard.id, this.state.retroBoard);
+
+    analytics.track("Retro Item Deleted", { id: itemId, column: columnType });
 
     return;
   };
@@ -265,6 +272,8 @@ export class RetroBoard extends React.Component<RetroBoardProps, RetroBoardState
     }));
 
     updateRetroBoardById(this.state.retroBoard.id, this.state.retroBoard);
+
+    analytics.track("Retro Item Liked", { id: itemId });
 
     return;
   };
@@ -339,6 +348,11 @@ export class RetroBoard extends React.Component<RetroBoardProps, RetroBoardState
     }
 
     updateRetroBoardById(this.state.retroBoard.id, this.state.retroBoard);
+
+    analytics.track("Retro Item Moved", {
+      start: start.type,
+      end: finish.type
+    });
 
     return;
   };

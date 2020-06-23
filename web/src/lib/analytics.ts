@@ -6,6 +6,9 @@ if (process.env.NODE_ENV !== "test") {
       apiKey: process.env.REACT_APP_AMPLITUDE_API_KEY,
       trackAllPages: true,
       trackReferrer: true
+    },
+    FullStory: {
+      org: process.env.REACT_APP_FULLSTORY_ORG_ID
     }
   });
 }
