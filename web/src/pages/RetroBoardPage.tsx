@@ -28,6 +28,7 @@ import {
 import { useSubscriptionStatusContext } from "../contexts/SubscriptionStatusContext";
 import analytics from "analytics.js";
 import { QuestionIcon } from "../images/QuestionIcon";
+import { OptimizelyFeature } from "@optimizely/react-sdk";
 
 const RETRO_QUERY = gql`
   query RetroQuery($id: ID!) {
@@ -184,7 +185,7 @@ export class RetroBoard extends React.Component<RetroBoardProps, RetroBoardState
 
     await updateRetroBoardById(this.state.retroBoard.id, this.state.retroBoard);
 
-    analytics.track("Retro Item Added", { content, column });
+    analytics.track("Retro Item Added", { content, column, isAnonymous });
 
     return;
   };
@@ -790,14 +791,20 @@ export class RetroItemModal extends React.Component<
               >
                 {isSubmitting ? "Submitting..." : "Submit"}
               </Button>
-              <Button
-                className="text-blue text-sm mt-4"
-                style={{ width: "10rem" }}
-                disabled={isSubmitting}
-                onClick={this.handlePostAnonymously}
-              >
-                {isSubmitting ? "Posting..." : "Post Anonymously"}
-              </Button>
+              <OptimizelyFeature feature="anonymous_retro_item">
+                {(isEnabled) =>
+                  isEnabled ? (
+                    <Button
+                      className="text-blue text-sm mt-4"
+                      style={{ width: "10rem" }}
+                      disabled={isSubmitting}
+                      onClick={this.handlePostAnonymously}
+                    >
+                      {isSubmitting ? "Posting..." : "Post Anonymously"}
+                    </Button>
+                  ) : null
+                }
+              </OptimizelyFeature>
             </div>
           </div>
         </div>
