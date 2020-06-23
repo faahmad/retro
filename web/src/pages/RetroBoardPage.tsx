@@ -8,7 +8,6 @@ import moment from "moment";
 import { AddButton } from "../components/AddButton";
 import { LoadingText } from "../components/LoadingText";
 import { AuthContext } from "../contexts/AuthContext";
-import Octicon, { Question } from "@primer/octicons-react";
 import Linkify from "react-linkify";
 import { Footer } from "../components/Footer";
 import ReactModal from "react-modal";
@@ -28,6 +27,8 @@ import {
 } from "../services/retro-board-service";
 import { useSubscriptionStatusContext } from "../contexts/SubscriptionStatusContext";
 import analytics from "analytics.js";
+import { QuestionIcon } from "../images/QuestionIcon";
+import { OptimizelyFeature } from "@optimizely/react-sdk";
 
 const RETRO_QUERY = gql`
   query RetroQuery($id: ID!) {
@@ -85,7 +86,6 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
   );
 };
 
-// import { RetroItemModal } from "../components/RetroItemModal";
 interface RetroBoardProps {
   id: RetroBoardInterface["id"];
   isActive: boolean | null;
@@ -98,6 +98,11 @@ interface RetroBoardState {
   columnTypeToAddItemTo: RetroColumnType | null;
   initialRetroItem?: RetroItem;
 }
+
+type CreateRetroItemParams = {
+  content: RetroItem["content"];
+  isAnonymous: RetroItem["isAnonymous"];
+};
 export class RetroBoard extends React.Component<RetroBoardProps, RetroBoardState> {
   static contextType = AuthContext;
   unsubscribeFromRetroBoardFn: any;
@@ -138,7 +143,7 @@ export class RetroBoard extends React.Component<RetroBoardProps, RetroBoardState
   };
 
   handleAddItemToColumn = async (
-    content: RetroItem["content"],
+    { content, isAnonymous }: CreateRetroItemParams,
     column: RetroColumnType
   ) => {
     if (!this.props.isActive) {
@@ -147,6 +152,7 @@ export class RetroBoard extends React.Component<RetroBoardProps, RetroBoardState
 
     const newItem: RetroItem = {
       content,
+      isAnonymous,
       id: uuidV4(),
       likedBy: {},
       likeCount: 0,
@@ -179,7 +185,7 @@ export class RetroBoard extends React.Component<RetroBoardProps, RetroBoardState
 
     await updateRetroBoardById(this.state.retroBoard.id, this.state.retroBoard);
 
-    analytics.track("Retro Item Added", { content, column });
+    analytics.track("Retro Item Added", { content, column, isAnonymous });
 
     return;
   };
@@ -243,14 +249,14 @@ export class RetroBoard extends React.Component<RetroBoardProps, RetroBoardState
       return;
     }
 
-    const { id } = this.context;
+    const { uid } = this.context;
     const item = this.state.retroBoard.items[itemId];
 
     const newLikedBy = item.likedBy;
-    if (item.likedBy[id]) {
-      delete newLikedBy[id];
+    if (item.likedBy[uid]) {
+      delete newLikedBy[uid];
     } else {
-      item.likedBy[id] = true;
+      item.likedBy[uid] = true;
     }
 
     const newItem = {
@@ -273,7 +279,7 @@ export class RetroBoard extends React.Component<RetroBoardProps, RetroBoardState
 
     updateRetroBoardById(this.state.retroBoard.id, this.state.retroBoard);
 
-    analytics.track("Retro Item Liked", { id: itemId });
+    analytics.track("Retro Item Liked", { id: itemId, userId: uid });
 
     return;
   };
@@ -506,6 +512,7 @@ export const RetroListItem: React.FC<
 > = ({
   id,
   content,
+  isAnonymous,
   likedBy,
   likeCount,
   createdByDisplayName,
@@ -532,26 +539,11 @@ export const RetroListItem: React.FC<
             {...provided.dragHandleProps}
           >
             <div className="flex content-center">
-              {createdByPhotoURL ? (
-                <img
-                  alt="user avatar"
-                  className="flex content-center content-center bg-blue rounded-full mr-2"
-                  style={{ height: 40, width: 40 }}
-                  src={createdByPhotoURL}
-                />
-              ) : (
-                <div
-                  className="flex content-center items-center bg-blue mr-2 rounded-full text-white"
-                  style={{ height: 40, width: 40 }}
-                >
-                  {createdByDisplayName ? (
-                    createdByDisplayName[0]
-                  ) : (
-                    <Octicon size="medium" icon={Question} />
-                  )}
-                </div>
-              )}
-
+              <RetroItemAvatar
+                createdByDisplayName={createdByDisplayName}
+                createdByPhotoURL={createdByPhotoURL}
+                isAnonymous={isAnonymous}
+              />
               <div>
                 <Linkify>
                   <span className="text-break">{content}</span>
@@ -566,7 +558,7 @@ export const RetroListItem: React.FC<
               <LikeButton
                 likeCount={likeCount}
                 likedBy={likedBy}
-                currentUserId={authAccount.displayName}
+                currentUserId={authAccount.uid}
                 onClick={() => handleOnClickLike(id)}
               />
             </div>
@@ -576,6 +568,48 @@ export const RetroListItem: React.FC<
     </Draggable>
   );
 };
+
+interface RetroItemAvatarProps {
+  createdByPhotoURL: RetroItem["createdByPhotoURL"];
+  createdByDisplayName: RetroItem["createdByDisplayName"];
+  isAnonymous: RetroItem["isAnonymous"];
+}
+function RetroItemAvatar({
+  createdByPhotoURL,
+  createdByDisplayName,
+  isAnonymous
+}: RetroItemAvatarProps) {
+  const sharedClassNames = "flex content-center bg-blue rounded-full mr-2";
+  const divClassNames = "text-white items-center justify-center";
+  const styles = { height: 40, width: 40 };
+
+  if (isAnonymous) {
+    return (
+      <div className={`${sharedClassNames} ${divClassNames}`} style={styles}>
+        <QuestionIcon />
+      </div>
+    );
+  }
+
+  // Default to displaying the user's photo.
+  if (createdByPhotoURL) {
+    return (
+      <img
+        alt="user avatar"
+        className="flex content-center bg-blue rounded-full mr-2"
+        style={styles}
+        src={createdByPhotoURL}
+      />
+    );
+  }
+
+  return (
+    <div className={`${sharedClassNames} ${divClassNames}`} style={styles}>
+      {/* If the user doesn't have a displayName, display the Question icon. */}
+      {createdByDisplayName ? createdByDisplayName[0] : <QuestionIcon />}
+    </div>
+  );
+}
 
 interface LikeButtonProps {
   likeCount: number;
@@ -624,7 +658,7 @@ interface RetroItemModalProps {
   column: RetroColumn;
   columnType: RetroColumnType | null;
   onToggle: () => void;
-  onSubmit: (content: RetroItem["content"], column: RetroColumnType) => Promise<void>;
+  onSubmit: (params: CreateRetroItemParams, column: RetroColumnType) => Promise<void>;
   initialRetroItem?: RetroItem;
   onEdit: (item: RetroItem, column: RetroColumnType) => Promise<void>;
   onDelete: (itemId: RetroItem["id"], column: RetroColumnType) => Promise<void>;
@@ -633,6 +667,7 @@ interface RetroItemModalProps {
 interface RetroItemModalState {
   columnType: RetroColumnType | "";
   content: RetroItem["content"];
+  isAnonymous: RetroItem["isAnonymous"];
   isSubmitting: boolean;
 }
 
@@ -645,11 +680,17 @@ export class RetroItemModal extends React.Component<
     this.state = {
       columnType: props.columnType || "",
       content: props.initialRetroItem ? props.initialRetroItem.content : "",
+      isAnonymous: false,
       isSubmitting: false
     };
   }
+  handlePostAnonymously = () => {
+    this.setState({ isAnonymous: true }, () => this.handleSubmit());
+    return;
+  };
+
   handleSubmit = async () => {
-    const { content, columnType } = this.state;
+    const { content, columnType, isAnonymous } = this.state;
     const { initialRetroItem } = this.props;
     if (!content) {
       return;
@@ -659,9 +700,9 @@ export class RetroItemModal extends React.Component<
     }
     this.setState({ isSubmitting: true });
     if (!initialRetroItem) {
-      await this.props.onSubmit(content, columnType);
+      await this.props.onSubmit({ content, isAnonymous }, columnType);
     } else {
-      await this.props.onEdit({ ...initialRetroItem, content }, columnType);
+      await this.props.onEdit({ ...initialRetroItem, content, isAnonymous }, columnType);
     }
     await this.setState({ isSubmitting: false });
     this.props.onToggle();
@@ -741,14 +782,30 @@ export class RetroItemModal extends React.Component<
             >
               Cancel
             </Button>
-            <Button
-              className="text-blue"
-              style={{ width: "10rem" }}
-              disabled={isSubmitting}
-              onClick={this.handleSubmit}
-            >
-              {isSubmitting ? "Submitting..." : "Submit"}
-            </Button>
+            <div className="flex flex-col">
+              <Button
+                className="bg-blue text-white"
+                style={{ width: "10rem" }}
+                disabled={isSubmitting}
+                onClick={this.handleSubmit}
+              >
+                {isSubmitting ? "Submitting..." : "Submit"}
+              </Button>
+              <OptimizelyFeature feature="anonymous_retro_item">
+                {(isEnabled) =>
+                  isEnabled ? (
+                    <Button
+                      className="text-blue text-sm mt-4"
+                      style={{ width: "10rem" }}
+                      disabled={isSubmitting}
+                      onClick={this.handlePostAnonymously}
+                    >
+                      {isSubmitting ? "Posting..." : "Post Anonymously"}
+                    </Button>
+                  ) : null
+                }
+              </OptimizelyFeature>
+            </div>
           </div>
         </div>
       </ReactModal>

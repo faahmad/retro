@@ -1,6 +1,6 @@
 import * as React from "react";
 import thumbsUpIcon from "../assets/icons/thumbs-up.svg";
-import thumbsUpFilledIcon from "../assets/icons/thumbs-up-filled.svg";
+import { ThumbsUpIcon as ThumbsUpIconDark } from "../images/ThumbsUpIcon";
 
 interface ThumbsUpIconProps {
   className?: string;
@@ -11,7 +11,9 @@ export const ThumbsUpIcon: React.FC<ThumbsUpIconProps> = ({
   className = "",
   filled = false
 }) => {
-  const iconSrc = filled ? thumbsUpFilledIcon : thumbsUpIcon;
-
-  return <img className={className} src={iconSrc} alt="thumbs up" />;
+  return filled ? (
+    <ThumbsUpIconDark />
+  ) : (
+    <img className={className} src={thumbsUpIcon} alt="thumbs up" />
+  );
 };
