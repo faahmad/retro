@@ -11,6 +11,7 @@ export interface RetroItem {
   createdByUserId: string;
   createdByPhotoURL?: string;
   hasBeenEdited?: boolean;
+  isAnonymous?: boolean;
 }
 
 export type RetroColumnType = "good" | "bad" | "actions" | "questions";
