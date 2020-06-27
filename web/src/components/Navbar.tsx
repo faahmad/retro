@@ -10,6 +10,7 @@ import { AuthService } from "../services/auth-service";
 import { useFeature } from "@optimizely/react-sdk";
 import { FeatureFlags } from "../constants/feature-flags";
 import { JoinWaitlistButton } from "./JoinWaitlistButton";
+import { useBasicUserQuery } from "../hooks/use-basic-user-query";
 
 export const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -117,13 +118,19 @@ const NavbarAuthButtons: React.FC<any> = ({ onClick, isLoggedIn }) => {
 };
 
 const NavbarAuthLinks = () => {
+  const { data, loading } = useBasicUserQuery();
+  if (loading || !data) {
+    return null;
+  }
+  const rootPath = `/workspaces/${data.user.workspace.id}`;
   return (
     <ul className="flex text-blue text-sm">
-      <li>
-        <a className="hover:underline" href="/">
-          Home
-        </a>
-      </li>
+      <Link className="px-2 hover:underline" to={rootPath}>
+        Home
+      </Link>
+      <Link className="px-2 hover:underline" to={`${rootPath}/settings`}>
+        Settings
+      </Link>
     </ul>
   );
 };
