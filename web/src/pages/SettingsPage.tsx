@@ -75,7 +75,7 @@ type BillingSettingsProps = {
 };
 function BillingSettings({ workspaceId, subscription }: BillingSettingsProps) {
   const { openBillingPortalFn, isOpeningPortal } = useOpenBillingPortal(workspaceId);
-  const isSubscriptionActive = subscription.status !== "active";
+  const isSubscriptionActive = subscription.status === "active";
 
   return (
     <div className="text-red border border-red shadow p-8 flex flex-col mt-2">
