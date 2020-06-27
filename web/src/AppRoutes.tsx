@@ -68,8 +68,8 @@ const UnauthenticatedAppRoutes: React.FC = () => {
   );
 };
 
-const USER_QUERY = gql`
-  query Workspace {
+export const USER_QUERY = gql`
+  query UserWorkspace {
     user {
       workspace {
         id
