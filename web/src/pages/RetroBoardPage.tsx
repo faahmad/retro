@@ -27,7 +27,7 @@ import {
 } from "../services/retro-board-service";
 import { useSubscriptionStatusContext } from "../contexts/SubscriptionStatusContext";
 import analytics from "analytics.js";
-import { QuestionIcon } from "../images/QuestionIcon";
+import { UserAvatar } from "../components/UserAvatar";
 import { OptimizelyFeature } from "@optimizely/react-sdk";
 
 const RETRO_QUERY = gql`
@@ -539,9 +539,9 @@ export const RetroListItem: React.FC<
             {...provided.dragHandleProps}
           >
             <div className="flex content-center">
-              <RetroItemAvatar
-                createdByDisplayName={createdByDisplayName}
-                createdByPhotoURL={createdByPhotoURL}
+              <UserAvatar
+                displayName={createdByDisplayName}
+                photoURL={createdByPhotoURL}
                 isAnonymous={isAnonymous}
               />
               <div>
@@ -568,48 +568,6 @@ export const RetroListItem: React.FC<
     </Draggable>
   );
 };
-
-interface RetroItemAvatarProps {
-  createdByPhotoURL: RetroItem["createdByPhotoURL"];
-  createdByDisplayName: RetroItem["createdByDisplayName"];
-  isAnonymous: RetroItem["isAnonymous"];
-}
-function RetroItemAvatar({
-  createdByPhotoURL,
-  createdByDisplayName,
-  isAnonymous
-}: RetroItemAvatarProps) {
-  const sharedClassNames = "flex content-center bg-blue rounded-full mr-2";
-  const divClassNames = "text-white items-center justify-center";
-  const styles = { height: 40, width: 40 };
-
-  if (isAnonymous) {
-    return (
-      <div className={`${sharedClassNames} ${divClassNames}`} style={styles}>
-        <QuestionIcon />
-      </div>
-    );
-  }
-
-  // Default to displaying the user's photo.
-  if (createdByPhotoURL) {
-    return (
-      <img
-        alt="user avatar"
-        className="flex content-center bg-blue rounded-full mr-2"
-        style={styles}
-        src={createdByPhotoURL}
-      />
-    );
-  }
-
-  return (
-    <div className={`${sharedClassNames} ${divClassNames}`} style={styles}>
-      {/* If the user doesn't have a displayName, display the Question icon. */}
-      {createdByDisplayName ? createdByDisplayName[0] : <QuestionIcon />}
-    </div>
-  );
-}
 
 interface LikeButtonProps {
   likeCount: number;

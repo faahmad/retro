@@ -2,31 +2,22 @@ import * as React from "react";
 import moment from "moment";
 import { PawIcon } from "../images/PawIcon";
 import { Button } from "./Button";
-import { createStripeBillingPortalSession } from "../services/stripe-service";
-import { useRouteMatch } from "react-router-dom";
+import { useOpenBillingPortal } from "../hooks/use-open-billing-portal";
 
 interface UpgradeToProBannerProps {
   trialEnd: number;
   workspaceId: string;
 }
+
 export const UpgradeToProBanner: React.FC<UpgradeToProBannerProps> = ({
   trialEnd,
   workspaceId
 }) => {
-  const [isLoading, setIsLoading] = React.useState(false);
-  const match = useRouteMatch();
+  const { openBillingPortalFn, isOpeningPortal } = useOpenBillingPortal(workspaceId);
+  const todayUnix = moment().unix();
+  const trialEndUnix = moment(trialEnd).unix();
 
-  const handleOpenStripeCheckSession = async () => {
-    setIsLoading(true);
-
-    const { data } = await createStripeBillingPortalSession({
-      workspaceId,
-      returnUrl: `${process.env.REACT_APP_RETRO_BASE_URL}${match.url}`
-    });
-    window.location.replace(data.url);
-    setIsLoading(false);
-    return;
-  };
+  const isPastTrialEnd = todayUnix > trialEndUnix;
 
   return (
     <div className="flex justify-between items-center text-blue my-2 p-4 bg-white border shadow flex-wrap">
@@ -35,18 +26,19 @@ export const UpgradeToProBanner: React.FC<UpgradeToProBannerProps> = ({
         <div className="pl-2">
           <p className="font-black">Upgrade to PRO</p>
           <p className="text-sm">
-            Your free trial ends {moment.unix(trialEnd).fromNow()}. Upgrade to PRO to keep
-            leveling up your team.
+            Your free trial {isPastTrialEnd ? "ended" : "ends"}{" "}
+            {moment.unix(trialEnd).fromNow()}. Upgrade to PRO to keep leveling up your
+            team.
           </p>
         </div>
       </div>
       <Button
         className="text-red"
-        onClick={handleOpenStripeCheckSession}
-        disabled={isLoading}
+        onClick={openBillingPortalFn}
+        disabled={isOpeningPortal}
         style={{ maxWidth: "8rem" }}
       >
-        {isLoading ? "Loading" : "Upgrade"}
+        {isOpeningPortal ? "Loading" : "Upgrade"}
       </Button>
     </div>
   );
