@@ -4,15 +4,15 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { ApolloProvider } from "@apollo/react-hooks";
 import { AppRoutes } from "./AppRoutes";
-import { AuthProvider } from "./contexts/AuthContext";
 import * as serviceWorker from "./serviceWorker";
+import { CurrentUserProvider } from "./contexts/CurrentUserContext";
 
 ReactDOM.render(
-  <AuthProvider>
-    <ApolloProvider client={apolloClient}>
+  <ApolloProvider client={apolloClient}>
+    <CurrentUserProvider>
       <AppRoutes />
-    </ApolloProvider>
-  </AuthProvider>,
+    </CurrentUserProvider>
+  </ApolloProvider>,
   document.getElementById("root")
 );
 
