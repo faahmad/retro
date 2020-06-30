@@ -1,15 +1,12 @@
 import React from "react";
-import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Switch, useHistory } from "react-router-dom";
 import { OptimizelyProvider, createInstance, setLogger } from "@optimizely/react-sdk";
-import { useAuthContext } from "./contexts/AuthContext";
 import { Navbar } from "./components/Navbar";
 import { DesignPage } from "./pages/DesignPage";
 import { FAQPage } from "./pages/FAQPage";
 import { LandingPage } from "./pages/LandingPage";
 import { OnboardingPage } from "./pages/OnboardingPage";
 import { DashboardPage } from "./pages/DashboardPage";
-import { gql } from "apollo-boost";
-import { useQuery } from "@apollo/react-hooks";
 import { LoadingText } from "./components/LoadingText";
 import { RetroBoardPage } from "./pages/RetroBoardPage";
 import { SettingsPage } from "./pages/SettingsPage";
@@ -19,6 +16,7 @@ import { SubscriptionStatusProvider } from "./contexts/SubscriptionStatusContext
 import { PageContainer } from "./components/PageContainer";
 import { Button } from "./components/Button";
 import { ErrorBoundary, FallbackProps } from "react-error-boundary";
+import { useCurrentUser } from "./hooks/use-current-user";
 
 const optimizely = createInstance({
   sdkKey: process.env.REACT_APP_OPTIMIZELY_SDK_KEY
@@ -28,7 +26,8 @@ if (process.env.NODE_ENV === "production") {
 }
 
 export const AppRoutes: React.FC = () => {
-  const authAccount = useAuthContext();
+  const currentUser = useCurrentUser();
+  const { auth, isLoggedIn } = currentUser;
 
   return (
     <OptimizelyProvider
@@ -40,19 +39,24 @@ export const AppRoutes: React.FC = () => {
        * Type 'null' is not assignable to type 'string'. ts(2322)
        */
       // @ts-ignore
-      user={{ id: authAccount ? authAccount.uid : null }}
+      user={{ id: isLoggedIn ? auth.uid : null }}
     >
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <BrowserRouter>
           <div className="mt-8 w-4/5 max-w-6xl m-auto">
-            <Navbar />
+            <Navbar isLoggedIn={isLoggedIn} />
           </div>
           <Switch>
             <Route exact path="/privacy" component={PrivacyPolicyPage} />
             <Route exact path="/terms" component={TermsOfServicePage} />
             <Route exact path="/faq" component={FAQPage} />
             <Route exact path="/design" component={DesignPage} />
-            {authAccount ? <AuthenticatedAppRoutes /> : <UnauthenticatedAppRoutes />}
+
+            {isLoggedIn ? (
+              <AuthenticatedAppRoutes currentUser={currentUser} />
+            ) : (
+              <UnauthenticatedAppRoutes />
+            )}
           </Switch>
         </BrowserRouter>
       </ErrorBoundary>
@@ -68,25 +72,19 @@ const UnauthenticatedAppRoutes: React.FC = () => {
   );
 };
 
-export const USER_QUERY = gql`
-  query UserWorkspace {
-    user {
-      workspace {
-        id
-        url
-      }
+function AuthenticatedAppRoutes({ currentUser }: any) {
+  const history = useHistory();
+  const workspace = currentUser.data?.user?.workspace;
+
+  React.useEffect(() => {
+    if (!currentUser.isLoggedIn) {
+      return;
     }
-  }
-`;
+    const redirectUrl = workspace ? `/workspaces/${workspace.id}` : "/onboarding";
+    history.push(redirectUrl);
+    //eslint-disable-next-line
+  }, [currentUser.isLoggedIn]);
 
-const AuthenticatedAppRoutes: React.FC = () => {
-  const { data, loading } = useQuery(USER_QUERY);
-
-  if (loading) {
-    return <LoadingText>Loading...</LoadingText>;
-  }
-
-  const { workspace } = data.user;
   return (
     <SubscriptionStatusProvider workspaceId={workspace?.id}>
       <Route exact path="/onboarding" component={OnboardingPage} />
@@ -97,12 +95,9 @@ const AuthenticatedAppRoutes: React.FC = () => {
       />
       <Route exact path="/workspaces/:workspaceId/settings" component={SettingsPage} />
       <Route exact path="/workspaces/:workspaceId" component={DashboardPage} />
-
-      {!workspace && <Redirect to="/onboarding" />}
-      {workspace && <Redirect to={`/workspaces/${data.user.workspace.id}`} />}
     </SubscriptionStatusProvider>
   );
-};
+}
 
 const ErrorFallback: React.FC<FallbackProps> = ({ resetErrorBoundary }) => {
   const handleOnClick = () => {
