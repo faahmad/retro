@@ -41,3 +41,10 @@ export async function addUserToWorkspaceUsersInFirestore(params) {
 
   return workspaceUsersRef.set({ users: updatedWorkspaceUsers }, { merge: true });
 }
+
+export async function addWorkspaceToUser(userId, workspace) {
+  const userRef = db.collection("users").doc(userId);
+  return userRef.update({
+    workspaces: firebaseAdmin.firestore.FieldValue.arrayUnion(workspace)
+  })
+}
