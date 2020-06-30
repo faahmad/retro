@@ -13,10 +13,11 @@ import { PageContainer } from "../components/PageContainer";
 import { useFeature } from "@optimizely/react-sdk";
 import { FeatureFlags } from "../constants/feature-flags";
 import { JoinWaitlistButton } from "../components/JoinWaitlistButton";
+import { useLoginWithGoogle } from "../hooks/use-login-with-google";
 
 export const LandingPage: React.FC = () => {
   const isSignUpEnabled = useFeature(FeatureFlags.SIGN_UP);
-
+  const loginWithGoogle = useLoginWithGoogle();
   return (
     <div>
       <div className="landing-page flex flex-col w-full justify-center my-8">
@@ -95,6 +96,7 @@ export const LandingPage: React.FC = () => {
                   buttonClassName="mt-4 text-blue bg-pink"
                   textClassName="justify-end"
                   useGoogleIcon={false}
+                  onClick={loginWithGoogle}
                 >
                   30 day free trial
                 </GoogleOAuthButton>
@@ -142,6 +144,7 @@ export const LandingPage: React.FC = () => {
                   buttonClassName="text-blue bg-pink"
                   textClassName="justify-end"
                   useGoogleIcon={false}
+                  onClick={loginWithGoogle}
                 >
                   Free Trial Inside
                 </GoogleOAuthButton>
@@ -165,6 +168,7 @@ export const LandingPage: React.FC = () => {
                   buttonClassName="mt-4 text-blue bg-pink"
                   textClassName="justify-end"
                   useGoogleIcon={false}
+                  onClick={loginWithGoogle}
                 >
                   Free Trial Inside
                 </GoogleOAuthButton>
