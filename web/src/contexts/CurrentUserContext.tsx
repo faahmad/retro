@@ -28,7 +28,7 @@ export enum CurrentUserState {
   ERROR = "error"
 }
 
-type CurrentUserContextValues = {
+export type CurrentUserContextValues = {
   auth: firebase.User | null;
   data: any | null;
   state: CurrentUserState;
