@@ -2,7 +2,6 @@ import * as React from "react";
 import { PageContainer } from "../components/PageContainer";
 import { Title } from "../components/Typography";
 import { UserAvatar } from "../components/UserAvatar";
-import { useAuthContext } from "../contexts/AuthContext";
 import moment from "moment";
 import { PencilEditIcon } from "../components/PencilEditIcon";
 import { gql } from "apollo-boost";
@@ -11,6 +10,7 @@ import { useParams } from "react-router-dom";
 import { dollarAmountAdapter } from "../utils/dollar-amount-adapter";
 import { useOpenBillingPortal } from "../hooks/use-open-billing-portal";
 import { UpgradeToProBanner } from "../components/UpgradeToProBanner";
+import { useCurrentUser } from "../hooks/use-current-user";
 
 const WORKSPACE_SUBSCRIPTION_QUERY = gql`
   query WorkspaceSubscriptionQuery($id: ID!) {
@@ -35,7 +35,7 @@ const WORKSPACE_SUBSCRIPTION_QUERY = gql`
 `;
 
 export const SettingsPage = () => {
-  const currentUser = useAuthContext();
+  const { auth } = useCurrentUser();
   const params = useParams<{ workspaceId: string }>();
   const { data, loading } = useQuery(WORKSPACE_SUBSCRIPTION_QUERY, {
     variables: { id: params.workspaceId }
@@ -48,12 +48,12 @@ export const SettingsPage = () => {
       <div className="text-red border border-red shadow p-8 flex mt-4">
         <UserAvatar
           size="xl"
-          displayName={currentUser?.displayName || undefined}
-          photoURL={currentUser?.photoURL || undefined}
+          displayName={auth!.displayName || undefined}
+          photoURL={auth!.photoURL || undefined}
         />
         <div className="text-blue ml-2">
-          <p className="text-xl font-black py-1">{currentUser?.displayName}</p>
-          <p className="py-1">{currentUser?.email}</p>
+          <p className="text-xl font-black py-1">{auth!.displayName}</p>
+          <p className="py-1">{auth!.email}</p>
         </div>
       </div>
       {hasBillingAccess && (

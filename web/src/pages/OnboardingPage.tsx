@@ -111,6 +111,8 @@ const CreateWorkspaceForm: React.FC = () => {
     refetchQueries: ["user"],
     awaitRefetchQueries: true
   });
+  const history = useHistory();
+
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -119,7 +121,7 @@ const CreateWorkspaceForm: React.FC = () => {
     },
     validationSchema: createWorkspaceFormValidationSchema,
     onSubmit: async (values) => {
-      await createWorkspace({
+      const { data } = await createWorkspace({
         variables: {
           input: {
             name: values.name,
@@ -128,7 +130,7 @@ const CreateWorkspaceForm: React.FC = () => {
           }
         }
       });
-      window.location.replace("/");
+      return history.push(`/workspaces/${data.createWorkspace.id}`);
     }
   });
 
