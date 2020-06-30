@@ -14,10 +14,18 @@ import { useFeature } from "@optimizely/react-sdk";
 import { FeatureFlags } from "../constants/feature-flags";
 import { JoinWaitlistButton } from "../components/JoinWaitlistButton";
 import { useLoginWithGoogle } from "../hooks/use-login-with-google";
+import { useCurrentUser } from "../hooks/use-current-user";
+import { CurrentUserState } from "../contexts/CurrentUserContext";
 
 export const LandingPage: React.FC = () => {
   const isSignUpEnabled = useFeature(FeatureFlags.SIGN_UP);
   const loginWithGoogle = useLoginWithGoogle();
+  const currentUser = useCurrentUser();
+
+  if (currentUser.state === CurrentUserState.LOADING) {
+    return null;
+  }
+
   return (
     <div>
       <div className="landing-page flex flex-col w-full justify-center my-8">

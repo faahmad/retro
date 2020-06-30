@@ -31,9 +31,9 @@ export class WorkspaceService {
       await user.addWorkspace(workspace.id);
       await user.addTeam(team.id);
 
-      addWorkspaceToUser(user.id, { id: String(workspace.id), name: workspace.name, url: workspace.url })
+      await addWorkspaceToUser(user.id, { id: String(workspace.id), name: workspace.name, url: workspace.url })
 
-      addWorkspaceToFirestore({
+      await addWorkspaceToFirestore({
         id: String(workspace.id),
         name: workspace.name,
         url: workspace.url,

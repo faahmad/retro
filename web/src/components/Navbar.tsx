@@ -7,6 +7,10 @@ import { GoogleOAuthButton } from "./GoogleOAuthButton";
 import { useLoginWithGoogle } from "../hooks/use-login-with-google";
 import { logOut } from "../services/auth-service";
 import { useCurrentUser } from "../hooks/use-current-user";
+import {
+  getRootUrlForWorkspace,
+  getWorkspaceFromCurrentUser
+} from "../utils/workspace-utils";
 
 export const Navbar: React.FC<any> = ({ isLoggedIn }) => {
   const loginWithGoogle = useLoginWithGoogle();
@@ -51,9 +55,10 @@ export const Navbar: React.FC<any> = ({ isLoggedIn }) => {
 
 const NavbarBrand: React.FC = () => {
   const currentUser = useCurrentUser();
+  const workspace = getWorkspaceFromCurrentUser(currentUser);
   const redirectUrl = currentUser.isLoggedIn
-    ? currentUser.data.user.workspace
-      ? `/workspaces/${currentUser.data.user.workspace.id}`
+    ? workspace
+      ? getRootUrlForWorkspace(workspace)
       : "/onboarding"
     : "/";
 
@@ -84,7 +89,9 @@ const NavbarBrand: React.FC = () => {
         </div>
         <div className="z-0 mt-8 sm:ml-0 lg:ml-5">
           <RetroPinkLogo />
-          <p className="text-blue">welcome to new school teamwork.</p>
+          {!currentUser.isLoggedIn && (
+            <p className="text-blue">welcome to new school teamwork.</p>
+          )}
         </div>
       </Link>
     </div>
@@ -93,19 +100,20 @@ const NavbarBrand: React.FC = () => {
 
 const NavbarAuthLinks = () => {
   const currentUser = useCurrentUser();
-  const workspace = currentUser?.data?.user?.workspace;
+  const workspace = getWorkspaceFromCurrentUser(currentUser);
 
-  if (!currentUser.isLoggedIn || !workspace) {
+  if (!workspace) {
     return null;
   }
-  const rootPath = `/workspaces/${workspace.id}`;
+
+  const rootUrl = getRootUrlForWorkspace(workspace);
 
   return (
     <ul className="flex text-blue text-sm">
-      <Link className="px-2 hover:underline" to={rootPath}>
+      <Link className="px-2 hover:underline" to={rootUrl}>
         Home
       </Link>
-      <Link className="px-2 hover:underline" to={`${rootPath}/settings`}>
+      <Link className="px-2 hover:underline" to={`${rootUrl}/settings`}>
         Settings
       </Link>
     </ul>

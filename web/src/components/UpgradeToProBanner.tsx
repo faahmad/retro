@@ -14,10 +14,6 @@ export const UpgradeToProBanner: React.FC<UpgradeToProBannerProps> = ({
   workspaceId
 }) => {
   const { openBillingPortalFn, isOpeningPortal } = useOpenBillingPortal(workspaceId);
-  const todayUnix = moment().unix();
-  const trialEndUnix = moment(trialEnd).unix();
-
-  const isPastTrialEnd = todayUnix > trialEndUnix;
 
   return (
     <div className="flex justify-between items-center text-blue my-2 p-4 bg-white border shadow flex-wrap">
@@ -26,9 +22,8 @@ export const UpgradeToProBanner: React.FC<UpgradeToProBannerProps> = ({
         <div className="pl-2">
           <p className="font-black">Upgrade to PRO</p>
           <p className="text-sm">
-            Your free trial {isPastTrialEnd ? "ended" : "ends"}{" "}
-            {moment.unix(trialEnd).fromNow()}. Upgrade to PRO to keep leveling up your
-            team.
+            Your free trial ends {moment.unix(trialEnd).fromNow()}. Upgrade to PRO to keep
+            leveling up your team.
           </p>
         </div>
       </div>
