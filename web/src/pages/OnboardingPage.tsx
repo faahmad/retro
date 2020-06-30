@@ -29,7 +29,7 @@ export function OnboardingPage() {
     setShowForm(!showForm);
   };
 
-  const { data, loading, error } = useQuery(GET_WORKSPACES_THAT_USER_IS_INVITED_TO_QUERY);
+  const { data, loading } = useQuery(GET_WORKSPACES_THAT_USER_IS_INVITED_TO_QUERY);
 
   const workspace = getWorkspaceFromCurrentUser(currentUser);
 
@@ -42,10 +42,6 @@ export function OnboardingPage() {
   if (loading) {
     return <LoadingText>Loading...</LoadingText>;
   }
-
-  console.log({ data, loading, error });
-
-  // return null;
 
   const hasPendingInvites = data?.getWorkspacesThatUserIsInvitedTo?.length !== 0;
 
