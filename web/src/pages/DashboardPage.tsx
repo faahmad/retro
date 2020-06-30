@@ -11,7 +11,7 @@ import { Footer } from "../components/Footer";
 import { PageContainer } from "../components/PageContainer";
 import { createRetroBoardInFirebase } from "../services/retro-board-service";
 import { UpgradeToProBanner } from "../components/UpgradeToProBanner";
-import { useAuthContext } from "../contexts/AuthContext";
+import { useCurrentUser } from "../hooks/use-current-user";
 import { useSubscriptionStatusContext } from "../contexts/SubscriptionStatusContext";
 import analytics from "analytics.js";
 
@@ -50,7 +50,8 @@ const WORKSPACE_QUERY = gql`
 `;
 
 export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
-  const authAccount = useAuthContext();
+  const currentUser = useCurrentUser();
+  const authAccount = currentUser.auth;
   const { workspaceId } = useParams();
   const { data, loading } = useQuery(WORKSPACE_QUERY, {
     variables: { id: workspaceId }

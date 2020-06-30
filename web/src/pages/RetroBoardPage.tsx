@@ -7,7 +7,7 @@ import { v4 as uuidV4 } from "uuid";
 import moment from "moment";
 import { AddButton } from "../components/AddButton";
 import { LoadingText } from "../components/LoadingText";
-import { AuthContext } from "../contexts/AuthContext";
+import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import Linkify from "react-linkify";
 import { Footer } from "../components/Footer";
 import ReactModal from "react-modal";
@@ -29,6 +29,7 @@ import { useSubscriptionStatusContext } from "../contexts/SubscriptionStatusCont
 import analytics from "analytics.js";
 import { UserAvatar } from "../components/UserAvatar";
 import { OptimizelyFeature } from "@optimizely/react-sdk";
+import { useCurrentUser } from "../hooks/use-current-user";
 
 const RETRO_QUERY = gql`
   query RetroQuery($id: ID!) {
@@ -104,7 +105,7 @@ type CreateRetroItemParams = {
   isAnonymous: RetroItem["isAnonymous"];
 };
 export class RetroBoard extends React.Component<RetroBoardProps, RetroBoardState> {
-  static contextType = AuthContext;
+  static contextType = CurrentUserContext;
   unsubscribeFromRetroBoardFn: any;
   // TODO: Fix this typing.
   constructor(props: any) {
@@ -156,9 +157,9 @@ export class RetroBoard extends React.Component<RetroBoardProps, RetroBoardState
       id: uuidV4(),
       likedBy: {},
       likeCount: 0,
-      createdByDisplayName: this.context.displayName,
-      createdByUserId: this.context.uid,
-      createdByPhotoURL: this.context.photoURL
+      createdByDisplayName: this.context.auth.displayName,
+      createdByUserId: this.context.auth.uid,
+      createdByPhotoURL: this.context.auth.photoURL
     };
 
     const prevColumn = this.state.retroBoard.columns[column];
@@ -249,7 +250,7 @@ export class RetroBoard extends React.Component<RetroBoardProps, RetroBoardState
       return;
     }
 
-    const { uid } = this.context;
+    const { uid } = this.context.auth;
     const item = this.state.retroBoard.items[itemId];
 
     const newLikedBy = item.likedBy;
@@ -522,7 +523,8 @@ export const RetroListItem: React.FC<
   handleOnClickEdit,
   index
 }) => {
-  const authAccount: any = React.useContext(AuthContext);
+  const currentUser = useCurrentUser();
+  const authAccount = currentUser.auth!;
 
   return (
     <Draggable draggableId={id} index={index} isDragDisabled={false}>
