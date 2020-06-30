@@ -8,17 +8,8 @@ import * as yup from "yup";
 import { LoadingText } from "../components/LoadingText";
 import { PageContainer } from "../components/PageContainer";
 import analytics from "analytics.js";
-
-const USER_QUERY = gql`
-  query Workspace {
-    user {
-      workspace {
-        id
-        url
-      }
-    }
-  }
-`;
+import { useCurrentUser } from "../hooks/use-current-user";
+import { getWorkspaceFromCurrentUser } from "../utils/workspace-utils";
 
 const GET_WORKSPACES_THAT_USER_IS_INVITED_TO_QUERY = gql`
   query GetWorkspacesThatUserIsInvitedTo {
@@ -30,43 +21,38 @@ const GET_WORKSPACES_THAT_USER_IS_INVITED_TO_QUERY = gql`
   }
 `;
 
-export const OnboardingPage: React.FC<any> = ({ history }) => {
+export function OnboardingPage() {
+  const currentUser = useCurrentUser();
+
   const [showForm, setShowForm] = React.useState(false);
   const handleToggleForm = () => {
     setShowForm(!showForm);
   };
 
-  const userQueryResponse = useQuery(USER_QUERY);
-  const getWorkspacesThatUserIsInvitedToQueryResponse = useQuery(
-    GET_WORKSPACES_THAT_USER_IS_INVITED_TO_QUERY
-  );
+  const { data, loading, error } = useQuery(GET_WORKSPACES_THAT_USER_IS_INVITED_TO_QUERY);
 
-  if (
-    userQueryResponse.loading ||
-    getWorkspacesThatUserIsInvitedToQueryResponse.loading
-  ) {
-    return <LoadingText>Loading...</LoadingText>;
-  }
+  const workspace = getWorkspaceFromCurrentUser(currentUser);
 
-  const workspace = userQueryResponse.data.user.workspace;
-
-  if (workspace !== null) {
+  // If the user already has a workspace,
+  // we should redirect them to the DashboardPage.
+  if (workspace) {
     return <Redirect to={`/workspaces/${workspace.id}`} />;
   }
 
-  const hasPendingInvites =
-    getWorkspacesThatUserIsInvitedToQueryResponse.data.getWorkspacesThatUserIsInvitedTo
-      .length !== 0;
+  if (loading) {
+    return <LoadingText>Loading...</LoadingText>;
+  }
+
+  console.log({ data, loading, error });
+
+  // return null;
+
+  const hasPendingInvites = data?.getWorkspacesThatUserIsInvitedTo?.length !== 0;
 
   return (
     <React.Fragment>
       {hasPendingInvites && !showForm ? (
-        <JoinWorkspaceList
-          workspaces={
-            getWorkspacesThatUserIsInvitedToQueryResponse.data
-              .getWorkspacesThatUserIsInvitedTo
-          }
-        />
+        <JoinWorkspaceList workspaces={data.getWorkspacesThatUserIsInvitedTo} />
       ) : (
         <CreateWorkspaceForm />
       )}
@@ -82,7 +68,7 @@ export const OnboardingPage: React.FC<any> = ({ history }) => {
       )}
     </React.Fragment>
   );
-};
+}
 
 const CREATE_WORKSPACE_MUTATION = gql`
   mutation CreateWorkspace($input: CreateWorkspaceInput!) {
@@ -107,6 +93,7 @@ const createWorkspaceFormValidationSchema = yup.object().shape({
 });
 
 const CreateWorkspaceForm: React.FC = () => {
+  const [showSuccessMessage, setShowSuccessMessage] = React.useState(false);
   const [createWorkspace] = useMutation(CREATE_WORKSPACE_MUTATION, {
     refetchQueries: ["user"],
     awaitRefetchQueries: true
@@ -130,9 +117,17 @@ const CreateWorkspaceForm: React.FC = () => {
           }
         }
       });
-      return history.push(`/workspaces/${data.createWorkspace.id}`);
+      setShowSuccessMessage(true);
+      return setTimeout(
+        () => history.push(`/workspaces/${data.createWorkspace.id}`),
+        5000
+      );
     }
   });
+
+  if (showSuccessMessage) {
+    return <LoadingText>Creating your new workspace! Hang tight...</LoadingText>;
+  }
 
   return (
     <div className="create-workspace-page flex flex-col w-full justify-center my-8 text-blue">
