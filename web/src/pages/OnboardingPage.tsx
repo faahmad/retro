@@ -10,6 +10,8 @@ import { PageContainer } from "../components/PageContainer";
 import analytics from "analytics.js";
 import { useCurrentUser } from "../hooks/use-current-user";
 import { getWorkspaceFromCurrentUser } from "../utils/workspace-utils";
+import { ErrorMessageBanner } from "../components/ErrorMessageBanner";
+import { cleanDuplicateKeyErrorMessage } from "../utils/error-utils";
 
 const GET_WORKSPACES_THAT_USER_IS_INVITED_TO_QUERY = gql`
   query GetWorkspacesThatUserIsInvitedTo {
@@ -88,22 +90,27 @@ const createWorkspaceFormValidationSchema = yup.object().shape({
     .matches(/[A-Za-z0-9.]+/, "Please only use letters, numbers, and extension.")
 });
 
+type CreateWorkspaceFormValues = {
+  name: string;
+  url: string;
+  allowedEmailDomain: string;
+};
+
 const CreateWorkspaceForm: React.FC = () => {
   const [showSuccessMessage, setShowSuccessMessage] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
   const [createWorkspace] = useMutation(CREATE_WORKSPACE_MUTATION, {
     refetchQueries: ["user"],
     awaitRefetchQueries: true
   });
   const history = useHistory();
 
-  const formik = useFormik({
-    initialValues: {
-      name: "",
-      url: "",
-      allowedEmailDomain: ""
-    },
-    validationSchema: createWorkspaceFormValidationSchema,
-    onSubmit: async (values) => {
+  const handleSetErrorMessage = (message: string) => {
+    return setErrorMessage(cleanDuplicateKeyErrorMessage(message));
+  };
+
+  const handleSubmit = async (values: CreateWorkspaceFormValues) => {
+    try {
       const { data } = await createWorkspace({
         variables: {
           input: {
@@ -114,11 +121,23 @@ const CreateWorkspaceForm: React.FC = () => {
         }
       });
       setShowSuccessMessage(true);
-      return setTimeout(
-        () => history.push(`/workspaces/${data.createWorkspace.id}`),
-        5000
-      );
+      setTimeout(() => {
+        history.push(`/workspaces/${data.createWorkspace.id}`);
+      }, 2000);
+      return;
+    } catch (error) {
+      return handleSetErrorMessage(error.message);
     }
+  };
+
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+      url: "",
+      allowedEmailDomain: ""
+    },
+    validationSchema: createWorkspaceFormValidationSchema,
+    onSubmit: handleSubmit
   });
 
   if (showSuccessMessage) {
@@ -129,6 +148,11 @@ const CreateWorkspaceForm: React.FC = () => {
     <div className="create-workspace-page flex flex-col w-full justify-center my-8 text-blue">
       <PageContainer>
         <div className="sm:w-1/2 md:w-1/2 lg:w-4/5 w-full max-w-6xl m-auto">
+          {errorMessage && (
+            <div className="mb-4">
+              <ErrorMessageBanner message={errorMessage} />
+            </div>
+          )}
           <div className="sm:text-center md:text-center lg:text-center">
             <h1 className="text-2xl">Let's set up a home for all your retros</h1>
             <h3 className="text-lg">You can always create another workspace later.</h3>
