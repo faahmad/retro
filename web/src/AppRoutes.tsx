@@ -17,6 +17,7 @@ import { PageContainer } from "./components/PageContainer";
 import { Button } from "./components/Button";
 import { ErrorBoundary, FallbackProps } from "react-error-boundary";
 import { useCurrentUser } from "./hooks/use-current-user";
+import { useScrollToTop } from "./hooks/use-scroll-to-top";
 
 const optimizely = createInstance({
   sdkKey: process.env.REACT_APP_OPTIMIZELY_SDK_KEY
@@ -43,6 +44,7 @@ export const AppRoutes: React.FC = () => {
     >
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <BrowserRouter>
+          <ScrollToTop />
           <div className="mt-8 w-4/5 max-w-6xl m-auto">
             <Navbar isLoggedIn={isLoggedIn} />
           </div>
@@ -63,6 +65,11 @@ export const AppRoutes: React.FC = () => {
     </OptimizelyProvider>
   );
 };
+
+function ScrollToTop() {
+  useScrollToTop();
+  return null;
+}
 
 const UnauthenticatedAppRoutes: React.FC = () => {
   return (
