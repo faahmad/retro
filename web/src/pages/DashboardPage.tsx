@@ -62,9 +62,9 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
   }
 
   const { workspace } = data;
-  const isInTrialMode =
-    workspace?.subscription?.status === "trialing" &&
-    workspace?.customer?.defaultPaymentMethod === null;
+  const userId = currentUser?.auth?.uid;
+  const isInTrialMode = getIsInTrialMode(workspace, userId);
+  const isFirstTimeBeingUsedByOwner = getIsFirstTimeBeingUsedByOwner(workspace, userId);
   const defaultTeam = workspace?.teams[0];
   const users = [...workspace.users, ...workspace.invitedUsers].filter(
     (user) => user.id !== authAccount?.uid
@@ -75,7 +75,7 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
       <PageContainer>
         <p className="text-blue mb-2 underline">{workspace.name}</p>
         <h1 className="text-blue font-black text-3xl">Dashboard</h1>
-        {isInTrialMode && (
+        {isInTrialMode && !isFirstTimeBeingUsedByOwner && (
           <UpgradeToProBanner
             workspaceId={workspace.id}
             trialEnd={workspace.subscription.trialEnd}
@@ -262,3 +262,18 @@ const TeamMemberOverview: React.FC<{
     </React.Fragment>
   );
 };
+
+function getIsInTrialMode(workspace: any, userId?: string) {
+  const isTrialing = workspace?.subscription?.status === "trialing";
+  const hasDefaultPaymentMethod = workspace?.customer?.defaultPaymentMethod !== null;
+  return (
+    (isTrialing && !hasDefaultPaymentMethod) ||
+    getIsFirstTimeBeingUsedByOwner(workspace, userId)
+  );
+}
+
+function getIsFirstTimeBeingUsedByOwner(workspace: any, userId?: string) {
+  const hasSubscription = workspace?.subscription !== null;
+  const isWorkspaceOwner = workspace?.ownerId === userId;
+  return !hasSubscription && isWorkspaceOwner;
+}
