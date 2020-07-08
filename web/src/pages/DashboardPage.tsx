@@ -12,7 +12,6 @@ import { PageContainer } from "../components/PageContainer";
 import { createRetroBoardInFirebase } from "../services/retro-board-service";
 import { UpgradeToProBanner } from "../components/UpgradeToProBanner";
 import { useCurrentUser } from "../hooks/use-current-user";
-import { useSubscriptionStatusContext } from "../contexts/SubscriptionStatusContext";
 import analytics from "analytics.js";
 
 const WORKSPACE_QUERY = gql`
@@ -21,6 +20,7 @@ const WORKSPACE_QUERY = gql`
       id
       name
       url
+      ownerId
       teams {
         id
         name
@@ -62,27 +62,39 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
   }
 
   const { workspace } = data;
-  const isInTrialMode =
-    workspace?.subscription?.status === "trialing" &&
-    workspace?.customer?.defaultPaymentMethod === null;
+  const userId = currentUser?.auth?.uid;
+  const isInActiveMode = getIsInActiveMode(workspace);
+  const isInTrialMode = getIsInTrialMode(workspace);
+  const isMissingSubscription = getIsMissingSubscription(workspace);
+  const isWorkspaceOwner = getIsWorkspaceOwner(workspace, userId || "");
   const defaultTeam = workspace?.teams[0];
   const users = [...workspace.users, ...workspace.invitedUsers].filter(
     (user) => user.id !== authAccount?.uid
   );
+  const isActive =
+    isInActiveMode || isInTrialMode || (isMissingSubscription && isWorkspaceOwner);
 
   return (
     <div>
       <PageContainer>
         <p className="text-blue mb-2 underline">{workspace.name}</p>
         <h1 className="text-blue font-black text-3xl">Dashboard</h1>
-        {isInTrialMode && (
+        {isInTrialMode && isWorkspaceOwner && (
           <UpgradeToProBanner
             workspaceId={workspace.id}
             trialEnd={workspace.subscription.trialEnd}
           />
         )}
-        <RetroBoardsOverview teamId={defaultTeam.id} history={history} />
-        <TeamMemberOverview workspaceId={workspace.id} users={users} />
+        <RetroBoardsOverview
+          teamId={defaultTeam.id}
+          history={history}
+          isActive={isActive}
+        />
+        <TeamMemberOverview
+          workspaceId={workspace.id}
+          users={users}
+          isActive={isActive}
+        />
       </PageContainer>
       <Footer />
     </div>
@@ -117,12 +129,12 @@ const CREATE_RETRO_MUTATION = gql`
 const RetroBoardsOverview: React.FC<{
   teamId: string;
   history: RouteComponentProps["history"];
-}> = ({ history, teamId }) => {
+  isActive: boolean;
+}> = ({ history, teamId, isActive }) => {
   const [retros, setRetros] = React.useState<any[]>([]);
   const { data } = useQuery(GET_TEAM_RETROS, {
     variables: { teamId }
   });
-  const { isActive } = useSubscriptionStatusContext();
 
   React.useEffect(() => {
     if (!data) {
@@ -199,9 +211,9 @@ const RetroBoardsOverview: React.FC<{
 const TeamMemberOverview: React.FC<{
   workspaceId: string;
   users: any[];
-}> = ({ workspaceId, users }) => {
+  isActive: boolean;
+}> = ({ workspaceId, users, isActive }) => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const { isActive } = useSubscriptionStatusContext();
 
   const handleToggleModal = async () => {
     await setIsModalOpen((prevIsModalOpen) => !prevIsModalOpen);
@@ -262,3 +274,29 @@ const TeamMemberOverview: React.FC<{
     </React.Fragment>
   );
 };
+
+function getIsInActiveMode(workspace: any) {
+  const isActive = workspace?.subscription?.status === "active";
+  const hasDefaultPaymentMethod = getHasDefaultPaymentMethod(workspace);
+  return isActive && hasDefaultPaymentMethod;
+}
+
+function getHasDefaultPaymentMethod(workspace: any) {
+  return workspace?.customer?.defaultPaymentMethod !== null;
+}
+
+function getIsInTrialMode(workspace: any) {
+  const isTrialing = workspace?.subscription?.status === "trialing";
+  const hasDefaultPaymentMethod = getHasDefaultPaymentMethod(workspace);
+  return isTrialing && !hasDefaultPaymentMethod;
+}
+
+function getIsMissingSubscription(workspace: any) {
+  // There is a race condition which causes the subscription to be null.
+  // This is the only time a subscription should be null.
+  return workspace?.subscription === null;
+}
+
+function getIsWorkspaceOwner(workspace: any, userId: string) {
+  return workspace?.ownerId === userId;
+}
