@@ -12,7 +12,6 @@ import { PageContainer } from "../components/PageContainer";
 import { createRetroBoardInFirebase } from "../services/retro-board-service";
 import { UpgradeToProBanner } from "../components/UpgradeToProBanner";
 import { useCurrentUser } from "../hooks/use-current-user";
-import { useSubscriptionStatusContext } from "../contexts/SubscriptionStatusContext";
 import analytics from "analytics.js";
 
 const WORKSPACE_QUERY = gql`
@@ -57,7 +56,6 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
   const { data, loading } = useQuery(WORKSPACE_QUERY, {
     variables: { id: workspaceId }
   });
-  // const { isActive } = useSubscriptionStatusContext();
 
   if (loading || !data) {
     return <LoadingText>Fetching workspace...</LoadingText>;
@@ -137,7 +135,6 @@ const RetroBoardsOverview: React.FC<{
   const { data } = useQuery(GET_TEAM_RETROS, {
     variables: { teamId }
   });
-  // const { isActive } = useSubscriptionStatusContext();
 
   React.useEffect(() => {
     if (!data) {
@@ -217,7 +214,6 @@ const TeamMemberOverview: React.FC<{
   isActive: boolean;
 }> = ({ workspaceId, users, isActive }) => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
-  // const { isActive } = useSubscriptionStatusContext();
 
   const handleToggleModal = async () => {
     await setIsModalOpen((prevIsModalOpen) => !prevIsModalOpen);

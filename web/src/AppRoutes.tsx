@@ -3,6 +3,8 @@ import { BrowserRouter, Route, Switch, useHistory } from "react-router-dom";
 import { OptimizelyProvider, createInstance, setLogger } from "@optimizely/react-sdk";
 import { Navbar } from "./components/Navbar";
 import { DesignPage } from "./pages/DesignPage";
+import { LoginPage } from "./pages/LoginPage";
+import { SignupPage } from "./pages/SignupPage";
 import { FAQPage } from "./pages/FAQPage";
 import { LandingPage } from "./pages/LandingPage";
 import { OnboardingPage } from "./pages/OnboardingPage";
@@ -28,7 +30,7 @@ if (process.env.NODE_ENV === "production") {
 
 export const AppRoutes: React.FC = () => {
   const currentUser = useCurrentUser();
-  const { auth, isLoggedIn } = currentUser;
+  const { auth, isLoggedIn, state } = currentUser;
 
   return (
     <OptimizelyProvider
@@ -46,7 +48,7 @@ export const AppRoutes: React.FC = () => {
         <BrowserRouter>
           <ScrollToTop />
           <div className="mt-8 w-4/5 max-w-6xl m-auto">
-            <Navbar isLoggedIn={isLoggedIn} />
+            <Navbar isLoggedIn={isLoggedIn} userState={state} />
           </div>
           <Switch>
             <Route exact path="/privacy" component={PrivacyPolicyPage} />
@@ -74,6 +76,8 @@ function ScrollToTop() {
 const UnauthenticatedAppRoutes: React.FC = () => {
   return (
     <React.Fragment>
+      <Route exact path="/login" component={LoginPage} />
+      <Route exact path="/signup" component={SignupPage} />
       <Route exact path="/" component={LandingPage} />
     </React.Fragment>
   );

@@ -3,17 +3,15 @@ import { Link, useHistory } from "react-router-dom";
 import { animated, useTransition } from "react-spring";
 import { Button } from "./Button";
 import { RetroPinkLogo } from "./RetroPinkLogo";
-import { GoogleOAuthButton } from "./GoogleOAuthButton";
-import { useLoginWithGoogle } from "../hooks/use-login-with-google";
 import { logOut } from "../services/auth-service";
 import { useCurrentUser } from "../hooks/use-current-user";
 import {
   getRootUrlForWorkspace,
   getWorkspaceFromCurrentUser
 } from "../utils/workspace-utils";
+import { CurrentUserState } from "../contexts/CurrentUserContext";
 
-export const Navbar: React.FC<any> = ({ isLoggedIn }) => {
-  const loginWithGoogle = useLoginWithGoogle();
+export const Navbar: React.FC<any> = ({ isLoggedIn, userState }) => {
   const history = useHistory();
 
   const handleOnLogOut = async () => {
@@ -32,21 +30,29 @@ export const Navbar: React.FC<any> = ({ isLoggedIn }) => {
         )}
       </div>
       <div className="flex flex-col z-0">
-        {isLoggedIn ? (
+        {isLoggedIn && (
           <Button
             className="mt-10 sm:mt-0 md:mt-0 lg:mt-0 text-blue text-right"
             onClick={handleOnLogOut}
           >
             Sign Out
           </Button>
-        ) : (
-          <GoogleOAuthButton
-            buttonClassName="text-blue"
-            textClassName="justify-end"
-            onClick={loginWithGoogle}
-          >
-            Continue With
-          </GoogleOAuthButton>
+        )}
+        {userState !== CurrentUserState.LOADING && !isLoggedIn && (
+          <React.Fragment>
+            <Button
+              className="mt-10 sm:mb-0 lg:mb-2 sm:mt-0 md:mt-0 lg:mt-0 text-blue"
+              onClick={() => history.push("/signup")}
+            >
+              Sign up for free
+            </Button>
+            <Button
+              className="mt-10 sm:mt-0 md:mt-0 lg:mt-0 text-blue"
+              onClick={() => history.push("/login")}
+            >
+              Log in
+            </Button>
+          </React.Fragment>
         )}
       </div>
     </nav>
