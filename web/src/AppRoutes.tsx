@@ -14,6 +14,8 @@ import { RetroBoardPage } from "./pages/RetroBoardPage";
 import { SettingsPage } from "./pages/SettingsPage";
 import { PrivacyPolicyPage } from "./pages/PrivacyPolicyPage";
 import { TermsOfServicePage } from "./pages/TermsOfServicePage";
+import { PodcastHomePage } from "./pages/PodcastHomePage";
+import { PodcastEpisodePage } from "./pages/PodcastEpisodePage";
 import { SubscriptionStatusProvider } from "./contexts/SubscriptionStatusContext";
 import { PageContainer } from "./components/PageContainer";
 import { Button } from "./components/Button";
@@ -55,6 +57,8 @@ export const AppRoutes: React.FC = () => {
             <Route exact path="/terms" component={TermsOfServicePage} />
             <Route exact path="/faq" component={FAQPage} />
             <Route exact path="/design" component={DesignPage} />
+            <Route path="/podcast/:episodeNumber" component={PodcastEpisodePage} />
+            <Route path="/podcast" component={PodcastHomePage} />
 
             {isLoggedIn ? (
               <AuthenticatedAppRoutes currentUser={currentUser} />
@@ -76,8 +80,8 @@ function ScrollToTop() {
 const UnauthenticatedAppRoutes: React.FC = () => {
   return (
     <React.Fragment>
-      <Route exact path="/login" component={LoginPage} />
-      <Route exact path="/signup" component={SignupPage} />
+      {/* <Route exact path="/login" component={LoginPage} /> */}
+      {/* <Route exact path="/signup" component={SignupPage} /> */}
       <Route exact path="/" component={LandingPage} />
     </React.Fragment>
   );

@@ -10,6 +10,7 @@ import {
   getWorkspaceFromCurrentUser
 } from "../utils/workspace-utils";
 import { CurrentUserState } from "../contexts/CurrentUserContext";
+import { JoinWaitlistButton } from "./JoinWaitlistButton";
 
 export const Navbar: React.FC<any> = ({ isLoggedIn, userState }) => {
   const history = useHistory();
@@ -38,7 +39,9 @@ export const Navbar: React.FC<any> = ({ isLoggedIn, userState }) => {
             Sign Out
           </Button>
         )}
-        {userState !== CurrentUserState.LOADING && !isLoggedIn && (
+        <p className="text-blue mb-4 text-center">Coming Soon!</p>
+        {userState !== CurrentUserState.LOADING && !isLoggedIn && <JoinWaitlistButton />}
+        {/* {userState !== CurrentUserState.LOADING && !isLoggedIn && (
           <React.Fragment>
             <Button
               className="mt-10 sm:mb-0 lg:mb-2 sm:mt-0 md:mt-0 lg:mt-0 text-blue"
@@ -53,7 +56,7 @@ export const Navbar: React.FC<any> = ({ isLoggedIn, userState }) => {
               Log in
             </Button>
           </React.Fragment>
-        )}
+        )} */}
       </div>
     </nav>
   );

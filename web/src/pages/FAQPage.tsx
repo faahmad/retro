@@ -87,23 +87,29 @@ export const FAQPage: React.FC = () => {
           </div>
         </div>
       </div>
-      <div
-        style={{
-          backgroundImage: `url(${landingFooterImage})`,
-          backgroundSize: "cover",
-          minHeight: "300px"
-        }}
-        className="w-full flex justify-center items-center"
-      >
-        <Link to="/">
-          <h2 className="text-5xl text-pink p-4 sm: p-2 md: p-2 lg:p-2 text-center bg-blue">
-            Home
-          </h2>
-        </Link>
-      </div>
+      <HomePageFooter />
       <footer className="bg-pink text-blue p-2 text-center">
         <p className="text-blue">&copy; 2020, Retro Technology</p>
       </footer>
+    </div>
+  );
+};
+
+export const HomePageFooter = () => {
+  return (
+    <div
+      style={{
+        backgroundImage: `url(${landingFooterImage})`,
+        backgroundSize: "cover",
+        minHeight: "300px"
+      }}
+      className="w-full flex justify-center items-center"
+    >
+      <Link to="/">
+        <h2 className="text-5xl text-pink p-4 sm: p-2 md: p-2 lg:p-2 text-center bg-blue">
+          Home
+        </h2>
+      </Link>
     </div>
   );
 };
