@@ -61,65 +61,83 @@ export function PodcastEpisodePage() {
               </a>
             </li>
           </ul>
+          <h3 className="text-xl font-black mt-6 mb-2">The Good</h3>
+          <GoodItems />
+          <h3 className="text-xl font-black mt-6 mb-2">The Bad</h3>
+          <BadItems />
           <h3 className="text-xl font-black mt-6 mb-2">Action Items</h3>
-          <ul>
-            <li className="mb-2">
-              - Position yourself as a specialist in your space. Start writing about X,
-              when something new comes out, try to have one of the first really solid
-              pieces of content.You'll learn as you write and become a specialist, other
-              people online will perceive you as an expert. Nader spent a lot of time
-              writing blogs and answering questions on StackOverflow about React Native.
-            </li>
-            <li className="mb-2">
-              {" "}
-              - Reach out other consultants in the space if you need advice about pricing.
-            </li>
-            <li className="mb-2">
-              {" "}
-              - Setting a firm work week / work hours and be strict. Gives you the time
-              needed to enjoy your life.
-            </li>
-            <li className="mb-2">
-              {" "}
-              - It's better to have a client that you enjoy working with for a little less
-              money.
-            </li>
-            <li className="mb-2">
-              {" "}
-              - Try to get half hourly billing, half value based pricing.
-            </li>
-            <li className="mb-2">- Pay your taxes quarterly.</li>
-            <li className="mb-2">- Have a backup laptop when you can afford it.</li>
-            <li className="mb-2">
-              {" "}
-              - If you have a lot of inbound sales, decide if you want to keep growing.If
-              you do, hire someone to manage it.
-            </li>
-          </ul>
-          <h3 className="text-xl font-black mt-6 mb-2">Bad</h3>
-          <ul>
-            <li className="mb-2">
-              - Was stressed out, family and personal life suffered.
-            </li>
-            <li className="mb-2">- Billing hourly.</li>
-            <li className="mb-2">
-              - Didn't pay taxes on time, ended up owing taxes for the entire following
-              year.
-            </li>
-            <li className="mb-2">- Laptop wasn't working on a high paying client.</li>
-            <li className="mb-2">
-              - Had too many clients reaching out and would often ignore inbound sales.
-            </li>
-          </ul>
-          <div className="mt-8">
-            {/* <Button className="text-blue" onClick={handleDownloadTranscript}>
-              Download Transcript
-            </Button> */}
-          </div>
+          <ActionItems />
+          <div className="mt-8"></div>
         </div>
       </PageContainer>
       <HomePageFooter />
       <LandingPageFooter />
     </div>
+  );
+}
+
+function ActionItems() {
+  return (
+    <ul>
+      <li className="mb-2">
+        - Position yourself as a specialist in your space. Start writing about X, when
+        something new comes out, try to have one of the first really solid pieces of
+        content.You'll learn as you write and become a specialist, other people online
+        will perceive you as an expert. Nader spent a lot of time writing blogs and
+        answering questions on StackOverflow about React Native.
+      </li>
+      <li className="mb-2">
+        {" "}
+        - Reach out other consultants in the space if you need advice about pricing.
+      </li>
+      <li className="mb-2">
+        {" "}
+        - Setting a firm work week / work hours and be strict. Gives you the time needed
+        to enjoy your life.
+      </li>
+      <li className="mb-2">
+        {" "}
+        - It's better to have a client that you enjoy working with for a little less
+        money.
+      </li>
+      <li className="mb-2">
+        {" "}
+        - Try to get half hourly billing, half value based pricing.
+      </li>
+      <li className="mb-2">- Pay your taxes quarterly.</li>
+      <li className="mb-2">- Have a backup laptop when you can afford it.</li>
+      <li className="mb-2">
+        {" "}
+        - If you have a lot of inbound sales, decide if you want to keep growing.If you
+        do, hire someone to manage it.
+      </li>
+    </ul>
+  );
+}
+
+function GoodItems() {
+  return (
+    <ul>
+      <li className="mb-2">- Learned a lot.</li>
+      <li className="mb-2">- Made a lot of money.</li>
+      <li className="mb-2">- Published a book.</li>
+      <li className="mb-2">- Landed a job at AWS.</li>
+    </ul>
+  );
+}
+
+function BadItems() {
+  return (
+    <ul>
+      <li className="mb-2">- Was stressed out, family and personal life suffered.</li>
+      <li className="mb-2">- Billing hourly.</li>
+      <li className="mb-2">
+        - Didn't pay taxes on time, ended up owing taxes for the entire following year.
+      </li>
+      <li className="mb-2">- Laptop wasn't working on a high paying client.</li>
+      <li className="mb-2">
+        - Had too many clients reaching out and would often ignore inbound sales.
+      </li>
+    </ul>
   );
 }
