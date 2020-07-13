@@ -6,26 +6,28 @@ import analytics from "analytics.js";
 import { LandingPageFooter } from "./LandingPage";
 import { HomePageFooter } from "./FAQPage";
 
-const RETROSPECTIVE_1_NADER_DABIT_TRANSCRIPT_FILE_URL =
-  "gs://retro-prod-786.appspot.com/retrospective-podcast-transcripts/retrospective-1-nader-dabit.vtt";
+const IFRAME_SRC = `<iframe width="100%" height="300" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/856887271&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"></iframe><div style="font-size: 10px; color: #cccccc;line-break: anywhere;word-break: normal;overflow: hidden;white-space: nowrap;text-overflow: ellipsis; font-family: Interstate,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Garuda,Verdana,Tahoma,sans-serif;font-weight: 100;"><a href="https://soundcloud.com/farazamiruddin" title="farazamiruddin" target="_blank" style="color: #cccccc; text-decoration: none;">farazamiruddin</a> · <a href="https://soundcloud.com/farazamiruddin/retrospective-1-nader-dabit-how-i-made-400k-in-a-year-as-a-software-consultant" title="Retrospective 1 // Nader Dabit - How I Made $400K in a Year as a Software Consultant" target="_blank" style="color: #cccccc; text-decoration: none;">Retrospective 1 // Nader Dabit - How I Made $400K in a Year as a Software Consultant</a></div>`;
 
-const transcriptRef = firebase
-  .storage()
-  .refFromURL(RETROSPECTIVE_1_NADER_DABIT_TRANSCRIPT_FILE_URL);
+// const RETROSPECTIVE_1_NADER_DABIT_TRANSCRIPT_FILE_URL =
+//   "gs://retro-prod-786.appspot.com/retrospective-podcast-transcripts/retrospective-1-nader-dabit.vtt";
+
+// const transcriptRef = firebase
+//   .storage()
+//   .refFromURL(RETROSPECTIVE_1_NADER_DABIT_TRANSCRIPT_FILE_URL);
 
 export function PodcastEpisodePage() {
-  const handleDownloadTranscript = async () => {
-    analytics.track("Transcript Downloaded", { episode: 1 });
-    const url = await transcriptRef.getDownloadURL();
-    const xhr = new XMLHttpRequest();
-    xhr.responseType = "blob";
-    xhr.onload = function () {
-      const blob = xhr.response;
-    };
-    xhr.open("GET", url);
-    xhr.send();
-    return;
-  };
+  // const handleDownloadTranscript = async () => {
+  //   analytics.track("Transcript Downloaded", { episode: 1 });
+  //   const url = await transcriptRef.getDownloadURL();
+  //   const xhr = new XMLHttpRequest();
+  //   xhr.responseType = "blob";
+  //   xhr.onload = function () {
+  //     const blob = xhr.response;
+  //   };
+  //   xhr.open("GET", url);
+  //   xhr.send();
+  //   return;
+  // };
 
   return (
     <div>
@@ -37,6 +39,9 @@ export function PodcastEpisodePage() {
           </h2>
           <h3 className="text-xl font-black mt-6 mb-2">Listen</h3>
           <ul className="my-2">
+            <li className="mb-4">
+              <div dangerouslySetInnerHTML={{ __html: IFRAME_SRC }} />
+            </li>
             <li>
               <a
                 className="underline"
@@ -71,7 +76,7 @@ export function PodcastEpisodePage() {
             </li>
             <li className="mb-2">
               {" "}
-              - Setting a firm work week / work hours and be strict.Gives you the time
+              - Setting a firm work week / work hours and be strict. Gives you the time
               needed to enjoy your life.
             </li>
             <li className="mb-2">
