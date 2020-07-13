@@ -107,9 +107,9 @@ export function PodcastEpisodePage() {
             </li>
           </ul>
           <div className="mt-8">
-            <Button className="text-blue" onClick={handleDownloadTranscript}>
+            {/* <Button className="text-blue" onClick={handleDownloadTranscript}>
               Download Transcript
-            </Button>
+            </Button> */}
           </div>
         </div>
       </PageContainer>
