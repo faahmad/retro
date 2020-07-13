@@ -99,7 +99,7 @@ export const LandingPage: React.FC = () => {
                 We’re on a mission to take over each team’s most dreaded weekly activity
                 and turn it into a fast win for everyone.
               </p>
-              {isSignUpEnabled ? (
+              {isSignUpEnabled && false ? (
                 <GoogleOAuthButton
                   buttonClassName="mt-4 text-blue bg-pink"
                   textClassName="justify-end"
@@ -147,7 +147,7 @@ export const LandingPage: React.FC = () => {
         <PageContainer>
           <div className="mt-20 mb-20 flex flex-col lg:flex-row max-w-6xl items-center m-auto">
             <div className="hidden w-full sm:block md:block lg:block sm:w-1/3 md:w-1/3 lg:w-1/3">
-              {isSignUpEnabled ? (
+              {isSignUpEnabled && false ? (
                 <GoogleOAuthButton
                   buttonClassName="text-blue bg-pink"
                   textClassName="justify-end"
@@ -162,16 +162,16 @@ export const LandingPage: React.FC = () => {
             </div>
             <div className="w-full sm:w-2/3 md:w-2/3 lg:w-2/3 sm:ml-4 md:ml-4 lg:w-ml-4">
               <h3 className="text-3xl text-blue sm:text-right  md:text-right  lg:text-right font-black mb-3">
-                {isSignUpEnabled ? "Play Now!" : "Get Extra Lives for Free."}
+                {isSignUpEnabled && false ? "Play Now!" : "Get Extra Lives for Free."}
               </h3>
               <p className="text-xl sm:text-right  md:text-right  lg:text-right  text-blue">
-                {isSignUpEnabled
+                {isSignUpEnabled && false
                   ? "No fees for your first 30 days. Retro is guaranteed to make your team feel more productive. This tool is awesome. We promise."
                   : "We will be launching soon. Get 2 months free when you join our waitlist. No payment information required."}
               </p>
             </div>
             <div className="block w-full sm:hidden md:hidden lg:hidden sm:w-1/3 md:w-1/3 lg:w-1/3">
-              {isSignUpEnabled ? (
+              {isSignUpEnabled && false ? (
                 <GoogleOAuthButton
                   buttonClassName="mt-4 text-blue bg-pink"
                   textClassName="justify-end"
@@ -187,31 +187,8 @@ export const LandingPage: React.FC = () => {
           </div>
         </PageContainer>
       </div>
-      <div
-        style={{
-          backgroundImage: `url(${landingFooterImage})`,
-          backgroundSize: "cover",
-          minHeight: "300px"
-        }}
-        className="w-full flex justify-center items-center"
-      >
-        <Link to="/faq">
-          <h2 className="text-5xl text-pink p-4 sm: p-2 md: p-2 lg:p-2 text-center bg-blue">
-            FAQ
-          </h2>
-        </Link>
-      </div>
-      <footer className="bg-pink text-blue text-xs p-2 flex justify-between">
-        <div className="flex">
-          <Link to="/terms" className="px-2">
-            Terms of Service
-          </Link>
-          <Link to="/privacy" className="px-2">
-            Privacy Policy
-          </Link>
-        </div>
-        <p className="text-blue">&copy; 2020, Retro Technology</p>
-      </footer>
+      <FAQFooter />
+      <LandingPageFooter />
     </div>
   );
 };
@@ -221,5 +198,40 @@ const HowItWorksCard: React.FC = ({ children }) => {
     <div className="bg-white h-72 w-64 text-blue border border-red shadow-red flex flex-col items-center p-4 text-center mb-4">
       {children}
     </div>
+  );
+};
+
+export const FAQFooter = () => {
+  return (
+    <div
+      style={{
+        backgroundImage: `url(${landingFooterImage})`,
+        backgroundSize: "cover",
+        minHeight: "300px"
+      }}
+      className="w-full flex justify-center items-center"
+    >
+      <Link to="/faq">
+        <h2 className="text-5xl text-pink p-4 sm: p-2 md: p-2 lg:p-2 text-center bg-blue">
+          FAQ
+        </h2>
+      </Link>
+    </div>
+  );
+};
+
+export const LandingPageFooter = () => {
+  return (
+    <footer className="bg-pink text-blue text-xs p-2 flex justify-between">
+      <div className="flex">
+        <Link to="/terms" className="px-2">
+          Terms of Service
+        </Link>
+        <Link to="/privacy" className="px-2">
+          Privacy Policy
+        </Link>
+      </div>
+      <p className="text-blue">&copy; 2020, Retro Technology</p>
+    </footer>
   );
 };
