@@ -5,21 +5,8 @@ import {
   deleteIdToken,
   getIdTokenFromFirebaseUser
 } from "../services/auth-service";
-
-import { gql } from "apollo-boost";
-import { useLazyQuery } from "@apollo/react-hooks";
-
-const GET_USER_QUERY = gql`
-  query GetUserQuery {
-    user {
-      id
-      workspace {
-        id
-        url
-      }
-    }
-  }
-`;
+import { getUserById } from "../services/user-service";
+import { User } from "../types/user";
 
 export enum CurrentUserState {
   LOADING = "loading",
@@ -30,7 +17,7 @@ export enum CurrentUserState {
 
 export type CurrentUserContextValues = {
   auth: firebase.User | null;
-  data: any | null;
+  data: User | null;
   state: CurrentUserState;
   isLoggedIn: boolean;
 };
@@ -48,7 +35,6 @@ export const CurrentUserContext = React.createContext<CurrentUserContextValues>(
 
 export function CurrentUserProvider({ children }: { children: React.ReactNode }) {
   const [values, dispatch] = React.useReducer(currentUserReducer, initialValues);
-  const [getUser, getUserResponse] = useLazyQuery(GET_USER_QUERY);
 
   React.useEffect(() => {
     return firebase.auth().onAuthStateChanged(handleAuthStateChanged);
@@ -63,15 +49,10 @@ export function CurrentUserProvider({ children }: { children: React.ReactNode })
     const idToken = await getIdTokenFromFirebaseUser(firebaseUser);
     saveIdToken(idToken);
     dispatch({ type: "authenticated", payload: firebaseUser });
-    getUser({ context: { idToken } });
+    const user = await getUserById(firebaseUser.uid);
+    dispatch({ type: "get_user_data_success", payload: user });
     return;
   };
-  React.useEffect(() => {
-    if (getUserResponse.called && !getUserResponse.loading) {
-      dispatch({ type: "get_user_data_success", payload: getUserResponse.data });
-    }
-    //eslint-disable-next-line
-  }, [getUserResponse.called, getUserResponse.loading]);
 
   const handleOnLoggedOut = () => {
     dispatch({ type: "logged_out", payload: null });

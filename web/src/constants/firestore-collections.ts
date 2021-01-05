@@ -1,3 +1,4 @@
 export enum FirestoreCollections {
-  WORKSPACES = "workspaces"
+  WORKSPACES = "workspaces",
+  USERS = "users"
 }
