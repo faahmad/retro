@@ -80,8 +80,8 @@ function ScrollToTop() {
 const UnauthenticatedAppRoutes: React.FC = () => {
   return (
     <React.Fragment>
-      {/* <Route exact path="/login" component={LoginPage} /> */}
-      {/* <Route exact path="/signup" component={SignupPage} /> */}
+      <Route exact path="/login" component={LoginPage} />
+      <Route exact path="/signup" component={SignupPage} />
       <Route exact path="/" component={LandingPage} />
     </React.Fragment>
   );
