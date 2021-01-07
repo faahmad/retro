@@ -23,7 +23,9 @@ export const createStripeCustomerSubscription = functions.firestore
       const subscription = await subscribeCustomerToProPlan(customer.id);
       await updateWorkspace(workspaceSnapshot.id, {
         customerId: customer.id,
-        subscriptionId: subscription.id
+        subscriptionId: subscription.id,
+        subscriptionTrialEnd: subscription.trial_end,
+        subscriptionStatus: subscription.status
       });
     } catch (error) {
       logger.log("Error creating stripe customer:", error.message);

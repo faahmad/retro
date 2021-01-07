@@ -15,6 +15,8 @@ export async function getUserIdFromIdToken(idToken: string) {
 interface UpdateWorkspaceParams {
   customerId?: string;
   subscriptionId?: string;
+  subscriptionTrialEnd: number | null;
+  subscriptionStatus?: string;
 }
 export function updateWorkspace(id: string, params: UpdateWorkspaceParams) {
   return db

@@ -7,4 +7,6 @@ export interface Workspace {
   createdAt: string;
   updatedAt: string;
   subscriptionStatus: "trialing";
+  subscriptionTrialEnd: number | null;
+  customerId?: string;
 }

@@ -7,5 +7,8 @@ export interface Workspace {
   ownerEmail: string;
   createdAt: string;
   updatedAt: string;
-  subscriptionStatus: "trialing";
+  subscriptionStatus: string;
+  subscriptionTrialEnd: number | null;
+  customerId?: string;
+  subscriptionId?: string;
 }
