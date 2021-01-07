@@ -3,6 +3,7 @@ import * as Airtable from "airtable";
 import { projectIds } from "../../../constants/project-ids";
 import { Workspace } from "../../../types/workspace";
 import * as moment from "moment";
+import { FirestoreCollections } from "../../../constants/firestore-collections";
 const env = functions.config();
 
 const DEV_WORKSPACE_SALES_BASE = "appZ1WIhL1TowGwzY";
@@ -21,13 +22,13 @@ const base = new Airtable({
  * data to Airtable so we can track our sales funnel.
  */
 export const addWorkspaceToAirtable = functions.firestore
-  .document("workspaces/{workspaceId}")
-  .onCreate((snapshot) => {
-    const workspace = snapshot.data() as Workspace;
+  .document(`${FirestoreCollections.WORKSPACE}/{workspaceId}`)
+  .onCreate((workspaceSnapshot) => {
+    const workspace = workspaceSnapshot.data() as Workspace;
     const data = {
-      Id: workspace.id,
+      Id: workspaceSnapshot.id,
       "Workspace Name": workspace.name,
-      "Owner Email": workspace.owner.email,
+      "Owner Email": workspace.ownerEmail,
       "Created At": moment(workspace.createdAt).format("L")
     };
     return base("Workspaces").create(data);

@@ -3,23 +3,25 @@ import { createCustomer, subscribeCustomerToProPlan } from "../../../services/st
 import { updateWorkspace } from "../../../services/firebase-admin";
 import { Workspace } from "../../../types/workspace";
 import { logger } from "../../../lib/logger";
+import { FirestoreCollections } from "../../../constants/firestore-collections";
 
 /**
  * When a Workspace is created,
  * this function creates a Stripe Customer and Subscription.
  */
 export const createStripeCustomerSubscription = functions.firestore
-  .document("workspaces/{workspaceId}")
-  .onCreate(async (snapshot) => {
-    const workspace = snapshot.data() as Workspace;
+  .document(`${FirestoreCollections.WORKSPACE}/{workspaceId}`)
+  .onCreate(async (workspaceSnapshot) => {
+    const workspace = workspaceSnapshot.data() as Workspace;
+    logger.prettyPrint({ workspace });
     if (!workspace) {
       logger.log("Workspace in undefined.");
       return;
     }
     try {
-      const customer = await createCustomer(workspace.name, workspace.owner.email);
+      const customer = await createCustomer(workspace.name, workspace.ownerEmail);
       const subscription = await subscribeCustomerToProPlan(customer.id);
-      await updateWorkspace(workspace.id, {
+      await updateWorkspace(workspaceSnapshot.id, {
         customerId: customer.id,
         subscriptionId: subscription.id
       });

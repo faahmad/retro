@@ -9,7 +9,7 @@ import { difference } from "lodash";
  * send the invite email via mailjet.
  */
 export const sendInvitationEmail = functions.firestore
-  .document("workspaceInvites/{workspaceId}")
+  .document("workspaceInvite/{workspaceId}")
   .onUpdate((change) => {
     const originalInvites = change.before.data() as WorkspaceInvitesCollection;
     const nextInvites = change.after.data() as WorkspaceInvitesCollection;

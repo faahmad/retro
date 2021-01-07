@@ -1,4 +1,5 @@
 import * as admin from "firebase-admin";
+import { FirestoreCollections } from "../constants/firestore-collections";
 
 const db = admin.firestore();
 
@@ -16,15 +17,21 @@ interface UpdateWorkspaceParams {
   subscriptionId?: string;
 }
 export function updateWorkspace(id: string, params: UpdateWorkspaceParams) {
-  return db.collection("workspaces").doc(id).set(params, { merge: true });
+  return db
+    .collection(FirestoreCollections.WORKSPACE)
+    .doc(id)
+    .set(params, { merge: true });
 }
 
 export async function getWorkspace(id: string) {
-  const workspaceDoc = await db.collection("workspaces").doc(id).get();
+  const workspaceDoc = await db.collection(FirestoreCollections.WORKSPACE).doc(id).get();
   return workspaceDoc.data();
 }
 
 export async function getWorkspaceUsers(workspaceId: string) {
-  const workspaceUsersDoc = await db.collection("workspaceUsers").doc(workspaceId).get();
+  const workspaceUsersDoc = await db
+    .collection(FirestoreCollections.WORKSPACE_USER)
+    .doc(workspaceId)
+    .get();
   return workspaceUsersDoc.data();
 }
