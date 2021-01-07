@@ -5,7 +5,10 @@ import { CurrentUserContextValues } from "../contexts/CurrentUserContext";
 export function getWorkspaceFromCurrentUser(
   currentUser: CurrentUserContextValues
 ): UserWorkspace | null {
-  return currentUser?.data?.workspaces[0] || null;
+  if (currentUser?.data?.workspaces) {
+    return currentUser?.data?.workspaces[0];
+  }
+  return null;
 }
 
 export function getRootUrlForWorkspace(workspace: Workspace | UserWorkspace) {
