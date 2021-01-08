@@ -1,3 +1,4 @@
+import { FirestoreTimestamp } from "./firestore-timestamp";
 export interface WorkspaceInvite {
   email: string;
   workspaceId: string;
@@ -5,11 +6,11 @@ export interface WorkspaceInvite {
   invitedByUserId: string;
   invitedByUserDisplayName: string;
   status: WorkspaceInviteStatus;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: FirestoreTimestamp;
+  updatedAt: FirestoreTimestamp;
 }
 
 export enum WorkspaceInviteStatus {
-  SENT = "sent",
+  SENT = "sent", // this assumes that sendInvitationEmail doesn't fail.
   ACCEPTED = "accepted"
 }
