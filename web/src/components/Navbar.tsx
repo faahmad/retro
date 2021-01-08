@@ -16,7 +16,7 @@ import { FeatureFlags } from "../constants/feature-flags";
 
 export const Navbar: React.FC<any> = ({ isLoggedIn, userState }) => {
   const history = useHistory();
-  const isSignUpEnabled = useFeature(FeatureFlags.SIGN_UP);
+  const [isSignUpEnabled] = useFeature(FeatureFlags.SIGN_UP);
 
   const handleOnLogOut = async () => {
     await logOut();

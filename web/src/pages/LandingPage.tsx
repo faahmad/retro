@@ -18,7 +18,7 @@ import { useCurrentUser } from "../hooks/use-current-user";
 import { CurrentUserState } from "../contexts/CurrentUserContext";
 
 export const LandingPage: React.FC = () => {
-  const isSignUpEnabled = useFeature(FeatureFlags.SIGN_UP);
+  const [isSignUpEnabled] = useFeature(FeatureFlags.SIGN_UP);
   const loginWithGoogle = useLoginWithGoogle();
   const currentUser = useCurrentUser();
 
