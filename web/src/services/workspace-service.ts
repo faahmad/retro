@@ -27,6 +27,7 @@ export function createWorkspaceTransaction(input: CreateWorkspaceTransactionInpu
     }
     // Create the workspace.
     const newWorkspaceRef = workspaceCollection.doc();
+    const newWorkspaceId = newWorkspaceRef.id;
     transaction.set(newWorkspaceRef, {
       name: input.name,
       url: input.url,
@@ -45,30 +46,27 @@ export function createWorkspaceTransaction(input: CreateWorkspaceTransactionInpu
       subscriptionTrialEnd: null
     });
     // Create the workspaceUrl.
-    transaction.set(workspaceUrlRef, { url: input.url, workspaceId: newWorkspaceRef.id });
+    transaction.set(workspaceUrlRef, { url: input.url, workspaceId: newWorkspaceId });
     // Add the workspace to the user's document.
     const userRef = userCollection.doc(input.userId);
     transaction.update(userRef, {
       workspaces: firebase.firestore.FieldValue.arrayUnion({
-        id: newWorkspaceRef.id,
+        id: newWorkspaceId,
         name: input.name
       })
     });
-    // Add the user to the workspace_user collection.
-    const workspaceUserRef = workspaceUserCollection.doc(newWorkspaceRef.id);
-    transaction.set(
-      workspaceUserRef,
-      {
-        users: {
-          [input.userId]: {
-            displayName: input.userDisplayName,
-            email: input.userEmail,
-            photoURL: input.userPhotoURL
-          }
-        }
-      },
-      { merge: true }
+    // Create a composite document for a Workspace User.
+    const workspaceUserRef = workspaceUserCollection.doc(
+      `${newWorkspaceId}_${input.userId}`
     );
+    transaction.set(workspaceUserRef, {
+      workspaceId: newWorkspaceId,
+      userId: input.userId,
+      userDisplayName: input.userDisplayName,
+      userEmail: input.userEmail,
+      userPhotoURL: input.userPhotoURL,
+      userRole: "owner"
+    });
     // Return the newWorkspaceRef.
     return newWorkspaceRef;
   });
