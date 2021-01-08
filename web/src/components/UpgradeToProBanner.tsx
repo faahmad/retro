@@ -5,7 +5,7 @@ import { Button } from "./Button";
 import { useOpenBillingPortal } from "../hooks/use-open-billing-portal";
 
 interface UpgradeToProBannerProps {
-  trialEnd: number;
+  trialEnd: number | null;
   workspaceId: string;
 }
 
@@ -14,6 +14,10 @@ export const UpgradeToProBanner: React.FC<UpgradeToProBannerProps> = ({
   workspaceId
 }) => {
   const { openBillingPortalFn, isOpeningPortal } = useOpenBillingPortal(workspaceId);
+
+  if (!trialEnd) {
+    return null;
+  }
 
   return (
     <div className="flex justify-between items-center text-blue my-2 p-4 bg-white border shadow flex-wrap">

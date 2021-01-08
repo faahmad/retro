@@ -1,6 +1,7 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 import { CreateUserParams } from "../../../types/user";
+import { FirestoreCollections } from "../../../constants/firestore-collections";
 
 const db = admin.firestore();
 
@@ -17,5 +18,5 @@ export const createUser = functions.auth.user().onCreate(async (user) => {
     phoneNumber: user.phoneNumber,
     createdAt: user.metadata.creationTime
   };
-  return db.collection("users").doc(user.uid).set(params);
+  return db.collection(FirestoreCollections.USER).doc(user.uid).set(params);
 });

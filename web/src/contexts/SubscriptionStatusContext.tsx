@@ -46,7 +46,7 @@ function subscriptionStatusReducer(
   }
 }
 
-export const SubscriptionStatusProvider: React.FC<{ workspaceId: string }> = ({
+export const SubscriptionStatusProvider: React.FC<{ workspaceId?: string }> = ({
   workspaceId,
   children
 }) => {

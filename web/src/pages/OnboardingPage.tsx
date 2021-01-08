@@ -12,6 +12,7 @@ import { useCurrentUser } from "../hooks/use-current-user";
 import { getWorkspaceFromCurrentUser } from "../utils/workspace-utils";
 import { ErrorMessageBanner } from "../components/ErrorMessageBanner";
 import { cleanDuplicateKeyErrorMessage } from "../utils/error-utils";
+import { useCreateWorkspace } from "../hooks/use-create-workspace";
 
 const GET_WORKSPACES_THAT_USER_IS_INVITED_TO_QUERY = gql`
   query GetWorkspacesThatUserIsInvitedTo {
@@ -68,16 +69,6 @@ export function OnboardingPage() {
   );
 }
 
-const CREATE_WORKSPACE_MUTATION = gql`
-  mutation CreateWorkspace($input: CreateWorkspaceInput!) {
-    createWorkspace(input: $input) {
-      id
-      name
-      url
-    }
-  }
-`;
-
 const createWorkspaceFormValidationSchema = yup.object().shape({
   name: yup.string().required("Workspace name is required."),
   url: yup
@@ -99,10 +90,7 @@ type CreateWorkspaceFormValues = {
 const CreateWorkspaceForm: React.FC = () => {
   const [showSuccessMessage, setShowSuccessMessage] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
-  const [createWorkspace] = useMutation(CREATE_WORKSPACE_MUTATION, {
-    refetchQueries: ["user"],
-    awaitRefetchQueries: true
-  });
+  const createWorkspace = useCreateWorkspace();
   const history = useHistory();
 
   const handleSetErrorMessage = (message: string) => {
@@ -111,18 +99,14 @@ const CreateWorkspaceForm: React.FC = () => {
 
   const handleSubmit = async (values: CreateWorkspaceFormValues) => {
     try {
-      const { data } = await createWorkspace({
-        variables: {
-          input: {
-            name: values.name,
-            url: values.url,
-            allowedEmailDomain: `@${values.allowedEmailDomain}`
-          }
-        }
+      const workspaceRef = await createWorkspace({
+        name: values.name,
+        url: values.url,
+        allowedEmailDomain: `@${values.allowedEmailDomain}`
       });
       setShowSuccessMessage(true);
       setTimeout(() => {
-        history.push(`/workspaces/${data.createWorkspace.id}`);
+        history.push(`/workspaces/${workspaceRef!.id}`);
       }, 2000);
       return;
     } catch (error) {

@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
-import { Workspace } from "../../../types/workspace";
+import { FirestoreCollections } from "../../../constants/firestore-collections";
 
 const db = admin.firestore();
 
@@ -9,11 +9,10 @@ const db = admin.firestore();
  * initializes workspaceInvites.
  */
 export const createWorkspaceInvites = functions.firestore
-  .document("workspace/{workspaceId}")
-  .onCreate(async (snapshot) => {
-    const workspace = snapshot.data() as Workspace;
+  .document(`${FirestoreCollections.WORKSPACE}/{workspaceId}`)
+  .onCreate(async (workspaceSnapshot) => {
     return db
-      .collection("workspaceInvites")
-      .doc(workspace.id)
-      .set({ workspaceId: workspace.id });
+      .collection(FirestoreCollections.WORKSPACE_INVITE)
+      .doc(workspaceSnapshot.id)
+      .set({ workspaceId: workspaceSnapshot.id });
   });

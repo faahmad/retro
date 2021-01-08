@@ -1,14 +1,12 @@
 export interface Workspace {
-  id: string;
   name: string;
-  owner: {
-    id: string;
-    email: string;
-  };
-  createdAt: Date;
-  updatedAt: Date;
-  url?: string;
+  url: string;
+  allowedEmailDomains: string[];
+  ownerId: string;
+  ownerEmail: string;
+  createdAt: string;
+  updatedAt: string;
+  subscriptionStatus: string;
+  subscriptionTrialEnd: number | null;
   customerId?: string;
-  subscriptionId?: string;
-  allowedEmailDomain?: string;
 }

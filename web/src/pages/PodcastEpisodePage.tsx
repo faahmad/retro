@@ -1,8 +1,5 @@
 import * as React from "react";
 import { PageContainer } from "../components/PageContainer";
-import firebase from "../lib/firebase";
-import { Button } from "../components/Button";
-import analytics from "analytics.js";
 import { LandingPageFooter } from "./LandingPage";
 import { HomePageFooter } from "./FAQPage";
 

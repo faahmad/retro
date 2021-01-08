@@ -1,6 +1,4 @@
 import React from "react";
-import { gql } from "apollo-boost";
-import { useQuery, useMutation } from "@apollo/react-hooks";
 import { useParams, RouteComponentProps } from "react-router-dom";
 import teamMemberEmptyImage from "../assets/images/team-member-empty-image.svg";
 import retroEmptyImage from "../assets/images/retro-empty-image.svg";
@@ -9,70 +7,30 @@ import { LoadingText } from "../components/LoadingText";
 import moment from "moment";
 import { Footer } from "../components/Footer";
 import { PageContainer } from "../components/PageContainer";
-import { createRetroBoardInFirebase } from "../services/retro-board-service";
 import { UpgradeToProBanner } from "../components/UpgradeToProBanner";
 import { useCurrentUser } from "../hooks/use-current-user";
 import analytics from "analytics.js";
-
-const WORKSPACE_QUERY = gql`
-  query WorkspaceQuery($id: ID!) {
-    workspace(id: $id) {
-      id
-      name
-      url
-      ownerId
-      teams {
-        id
-        name
-      }
-      users {
-        __typename
-        id
-        email
-        createdAt
-      }
-      invitedUsers {
-        __typename
-        id
-        email
-        createdAt
-        accepted
-      }
-      subscription {
-        status
-        trialEnd
-      }
-      customer {
-        defaultPaymentMethod
-      }
-    }
-  }
-`;
+import { useGetWorkspace } from "../hooks/use-get-workspace";
 
 export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
   const currentUser = useCurrentUser();
   const authAccount = currentUser.auth;
-  const { workspaceId } = useParams();
-  const { data, loading } = useQuery(WORKSPACE_QUERY, {
-    variables: { id: workspaceId }
-  });
+  const { workspaceId } = useParams<{ workspaceId: string }>();
+  const { data: workspace, loading } = useGetWorkspace(workspaceId);
 
-  if (loading || !data) {
+  if (loading || !workspace) {
     return <LoadingText>Fetching workspace...</LoadingText>;
   }
 
-  const { workspace } = data;
   const userId = currentUser?.auth?.uid;
   const isInActiveMode = getIsInActiveMode(workspace);
   const isInTrialMode = getIsInTrialMode(workspace);
-  const isMissingSubscription = getIsMissingSubscription(workspace);
   const isWorkspaceOwner = getIsWorkspaceOwner(workspace, userId || "");
-  const defaultTeam = workspace?.teams[0];
+  const isActive = isInActiveMode || isInTrialMode;
+
   const users = [...workspace.users, ...workspace.invitedUsers].filter(
     (user) => user.id !== authAccount?.uid
   );
-  const isActive =
-    isInActiveMode || isInTrialMode || (isMissingSubscription && isWorkspaceOwner);
 
   return (
     <div>
@@ -85,11 +43,7 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
             trialEnd={workspace.subscription.trialEnd}
           />
         )}
-        <RetroBoardsOverview
-          teamId={defaultTeam.id}
-          history={history}
-          isActive={isActive}
-        />
+        <RetroBoardsOverview history={history} isActive={isActive} />
         <TeamMemberOverview
           workspaceId={workspace.id}
           users={users}
@@ -101,52 +55,11 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
   );
 };
 
-const GET_TEAM_RETROS = gql`
-  query RetrosByTeam($teamId: ID!) {
-    getRetrosByTeamId(teamId: $teamId) {
-      id
-      name
-      teamId
-      workspaceId
-      createdById
-      createdAt
-      updatedAt
-    }
-  }
-`;
-
-const CREATE_RETRO_MUTATION = gql`
-  mutation CreateRetro($input: CreateRetroInput!) {
-    createRetro(input: $input) {
-      id
-      teamId
-      workspaceId
-      createdById
-    }
-  }
-`;
-
 const RetroBoardsOverview: React.FC<{
-  teamId: string;
   history: RouteComponentProps["history"];
   isActive: boolean;
-}> = ({ history, teamId, isActive }) => {
-  const [retros, setRetros] = React.useState<any[]>([]);
-  const { data } = useQuery(GET_TEAM_RETROS, {
-    variables: { teamId }
-  });
-
-  React.useEffect(() => {
-    if (!data) {
-      return;
-    }
-    setRetros(data.getRetrosByTeamId);
-  }, [data]);
-
-  const [createRetroMutation] = useMutation(CREATE_RETRO_MUTATION, {
-    refetchQueries: ["RetrosByTeam"],
-    awaitRefetchQueries: true
-  });
+}> = ({ history, isActive }) => {
+  const [retros] = React.useState<any[]>([]);
 
   const handleRedirectToRetroPage = (retro: any) => {
     analytics.track("Retro Opened", { ...retro });
@@ -159,12 +72,12 @@ const RetroBoardsOverview: React.FC<{
     if (!isActive) {
       return;
     }
-    const { data } = await createRetroMutation({
-      variables: { input: { teamId } }
-    });
-    createRetroBoardInFirebase(data.createRetro);
-    analytics.track("Retro Created", { ...data.createRetro });
-    return handleRedirectToRetroPage(data.createRetro);
+    // const { data } = await createRetroMutation({
+    //   variables: { input: { teamId } }
+    // });
+    // createRetroBoardInFirebase(data.createRetro);
+    // analytics.track("Retro Created", { ...data.createRetro });
+    // return handleRedirectToRetroPage(data.createRetro);
   };
 
   return (
@@ -276,25 +189,11 @@ const TeamMemberOverview: React.FC<{
 };
 
 function getIsInActiveMode(workspace: any) {
-  const isActive = workspace?.subscription?.status === "active";
-  const hasDefaultPaymentMethod = getHasDefaultPaymentMethod(workspace);
-  return isActive && hasDefaultPaymentMethod;
-}
-
-function getHasDefaultPaymentMethod(workspace: any) {
-  return workspace?.customer?.defaultPaymentMethod !== null;
+  return workspace?.subscription?.status === "active";
 }
 
 function getIsInTrialMode(workspace: any) {
-  const isTrialing = workspace?.subscription?.status === "trialing";
-  const hasDefaultPaymentMethod = getHasDefaultPaymentMethod(workspace);
-  return isTrialing && !hasDefaultPaymentMethod;
-}
-
-function getIsMissingSubscription(workspace: any) {
-  // There is a race condition which causes the subscription to be null.
-  // This is the only time a subscription should be null.
-  return workspace?.subscription === null;
+  return workspace?.subscription?.status === "trialing";
 }
 
 function getIsWorkspaceOwner(workspace: any, userId: string) {

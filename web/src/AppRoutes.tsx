@@ -22,6 +22,10 @@ import { Button } from "./components/Button";
 import { ErrorBoundary, FallbackProps } from "react-error-boundary";
 import { useCurrentUser } from "./hooks/use-current-user";
 import { useScrollToTop } from "./hooks/use-scroll-to-top";
+import { FeatureFlags } from "./constants/feature-flags";
+import { ExperimentalRoute } from "./components/ExperimentalRoute";
+import { getWorkspaceFromCurrentUser } from "./utils/workspace-utils";
+import { CurrentUserContextValues } from "./contexts/CurrentUserContext";
 
 const optimizely = createInstance({
   sdkKey: process.env.REACT_APP_OPTIMIZELY_SDK_KEY
@@ -80,16 +84,25 @@ function ScrollToTop() {
 const UnauthenticatedAppRoutes: React.FC = () => {
   return (
     <React.Fragment>
-      {/* <Route exact path="/login" component={LoginPage} /> */}
-      {/* <Route exact path="/signup" component={SignupPage} /> */}
+      <Route exact path="/login" component={LoginPage} />
+      <ExperimentalRoute
+        featureKey={FeatureFlags.SIGN_UP}
+        exact
+        path="/signup"
+        component={SignupPage}
+      />
       <Route exact path="/" component={LandingPage} />
     </React.Fragment>
   );
 };
 
-function AuthenticatedAppRoutes({ currentUser }: any) {
+function AuthenticatedAppRoutes({
+  currentUser
+}: {
+  currentUser: CurrentUserContextValues;
+}) {
   const history = useHistory();
-  const workspace = currentUser.data?.user?.workspace;
+  const workspace = getWorkspaceFromCurrentUser(currentUser);
 
   React.useEffect(() => {
     if (!currentUser.isLoggedIn) {

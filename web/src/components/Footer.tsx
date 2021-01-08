@@ -15,7 +15,7 @@ export const Footer = () => {
             Privacy Policy
           </Link>
         </div>
-        <p className="text-blue">&copy; 2020, Retro Technology</p>
+        <p className="text-blue">&copy; 2021, Retro Technology</p>
       </footer>
     </React.Fragment>
   );
