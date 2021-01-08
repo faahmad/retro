@@ -1,6 +1,4 @@
 import React from "react";
-import { gql } from "apollo-boost";
-import { useQuery, useMutation } from "@apollo/react-hooks";
 import { useParams, RouteComponentProps } from "react-router-dom";
 import teamMemberEmptyImage from "../assets/images/team-member-empty-image.svg";
 import retroEmptyImage from "../assets/images/retro-empty-image.svg";
@@ -9,46 +7,10 @@ import { LoadingText } from "../components/LoadingText";
 import moment from "moment";
 import { Footer } from "../components/Footer";
 import { PageContainer } from "../components/PageContainer";
-import { createRetroBoardInFirebase } from "../services/retro-board-service";
 import { UpgradeToProBanner } from "../components/UpgradeToProBanner";
 import { useCurrentUser } from "../hooks/use-current-user";
 import analytics from "analytics.js";
 import { useGetWorkspace } from "../hooks/use-get-workspace";
-
-const WORKSPACE_QUERY = gql`
-  query WorkspaceQuery($id: ID!) {
-    workspace(id: $id) {
-      id
-      name
-      url
-      ownerId
-      teams {
-        id
-        name
-      }
-      users {
-        __typename
-        id
-        email
-        createdAt
-      }
-      invitedUsers {
-        __typename
-        id
-        email
-        createdAt
-        accepted
-      }
-      subscription {
-        status
-        trialEnd
-      }
-      customer {
-        defaultPaymentMethod
-      }
-    }
-  }
-`;
 
 export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
   const currentUser = useCurrentUser();
@@ -93,41 +55,11 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
   );
 };
 
-const GET_TEAM_RETROS = gql`
-  query RetrosByTeam($teamId: ID!) {
-    getRetrosByTeamId(teamId: $teamId) {
-      id
-      name
-      teamId
-      workspaceId
-      createdById
-      createdAt
-      updatedAt
-    }
-  }
-`;
-
-const CREATE_RETRO_MUTATION = gql`
-  mutation CreateRetro($input: CreateRetroInput!) {
-    createRetro(input: $input) {
-      id
-      teamId
-      workspaceId
-      createdById
-    }
-  }
-`;
-
 const RetroBoardsOverview: React.FC<{
   history: RouteComponentProps["history"];
   isActive: boolean;
 }> = ({ history, isActive }) => {
-  const [retros, setRetros] = React.useState<any[]>([]);
-
-  const [createRetroMutation] = useMutation(CREATE_RETRO_MUTATION, {
-    refetchQueries: ["RetrosByTeam"],
-    awaitRefetchQueries: true
-  });
+  const [retros] = React.useState<any[]>([]);
 
   const handleRedirectToRetroPage = (retro: any) => {
     analytics.track("Retro Opened", { ...retro });

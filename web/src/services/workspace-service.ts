@@ -1,7 +1,6 @@
 import firebase from "../lib/firebase";
 import { FirestoreCollections } from "../constants/firestore-collections";
 import { Workspace } from "../types/workspace";
-import { WorkspaceUrl } from "../types/workspace-url";
 
 const db = firebase.firestore();
 const workspaceCollection = db.collection(FirestoreCollections.WORKSPACE);
