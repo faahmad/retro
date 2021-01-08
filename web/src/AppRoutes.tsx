@@ -84,7 +84,12 @@ function ScrollToTop() {
 const UnauthenticatedAppRoutes: React.FC = () => {
   return (
     <React.Fragment>
-      <Route exact path="/login" component={LoginPage} />
+      <ExperimentalRoute
+        featureKey={FeatureFlags.SIGN_UP}
+        exact
+        path="/login"
+        component={LoginPage}
+      />
       <ExperimentalRoute
         featureKey={FeatureFlags.SIGN_UP}
         exact
