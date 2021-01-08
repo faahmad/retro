@@ -4,9 +4,7 @@ import addTeamMemberImage from "../assets/images/add-team-member-image.svg";
 import { Button } from "./Button";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { gql } from "apollo-boost";
-import { useMutation } from "@apollo/react-hooks";
-import analytics from "analytics.js";
+import { useCreateWorkspaceInvite } from "../hooks/use-create-workspace-invite";
 interface InviteUserToWorkspaceModalProps {
   isOpen: boolean;
   onRequestClose: (
@@ -14,13 +12,15 @@ interface InviteUserToWorkspaceModalProps {
   ) => void;
   onClick: () => void;
   workspaceId: string;
+  workspaceName: string;
 }
 
 export const InviteUserToWorkspaceModal: React.FC<InviteUserToWorkspaceModalProps> = ({
   isOpen,
   onRequestClose,
   onClick,
-  workspaceId
+  workspaceId,
+  workspaceName
 }) => {
   return (
     <ReactModal
@@ -36,47 +36,33 @@ export const InviteUserToWorkspaceModal: React.FC<InviteUserToWorkspaceModalProp
       closeTimeoutMS={200}
     >
       <img className="w-full" src={addTeamMemberImage} alt="Add your team member" />
-      <InviteUserToWorkspaceForm workspaceId={workspaceId} onClick={onClick} />
+      <InviteUserToWorkspaceForm
+        workspaceId={workspaceId}
+        workspaceName={workspaceName}
+        onClick={onClick}
+      />
     </ReactModal>
   );
 };
 
-const INVITE_USER_TO_WORKSPACE_MUTATION = gql`
-  mutation InviteUserToWorskspace($input: InviteUserToWorkspaceInput!) {
-    inviteUserToWorkspace(input: $input) {
-      id
-      email
-      accepted
-      createdAt
-    }
-  }
-`;
-
 const InviteUserToWorkspaceForm: React.FC<{
   workspaceId: string;
+  workspaceName: string;
   onClick: () => void;
-}> = ({ workspaceId, onClick }) => {
-  const [inviteUserToWorkspace] = useMutation(INVITE_USER_TO_WORKSPACE_MUTATION, {
-    refetchQueries: ["WorkspaceQuery"]
-  });
+}> = ({ workspaceId, workspaceName, onClick }) => {
   const [submitButtonText, setSubmitButtonText] = React.useState("Send Invite");
   const [isDisabled, setIsDisabled] = React.useState(false);
+  const createWorkspaceInvite = useCreateWorkspaceInvite();
 
   const handleSubmit = async (values: any) => {
     setIsDisabled(true);
     setSubmitButtonText("Sending...");
-    await inviteUserToWorkspace({
-      variables: {
-        input: {
-          workspaceId,
-          email: values.email
-        }
-      }
+    await createWorkspaceInvite({
+      workspaceId,
+      workspaceName,
+      email: values.email
     });
     setSubmitButtonText("Sent!");
-    analytics.track("User Invited", {
-      ...values
-    });
     onClick();
     return;
   };

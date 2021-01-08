@@ -45,6 +45,7 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
         )}
         <RetroBoardsOverview history={history} isActive={isActive} />
         <TeamMemberOverview
+          workspaceName={workspace.name}
           workspaceId={workspace.id}
           users={users}
           isActive={isActive}
@@ -123,9 +124,10 @@ const RetroBoardsOverview: React.FC<{
 
 const TeamMemberOverview: React.FC<{
   workspaceId: string;
+  workspaceName: string;
   users: any[];
   isActive: boolean;
-}> = ({ workspaceId, users, isActive }) => {
+}> = ({ workspaceId, workspaceName, users, isActive }) => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
 
   const handleToggleModal = async () => {
@@ -136,6 +138,7 @@ const TeamMemberOverview: React.FC<{
     <React.Fragment>
       <InviteUserToWorkspaceModal
         workspaceId={workspaceId}
+        workspaceName={workspaceName}
         isOpen={isModalOpen}
         onRequestClose={handleToggleModal}
         onClick={handleToggleModal}
