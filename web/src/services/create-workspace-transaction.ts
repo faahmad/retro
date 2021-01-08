@@ -6,7 +6,6 @@ const workspaceCollection = db.collection(FirestoreCollections.WORKSPACE);
 const workspaceUrlCollection = db.collection(FirestoreCollections.WORKSPACE_URL);
 const workspaceUserCollection = db.collection(FirestoreCollections.WORKSPACE_USER);
 const userCollection = db.collection(FirestoreCollections.USER);
-
 export interface CreateWorkspaceTransactionInput {
   name: string;
   url: string;
