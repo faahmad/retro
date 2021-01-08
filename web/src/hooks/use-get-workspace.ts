@@ -1,6 +1,5 @@
 import * as React from "react";
 import { getWorkspaceById } from "../services/workspace-service";
-import { Workspace } from "../types/workspace";
 
 export function useGetWorkspace(id?: string) {
   const [data, setData] = React.useState<any>(null);
@@ -38,38 +37,3 @@ export function useGetWorkspace(id?: string) {
 
   return { data, loading, error };
 }
-
-// const WORKSPACE_QUERY = gql`
-//   query WorkspaceQuery($id: ID!) {
-//     workspace(id: $id) {
-//       id
-//       name
-//       url
-//       ownerId
-//       teams {
-//         id
-//         name
-//       }
-//       users {
-//         __typename
-//         id
-//         email
-//         createdAt
-//       }
-//       invitedUsers {
-//         __typename
-//         id
-//         email
-//         createdAt
-//         accepted
-//       }
-//       subscription {
-//         status
-//         trialEnd
-//       }
-//       customer {
-//         defaultPaymentMethod
-//       }
-//     }
-//   }
-// `;

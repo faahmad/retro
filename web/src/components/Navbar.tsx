@@ -11,9 +11,12 @@ import {
 } from "../utils/workspace-utils";
 import { CurrentUserState } from "../contexts/CurrentUserContext";
 import { JoinWaitlistButton } from "./JoinWaitlistButton";
+import { useFeature } from "@optimizely/react-sdk";
+import { FeatureFlags } from "../constants/feature-flags";
 
 export const Navbar: React.FC<any> = ({ isLoggedIn, userState }) => {
   const history = useHistory();
+  const isSignUpEnabled = useFeature(FeatureFlags.SIGN_UP);
 
   const handleOnLogOut = async () => {
     await logOut();
@@ -39,26 +42,34 @@ export const Navbar: React.FC<any> = ({ isLoggedIn, userState }) => {
             Sign Out
           </Button>
         )}
-        {userState !== CurrentUserState.LOADING && !isLoggedIn && (
-          <React.Fragment>
-            <Button
-              className="mt-10 sm:mb-0 lg:mb-2 sm:mt-0 md:mt-0 lg:mt-0 text-blue"
-              onClick={() => history.push("/signup")}
-            >
-              Sign up for free
-            </Button>
-            <Button
-              className="mt-10 sm:mt-0 md:mt-0 lg:mt-0 text-blue"
-              onClick={() => history.push("/login")}
-            >
-              Log in
-            </Button>
-          </React.Fragment>
+        {!isSignUpEnabled && <JoinWaitlistButton />}
+        {isSignUpEnabled && userState !== CurrentUserState.LOADING && !isLoggedIn && (
+          <NavbarLoggedOutButtons />
         )}
       </div>
     </nav>
   );
 };
+
+function NavbarLoggedOutButtons() {
+  const history = useHistory();
+  return (
+    <React.Fragment>
+      <Button
+        className="mt-10 sm:mb-0 lg:mb-2 sm:mt-0 md:mt-0 lg:mt-0 text-blue"
+        onClick={() => history.push("/signup")}
+      >
+        Sign up for free
+      </Button>
+      <Button
+        className="mt-10 sm:mt-0 md:mt-0 lg:mt-0 text-blue"
+        onClick={() => history.push("/login")}
+      >
+        Log in
+      </Button>
+    </React.Fragment>
+  );
+}
 
 const NavbarBrand: React.FC = () => {
   const currentUser = useCurrentUser();
