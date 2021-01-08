@@ -26,6 +26,7 @@ import { FeatureFlags } from "./constants/feature-flags";
 import { ExperimentalRoute } from "./components/ExperimentalRoute";
 import { getWorkspaceFromCurrentUser } from "./utils/workspace-utils";
 import { CurrentUserContextValues } from "./contexts/CurrentUserContext";
+import { useAnalyticsPageView } from "./hooks/use-analytics-page-view";
 
 const optimizely = createInstance({
   sdkKey: process.env.REACT_APP_OPTIMIZELY_SDK_KEY
@@ -82,9 +83,15 @@ function ScrollToTop() {
 }
 
 const UnauthenticatedAppRoutes: React.FC = () => {
+  useAnalyticsPageView();
   return (
     <React.Fragment>
-      <Route exact path="/login" component={LoginPage} />
+      <ExperimentalRoute
+        featureKey={FeatureFlags.SIGN_UP}
+        exact
+        path="/login"
+        component={LoginPage}
+      />
       <ExperimentalRoute
         featureKey={FeatureFlags.SIGN_UP}
         exact
@@ -101,6 +108,7 @@ function AuthenticatedAppRoutes({
 }: {
   currentUser: CurrentUserContextValues;
 }) {
+  useAnalyticsPageView();
   const history = useHistory();
   const workspace = getWorkspaceFromCurrentUser(currentUser);
 
