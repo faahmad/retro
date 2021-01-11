@@ -1,4 +1,4 @@
-import { createWorkspaceInvite } from "../services/workspace-service";
+import { createWorkspaceInvite } from "../services/create-workspace-invite";
 import { useCurrentUser } from "./use-current-user";
 import { useAnalyticsEvent, AnalyticsEvent } from "./use-analytics-event";
 
