@@ -1,4 +1,5 @@
 import { createWorkspaceTransaction } from "../services/create-workspace-transaction";
+import { AnalyticsEvent, useAnalyticsEvent } from "./use-analytics-event";
 import { useCurrentUser } from "./use-current-user";
 
 interface CreateWorkspaceInput {
@@ -8,6 +9,7 @@ interface CreateWorkspaceInput {
 }
 export function useCreateWorkspace() {
   const currentUser = useCurrentUser();
+  const trackEvent = useAnalyticsEvent();
   async function createWorkspace(input: CreateWorkspaceInput) {
     if (!currentUser.auth) {
       return;
@@ -15,7 +17,7 @@ export function useCreateWorkspace() {
     const { uid, email, photoURL, displayName } = currentUser.auth;
     const { name, url, allowedEmailDomain } = input;
 
-    const workspaceRef = await createWorkspaceTransaction({
+    const params = {
       name,
       url,
       allowedEmailDomain,
@@ -23,7 +25,11 @@ export function useCreateWorkspace() {
       userEmail: email!,
       userPhotoURL: photoURL!,
       userDisplayName: displayName!
-    });
+    };
+
+    const workspaceRef = await createWorkspaceTransaction(params);
+
+    trackEvent(AnalyticsEvent.WORKSPACE_CREATED, params);
 
     return workspaceRef;
   }
