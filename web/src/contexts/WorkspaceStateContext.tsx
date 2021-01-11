@@ -3,9 +3,8 @@ import { TODO } from "../types/todo";
 import { Workspace } from "../types/workspace";
 import { WorkspaceUser } from "../types/workspace-user";
 import { WorkspaceInvite } from "../types/workspace-invite";
-import { useOnSnapshot } from "../hooks/use-on-snapshot";
-import { FirestoreCollections } from "../constants/firestore-collections";
-import { workspaceUsersListener } from "../services/workspace-service";
+import { workspaceListener } from "../services/workspace-listener";
+import { workspaceUsersListener } from "../services/workspace-users-listener";
 
 enum WorkspaceStateStatus {
   LOADING = "loading",
@@ -63,9 +62,6 @@ export function WorkspaceStateProvider({
 }) {
   const [values, dispatch] = React.useReducer(workspaceStateReducer, initialState);
 
-  const onWorkspaceSnapshot = useOnSnapshot<Workspace>(
-    `${FirestoreCollections.WORKSPACE}/${workspaceId}`
-  );
   const handleWorkspaceSnapshot = (workspaceData: Workspace) => {
     return dispatch({
       type: WorkspaceStateActionTypes.WORKSPACE_SNAPSHOT,
@@ -80,7 +76,10 @@ export function WorkspaceStateProvider({
   };
 
   React.useEffect(() => {
-    const workspaceUnsubscribeFn = onWorkspaceSnapshot(handleWorkspaceSnapshot);
+    const workspaceUnsubscribeFn = workspaceListener(
+      workspaceId,
+      handleWorkspaceSnapshot
+    );
     const workspaceUsersUnsubscribeFn = workspaceUsersListener(
       workspaceId,
       handleWorkspaceUsersQuerySnapshot
