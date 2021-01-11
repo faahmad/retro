@@ -9,19 +9,10 @@ const db = firebase.firestore();
  */
 export function useOnSnapshot<T>(documentPath: string) {
   return React.useCallback(
-    (
-      onSuccess: (
-        data: T,
-        doc?: firebase.firestore.DocumentSnapshot<firebase.firestore.DocumentData>
-      ) => void
-    ) =>
+    (onSuccess: (data: T) => void) =>
       db.doc(documentPath).onSnapshot((snapshot) => {
-        return onSuccess(snapshot.data() as T, snapshot);
+        return onSuccess(({ id: snapshot.id, ...snapshot.data() } as unknown) as T);
       }),
     [documentPath]
   );
-}
-
-export function getWorkspaceDocumentPath(id: string) {
-  return `/workspaces/${id}`;
 }

@@ -13,5 +13,6 @@ export function useAnalyticsPageView() {
       });
       analytics.page(location.pathname);
     });
+    // eslint-disable-next-line
   }, [location.pathname]);
 }

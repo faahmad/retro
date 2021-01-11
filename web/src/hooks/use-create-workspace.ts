@@ -1,4 +1,4 @@
-import { createWorkspaceTransaction } from "../services/workspace-service";
+import { createWorkspaceTransaction } from "../services/create-workspace-transaction";
 import { useCurrentUser } from "./use-current-user";
 
 interface CreateWorkspaceInput {

@@ -8,6 +8,7 @@ export interface User {
   phoneNumber: string | null;
   photoUrl: string;
   workspaces: UserWorkspace[];
+  role: "owner" | "member";
 }
 
 export interface UserWorkspace {

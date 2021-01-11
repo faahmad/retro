@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams, RouteComponentProps } from "react-router-dom";
+import { RouteComponentProps } from "react-router-dom";
 import teamMemberEmptyImage from "../assets/images/team-member-empty-image.svg";
 import retroEmptyImage from "../assets/images/retro-empty-image.svg";
 import { InviteUserToWorkspaceModal } from "../components/InviteUserToWorkspaceModal";
@@ -10,45 +10,42 @@ import { PageContainer } from "../components/PageContainer";
 import { UpgradeToProBanner } from "../components/UpgradeToProBanner";
 import { useCurrentUser } from "../hooks/use-current-user";
 import analytics from "analytics.js";
-import { useGetWorkspace } from "../hooks/use-get-workspace";
+import { useWorkspaceState } from "../hooks/use-workspace-state";
+import { WorkspaceUser } from "../types/workspace-user";
 
 export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
   const currentUser = useCurrentUser();
-  const authAccount = currentUser.auth;
-  const { workspaceId } = useParams<{ workspaceId: string }>();
-  const { data: workspace, loading } = useGetWorkspace(workspaceId);
+  const workspaceState = useWorkspaceState();
 
-  if (loading || !workspace) {
+  if (workspaceState.status === "loading") {
     return <LoadingText>Fetching workspace...</LoadingText>;
   }
 
-  const userId = currentUser?.auth?.uid;
-  const isInActiveMode = getIsInActiveMode(workspace);
-  const isInTrialMode = getIsInTrialMode(workspace);
-  const isWorkspaceOwner = getIsWorkspaceOwner(workspace, userId || "");
-  const isActive = isInActiveMode || isInTrialMode;
+  if (workspaceState.status === "error") {
+    return <LoadingText>Uh oh...something went wrong.</LoadingText>;
+  }
 
-  const users = [...workspace.users, ...workspace.invitedUsers].filter(
-    (user) => user.id !== authAccount?.uid
-  );
+  const userId = currentUser?.auth?.uid;
+  const isWorkspaceOwner = getIsWorkspaceOwner(workspaceState, userId || "");
+  const isInTrialMode = workspaceState.subscriptionStatus === "trialing";
 
   return (
     <div>
       <PageContainer>
-        <p className="text-blue mb-2 underline">{workspace.name}</p>
+        <p className="text-blue mb-2 underline">{workspaceState.name}</p>
         <h1 className="text-blue font-black text-3xl">Dashboard</h1>
         {isInTrialMode && isWorkspaceOwner && (
           <UpgradeToProBanner
-            workspaceId={workspace.id}
-            trialEnd={workspace.subscription.trialEnd}
+            workspaceId={workspaceState.id}
+            trialEnd={workspaceState.subscriptionTrialEnd}
           />
         )}
-        <RetroBoardsOverview history={history} isActive={isActive} />
+        <RetroBoardsOverview history={history} isActive={workspaceState.isActive} />
         <TeamMemberOverview
-          workspaceName={workspace.name}
-          workspaceId={workspace.id}
-          users={users}
-          isActive={isActive}
+          workspaceName={workspaceState.name}
+          workspaceId={workspaceState.id}
+          users={workspaceState.users}
+          isActive={workspaceState.isActive}
         />
       </PageContainer>
       <Footer />
@@ -125,7 +122,7 @@ const RetroBoardsOverview: React.FC<{
 const TeamMemberOverview: React.FC<{
   workspaceId: string;
   workspaceName: string;
-  users: any[];
+  users: WorkspaceUser[];
   isActive: boolean;
 }> = ({ workspaceId, workspaceName, users, isActive }) => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
@@ -157,30 +154,14 @@ const TeamMemberOverview: React.FC<{
             </button>
           </div>
         </div>
-        {users.length !== 0 ? (
+        {/* 
+          If users.length === 1, this means that you're the only person in the workspace. 
+          In this case, we want to display the No Team Members illustration 
+        */}
+        {users.length !== 1 ? (
           <div className="flex flex-wrap">
-            {users.map((u) => {
-              const isInvitedUser = u.__typename === "WorkspaceInvite";
-              return (
-                <div
-                  key={u.id}
-                  className="flex flex-col lg:flex-row text-center lg:text-left items-center mx-auto lg:mx-4 my-4 w-64"
-                >
-                  <div
-                    className={`flex h-12 w-12 rounded-full text-white items-center justify-center border border-red text-xl flex-shrink-0 ${
-                      isInvitedUser ? "bg-pink-1/2 text-blue" : "bg-blue text-white"
-                    }`}
-                  >
-                    {u.email[0]}
-                  </div>
-                  <div className="flex flex-col flex-shrink ml-2">
-                    <p className="text-blue text-sm font-light">{u.email}</p>
-                    <p className="uppercase text-pink text-xs font-black">
-                      {isInvitedUser ? "invited" : "member"}
-                    </p>
-                  </div>
-                </div>
-              );
+            {users.map((user) => {
+              return <WorkspaceUserItem key={user.userId} {...user} />;
             })}
           </div>
         ) : (
@@ -191,12 +172,31 @@ const TeamMemberOverview: React.FC<{
   );
 };
 
-function getIsInActiveMode(workspace: any) {
-  return workspace?.subscription?.status === "active";
-}
-
-function getIsInTrialMode(workspace: any) {
-  return workspace?.subscription?.status === "trialing";
+function WorkspaceUserItem({
+  userId,
+  userPhotoURL,
+  userDisplayName,
+  userRole,
+  userEmail
+}: WorkspaceUser) {
+  return (
+    <div
+      key={userId}
+      className="flex flex-col lg:flex-row text-center lg:text-left items-center mx-auto lg:mx-4 my-4 w-64"
+    >
+      <img
+        alt="User Avatar"
+        src={userPhotoURL}
+        className={`flex h-12 w-12 rounded-full text-white items-center justify-center border border-red text-xl flex-shrink-0 ${"bg-blue text-white"}`}
+      />
+      <div className="flex flex-col flex-shrink ml-2">
+        <p className="text-blue text-xs font-black">
+          {userDisplayName} <span className="uppercase text-pink">{userRole}</span>
+        </p>
+        <p className="text-blue text-sm font-light">{userEmail}</p>
+      </div>
+    </div>
+  );
 }
 
 function getIsWorkspaceOwner(workspace: any, userId: string) {

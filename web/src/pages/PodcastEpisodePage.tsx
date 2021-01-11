@@ -44,6 +44,7 @@ export function PodcastEpisodePage() {
                 className="underline"
                 href="https://www.youtube.com/watch?v=iVYNTKKeWwQ&list=PLm-Ufidv3fEEZvKl58VY5GajEd57Y9GBR"
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 YouTube
               </a>
@@ -53,6 +54,7 @@ export function PodcastEpisodePage() {
                 className="underline"
                 href="https://open.spotify.com/episode/4cLZrKJIKJmOwX1yJGu8B5?si=TW9AyICxRuKHXjpYWi0NFQ"
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 Spotify
               </a>
