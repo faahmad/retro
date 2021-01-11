@@ -57,7 +57,7 @@ export function WorkspaceStateProvider({
   workspaceId,
   children
 }: {
-  workspaceId: Workspace["id"];
+  workspaceId?: Workspace["id"];
   children: React.ReactNode;
 }) {
   const [values, dispatch] = React.useReducer(workspaceStateReducer, initialState);
@@ -76,6 +76,9 @@ export function WorkspaceStateProvider({
   };
 
   React.useEffect(() => {
+    if (!workspaceId) {
+      return;
+    }
     const workspaceUnsubscribeFn = workspaceListener(
       workspaceId,
       handleWorkspaceSnapshot
