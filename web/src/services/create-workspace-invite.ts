@@ -14,7 +14,10 @@ interface CreateWorkspaceInviteParams {
 }
 
 export function createWorkspaceInvite(params: CreateWorkspaceInviteParams) {
-  return workspaceInviteCollection.add({
+  const workspaceInviteRef = workspaceInviteCollection.doc(
+    `${params.workspaceId}_${params.email}`
+  );
+  return workspaceInviteRef.set({
     ...params,
     status: WorkspaceInviteStatus.SENT,
     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
