@@ -27,6 +27,7 @@ import { ExperimentalRoute } from "./components/ExperimentalRoute";
 import { getWorkspaceFromCurrentUser } from "./utils/workspace-utils";
 import { CurrentUserContextValues } from "./contexts/CurrentUserContext";
 import { useAnalyticsPageView } from "./hooks/use-analytics-page-view";
+import { WorkspaceStateProvider } from "./contexts/WorkspaceStateContext";
 
 const optimizely = createInstance({
   sdkKey: process.env.REACT_APP_OPTIMIZELY_SDK_KEY
@@ -111,27 +112,34 @@ function AuthenticatedAppRoutes({
   useAnalyticsPageView();
   const history = useHistory();
   const workspace = getWorkspaceFromCurrentUser(currentUser);
+  const workspaceId = workspace?.id;
 
   React.useEffect(() => {
     if (!currentUser.isLoggedIn) {
       return;
     }
-    const redirectUrl = workspace ? `/workspaces/${workspace.id}` : "/onboarding";
+    const redirectUrl = workspaceId ? `/workspaces/${workspaceId}` : "/onboarding";
     history.push(redirectUrl);
     //eslint-disable-next-line
-  }, [currentUser.isLoggedIn]);
+  }, [currentUser.isLoggedIn, workspaceId]);
+
+  if (!workspaceId) {
+    return null;
+  }
 
   return (
-    <SubscriptionStatusProvider workspaceId={workspace?.id}>
-      <Route exact path="/onboarding" component={OnboardingPage} />
-      <Route
-        exact
-        path="/workspaces/:workspaceId/teams/:teamId/retros/:retroId"
-        component={RetroBoardPage}
-      />
-      <Route exact path="/workspaces/:workspaceId/settings" component={SettingsPage} />
-      <Route exact path="/workspaces/:workspaceId" component={DashboardPage} />
-    </SubscriptionStatusProvider>
+    <WorkspaceStateProvider workspaceId={workspaceId}>
+      <SubscriptionStatusProvider workspaceId={workspaceId}>
+        <Route exact path="/onboarding" component={OnboardingPage} />
+        <Route
+          exact
+          path="/workspaces/:workspaceId/teams/:teamId/retros/:retroId"
+          component={RetroBoardPage}
+        />
+        <Route exact path="/workspaces/:workspaceId/settings" component={SettingsPage} />
+        <Route exact path="/workspaces/:workspaceId" component={DashboardPage} />
+      </SubscriptionStatusProvider>
+    </WorkspaceStateProvider>
   );
 }
 
