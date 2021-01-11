@@ -42,7 +42,7 @@ export const Navbar: React.FC<any> = ({ isLoggedIn, userState }) => {
             Sign Out
           </Button>
         )}
-        {!isSignUpEnabled && <JoinWaitlistButton />}
+        {!isSignUpEnabled && !isLoggedIn && <JoinWaitlistButton />}
         {isSignUpEnabled && userState !== CurrentUserState.LOADING && !isLoggedIn && (
           <NavbarLoggedOutButtons />
         )}
