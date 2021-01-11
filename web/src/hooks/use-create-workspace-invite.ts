@@ -22,7 +22,7 @@ export function useCreateWorkspaceInvite() {
       email,
       workspaceId,
       workspaceName,
-      invitedByDisplayName: displayName!,
+      invitedByUserDisplayName: displayName!,
       invitedByUserId: uid
     };
 
