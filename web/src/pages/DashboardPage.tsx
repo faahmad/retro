@@ -185,6 +185,7 @@ function WorkspaceUserItem({
       className="flex flex-col lg:flex-row text-center lg:text-left items-center mx-auto lg:mx-4 my-4 w-64"
     >
       <img
+        alt="User Avatar"
         src={userPhotoURL}
         className={`flex h-12 w-12 rounded-full text-white items-center justify-center border border-red text-xl flex-shrink-0 ${"bg-blue text-white"}`}
       />
