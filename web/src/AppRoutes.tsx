@@ -123,10 +123,6 @@ function AuthenticatedAppRoutes({
     //eslint-disable-next-line
   }, [currentUser.isLoggedIn, workspaceId]);
 
-  if (!workspaceId) {
-    return null;
-  }
-
   return (
     <WorkspaceStateProvider workspaceId={workspaceId}>
       <SubscriptionStatusProvider workspaceId={workspaceId}>
