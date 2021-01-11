@@ -2,6 +2,7 @@ import firebase from "../lib/firebase";
 import { FirestoreCollections } from "../constants/firestore-collections";
 import { Workspace } from "../types/workspace";
 import { WorkspaceInvite, WorkspaceInviteStatus } from "../types/workspace-invite";
+import { WorkspaceUser } from "../types/workspace-user";
 
 const db = firebase.firestore();
 const workspaceCollection = db.collection(FirestoreCollections.WORKSPACE);
@@ -94,4 +95,18 @@ export function createWorkspaceInvite(params: CreateWorkspaceInviteParams) {
     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
   } as WorkspaceInvite);
+}
+
+export function workspaceUsersListener(
+  workspaceId: string,
+  onSuccess: (workspaceUser: WorkspaceUser) => void
+) {
+  return workspaceUserCollection
+    .where("workspaceId", "==", workspaceId)
+    .limit(10)
+    .onSnapshot((workspaceUsersQuerySnapshot) =>
+      workspaceUsersQuerySnapshot.forEach((workspaceUser) =>
+        onSuccess(workspaceUser.data() as WorkspaceUser)
+      )
+    );
 }
