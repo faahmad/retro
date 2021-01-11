@@ -75,11 +75,6 @@ export function createWorkspaceTransaction(input: CreateWorkspaceTransactionInpu
   });
 }
 
-export async function getWorkspaceById(id: string) {
-  const workspaceSnapshot = await workspaceCollection.doc(id).get();
-  return workspaceSnapshot.data() as Workspace | undefined;
-}
-
 interface CreateWorkspaceInviteParams {
   email: string;
   workspaceId: string;
