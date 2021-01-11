@@ -1,15 +1,12 @@
 import firebase from "../lib/firebase";
 import { FirestoreCollections } from "../constants/firestore-collections";
-import { Workspace } from "../types/workspace";
-import { WorkspaceInvite, WorkspaceInviteStatus } from "../types/workspace-invite";
-import { WorkspaceUser } from "../types/workspace-user";
 
 const db = firebase.firestore();
 const workspaceCollection = db.collection(FirestoreCollections.WORKSPACE);
 const workspaceUrlCollection = db.collection(FirestoreCollections.WORKSPACE_URL);
 const workspaceUserCollection = db.collection(FirestoreCollections.WORKSPACE_USER);
 const userCollection = db.collection(FirestoreCollections.USER);
-const workspaceInviteCollection = db.collection(FirestoreCollections.WORKSPACE_INVITE);
+
 export interface CreateWorkspaceTransactionInput {
   name: string;
   url: string;
@@ -26,7 +23,7 @@ export function createWorkspaceTransaction(input: CreateWorkspaceTransactionInpu
     const workspaceUrlRef = workspaceUrlCollection.doc(input.url);
     const workspaceUrlDoc = await transaction.get(workspaceUrlRef);
     if (workspaceUrlDoc.exists) {
-      throw "Workspace URL is already taken.";
+      throw new Error("Workspace URL is already taken.");
     }
     // Create the workspace.
     const newWorkspaceRef = workspaceCollection.doc();
@@ -73,35 +70,4 @@ export function createWorkspaceTransaction(input: CreateWorkspaceTransactionInpu
     // Return the newWorkspaceRef.
     return newWorkspaceRef;
   });
-}
-
-interface CreateWorkspaceInviteParams {
-  email: string;
-  workspaceId: string;
-  workspaceName: string;
-  invitedByUserDisplayName: string;
-  invitedByUserId: string;
-}
-
-export function createWorkspaceInvite(params: CreateWorkspaceInviteParams) {
-  return workspaceInviteCollection.add({
-    ...params,
-    status: WorkspaceInviteStatus.SENT,
-    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-  } as WorkspaceInvite);
-}
-
-export function workspaceUsersListener(
-  workspaceId: string,
-  onSuccess: (workspaceUser: WorkspaceUser) => void
-) {
-  return workspaceUserCollection
-    .where("workspaceId", "==", workspaceId)
-    .limit(10)
-    .onSnapshot((workspaceUsersQuerySnapshot) =>
-      workspaceUsersQuerySnapshot.forEach((workspaceUser) =>
-        onSuccess(workspaceUser.data() as WorkspaceUser)
-      )
-    );
 }
