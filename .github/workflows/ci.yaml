@@ -1,18 +1,11 @@
-name: CI - Web
+name: CI
 
 on:
   pull_request:
     types: [opened, synchronize, reopened]
 
 jobs:
-  checkout:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@master
-
-  install_deps:
-    needs: checkout
+  install_dependencies:
     runs-on: ubuntu-latest
     steps:
       - name: Cache node modules
@@ -27,15 +20,16 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
       - name: Install node modules
+        uses: actions/checkout@master
         run: |
-          ls
+          cd web
           # npm install
 
-  # lint:
-  #   needs: install_deps
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Lint
-  #       run: |
-  #         cd web
-  #         npm run lint
+  lint:
+    needs: install_dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - name: Lint
+        run: |
+          cd web
+          npm run lint
