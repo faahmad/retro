@@ -79,6 +79,7 @@ export function WorkspaceStateProvider({
     if (!workspaceId) {
       return;
     }
+
     const workspaceUnsubscribeFn = workspaceListener(
       workspaceId,
       handleWorkspaceSnapshot
