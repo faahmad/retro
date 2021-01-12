@@ -18,7 +18,7 @@ export const sendInvitationEmail = functions.firestore
     }
     return sendInvitationMailer(
       workspaceInvite.email,
-      workspaceInvite.invitedByUserDisplayName
+      workspaceInvite.workspaceName
     ).then(
       (value) => logger.prettyPrint(value),
       (reason) => logger.prettyPrint(reason)

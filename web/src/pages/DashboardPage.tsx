@@ -185,12 +185,17 @@ function WorkspaceUserItem({
   userEmail
 }: WorkspaceUser) {
   return (
-    <div className="flex flex-col lg:flex-row text-center lg:text-left items-center mx-auto lg:mx-4 my-4 w-64">
-      <img
-        alt="User Avatar"
-        src={userPhotoURL}
-        className={`flex h-12 w-12 rounded-full text-white items-center justify-center border border-red text-xl flex-shrink-0 ${"bg-blue text-white"}`}
-      />
+    <div className="flex flex-col lg:flex-row text-center lg:text-left items-center mx-auto lg:mx-8 my-4 w-64">
+      {userPhotoURL ? (
+        <img
+          alt="User Avatar"
+          src={userPhotoURL}
+          className={`flex h-12 w-12 rounded-full text-white items-center justify-center border border-red text-xl flex-shrink-0 ${"bg-blue text-white"}`}
+        />
+      ) : (
+        <PlaceholderAvatar char={userEmail[0]} />
+      )}
+
       <div className="flex flex-col flex-shrink ml-2">
         <p className="text-blue text-xs font-black">
           {userDisplayName} <span className="uppercase text-pink">{userRole}</span>
@@ -204,15 +209,21 @@ function WorkspaceUserItem({
 function WorkspaceInviteItem({ email }: WorkspaceInvite) {
   return (
     <div className="flex flex-col lg:flex-row text-center lg:text-left items-center mx-auto lg:mx-4 my-4 w-64">
-      <div
-        className={`flex h-12 w-12 rounded-full text-white items-center justify-center border border-red text-xl flex-shrink-0 ${"bg-blue text-white"}`}
-      >
-        {email[0]}
-      </div>
+      <PlaceholderAvatar char={email[0]} />
       <div className="flex flex-col flex-shrink ml-2">
         <p className="text-blue text-xs font-black">invited</p>
         <p className="text-blue text-sm font-light">{email}</p>
       </div>
+    </div>
+  );
+}
+
+function PlaceholderAvatar({ char }: { char: string }) {
+  return (
+    <div
+      className={`flex h-12 w-12 rounded-full text-white items-center justify-center border border-red text-xl flex-shrink-0 ${"bg-blue text-white"}`}
+    >
+      {char}
     </div>
   );
 }

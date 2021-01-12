@@ -3,13 +3,14 @@ import { mailjet } from "../constants/mailjet";
 import { projectIds } from "../constants/project-ids";
 
 const isProd = process.env.GCLOUD_PROJECT === projectIds.prod;
+const mailjetConfig = {
+  version: "v3",
+  perform_api_call: isProd
+};
 
 export const addUserToDefaultContactList = (email: string, name: string) => {
   return client
-    .post(`contactslist/${mailjet.contactLists.ALL_USERS}/managecontact`, {
-      version: "v3",
-      perform_api_call: isProd
-    })
+    .post(`contactslist/${mailjet.contactLists.ALL_USERS}/managecontact`, mailjetConfig)
     .request({
       Email: email,
       Name: name,
@@ -18,7 +19,7 @@ export const addUserToDefaultContactList = (email: string, name: string) => {
 };
 
 export const sendInvitationMailer = (email: string, senderFirstName: string) => {
-  return client.post("send", { version: "v3.1", perform_api_call: true }).request({
+  return client.post("send", mailjetConfig).request({
     Messages: [
       {
         To: [
