@@ -18,8 +18,6 @@ export function useJoinWorkspaceFromInvite() {
 
     const workspaceInviteRef = await joinWorkspaceFromInviteTransaction(params);
 
-    // trackEvent(AnalyticsEvent.WORKSPACE_JOINED, params);
-
     return workspaceInviteRef;
   }
   return joinWorkspace;
