@@ -54,6 +54,7 @@ jobs:
           REACT_APP_OPTIMIZELY_SDK_KEY: ${{ secrets.REACT_APP_DEV_OPTIMIZELY_SDK_KEY }}
           # Note: Uses Production GraphQL URI.
           REACT_APP_GRAPHQL_URI: ${{ secrets.REACT_APP_GRAPHQL_URI }}
+        # TODO - save build artifact
 
       - name: Test
         run: npm run test
@@ -97,7 +98,17 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      # Test
-
       - name: Build
         run: npm run build
+        # TODO - save build artifact
+
+      # - name: Test
+      #   run: npm run test
+
+      - name: Deploy cloud functions to staging
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only functions
+        env:
+          FIREBASE_TOKEN: ${{ secrets.DEV_FIREBASE_TOKEN }}
+          PROJECT_PATH: ./web
