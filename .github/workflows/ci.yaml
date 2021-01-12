@@ -1,11 +1,11 @@
-name: CI - Web
+name: CI
 
 on:
   pull_request:
     types: [opened, synchronize, reopened]
 
 jobs:
-  build:
+  web_ci:
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -33,4 +33,34 @@ jobs:
       - name: Lint
         run: |
           cd web
+          npm run lint
+
+  functions_ci:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+
+      - name: Cache node modules
+        uses: actions/cache@v1
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm # npm cache files are stored in `~/.npm` on Linux/macOS
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - name: Install node modules
+        run: |
+          cd web/functions
+          npm install
+
+      - name: Lint
+        run: |
+          cd web/functions
           npm run lint
