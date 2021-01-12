@@ -1,17 +1,20 @@
-name: CI - Functions
+name: CI - Web
 
 on:
   pull_request:
     types: [opened, synchronize, reopened]
 
 jobs:
-  build:
+  checkout:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
-
     steps:
       - name: Checkout
         uses: actions/checkout@master
+
+  install_deps:
+    needs: checkout
+    runs-on: ubuntu-latest
+    steps:
       - name: Cache node modules
         uses: actions/cache@v1
         env:
@@ -23,20 +26,16 @@ jobs:
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
-      - name: Installing node modules
+      - name: Install node modules
         run: |
-          cd web/functions
+          cd web
           npm install
-      - name: Run Lint
+
+  lint:
+    needs: install_deps
+    runs-on: ubuntu-latest
+    steps:
+      - name: Lint
         run: |
-          cd web/functions
+          cd web
           npm run lint
-      - name: Run Build
-        run: |
-          cd web/functions
-          npm run build
-      # Uncomment when we have tests.
-      # - name: Running Tests
-      #   run: |
-      #     cd web
-      #     npm run test
