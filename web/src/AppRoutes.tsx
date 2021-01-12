@@ -29,8 +29,6 @@ import { CurrentUserContextValues } from "./contexts/CurrentUserContext";
 import { useAnalyticsPageView } from "./hooks/use-analytics-page-view";
 import { WorkspaceStateProvider } from "./contexts/WorkspaceStateContext";
 
-const logger = console;
-
 const optimizely = createInstance({
   sdkKey: process.env.REACT_APP_OPTIMIZELY_SDK_KEY
 });
