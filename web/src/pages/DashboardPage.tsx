@@ -12,6 +12,7 @@ import { useCurrentUser } from "../hooks/use-current-user";
 import analytics from "analytics.js";
 import { useWorkspaceState } from "../hooks/use-workspace-state";
 import { WorkspaceUser } from "../types/workspace-user";
+import { WorkspaceInvite } from "../types/workspace-invite";
 
 export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
   const currentUser = useCurrentUser();
@@ -45,6 +46,7 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
           workspaceName={workspaceState.name}
           workspaceId={workspaceState.id}
           users={workspaceState.users}
+          invitedUsers={workspaceState.invitedUsers}
           isActive={workspaceState.isActive}
         />
       </PageContainer>
@@ -123,8 +125,9 @@ const TeamMemberOverview: React.FC<{
   workspaceId: string;
   workspaceName: string;
   users: WorkspaceUser[];
+  invitedUsers: WorkspaceInvite[];
   isActive: boolean;
-}> = ({ workspaceId, workspaceName, users, isActive }) => {
+}> = ({ workspaceId, workspaceName, users, isActive, invitedUsers }) => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
 
   const handleToggleModal = async () => {
@@ -158,11 +161,14 @@ const TeamMemberOverview: React.FC<{
           If users.length === 1, this means that you're the only person in the workspace. 
           In this case, we want to display the No Team Members illustration 
         */}
-        {users.length !== 1 ? (
+        {users.length !== 1 || invitedUsers.length !== 0 ? (
           <div className="flex flex-wrap">
             {users.map((user) => {
               return <WorkspaceUserItem key={user.userId} {...user} />;
             })}
+            {invitedUsers.map((invitedUser) => (
+              <WorkspaceInviteItem key={invitedUser.id} {...invitedUser} />
+            ))}
           </div>
         ) : (
           <img className="mt-4" src={teamMemberEmptyImage} alt="No Team Members" />
@@ -173,17 +179,13 @@ const TeamMemberOverview: React.FC<{
 };
 
 function WorkspaceUserItem({
-  userId,
   userPhotoURL,
   userDisplayName,
   userRole,
   userEmail
 }: WorkspaceUser) {
   return (
-    <div
-      key={userId}
-      className="flex flex-col lg:flex-row text-center lg:text-left items-center mx-auto lg:mx-4 my-4 w-64"
-    >
+    <div className="flex flex-col lg:flex-row text-center lg:text-left items-center mx-auto lg:mx-4 my-4 w-64">
       <img
         alt="User Avatar"
         src={userPhotoURL}
@@ -194,6 +196,22 @@ function WorkspaceUserItem({
           {userDisplayName} <span className="uppercase text-pink">{userRole}</span>
         </p>
         <p className="text-blue text-sm font-light">{userEmail}</p>
+      </div>
+    </div>
+  );
+}
+
+function WorkspaceInviteItem({ email }: WorkspaceInvite) {
+  return (
+    <div className="flex flex-col lg:flex-row text-center lg:text-left items-center mx-auto lg:mx-4 my-4 w-64">
+      <div
+        className={`flex h-12 w-12 rounded-full text-white items-center justify-center border border-red text-xl flex-shrink-0 ${"bg-blue text-white"}`}
+      >
+        {email[0]}
+      </div>
+      <div className="flex flex-col flex-shrink ml-2">
+        <p className="text-blue text-xs font-black">invited</p>
+        <p className="text-blue text-sm font-light">{email}</p>
       </div>
     </div>
   );

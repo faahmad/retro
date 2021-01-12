@@ -1,5 +1,6 @@
 import { FirestoreTimestamp } from "./firestore-timestamp";
 export interface WorkspaceInvite {
+  id: string;
   email: string;
   workspaceId: string;
   workspaceName: string;

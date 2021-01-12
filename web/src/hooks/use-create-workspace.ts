@@ -15,7 +15,7 @@ export function useCreateWorkspace() {
     const { uid, email, photoURL, displayName } = currentUser.auth;
     const { name, url, allowedEmailDomain } = input;
 
-    const workspaceRef = await createWorkspaceTransaction({
+    const params = {
       name,
       url,
       allowedEmailDomain,
@@ -23,7 +23,9 @@ export function useCreateWorkspace() {
       userEmail: email!,
       userPhotoURL: photoURL!,
       userDisplayName: displayName!
-    });
+    };
+
+    const workspaceRef = await createWorkspaceTransaction(params);
 
     return workspaceRef;
   }

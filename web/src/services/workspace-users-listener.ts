@@ -11,7 +11,7 @@ export function workspaceUsersListener(
 ) {
   return workspaceUserCollection
     .where("workspaceId", "==", workspaceId)
-    .limit(10)
+    .limit(8)
     .onSnapshot((workspaceUsersQuerySnapshot) =>
       workspaceUsersQuerySnapshot.forEach((workspaceUser) =>
         onSuccess(workspaceUser.data() as WorkspaceUser)

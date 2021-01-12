@@ -1,28 +1,18 @@
 import React from "react";
-import { gql } from "apollo-boost";
-import { useMutation, useQuery } from "@apollo/react-hooks";
 import { Button } from "../components/Button";
 import { Redirect, useHistory } from "react-router-dom";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { LoadingText } from "../components/LoadingText";
 import { PageContainer } from "../components/PageContainer";
-import analytics from "analytics.js";
 import { useCurrentUser } from "../hooks/use-current-user";
 import { getWorkspaceFromCurrentUser } from "../utils/workspace-utils";
 import { ErrorMessageBanner } from "../components/ErrorMessageBanner";
 import { cleanDuplicateKeyErrorMessage } from "../utils/error-utils";
 import { useCreateWorkspace } from "../hooks/use-create-workspace";
-
-const GET_WORKSPACES_THAT_USER_IS_INVITED_TO_QUERY = gql`
-  query GetWorkspacesThatUserIsInvitedTo {
-    getWorkspacesThatUserIsInvitedTo {
-      id
-      name
-      url
-    }
-  }
-`;
+import { useGetWorkspaceInvitesByEmail } from "../hooks/use-get-workspace-invites-by-email";
+import { WorkspaceInvite } from "../types/workspace-invite";
+import { useJoinWorkspaceFromInvite } from "../hooks/use-join-workspace-from-invite";
 
 export function OnboardingPage() {
   const currentUser = useCurrentUser();
@@ -32,7 +22,7 @@ export function OnboardingPage() {
     setShowForm(!showForm);
   };
 
-  const { data, loading } = useQuery(GET_WORKSPACES_THAT_USER_IS_INVITED_TO_QUERY);
+  const { data, loading } = useGetWorkspaceInvitesByEmail(currentUser.auth?.email);
 
   const workspace = getWorkspaceFromCurrentUser(currentUser);
 
@@ -46,12 +36,12 @@ export function OnboardingPage() {
     return <LoadingText>Loading...</LoadingText>;
   }
 
-  const hasPendingInvites = data?.getWorkspacesThatUserIsInvitedTo?.length !== 0;
+  const hasPendingInvites = data.length !== 0;
 
   return (
     <React.Fragment>
       {hasPendingInvites && !showForm ? (
-        <JoinWorkspaceList workspaces={data.getWorkspacesThatUserIsInvitedTo} />
+        <JoinWorkspaceList workspaceInvites={data} />
       ) : (
         <CreateWorkspaceForm />
       )}
@@ -229,30 +219,17 @@ const CreateWorkspaceForm: React.FC = () => {
   );
 };
 
-const JOIN_WORKSPACE_MUTATION = gql`
-  mutation JoinWorkspaceMutation($workspaceId: ID!) {
-    joinWorkspace(workspaceId: $workspaceId) {
-      code
-      success
-      message
-    }
-  }
-`;
-
 interface JoinWorkspaceListProps {
-  workspaces: any[];
+  workspaceInvites: WorkspaceInvite[];
 }
 
-const JoinWorkspaceList: React.FC<JoinWorkspaceListProps> = ({ workspaces }) => {
-  const [joinWorkspace] = useMutation(JOIN_WORKSPACE_MUTATION);
+const JoinWorkspaceList: React.FC<JoinWorkspaceListProps> = ({ workspaceInvites }) => {
   const history = useHistory();
+  const joinWorkspace = useJoinWorkspaceFromInvite();
 
-  const handleJoinWorkspace = async (workspace: any) => {
-    await joinWorkspace({
-      variables: { workspaceId: workspace.id }
-    });
-    analytics.track("Workspace Joined", { ...workspace });
-    history.push(`/workspaces/${workspace.id}`);
+  const handleJoinWorkspace = async (workspaceInvite: WorkspaceInvite) => {
+    await joinWorkspace(workspaceInvite);
+    history.push(`/workspaces/${workspaceInvite.workspaceId}`);
     return;
   };
 
@@ -262,23 +239,23 @@ const JoinWorkspaceList: React.FC<JoinWorkspaceListProps> = ({ workspaces }) => 
         <div className="text-center">
           <h1 className="text-2xl">Join your teammates on Retro</h1>
           <h3 className="text-lg">{`You've been invited to ${
-            workspaces.length
-          } workspace${workspaces.length > 1 ? "s" : ""}.`}</h3>
+            workspaceInvites.length
+          } workspace${workspaceInvites.length > 1 ? "s" : ""}.`}</h3>
         </div>
 
         <hr className="mt-4 mb-6"></hr>
 
         <ul>
-          {workspaces.map((workspace) => (
+          {workspaceInvites.map((workspaceInvite) => (
             <li
-              onClick={() => handleJoinWorkspace(workspace)}
+              onClick={() => handleJoinWorkspace(workspaceInvite)}
               className="border border-blue shadow p-4 mb-4 hover:bg-pink-1/2 cursor-pointer active:transform-1"
-              key={workspace.id}
+              key={workspaceInvite.workspaceId}
             >
               <span role="img" aria-label="team">
                 👯‍♀
               </span>{" "}
-              Join <span className="font-black">{workspace.name}</span>
+              Join <span className="font-black">{workspaceInvite.workspaceName}</span>
             </li>
           ))}
         </ul>
