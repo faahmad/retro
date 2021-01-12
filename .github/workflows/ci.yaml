@@ -34,9 +34,6 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: Test
-        run: npm run test
-
       - name: Build
         run: npm run build
         env:
@@ -58,14 +55,17 @@ jobs:
           # Note: Uses Production GraphQL URI.
           REACT_APP_GRAPHQL_URI: ${{ secrets.REACT_APP_GRAPHQL_URI }}
 
-      - name: Preview
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_RETRO_DEV_786 }}"
-          projectId: retro-dev-786
-        env:
-          FIREBASE_CLI_PREVIEWS: hostingchannels
+      - name: Test
+        run: npm run test
+
+      # - name: Preview
+      #   uses: FirebaseExtended/action-hosting-deploy@v0
+      #   with:
+      #     repoToken: "${{ secrets.GITHUB_TOKEN }}"
+      #     firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_RETRO_DEV_786 }}"
+      #     projectId: retro-dev-786
+      #   env:
+      #     FIREBASE_CLI_PREVIEWS: hostingchannels
 
   functions_ci:
     runs-on: ubuntu-latest
