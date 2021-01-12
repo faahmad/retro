@@ -6,9 +6,6 @@
     "lint": "tslint --project tsconfig.json",
     "prettier": "prettier \"src/**/*.{js,json,ts}\" --write",
     "build": "tsc",
-    "dev": "npm run build && firebase emulators:start --project dev --only functions,auth",
-    "shell": "npm run build && firebase functions:shell",
-    "start": "npm run shell",
     "deploy:dev": "firebase deploy --project dev --only functions",
     "deploy:prod": "firebase deploy --project prod --only functions",
     "logs": "firebase functions:log"
@@ -16,7 +13,7 @@
   "engines": {
     "node": "10"
   },
-  "main": "lib/index.js",
+  "main": "build/index.js",
   "dependencies": {
     "@types/lodash": "^4.14.152",
     "airtable": "^0.8.1",

@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "yarn start",
-    "start": "firebase emulators:exec 'react-scripts start'",
+    "emulate": "firebase emulators:start",
+    "start": "react-scripts start",
     "test": "react-scripts test",
     "build:dev": "env-cmd -f .env.development react-scripts build",
     "build:prod": "env-cmd -f .env.production react-scripts build",
