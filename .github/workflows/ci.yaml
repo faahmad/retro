@@ -59,7 +59,6 @@ jobs:
           REACT_APP_GRAPHQL_URI: ${{ secrets.REACT_APP_GRAPHQL_URI }}
 
       - name: Preview
-        uses: actions/checkout@v2
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
