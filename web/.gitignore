@@ -20,6 +20,7 @@
 .env.production.local
 .firebase
 .firebase/*
+.runtimeconfig.json
 
 
 

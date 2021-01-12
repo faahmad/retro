@@ -16,4 +16,14 @@ firebase.initializeApp({
 });
 
 firebase.analytics();
+const db = firebase.firestore();
+
+if (window.location.hostname === "localhost") {
+  firebase.auth().useEmulator("http://localhost:9099/");
+  db.settings({
+    host: "localhost:8080",
+    ssl: false
+  });
+}
+
 export default firebase;

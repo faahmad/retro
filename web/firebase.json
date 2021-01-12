@@ -1,7 +1,11 @@
 {
   "hosting": {
     "public": "build",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
     "rewrites": [
       {
         "source": "**",
@@ -10,6 +14,24 @@
     ]
   },
   "functions": {
-    "predeploy": "npm --prefix functions run build"
+    "predeploy": "npm --prefix functions run build",
+    "source": "functions"
+  },
+  "emulators": {
+    "functions": {
+      "port": 5001
+    },
+    "firestore": {
+      "port": 8080
+    },
+    "hosting": {
+      "port": null
+    },
+    "ui": {
+      "enabled": true
+    },
+    "auth": {
+      "port": 9099
+    }
   }
 }
