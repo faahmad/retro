@@ -28,14 +28,14 @@ jobs:
             ${{ runner.os }}-
       - name: Install node modules
         run: |
-          cd web
-          npm install
+          ls
+          # npm install
 
-  lint:
-    needs: install_deps
-    runs-on: ubuntu-latest
-    steps:
-      - name: Lint
-        run: |
-          cd web
-          npm run lint
+  # lint:
+  #   needs: install_deps
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Lint
+  #       run: |
+  #         cd web
+  #         npm run lint
