@@ -58,6 +58,16 @@ jobs:
           # Note: Uses Production GraphQL URI.
           REACT_APP_GRAPHQL_URI: ${{ secrets.REACT_APP_GRAPHQL_URI }}
 
+      - name: Preview
+        uses: actions/checkout@v2
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_RETRO_DEV_786 }}"
+          projectId: retro-dev-786
+        env:
+          FIREBASE_CLI_PREVIEWS: hostingchannels
+
   functions_ci:
     runs-on: ubuntu-latest
     timeout-minutes: 10
