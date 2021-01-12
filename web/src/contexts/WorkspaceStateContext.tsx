@@ -70,16 +70,16 @@ export function WorkspaceStateProvider({
       payload: workspaceData
     });
   };
-  const handleWorkspaceUsersQuerySnapshot = (workspaceUser: WorkspaceUser) => {
+  const handleWorkspaceUsersQuerySnapshot = (workspaceUsers: WorkspaceUser[]) => {
     return dispatch({
       type: WorkspaceStateActionTypes.WORKSPACE_USER_SNAPSHOT,
-      payload: workspaceUser
+      payload: workspaceUsers
     });
   };
-  const handleWorkspaceInvitesQuerySnapshot = (workspaceInvite: WorkspaceInvite) => {
+  const handleWorkspaceInvitesQuerySnapshot = (workspaceInvites: WorkspaceInvite[]) => {
     return dispatch({
       type: WorkspaceStateActionTypes.WORKSPACE_INVITE_SNAPSHOT,
-      payload: workspaceInvite
+      payload: workspaceInvites
     });
   };
 
@@ -165,12 +165,15 @@ function getIsInTrialMode(subscriptionStatus: Workspace["subscriptionStatus"]) {
   return subscriptionStatus === "trialing";
 }
 
-function reduceWorkspaceUser(state: WorkspaceStateValues, workspaceUser: WorkspaceUser) {
-  return { ...state, users: [...state.users, workspaceUser] };
+function reduceWorkspaceUser(
+  state: WorkspaceStateValues,
+  workspaceUsers: WorkspaceUser[]
+) {
+  return { ...state, users: workspaceUsers };
 }
 function reduceWorkspaceInvite(
   state: WorkspaceStateValues,
-  workspaceInvite: WorkspaceInvite
+  workspaceInvites: WorkspaceInvite[]
 ) {
-  return { ...state, invitedUsers: [...state.invitedUsers, workspaceInvite] };
+  return { ...state, invitedUsers: workspaceInvites };
 }

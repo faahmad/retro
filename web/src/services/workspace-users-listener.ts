@@ -7,14 +7,16 @@ const workspaceUserCollection = db.collection(FirestoreCollections.WORKSPACE_USE
 
 export function workspaceUsersListener(
   workspaceId: string,
-  onSuccess: (workspaceUser: WorkspaceUser) => void
+  onSuccess: (workspaceUsers: WorkspaceUser[]) => void
 ) {
   return workspaceUserCollection
     .where("workspaceId", "==", workspaceId)
     .limit(8)
-    .onSnapshot((workspaceUsersQuerySnapshot) =>
+    .onSnapshot((workspaceUsersQuerySnapshot) => {
+      let workspaceUsers: WorkspaceUser[] = [];
       workspaceUsersQuerySnapshot.forEach((workspaceUser) =>
-        onSuccess(workspaceUser.data() as WorkspaceUser)
-      )
-    );
+        workspaceUsers.push(workspaceUser.data() as WorkspaceUser)
+      );
+      return onSuccess(workspaceUsers);
+    });
 }
