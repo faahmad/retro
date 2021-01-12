@@ -108,7 +108,7 @@ jobs:
       - name: Deploy cloud functions to staging
         uses: w9jds/firebase-action@master
         with:
-          args: deploy --only functions
+          args: deploy --project dev --only functions
         env:
           FIREBASE_TOKEN: ${{ secrets.DEV_FIREBASE_TOKEN }}
           PROJECT_PATH: ./web
