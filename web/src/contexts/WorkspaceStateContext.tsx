@@ -5,6 +5,7 @@ import { WorkspaceUser } from "../types/workspace-user";
 import { WorkspaceInvite } from "../types/workspace-invite";
 import { workspaceListener } from "../services/workspace-listener";
 import { workspaceUsersListener } from "../services/workspace-users-listener";
+import { workspaceInvitesListener } from "../services/workspace-invite-listener";
 
 enum WorkspaceStateStatus {
   LOADING = "loading",
@@ -14,7 +15,8 @@ enum WorkspaceStateStatus {
 
 enum WorkspaceStateActionTypes {
   WORKSPACE_SNAPSHOT = "workspace_snapshot",
-  WORKSPACE_USER_SNAPSHOT = "workspace_user_snapshot"
+  WORKSPACE_USER_SNAPSHOT = "workspace_user_snapshot",
+  WORKSPACE_INVITE_SNAPSHOT = "workspace_invite_snapshot"
 }
 
 type WorkspaceStateValues = {
@@ -74,6 +76,12 @@ export function WorkspaceStateProvider({
       payload: workspaceUser
     });
   };
+  const handleWorkspaceInvitesQuerySnapshot = (workspaceInvite: WorkspaceInvite) => {
+    return dispatch({
+      type: WorkspaceStateActionTypes.WORKSPACE_INVITE_SNAPSHOT,
+      payload: workspaceInvite
+    });
+  };
 
   React.useEffect(() => {
     if (!workspaceId) {
@@ -88,10 +96,15 @@ export function WorkspaceStateProvider({
       workspaceId,
       handleWorkspaceUsersQuerySnapshot
     );
+    const workspaceInvitesUnsubscribeFn = workspaceInvitesListener(
+      workspaceId,
+      handleWorkspaceInvitesQuerySnapshot
+    );
 
     return () => {
       workspaceUnsubscribeFn();
       workspaceUsersUnsubscribeFn();
+      workspaceInvitesUnsubscribeFn();
     };
   }, [workspaceId]);
 
@@ -112,6 +125,9 @@ function workspaceStateReducer(
     }
     case WorkspaceStateActionTypes.WORKSPACE_USER_SNAPSHOT: {
       return reduceWorkspaceUser(state, action.payload);
+    }
+    case WorkspaceStateActionTypes.WORKSPACE_INVITE_SNAPSHOT: {
+      return reduceWorkspaceInvite(state, action.payload);
     }
     default: {
       return state;
@@ -151,4 +167,10 @@ function getIsInTrialMode(subscriptionStatus: Workspace["subscriptionStatus"]) {
 
 function reduceWorkspaceUser(state: WorkspaceStateValues, workspaceUser: WorkspaceUser) {
   return { ...state, users: [...state.users, workspaceUser] };
+}
+function reduceWorkspaceInvite(
+  state: WorkspaceStateValues,
+  workspaceInvite: WorkspaceInvite
+) {
+  return { ...state, invitedUsers: [...state.invitedUsers, workspaceInvite] };
 }

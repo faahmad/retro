@@ -1,9 +1,5 @@
 import analytics from "analytics.js";
-import {
-  authenticateWithGoogle,
-  getIdTokenFromUserCredential,
-  isNewUser
-} from "../services/auth-service";
+import { authenticateWithGoogle, isNewUser } from "../services/auth-service";
 import { useHistory } from "react-router-dom";
 
 export function useLoginWithGoogle() {
