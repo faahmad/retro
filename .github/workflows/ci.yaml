@@ -5,7 +5,7 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  web_ci:
+  web:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     defaults:
@@ -69,7 +69,7 @@ jobs:
         env:
           FIREBASE_CLI_PREVIEWS: hostingchannels
 
-  functions_ci:
+  functions:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     defaults:
