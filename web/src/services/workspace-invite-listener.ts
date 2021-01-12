@@ -7,18 +7,20 @@ const workspaceInviteCollection = db.collection(FirestoreCollections.WORKSPACE_I
 
 export function workspaceInvitesListener(
   workspaceId: string,
-  onSuccess: (workspaceInvite: WorkspaceInvite) => void
+  onSuccess: (workspaceInvites: WorkspaceInvite[]) => void
 ) {
   return workspaceInviteCollection
     .where("workspaceId", "==", workspaceId)
     .where("status", "==", WorkspaceInviteStatus.SENT)
     .limit(8)
-    .onSnapshot((workspaceInviteQuerySnapshot) =>
+    .onSnapshot((workspaceInviteQuerySnapshot) => {
+      let workspaceInvites: WorkspaceInvite[] = [];
       workspaceInviteQuerySnapshot.forEach((workspaceInviteSnapshot) =>
-        onSuccess({
+        workspaceInvites.push({
           id: workspaceInviteSnapshot.id,
           ...workspaceInviteSnapshot.data()
         } as WorkspaceInvite)
-      )
-    );
+      );
+      return onSuccess(workspaceInvites);
+    });
 }
