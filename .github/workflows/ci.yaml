@@ -8,6 +8,9 @@ jobs:
   web_ci:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: ./web
 
     steps:
       - name: Checkout
@@ -26,18 +29,20 @@ jobs:
             ${{ runner.os }}-
 
       - name: Install node modules
-        run: |
-          cd web
-          npm install
+        run: npm install
 
       - name: Lint
-        run: |
-          cd web
-          npm run lint
+        run: npm run lint
+
+      - name: Test
+        run: npm run test
 
   functions_ci:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: ./web/functions
 
     steps:
       - name: Checkout
@@ -56,11 +61,7 @@ jobs:
             ${{ runner.os }}-
 
       - name: Install node modules
-        run: |
-          cd web/functions
-          npm install
+        run: npm install
 
       - name: Lint
-        run: |
-          cd web/functions
-          npm run lint
+        run: npm run lint
