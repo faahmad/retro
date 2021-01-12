@@ -1,13 +1,18 @@
-name: CI
+name: CI - Web
 
 on:
   pull_request:
     types: [opened, synchronize, reopened]
 
 jobs:
-  install_dependencies:
+  build:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+
     steps:
+      - name: Checkout
+        uses: actions/checkout@master
+
       - name: Cache node modules
         uses: actions/cache@v1
         env:
@@ -19,16 +24,12 @@ jobs:
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
+
       - name: Install node modules
-        uses: actions/checkout@master
         run: |
           cd web
-          # npm install
+          npm install
 
-  lint:
-    needs: install_dependencies
-    runs-on: ubuntu-latest
-    steps:
       - name: Lint
         run: |
           cd web
