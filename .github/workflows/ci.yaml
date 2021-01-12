@@ -58,13 +58,6 @@ jobs:
           # Note: Uses Production GraphQL URI.
           REACT_APP_GRAPHQL_URI: ${{ secrets.REACT_APP_GRAPHQL_URI }}
 
-      - name: Deploy Web to Staging
-        uses: w9jds/firebase-action@master
-        with:
-          args: deploy --project dev --only hosting
-        env:
-          GCP_SA_KEY: ${{ secrets.PROD_GCP_FB_SA_KEY }}
-
   functions_ci:
     runs-on: ubuntu-latest
     timeout-minutes: 10
