@@ -116,6 +116,7 @@ jobs:
       - name: Install web dependencies.
         run: |
           npm install
+
       - name: Build web application.
         run: |
           npm run build
@@ -132,6 +133,7 @@ jobs:
           REACT_APP_STRIPE_PUBLISHABLE_KEY: ${{ secrets.REACT_APP_PROD_STRIPE_PUBLISHABLE_KEY }}
           REACT_APP_AMPLITUDE_API_KEY: ${{ secrets.REACT_APP_PROD_AMPLITUDE_API_KEY }}
           REACT_APP_OPTIMIZELY_SDK_KEY: ${{ secrets.REACT_APP_PROD_OPTIMIZELY_SDK_KEY }}
+
       - name: Deploy to web app to firebase hosting.
         uses: w9jds/firebase-action@master
         with:
