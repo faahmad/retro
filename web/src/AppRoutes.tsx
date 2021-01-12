@@ -42,8 +42,6 @@ export const AppRoutes: React.FC = () => {
   const currentUser = useCurrentUser();
   const { auth, isLoggedIn, state } = currentUser;
 
-  logger.log("TESTING CI");
-
   return (
     <OptimizelyProvider
       optimizely={optimizely}

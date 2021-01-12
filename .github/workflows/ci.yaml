@@ -64,7 +64,6 @@ jobs:
           args: deploy --project dev --only hosting
         env:
           GCP_SA_KEY: ${{ secrets.PROD_GCP_FB_SA_KEY }}
-          PROJECT_PATH: ./web
 
   functions_ci:
     runs-on: ubuntu-latest
