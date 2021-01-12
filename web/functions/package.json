@@ -24,7 +24,7 @@
     "moment": "^2.26.0",
     "node-mailjet": "^3.3.1",
     "request": "^2.88.2",
-    "stripe": "^8.50.0"
+    "stripe": "^8.130.0"
   },
   "devDependencies": {
     "@types/airtable": "^0.5.7",
