@@ -4,7 +4,7 @@ import { Retro } from "../types/retro";
 
 const db = firebase.firestore();
 const retroCollection = db.collection(FirestoreCollections.RETRO);
-const workspaceCollection = db.collection(FirestoreCollections.WORKSPACE);
+// const workspaceCollection = db.collection(FirestoreCollections.WORKSPACE);
 
 export interface CreateRetroTransactionParams {
   userId: string;
@@ -38,5 +38,6 @@ export function createWorkspaceTransaction({
     await newRetroRef.set(newRetroData);
 
     // Add the retro to the workspace's recent retros.
+    // workspace;
   });
 }
