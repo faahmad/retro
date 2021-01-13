@@ -1,4 +1,5 @@
 import { TODO } from "./todo";
+import { Retro } from "./retro";
 
 export interface Workspace {
   id: string;
@@ -19,4 +20,5 @@ export interface Workspace {
   };
   customerId?: string;
   subscriptionId?: string;
+  recentRetroIds?: string[];
 }
