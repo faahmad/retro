@@ -32,8 +32,6 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
   const isWorkspaceOwner = getIsWorkspaceOwner(workspaceState, userId || "");
   const isInTrialMode = workspaceState.subscriptionStatus === "trialing";
 
-  console.log({ workspaceState });
-
   return (
     <div>
       <PageContainer>
