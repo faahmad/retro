@@ -21,6 +21,7 @@
 .firebase
 .firebase/*
 .runtimeconfig.json
+firestore-debug.log
 
 
 
