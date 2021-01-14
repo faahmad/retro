@@ -11,7 +11,7 @@ export function workspaceRetrosListener(
 ) {
   return retroCollection
     .where("workspaceId", "==", workspaceId)
-    .orderBy("createdAt")
+    .orderBy("createdAt", "desc")
     .limitToLast(2)
     .onSnapshot((retroQuerySnapshot) => {
       let retros: Retro[] = [];

@@ -113,7 +113,11 @@ const RetroBoardsOverview: React.FC<{
         <div className="flex flex-wrap">
           {retros.map((retro) => {
             return (
-              <RetroCard retro={retro} onClick={() => handleRedirectToRetroPage(retro)} />
+              <RetroCard
+                key={retro.id}
+                retro={retro}
+                onClick={() => handleRedirectToRetroPage(retro)}
+              />
             );
           })}
         </div>
