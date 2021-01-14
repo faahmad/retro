@@ -13,12 +13,12 @@ import { Button } from "../components/Button";
 import { ThumbsUpIcon } from "../components/ThumbsUpIcon";
 import pencilIcon from "../assets/icons/pencil.svg";
 import { PageContainer } from "../components/PageContainer";
-import {
-  RetroBoard as RetroBoardInterface,
-  RetroColumn,
-  RetroColumnType,
-  RetroItem
-} from "../types";
+// import {
+//   RetroBoard as RetroBoardInterface,
+//   RetroColumn,
+//   RetroColumnType,
+//   RetroItem
+// } from "../types";
 // import {
 //   subscribeToRetroBoardById,
 //   updateRetroBoardById
