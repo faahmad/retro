@@ -23,7 +23,7 @@ import {
 //   subscribeToRetroBoardById,
 //   updateRetroBoardById
 // } from "../services/retro-board-service";
-import { useSubscriptionStatusContext } from "../contexts/SubscriptionStatusContext";
+import { useRetroState, RetroStateStatus } from "../hooks/use-retro-state";
 import analytics from "analytics.js";
 import { UserAvatar } from "../components/UserAvatar";
 import { OptimizelyFeature } from "@optimizely/react-sdk";
@@ -32,25 +32,23 @@ import { Retro } from "../types/retro";
 
 export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
   const params = useParams<{ retroId: Retro["id"] }>();
-  // let { isActive, isLoading } = useSubscriptionStatusContext();
+  const retroState = useRetroState(params.retroId);
 
-  const retro = { name: "New Retro", createdAt: new Date() };
-
-  // if (isLoading) {
-  //   return (
-  //     <PageContainer>
-  //       <p className="text-blue">Fetching retro...</p>
-  //     </PageContainer>
-  //   );
-  // }
+  if (retroState.status === RetroStateStatus.LOADING) {
+    return (
+      <PageContainer>
+        <p className="text-blue">Fetching retro...</p>
+      </PageContainer>
+    );
+  }
 
   return (
     <React.Fragment>
       <PageContainer>
         <h1 className="text-blue text-4xl font-bold mb-8">
-          {retro.name || "Retro Board"} -{" "}
+          {retroState.name || "Retro Board"} -{" "}
           <span className="font-normal">
-            {moment(retro.createdAt).format("MM.DD.YYYY")}
+            {moment(retroState.createdAt.toDate()).format("LLL")}
           </span>
         </h1>
         {/* <RetroBoard id={params.retroId} isActive={isActive} /> */}
