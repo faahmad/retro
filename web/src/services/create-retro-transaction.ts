@@ -1,43 +1,69 @@
 import firebase from "../lib/firebase";
 import { FirestoreCollections } from "../constants/firestore-collections";
 import { Retro } from "../types/retro";
+import { RetroColumnType } from "../types/retro-column";
+import { Workspace } from "../types/workspace";
+import { User } from "../types/user";
 
 const db = firebase.firestore();
 const retroCollection = db.collection(FirestoreCollections.RETRO);
-// const workspaceCollection = db.collection(FirestoreCollections.WORKSPACE);
 
 export interface CreateRetroTransactionParams {
-  userId: string;
-  workspaceId: string;
+  userId: User["id"];
+  workspaceId: Workspace["id"];
 }
 
-export function createWorkspaceTransaction({
+export async function createRetroTransaction({
   userId,
   workspaceId
 }: CreateRetroTransactionParams) {
-  return db.runTransaction(async (transaction) => {
-    // Create the new retro.
-    const newRetroRef = retroCollection.doc();
-    const newRetroData: Retro = {
-      id: newRetroRef.id,
-      workspaceId: workspaceId,
-      createdById: userId,
-      name: "New Retro",
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-      userIds: {
-        [userId]: userId
+  // Create the new retro.
+  const newRetroRef = retroCollection.doc();
+  const newRetroData: Retro = {
+    id: newRetroRef.id,
+    workspaceId: workspaceId,
+    createdById: userId,
+    name: "New Retro",
+    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    userIds: {
+      [userId]: userId
+    },
+    retroItemIds: {},
+    retroItemsData: {
+      goodCount: 0,
+      badCount: 0,
+      actionsCount: 0,
+      questionsCount: 0
+    },
+    columns: {
+      good: {
+        type: RetroColumnType.GOOD,
+        title: "What went well?",
+        retroItemIds: []
       },
-      retroItemsData: {
-        goodCount: 0,
-        badCount: 0,
-        actionsCount: 0,
-        questionsCount: 0
+      bad: {
+        type: RetroColumnType.BAD,
+        title: "What can be improved?",
+        retroItemIds: []
+      },
+      actions: {
+        type: RetroColumnType.ACTIONS,
+        title: "What do we need to do?",
+        retroItemIds: []
+      },
+      questions: {
+        type: RetroColumnType.QUESTIONS,
+        title: "What do we have questions on?",
+        retroItemIds: []
       }
-    };
-    await newRetroRef.set(newRetroData);
-
-    // Add the retro to the workspace's recent retros.
-    // workspace;
-  });
+    },
+    columnOrder: [
+      RetroColumnType.GOOD,
+      RetroColumnType.BAD,
+      RetroColumnType.ACTIONS,
+      RetroColumnType.QUESTIONS
+    ]
+  };
+  await newRetroRef.set(newRetroData);
+  return newRetroData;
 }

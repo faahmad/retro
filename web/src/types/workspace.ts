@@ -20,5 +20,4 @@ export interface Workspace {
   };
   customerId?: string;
   subscriptionId?: string;
-  recentRetroIds?: Retro["id"][];
 }

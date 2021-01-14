@@ -6,6 +6,8 @@ import { WorkspaceInvite } from "../types/workspace-invite";
 import { workspaceListener } from "../services/workspace-listener";
 import { workspaceUsersListener } from "../services/workspace-users-listener";
 import { workspaceInvitesListener } from "../services/workspace-invite-listener";
+import { workspaceRetrosListener } from "../services/workspace-retros-listener";
+import { Retro } from "../types/retro";
 
 enum WorkspaceStateStatus {
   LOADING = "loading",
@@ -16,7 +18,8 @@ enum WorkspaceStateStatus {
 enum WorkspaceStateActionTypes {
   WORKSPACE_SNAPSHOT = "workspace_snapshot",
   WORKSPACE_USER_SNAPSHOT = "workspace_user_snapshot",
-  WORKSPACE_INVITE_SNAPSHOT = "workspace_invite_snapshot"
+  WORKSPACE_INVITE_SNAPSHOT = "workspace_invite_snapshot",
+  WORKSPACE_RETRO_SNAPSHOT = "workspace_retro_snapshot"
 }
 
 type WorkspaceStateValues = {
@@ -25,6 +28,7 @@ type WorkspaceStateValues = {
   isActive: boolean;
   users: WorkspaceUser[];
   invitedUsers: WorkspaceInvite[];
+  retros: Retro[];
 } & Workspace;
 
 const initialState: WorkspaceStateValues = {
@@ -33,6 +37,7 @@ const initialState: WorkspaceStateValues = {
   isActive: false,
   users: [],
   invitedUsers: [],
+  retros: [],
   id: "",
   name: "",
   url: "",
@@ -82,6 +87,12 @@ export function WorkspaceStateProvider({
       payload: workspaceInvites
     });
   };
+  const handleWorkspaceRetrosQuerySnapshot = (retros: Retro[]) => {
+    return dispatch({
+      type: WorkspaceStateActionTypes.WORKSPACE_RETRO_SNAPSHOT,
+      payload: retros
+    });
+  };
 
   React.useEffect(() => {
     if (!workspaceId) {
@@ -100,11 +111,16 @@ export function WorkspaceStateProvider({
       workspaceId,
       handleWorkspaceInvitesQuerySnapshot
     );
+    const workspaceRetrosUnsubscribeFn = workspaceRetrosListener(
+      workspaceId,
+      handleWorkspaceRetrosQuerySnapshot
+    );
 
     return () => {
       workspaceUnsubscribeFn();
       workspaceUsersUnsubscribeFn();
       workspaceInvitesUnsubscribeFn();
+      workspaceRetrosUnsubscribeFn();
     };
   }, [workspaceId]);
 
@@ -128,6 +144,9 @@ function workspaceStateReducer(
     }
     case WorkspaceStateActionTypes.WORKSPACE_INVITE_SNAPSHOT: {
       return reduceWorkspaceInvite(state, action.payload);
+    }
+    case WorkspaceStateActionTypes.WORKSPACE_RETRO_SNAPSHOT: {
+      return reduceWorkspaceRetros(state, action.payload);
     }
     default: {
       return state;
@@ -176,4 +195,7 @@ function reduceWorkspaceInvite(
   workspaceInvites: WorkspaceInvite[]
 ) {
   return { ...state, invitedUsers: workspaceInvites };
+}
+function reduceWorkspaceRetros(state: WorkspaceStateValues, retros: Retro[]) {
+  return { ...state, retros };
 }

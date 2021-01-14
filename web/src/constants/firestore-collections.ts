@@ -6,5 +6,6 @@ export enum FirestoreCollections {
   WORKSPACE_INVITE = "workspaceInvite",
   RETRO = "retro",
   // composite collections
-  WORKSPACE_USER = "workspace_user"
+  WORKSPACE_USER = "workspace_user",
+  RETRO_ITEM_RETRO = "retroItem_retro"
 }

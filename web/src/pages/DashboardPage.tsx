@@ -4,15 +4,17 @@ import teamMemberEmptyImage from "../assets/images/team-member-empty-image.svg";
 import retroEmptyImage from "../assets/images/retro-empty-image.svg";
 import { InviteUserToWorkspaceModal } from "../components/InviteUserToWorkspaceModal";
 import { LoadingText } from "../components/LoadingText";
-import moment from "moment";
 import { Footer } from "../components/Footer";
 import { PageContainer } from "../components/PageContainer";
 import { UpgradeToProBanner } from "../components/UpgradeToProBanner";
 import { useCurrentUser } from "../hooks/use-current-user";
-import analytics from "analytics.js";
 import { useWorkspaceState } from "../hooks/use-workspace-state";
 import { WorkspaceUser } from "../types/workspace-user";
 import { WorkspaceInvite } from "../types/workspace-invite";
+import { Retro } from "../types/retro";
+import { Workspace } from "../types/workspace";
+import { useCreateRetro } from "../hooks/use-create-retro";
+import { RetroCard } from "../components/RetroCard";
 
 export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
   const currentUser = useCurrentUser();
@@ -30,6 +32,8 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
   const isWorkspaceOwner = getIsWorkspaceOwner(workspaceState, userId || "");
   const isInTrialMode = workspaceState.subscriptionStatus === "trialing";
 
+  console.log({ workspaceState });
+
   return (
     <div>
       <PageContainer>
@@ -41,7 +45,12 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
             trialEnd={workspaceState.subscriptionTrialEnd}
           />
         )}
-        <RetroBoardsOverview history={history} isActive={workspaceState.isActive} />
+        <RetroBoardsOverview
+          workspaceId={workspaceState.id}
+          retros={workspaceState.retros}
+          history={history}
+          isActive={workspaceState.isActive}
+        />
         <TeamMemberOverview
           workspaceName={workspaceState.name}
           workspaceId={workspaceState.id}
@@ -56,22 +65,27 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
 };
 
 const RetroBoardsOverview: React.FC<{
+  workspaceId: Workspace["id"];
   history: RouteComponentProps["history"];
   isActive: boolean;
-}> = ({ history, isActive }) => {
-  const [retros] = React.useState<any[]>([]);
+  retros: Retro[];
+}> = ({ history, isActive, retros, workspaceId }) => {
+  const createRetro = useCreateRetro();
 
-  const handleRedirectToRetroPage = (retro: any) => {
-    analytics.track("Retro Opened", { ...retro });
-    return history.push(
-      `/workspaces/${retro.workspaceId}/teams/${retro.teamId}/retros/${retro.id}`
-    );
+  const handleRedirectToRetroPage = (retro: Retro) => {
+    // analytics.track("Retro Opened", { ...retro });
+    return history.push(`/workspaces/${retro.workspaceId}/retros/${retro.id}`);
   };
 
   const handleCreateRetro = async () => {
     if (!isActive) {
       return;
     }
+    const newRetroData = await createRetro(workspaceId);
+    if (newRetroData) {
+      return handleRedirectToRetroPage(newRetroData);
+    }
+    return;
     // const { data } = await createRetroMutation({
     //   variables: { input: { teamId } }
     // });
@@ -99,18 +113,7 @@ const RetroBoardsOverview: React.FC<{
         <div className="flex flex-wrap">
           {retros.map((retro) => {
             return (
-              <div
-                key={retro.id}
-                onClick={() => handleRedirectToRetroPage(retro)}
-                className="flex flex-col lg:flex-row text-center lg:text-left items-center mx-auto lg:mx-4 my-4 w-64"
-              >
-                <div className="flex flex-col flex-shrink ml-1 bg-pink p-4 cursor-pointer hover:bg-pink-1/2 hover:shadow-blue">
-                  <p className="text-xs text-blue">#{retro.id}</p>
-                  <p className="text-blue text-sm font-light">
-                    {retro.name || moment(retro.createdAt).format("LLLL")}
-                  </p>
-                </div>
-              </div>
+              <RetroCard retro={retro} onClick={() => handleRedirectToRetroPage(retro)} />
             );
           })}
         </div>

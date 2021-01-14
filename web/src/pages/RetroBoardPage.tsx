@@ -1,7 +1,5 @@
 import * as React from "react";
 import { RouteComponentProps, useParams } from "react-router-dom";
-import { gql } from "apollo-boost";
-import { useQuery } from "@apollo/react-hooks";
 import { DragDropContext, Draggable, DropResult, Droppable } from "react-beautiful-dnd";
 import { v4 as uuidV4 } from "uuid";
 import moment from "moment";
@@ -21,55 +19,30 @@ import {
   RetroColumnType,
   RetroItem
 } from "../types";
-import {
-  subscribeToRetroBoardById,
-  updateRetroBoardById
-} from "../services/retro-board-service";
+// import {
+//   subscribeToRetroBoardById,
+//   updateRetroBoardById
+// } from "../services/retro-board-service";
 import { useSubscriptionStatusContext } from "../contexts/SubscriptionStatusContext";
 import analytics from "analytics.js";
 import { UserAvatar } from "../components/UserAvatar";
 import { OptimizelyFeature } from "@optimizely/react-sdk";
 import { useCurrentUser } from "../hooks/use-current-user";
-
-const RETRO_QUERY = gql`
-  query RetroQuery($id: ID!) {
-    retro(id: $id) {
-      id
-      name
-      teamId
-      workspaceId
-      createdById
-      createdAt
-      updatedAt
-    }
-  }
-`;
+import { Retro } from "../types/retro";
 
 export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
-  const params = useParams<{ retroId: string }>();
-  const { data, loading, error } = useQuery(RETRO_QUERY, {
-    variables: { id: params.retroId }
-  });
-  let { isActive, isLoading } = useSubscriptionStatusContext();
+  const params = useParams<{ retroId: Retro["id"] }>();
+  // let { isActive, isLoading } = useSubscriptionStatusContext();
 
-  if (loading || isLoading) {
-    return (
-      <PageContainer>
-        <p className="text-blue">Fetching retro...</p>
-      </PageContainer>
-    );
-  }
+  const retro = { name: "New Retro", createdAt: new Date() };
 
-  if (!data || !data.retro) {
-    return (
-      <PageContainer>
-        <p className="text-red">Couldn't fetch the retro.</p>
-        {error && <p className="text-red">{error.message}</p>}
-      </PageContainer>
-    );
-  }
-
-  const { retro } = data;
+  // if (isLoading) {
+  //   return (
+  //     <PageContainer>
+  //       <p className="text-blue">Fetching retro...</p>
+  //     </PageContainer>
+  //   );
+  // }
 
   return (
     <React.Fragment>
@@ -80,7 +53,7 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
             {moment(retro.createdAt).format("MM.DD.YYYY")}
           </span>
         </h1>
-        <RetroBoard id={params.retroId} isActive={isActive} />
+        {/* <RetroBoard id={params.retroId} isActive={isActive} /> */}
       </PageContainer>
       <Footer />
     </React.Fragment>
@@ -121,14 +94,14 @@ export class RetroBoard extends React.Component<RetroBoardProps, RetroBoardState
     this.unsubscribeFromRetroBoardFn = null;
   }
 
-  async componentDidMount() {
-    this.unsubscribeFromRetroBoardFn = subscribeToRetroBoardById(
-      this.props.id,
-      this.handleSetRetroBoardState
-    );
-    await this.setState({ isFetching: false });
-    return;
-  }
+  // async componentDidMount() {
+  //   this.unsubscribeFromRetroBoardFn = subscribeToRetroBoardById(
+  //     this.props.id,
+  //     this.handleSetRetroBoardState
+  //   );
+  //   await this.setState({ isFetching: false });
+  //   return;
+  // }
 
   componentWillUnmount() {
     if (this.unsubscribeFromRetroBoardFn) {
@@ -184,7 +157,7 @@ export class RetroBoard extends React.Component<RetroBoardProps, RetroBoardState
       }
     }));
 
-    await updateRetroBoardById(this.state.retroBoard.id, this.state.retroBoard);
+    // await updateRetroBoardById(this.state.retroBoard.id, this.state.retroBoard);
 
     analytics.track("Retro Item Added", { content, column, isAnonymous });
 
@@ -203,7 +176,7 @@ export class RetroBoard extends React.Component<RetroBoardProps, RetroBoardState
       }
     }));
 
-    await updateRetroBoardById(this.state.retroBoard.id, this.state.retroBoard);
+    // await updateRetroBoardById(this.state.retroBoard.id, this.state.retroBoard);
 
     analytics.track("Retro Item Edited", { ...item });
 
@@ -238,7 +211,7 @@ export class RetroBoard extends React.Component<RetroBoardProps, RetroBoardState
       }
     }));
 
-    await updateRetroBoardById(this.state.retroBoard.id, this.state.retroBoard);
+    // await updateRetroBoardById(this.state.retroBoard.id, this.state.retroBoard);
 
     analytics.track("Retro Item Deleted", { id: itemId, column: columnType });
 
@@ -278,7 +251,7 @@ export class RetroBoard extends React.Component<RetroBoardProps, RetroBoardState
       }
     }));
 
-    updateRetroBoardById(this.state.retroBoard.id, this.state.retroBoard);
+    // updateRetroBoardById(this.state.retroBoard.id, this.state.retroBoard);
 
     analytics.track("Retro Item Liked", { id: itemId, userId: uid });
 
@@ -354,7 +327,7 @@ export class RetroBoard extends React.Component<RetroBoardProps, RetroBoardState
       }));
     }
 
-    updateRetroBoardById(this.state.retroBoard.id, this.state.retroBoard);
+    // updateRetroBoardById(this.state.retroBoard.id, this.state.retroBoard);
 
     analytics.track("Retro Item Moved", {
       start: start.type,

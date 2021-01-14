@@ -129,7 +129,7 @@ function AuthenticatedAppRoutes({
         <Route exact path="/onboarding" component={OnboardingPage} />
         <Route
           exact
-          path="/workspaces/:workspaceId/teams/:teamId/retros/:retroId"
+          path="/workspaces/:workspaceId/retros/:retroId"
           component={RetroBoardPage}
         />
         <Route exact path="/workspaces/:workspaceId/settings" component={SettingsPage} />
