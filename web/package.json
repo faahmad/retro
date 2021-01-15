@@ -11,8 +11,8 @@
     "build:css": "tailwind build src/styles/tailwind.css -o src/styles/index.css",
     "prestart": "yarn run build:css",
     "prebuild": "yarn run build:css",
-    "deploy:dev": "yarn run build:dev && firebase deploy --project dev --only hosting",
-    "deploy:prod": "yarn run build:prod && firebase deploy --project prod --only hosting",
+    "deploy:dev": "yarn run build && firebase deploy --project dev --only hosting",
+    "deploy:prod": "yarn run build && firebase deploy --project prod --only hosting",
     "lint": "eslint 'src/**/*.{js,jsx,json,ts,tsx}' --quiet --fix",
     "prettier": "prettier \"src/**/*.{js,jsx,json,css,ts,tsx,scss}\" --write"
   },
