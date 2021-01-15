@@ -3,8 +3,8 @@ import { BrowserRouter, Route, Switch, useHistory } from "react-router-dom";
 import { OptimizelyProvider, createInstance, setLogger } from "@optimizely/react-sdk";
 import { Navbar } from "./components/Navbar";
 import { DesignPage } from "./pages/DesignPage";
-import { LoginPage } from "./pages/LoginPage";
-import { SignupPage } from "./pages/SignupPage";
+// import { LoginPage } from "./pages/LoginPage";
+// import { SignupPage } from "./pages/SignupPage";
 import { FAQPage } from "./pages/FAQPage";
 import { LandingPage } from "./pages/LandingPage";
 import { OnboardingPage } from "./pages/OnboardingPage";
@@ -22,8 +22,8 @@ import { Button } from "./components/Button";
 import { ErrorBoundary, FallbackProps } from "react-error-boundary";
 import { useCurrentUser } from "./hooks/use-current-user";
 import { useScrollToTop } from "./hooks/use-scroll-to-top";
-import { FeatureFlags } from "./constants/feature-flags";
-import { ExperimentalRoute } from "./components/ExperimentalRoute";
+// import { FeatureFlags } from "./constants/feature-flags";
+// import { ExperimentalRoute } from "./components/ExperimentalRoute";
 import { getWorkspaceFromCurrentUser } from "./utils/workspace-utils";
 import { CurrentUserContextValues } from "./contexts/CurrentUserContext";
 import { useAnalyticsPageView } from "./hooks/use-analytics-page-view";
@@ -87,7 +87,7 @@ const UnauthenticatedAppRoutes: React.FC = () => {
   useAnalyticsPageView();
   return (
     <React.Fragment>
-      <ExperimentalRoute
+      {/* <ExperimentalRoute
         featureKey={FeatureFlags.SIGN_UP}
         exact
         path="/login"
@@ -98,7 +98,7 @@ const UnauthenticatedAppRoutes: React.FC = () => {
         exact
         path="/signup"
         component={SignupPage}
-      />
+      /> */}
       <Route exact path="/" component={LandingPage} />
     </React.Fragment>
   );
