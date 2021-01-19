@@ -108,7 +108,7 @@ const NavbarBrand: React.FC = () => {
         <div className="z-0 mt-8 sm:ml-0 lg:ml-5">
           <RetroPinkLogo />
           {!currentUser.isLoggedIn && (
-            <p className="text-blue">welcome to new school teamwork.</p>
+            <p className="text-blue">agile retrospectives made easy</p>
           )}
         </div>
       </Link>
