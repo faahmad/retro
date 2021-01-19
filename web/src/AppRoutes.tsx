@@ -28,6 +28,7 @@ import { getWorkspaceFromCurrentUser } from "./utils/workspace-utils";
 import { CurrentUserContextValues } from "./contexts/CurrentUserContext";
 import { useAnalyticsPageView } from "./hooks/use-analytics-page-view";
 import { WorkspaceStateProvider } from "./contexts/WorkspaceStateContext";
+import { PainDreamFixLandingPage } from "./pages/PainDreamFixLandingPage";
 
 const optimizely = createInstance({
   sdkKey: process.env.REACT_APP_OPTIMIZELY_SDK_KEY
@@ -85,6 +86,9 @@ function ScrollToTop() {
 
 const UnauthenticatedAppRoutes: React.FC = () => {
   useAnalyticsPageView();
+
+  const isLandingPageXPEnabled = true;
+
   return (
     <React.Fragment>
       {/* <ExperimentalRoute
@@ -99,7 +103,11 @@ const UnauthenticatedAppRoutes: React.FC = () => {
         path="/signup"
         component={SignupPage}
       /> */}
-      <Route exact path="/" component={LandingPage} />
+      <Route
+        exact
+        path="/"
+        component={isLandingPageXPEnabled ? PainDreamFixLandingPage : LandingPage}
+      />
     </React.Fragment>
   );
 };
