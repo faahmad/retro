@@ -17,7 +17,7 @@ import { useLoginWithGoogle } from "../hooks/use-login-with-google";
 import { useCurrentUser } from "../hooks/use-current-user";
 import { CurrentUserState } from "../contexts/CurrentUserContext";
 
-export const LandingPage: React.FC = () => {
+export const PainDreamFixLandingPage: React.FC = () => {
   const [isSignUpEnabled] = useFeature(FeatureFlags.SIGN_UP);
   const loginWithGoogle = useLoginWithGoogle();
   const currentUser = useCurrentUser();
@@ -37,9 +37,9 @@ export const LandingPage: React.FC = () => {
             >
               <HeroImage />
             </div>
-            <h2 className="text-blue font-black text-2xl">
-              Online retrospective tool that will keep
-              <br /> your meetings focused, fun, and productive.
+            <h2 className="text-blue font-black text-xl">
+              Online retrospective tool that will keep your meetings focused, fun, and
+              productive.
             </h2>
             <h3 className="text-blue text-xl mt-2">
               Walk away with actionable insights{" "}
@@ -47,6 +47,12 @@ export const LandingPage: React.FC = () => {
             </h3>
           </div>
         </PageContainer>
+        <div className="mt-4">
+          <PageContainer>
+            <hr className="text-blue" />
+          </PageContainer>
+        </div>
+        <PainSection />
         <div className="landing-page__how-it-works relative w-full min-h-full vertical-stripes-blue border border-blue mt-8">
           <div className="w-full min-h-full -z-1 absolute horizontal-stripes-blue"></div>
           <div className="sm:w-full lg:w-4/5 m-auto p-4 py-8">
@@ -56,24 +62,25 @@ export const LandingPage: React.FC = () => {
             <div className="mt-10 flex flex-col lg:flex-row justify-between max-w-6xl items-center z-10 m-auto">
               <HowItWorksCard>
                 <img
-                  alt="Invite"
-                  src={howItWorksInviteImage}
-                  className="bg-white mb-2"
-                  style={{ height: "115px", width: "140px" }}
-                />
-                <p className="text-xl mb-2">Invite</p>
-                <p>Invite your team.</p>
-              </HowItWorksCard>
-              <HowItWorksCard>
-                <img
                   alt="Conduct"
                   src={howItWorksConductImage}
                   className="bg-white mb-2"
                   style={{ height: "115px", width: "140px" }}
                 />
-                <p className="text-xl mb-2">Conduct</p>
-                <p>Conduct your retro using our drag and drop interface.</p>
+                <p className="text-xl mb-2">Easy to use</p>
+                <p>Get more engagement from team members that usually don't speak up.</p>
               </HowItWorksCard>
+              <HowItWorksCard>
+                <img
+                  alt="Invite"
+                  src={howItWorksInviteImage}
+                  className="bg-white mb-2"
+                  style={{ height: "115px", width: "140px" }}
+                />
+                <p className="text-xl mb-2">Improve</p>
+                <p>Surface the most important pains and get valuable actions.</p>
+              </HowItWorksCard>
+
               <HowItWorksCard>
                 <img
                   alt="Conduct"
@@ -81,8 +88,8 @@ export const LandingPage: React.FC = () => {
                   className="bg-white mb-2"
                   style={{ height: "115px", width: "140px" }}
                 />
-                <p className="text-xl mb-2">Analyze</p>
-                <p>Analyze your team's progress.</p>
+                <p className="text-xl mb-2">Insights</p>
+                <p>Analyze your team's improvement over time.</p>
               </HowItWorksCard>
             </div>
           </div>
@@ -121,10 +128,6 @@ export const LandingPage: React.FC = () => {
             </div>
           </div>
         </PageContainer>
-        {/* <hr
-          className="flex flex-col justify-center self-center w-3/5 mt-12 mb-12"
-          style={{ borderTop: "2px dashed #11269C" }}
-        /> */}
         <div className="bg-red text-white p-12">
           <PageContainer>
             <div className="mt-20 mb-20 flex flex-col lg:flex-row max-w-6xl m-auto">
@@ -238,5 +241,121 @@ export const LandingPageFooter = () => {
       </div>
       <p className="text-blue">&copy; 2020, Retro Technology</p>
     </footer>
+  );
+};
+
+const PainSection = () => {
+  return (
+    <div className="text-blue">
+      <PageContainer>
+        <div className="my-4 flex flex-col lg:flex-row m-auto">
+          <div className="w-full">
+            <h3 className="text-red text-2xl font-black mb-8">
+              “My team hates having retrospectives. They’re time consuming and it’s really
+              frustrating when nothing changes as a result.”
+            </h3>
+            <div className="text-lg">
+              <p>
+                That's a quote from an engineer -- and it's something we've heard{" "}
+                <span className="italic">a lot</span>.
+              </p>
+              <br />
+              <p>
+                Retrospectives are the most time-consuming, expensive, and frustrating
+                part about agile development.
+              </p>
+              <br />
+              <p>Yet, the process to execute them is totally broken.</p>
+              <br />
+              <p className="pb-4">
+                You've got things to build, but you also want to make sure your team is
+                engaged and getting better:
+              </p>
+              <ul className="list-disc list-outside">
+                <li className="pl-8 pb-2">What is slowing you and your team down?</li>
+                <li className="pl-8 pb-2">
+                  Is your team engaged and excited about their work?
+                </li>
+                <li className="pl-8 pb-2">
+                  Are your current projects giving a good ROI?
+                </li>
+                <li className="pl-8 pb-2">
+                  How can you catch small issues early, so that they don't turn into{" "}
+                  <span className="font-black">BIG</span> problems?
+                </li>
+              </ul>
+              <br />
+              <br />
+              <p>
+                <span className="font-black">
+                  To answer these questions, you should be having retrospectives
+                  regularly. But, your team hates retros.
+                </span>{" "}
+                You’re probably getting a lot of{" "}
+                <span className="italic">surface-level</span> issues that aren’t
+                addressing the <span className="underline">real</span> problems facing
+                your team.
+              </p>
+              <br />
+              <p>
+                This leads to bad information and decision making, a not-so-engaged team
+                that ignores small issues that could blow up in your face and cost a lot
+                more down the road.
+              </p>
+              <br />
+              <p>
+                How much easier would your job be if retrospectives were fast, easy,
+                almost fun, and your team actually looked forward to them?
+              </p>
+              <br />
+              <br />
+              <p className="text-xl italic pb-4">*** Imagine ***</p>
+              <ul className="list-disc list-outside">
+                <li className="pl-8 pb-2">
+                  You wouldn't have to nag your team about retrospectives.
+                </li>
+                <li className="pl-8 pb-2">
+                  Your retrospectives were focused and produtive.
+                </li>
+                <li className="pl-8 pb-2">You walked away with actionable insights.</li>
+                <li className="pl-8 pb-2">
+                  You'd have <span className="underline">real</span> data on how your team
+                  was improving.
+                </li>
+                <li className="pl-8 pb-2">
+                  You'd make the right decisions as a team and catch those little issues
+                  before they turned into fires.
+                </li>
+                <li className="pl-8 pb-2 font-black">
+                  Your team would be happy, engaged, and ship better products -- which
+                  adds value (and probably money) to your business.
+                </li>
+              </ul>
+              <br />
+              <br />
+              <p>
+                What if you could instantly see the pulse of your team; happiness,
+                roadblocks, current questions?
+              </p>
+              <br />
+              <p className="font-black text-2xl my-8">
+                If you're not walking away from every meeting with valuable action items,
+                you should check out Retro.
+              </p>
+              <p>
+                We've been agile for years, and recently gone remote.{" "}
+                <span className="italic">We hate</span> the tools we've tried for online
+                retrospectives.
+              </p>
+              <br />
+              <p>
+                That's why we're building Retro to help you and your team have
+                retrospectives that are focused, fun, and productive.
+              </p>
+            </div>
+          </div>
+        </div>
+      </PageContainer>
+    </div>
   );
 };
