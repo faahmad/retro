@@ -15,8 +15,7 @@ export const FAQPage: React.FC = () => {
             <h3 className="text-blue font-bold text-2xl">How much does Retro cost?</h3>
             <p className="text-xl text-blue">
               Retro is free for the first 30 days, then it is $39.99 per month. This gets
-              you one workspace, unlimited teams, unlimited retro boards, and unlimited
-              team members.
+              you one workspace, 10 team members, and unlimited retro boards.
             </p>
           </div>
           <div className="mt-20 mb-20">
