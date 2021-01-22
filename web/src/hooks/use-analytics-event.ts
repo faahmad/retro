@@ -3,6 +3,7 @@ import analytics from "analytics.js";
 
 export enum AnalyticsEvent {
   JOIN_WAITLIST_CLICKED = "Join Waitlist Link Clicked",
+  JOINED_NEWSLETTER = "Joined Newsletter",
   USER_INVITED = "User Invited",
   WORKSPACE_CREATED = "Workspace Created",
   WORKSPACE_JOINED = "Workspace Joined"

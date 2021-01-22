@@ -16,6 +16,7 @@ import { JoinWaitlistButton } from "../components/JoinWaitlistButton";
 import { useLoginWithGoogle } from "../hooks/use-login-with-google";
 import { useCurrentUser } from "../hooks/use-current-user";
 import { CurrentUserState } from "../contexts/CurrentUserContext";
+import { MailchimpNewsLetterSignupForm } from "../components/MailchimpNewsletterSubscribeForm";
 
 export const PainDreamFixLandingPage: React.FC = () => {
   const [isSignUpEnabled] = useFeature(FeatureFlags.SIGN_UP);
@@ -28,30 +29,42 @@ export const PainDreamFixLandingPage: React.FC = () => {
 
   return (
     <div>
-      <div className="landing-page flex flex-col w-full justify-center my-8">
+      <div className="landing-page flex flex-col w-full justify-center">
         <PageContainer>
-          <div className="flex flex-col items-center lg:text-center m-0">
+          <div className="flex flex-col-reverse text-center lg:flex-row lg:items-center lg:text-left">
+            <div id="hero-title" className="w-full lg:w-1/2 mt-4 lg:mt-0">
+              <h2 className="text-blue font-black text-xl lg:text-2xl">
+                Agile retrospectives made easy
+              </h2>
+              <h3 className="text-blue text-lg mt-2">
+                An online retrospective tool that will keep your meetings fun, focused,
+                and productive.
+              </h3>
+              <p className="text-blue text-lg mt-8">
+                <span className="font-black">Get 2 months free</span>{" "}
+                <br className="lg:hidden" />
+                when you join our newsletter.
+              </p>
+              <MailchimpNewsLetterSignupForm className="mt-4" location="hero" />
+            </div>
             <div
-              className="w-full sm:w-full md:flex-1 lg:flex-1 mt-4"
+              id="hero-image"
+              className="bg-white lg:w-1/2"
               aria-label="Retro Hero Image"
             >
-              <HeroImage />
+              <img
+                alt="Screenshot"
+                src={applicationScreenshotImage}
+                className="h-full w-full"
+              />
             </div>
-            <h2 className="text-blue font-black text-xl">
-              Online retrospective tool that will keep your meetings focused, fun, and
-              productive.
-            </h2>
-            <h3 className="text-blue text-xl mt-2">
-              Walk away with actionable insights{" "}
-              <span className="underline">every time.</span>
-            </h3>
           </div>
         </PageContainer>
-        <div className="mt-4">
-          <PageContainer>
-            <hr className="text-blue" />
-          </PageContainer>
+
+        <div className="my-8 w-full mx-auto lg:w-1/2">
+          <hr className="text-blue" />
         </div>
+
         <PainSection />
         <div className="landing-page__how-it-works relative w-full min-h-full vertical-stripes-blue border border-blue mt-8">
           <div className="w-full min-h-full -z-1 absolute horizontal-stripes-blue"></div>
@@ -97,11 +110,7 @@ export const PainDreamFixLandingPage: React.FC = () => {
         <PageContainer>
           <div className="mt-20 mb-20 flex flex-col lg:flex-row max-w-6xl items-center m-auto">
             <div className="w-full sm:w-2/3 md:w-2/3 lg:w-2/3">
-              <img
-                alt="Screenshot"
-                src={applicationScreenshotImage}
-                className="bg-white mb-2 sm:p-10 md:p-10 lg:p-10"
-              />
+              <HeroImage />
             </div>
             <div className="w-full sm:w-1/3 md:w-1/3 lg:w-1/3 sm:ml-4 md:ml-4 lg:w-ml-4">
               <h3 className="text-3xl text-blue font-black mb-3">
@@ -137,7 +146,7 @@ export const PainDreamFixLandingPage: React.FC = () => {
                 </h3>
                 <p className="text-xl text-white">
                   Our pricing is dead simple. Pay the same price forever regardless of how
-                  your team and company grows.
+                  meetings you have.
                 </p>
               </div>
               <div className="w-full mt-10 sm:w-1/2 md:w-1/2 lg:w-1/2 sm:mt-0 md:mt-0 lg:mt-0 sm:ml-4 md:ml-4 lg:w-ml-4 sm:text-right  md:text-right  lg:text-right">
@@ -145,56 +154,34 @@ export const PainDreamFixLandingPage: React.FC = () => {
                   $39.99<span className="text-xl font-normal text-white"> Per Month</span>
                 </h2>
                 <p className="text-xl text-white">
-                  <b>Includes:</b> <br /> One Workspace <br /> Unlimited Teams <br />{" "}
-                  Unlimited Boards <br /> Unlimited Team Members
+                  <b>Team Plan:</b>
+                  <br />
+                  1 Workspace
+                  <br />
+                  10 Team Members
+                  <br />
+                  Unlimited Boards
                 </p>
               </div>
             </div>
           </PageContainer>
         </div>
-        <PageContainer>
-          <div className="mt-20 mb-20 flex flex-col lg:flex-row max-w-6xl items-center m-auto">
-            <div className="hidden w-full sm:block md:block lg:block sm:w-1/3 md:w-1/3 lg:w-1/3">
-              {isSignUpEnabled ? (
-                <GoogleOAuthButton
-                  buttonClassName="text-blue bg-pink"
-                  textClassName="justify-end"
-                  useGoogleIcon={false}
-                  onClick={loginWithGoogle}
-                >
-                  Free Trial Inside
-                </GoogleOAuthButton>
-              ) : (
-                <JoinWaitlistButton />
-              )}
-            </div>
-            <div className="w-full sm:w-2/3 md:w-2/3 lg:w-2/3 sm:ml-4 md:ml-4 lg:w-ml-4">
-              <h3 className="text-3xl text-blue sm:text-right  md:text-right  lg:text-right font-black mb-3">
-                {isSignUpEnabled ? "Play Now!" : "Get Extra Lives for Free."}
-              </h3>
-              <p className="text-xl sm:text-right  md:text-right  lg:text-right  text-blue">
-                {isSignUpEnabled
-                  ? "No fees for your first 30 days. Retro is guaranteed to make your team feel more productive. This tool is awesome. We promise."
-                  : "We will be launching soon. Get 2 months free when you join our waitlist. No payment information required."}
-              </p>
-            </div>
-            <div className="block w-full sm:hidden md:hidden lg:hidden sm:w-1/3 md:w-1/3 lg:w-1/3">
-              {isSignUpEnabled ? (
-                <GoogleOAuthButton
-                  buttonClassName="mt-4 text-blue bg-pink"
-                  textClassName="justify-end"
-                  useGoogleIcon={false}
-                  onClick={loginWithGoogle}
-                >
-                  Free Trial Inside
-                </GoogleOAuthButton>
-              ) : (
-                <JoinWaitlistButton />
-              )}
-            </div>
-          </div>
-        </PageContainer>
       </div>
+      <PageContainer>
+        <div className="text-blue">
+          <h3 className="text-xl lg:text-3xl font-black mb-3">
+            Get 2 months for free when you join our newsletter.
+          </h3>
+          <p className="mb-3">
+            We're embracing openness by sharing our metrics with everyone.
+          </p>
+          <p className="mb-3">
+            Every two weeks we'll share updates from the product, marketing, and business
+            sides of Retro.
+          </p>
+        </div>
+        <MailchimpNewsLetterSignupForm location="landing bottom" />
+      </PageContainer>
       <FAQFooter />
       <LandingPageFooter />
     </div>
