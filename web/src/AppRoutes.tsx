@@ -3,8 +3,6 @@ import { BrowserRouter, Route, Switch, useHistory } from "react-router-dom";
 import { OptimizelyProvider, createInstance, setLogger } from "@optimizely/react-sdk";
 import { Navbar } from "./components/Navbar";
 import { DesignPage } from "./pages/DesignPage";
-// import { LoginPage } from "./pages/LoginPage";
-// import { SignupPage } from "./pages/SignupPage";
 import { FAQPage } from "./pages/FAQPage";
 import { LandingPage } from "./pages/LandingPage";
 import { OnboardingPage } from "./pages/OnboardingPage";
@@ -22,13 +20,18 @@ import { Button } from "./components/Button";
 import { ErrorBoundary, FallbackProps } from "react-error-boundary";
 import { useCurrentUser } from "./hooks/use-current-user";
 import { useScrollToTop } from "./hooks/use-scroll-to-top";
-// import { FeatureFlags } from "./constants/feature-flags";
-// import { ExperimentalRoute } from "./components/ExperimentalRoute";
+
 import { getWorkspaceFromCurrentUser } from "./utils/workspace-utils";
 import { CurrentUserContextValues } from "./contexts/CurrentUserContext";
 import { useAnalyticsPageView } from "./hooks/use-analytics-page-view";
 import { WorkspaceStateProvider } from "./contexts/WorkspaceStateContext";
 import { PainDreamFixLandingPage } from "./pages/PainDreamFixLandingPage";
+
+// Comment these out before deploying to prod!
+// import { LoginPage } from "./pages/LoginPage";
+// import { SignupPage } from "./pages/SignupPage";
+// import { FeatureFlags } from "./constants/feature-flags";
+// import { ExperimentalRoute } from "./components/ExperimentalRoute";
 
 const optimizely = createInstance({
   sdkKey: process.env.REACT_APP_OPTIMIZELY_SDK_KEY
@@ -126,8 +129,9 @@ function AuthenticatedAppRoutes({
     if (!currentUser.isLoggedIn) {
       return;
     }
-    const redirectUrl = workspaceId ? `/workspaces/${workspaceId}` : "/onboarding";
-    history.push(redirectUrl);
+    if (!workspaceId) {
+      return history.push("/onboarding");
+    }
     //eslint-disable-next-line
   }, [currentUser.isLoggedIn, workspaceId]);
 
