@@ -11,13 +11,13 @@ export function workspaceRetrosListener(
 ) {
   return retroCollection
     .where("workspaceId", "==", workspaceId)
-    .orderBy("createdAt", "desc")
+    .orderBy("createdAt", "asc")
     .limitToLast(2)
     .onSnapshot((retroQuerySnapshot) => {
       let retros: Retro[] = [];
       retroQuerySnapshot.forEach((retroDoc) => {
         retros.push(retroDoc.data() as Retro);
       });
-      return onSuccess(retros);
+      return onSuccess(retros.reverse());
     });
 }
