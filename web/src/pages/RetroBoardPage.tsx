@@ -58,7 +58,7 @@ interface RetroHeaderProps {
   name: string;
   createdAt: any;
 }
-function RetroHeader({ id, name, createdAt }: ReaderHeaderProps) {
+function RetroHeader({ id, name, createdAt }: RetroHeaderProps) {
   const [localName, setLocalName] = React.useState(name);
   const handleOnChange = (event) => {
     return setLocalName(event.currentTarget.value);
@@ -84,7 +84,7 @@ function RetroHeader({ id, name, createdAt }: ReaderHeaderProps) {
 
   return (
     <div className="flex text-blue items-baseline justify-between mb-8">
-      <div className="flex flex-col flex-nowrap">
+      <div className="flex flex-col flex-grow flex-nowrap">
         {!isEditing ? (
           <h1 className="text-4xl font-bold">{name || "Retro Board"}</h1>
         ) : (
@@ -104,14 +104,14 @@ function RetroHeader({ id, name, createdAt }: ReaderHeaderProps) {
       {!isEditing ? (
         <button
           aria-label="edit title button"
-          className="flex text-sm items-center px-2 border border blue"
+          className="flex items-center px-4 border border blue"
           onClick={handleToggleEditing}
         >
           <span>Edit</span>
         </button>
       ) : (
         <button
-          className="flex text-sm items-center px-2 bg-blue text-white"
+          className="flex items-center px-4 bg-blue text-white"
           onClick={handleSave}
         >
           Save

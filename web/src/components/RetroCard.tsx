@@ -15,11 +15,14 @@ export function RetroCard({ retro, onClick }: RetroCardProps) {
     <div
       onClick={onClick}
       className="flex border border-blue cursor-pointer flex-col mx-auto lg:mx-4 my-4 w-5/12 h-64"
+      style={{ minWidth: "360px" }}
     >
       <div className="flex bg-pink p-3 items-baseline w-full">
         <p className="flex w-full justify-between text-sm text-blue font-black">
           <span>{retro.name}</span>
-          <span className="text-xs font-light">{moment(createdAt).format("LLL")}</span>
+          <span className="text-xs font-light hidden lg:block">
+            {moment(createdAt).format("LLL")}
+          </span>
         </p>
       </div>
       <div className="flex flex-col justify-around h-full w-full p-4">

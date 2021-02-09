@@ -1,5 +1,5 @@
 import React from "react";
-import { RouteComponentProps } from "react-router-dom";
+import { RouteComponentProps, Link } from "react-router-dom";
 import teamMemberEmptyImage from "../assets/images/team-member-empty-image.svg";
 import retroEmptyImage from "../assets/images/retro-empty-image.svg";
 import { InviteUserToWorkspaceModal } from "../components/InviteUserToWorkspaceModal";
@@ -110,17 +110,27 @@ const RetroBoardsOverview: React.FC<{
         </div>
       </div>
       {retros.length !== 0 ? (
-        <div className="flex flex-wrap">
-          {retros.map((retro) => {
-            return (
-              <RetroCard
-                key={retro.id}
-                retro={retro}
-                onClick={() => handleRedirectToRetroPage(retro)}
-              />
-            );
-          })}
-        </div>
+        <React.Fragment>
+          <div className="flex flex-wrap">
+            {retros.map((retro) => {
+              return (
+                <RetroCard
+                  key={retro.id}
+                  retro={retro}
+                  onClick={() => handleRedirectToRetroPage(retro)}
+                />
+              );
+            })}
+          </div>
+          {retros.length && (
+            <Link
+              className="text-right underline text-sm"
+              to={`/workspaces/${workspaceId}/retros`}
+            >
+              <p className="text-blue">See all</p>
+            </Link>
+          )}
+        </React.Fragment>
       ) : (
         <img className="mt-4" src={retroEmptyImage} alt="No Retros" />
       )}
