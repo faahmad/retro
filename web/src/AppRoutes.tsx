@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Switch, useHistory } from "react-router-dom";
 import { OptimizelyProvider, createInstance, setLogger } from "@optimizely/react-sdk";
 import { Navbar } from "./components/Navbar";
 import { DesignPage } from "./pages/DesignPage";
+
 import { FAQPage } from "./pages/FAQPage";
 import { LandingPage } from "./pages/LandingPage";
 import { OnboardingPage } from "./pages/OnboardingPage";
@@ -32,7 +33,7 @@ import { PainDreamFixLandingPage } from "./pages/PainDreamFixLandingPage";
 // import { SignupPage } from "./pages/SignupPage";
 // import { FeatureFlags } from "./constants/feature-flags";
 // import { ExperimentalRoute } from "./components/ExperimentalRoute";
-
+        
 const optimizely = createInstance({
   sdkKey: process.env.REACT_APP_OPTIMIZELY_SDK_KEY
 });
