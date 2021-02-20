@@ -3,14 +3,24 @@ import * as React from "react";
 import { Retro } from "../types/retro";
 import { Workspace } from "../types/workspace";
 
-export function useGetWorkspaceRetros() {
+export function useGetWorkspaceRetros(workspaceId: Workspace["id"]) {
   const [retros, setRetros] = React.useState<Retro[]>([]);
-  function handleGetWorkspaceRetros(workspaceId: Workspace["id"]) {
-    return getWorkspaceRetros({ workspaceId });
-  }
+  const [isLoading, setIsLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    setIsLoading(true);
+    getWorkspaceRetros({ workspaceId }).then((r) => {
+      console.log(r);
+      return setRetros(r);
+    });
+  }, [workspaceId]);
+
+  // function handleGetWorkspaceRetros(workspaceId: Workspace["id"]) {
+  //   return getWorkspaceRetros({ workspaceId });
+  // }
 
   // function handleGetMore() {
   // }
 
-  return { getWorkspaceRetros: handleGetWorkspaceRetros };
+  return { isLoading, retros };
 }

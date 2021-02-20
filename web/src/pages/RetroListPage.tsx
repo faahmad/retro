@@ -13,14 +13,16 @@ export function RetroListPage() {
     return history.push(`/workspaces/${retro.workspaceId}/retros/${retro.id}`);
   };
   const workspaceState = useWorkspaceState();
-  const { getWorkspaceRetros } = useGetWorkspaceRetros();
+  const { retros } = useGetWorkspaceRetros(workspaceState.id);
+
+  debugger;
 
   return (
     <PageContainer>
       <p className="text-blue mb-2 underline">{workspaceState.name}</p>
       <h1 className="text-blue font-black text-3xl">All Retros</h1>
       <div className="flex flex-wrap">
-        {retros.map((retro) => {
+        {/* {retros.map((retro) => {
           return (
             <RetroCard
               key={retro.id}
@@ -28,7 +30,7 @@ export function RetroListPage() {
               onClick={() => handleRedirectToRetroPage(retro)}
             />
           );
-        })}
+        })} */}
       </div>
     </PageContainer>
   );
