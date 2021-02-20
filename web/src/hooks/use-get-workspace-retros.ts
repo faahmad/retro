@@ -10,7 +10,7 @@ export function useGetWorkspaceRetros(workspaceId: Workspace["id"]) {
   React.useEffect(() => {
     setIsLoading(true);
     getWorkspaceRetros({ workspaceId }).then((r) => {
-      console.log(r);
+      // console.log(r);
       return setRetros(r);
     });
   }, [workspaceId]);
