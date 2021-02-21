@@ -1741,87 +1741,6 @@
     "@opentelemetry/resources" "^0.12.0"
     "@opentelemetry/semantic-conventions" "^0.12.0"
 
-"@optimizely/js-sdk-datafile-manager@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@optimizely/js-sdk-datafile-manager/-/js-sdk-datafile-manager-0.8.0.tgz#de213b45777236b1e41082eeb63eaceea267e0fb"
-  integrity sha512-eTpWhLisgXLlUFy0Qz6SP0yKYYwyP8DDLt6nwZky33lka2kustQMnfI0uhNN8EAdx/vayxuTdmaYRWBy+pS7Vg==
-  dependencies:
-    "@optimizely/js-sdk-logging" "^0.1.0"
-    "@optimizely/js-sdk-utils" "^0.4.0"
-    decompress-response "^4.2.1"
-
-"@optimizely/js-sdk-event-processor@^0.7.0":
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/@optimizely/js-sdk-event-processor/-/js-sdk-event-processor-0.7.0.tgz#e5ff9d36bfa13891fd8a647f5b10e1df1a9bdce7"
-  integrity sha512-HFXPeM5xCCy2qRrVcYeYcy6JIwaGRVb8GnoDQjEsyB8M5AgNzoOTBFWPstCMFHE5jyjrE+QbhXpRcTBLBvRnEA==
-  dependencies:
-    "@optimizely/js-sdk-logging" "^0.1.0"
-    "@optimizely/js-sdk-utils" "^0.4.0"
-
-"@optimizely/js-sdk-event-processor@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@optimizely/js-sdk-event-processor/-/js-sdk-event-processor-0.8.0.tgz#67a8dbcdc0008078d50f13295eb657e38492b5fa"
-  integrity sha512-fq1OcZtYIkMLGXB60I+aetkMWmBl7jjeHEFbaiAmbwwqLcdxQZXIfRhGnCJ+I3MA8OGvqzxZK+dlS5PqeoGt9g==
-  dependencies:
-    "@optimizely/js-sdk-logging" "^0.1.0"
-    "@optimizely/js-sdk-utils" "^0.4.0"
-
-"@optimizely/js-sdk-logging@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@optimizely/js-sdk-logging/-/js-sdk-logging-0.1.0.tgz#e5950c3d9a708fbd5931a043130469c5df7f64e8"
-  integrity sha512-Bs2zHvsdNIk2QSg05P6mKIlROHoBIRNStbrVwlePm603CucojKRPlFJG4rt7sFZQOo8xS8I7z1BmE4QI3/ZE9A==
-  dependencies:
-    "@optimizely/js-sdk-utils" "^0.1.0"
-
-"@optimizely/js-sdk-utils@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@optimizely/js-sdk-utils/-/js-sdk-utils-0.1.0.tgz#e3ac1fef81f11c15774f4743c3fa7c65d9c3352a"
-  integrity sha512-p7499GgVaX94YmkrwOiEtLgxgjXTPbUQsvETaAil5J7zg1TOA4Wl8ClalLSvCh+AKWkxGdkL4/uM/zfbxPSNNw==
-  dependencies:
-    uuid "^3.3.2"
-
-"@optimizely/js-sdk-utils@^0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@optimizely/js-sdk-utils/-/js-sdk-utils-0.4.0.tgz#835b88bc7b5365a5c4a3d073c01c3a55d9f93a8f"
-  integrity sha512-QG2oytnITW+VKTJK+l0RxjaS5VrA6W+AZMzpeg4LCB4Rn4BEKtF+EcW/5S1fBDLAviGq/0TLpkjM3DlFkJ9/Gw==
-  dependencies:
-    uuid "^3.3.2"
-
-"@optimizely/optimizely-sdk@4.4.1":
-  version "4.4.1"
-  resolved "https://registry.yarnpkg.com/@optimizely/optimizely-sdk/-/optimizely-sdk-4.4.1.tgz#771b4560d717b62354d9c2eec7f85267da8928ce"
-  integrity sha512-zk7g2jjnK4WeCJpWWELXDNZak9+pjY5y+e/paCHMjEAv2Q6jrNkDnMYDlRfGQiXtCTQww+AjjLzxaVPwGo40bA==
-  dependencies:
-    "@optimizely/js-sdk-datafile-manager" "^0.8.0"
-    "@optimizely/js-sdk-event-processor" "^0.7.0"
-    "@optimizely/js-sdk-logging" "^0.1.0"
-    "@optimizely/js-sdk-utils" "^0.4.0"
-    json-schema "^0.2.3"
-    murmurhash "0.0.2"
-
-"@optimizely/optimizely-sdk@^4.4.3":
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/@optimizely/optimizely-sdk/-/optimizely-sdk-4.5.0.tgz#af85693b38662d0036e2b819426d11fc038dd7e0"
-  integrity sha512-d9dYXfncDDXlBZ1pFsqNkwO7rTBHuEQGVE3pWd3lIsddpaCWEo+lf5j6F3CzvECbi2moVRtBYaIpo8PzKNRGJw==
-  dependencies:
-    "@optimizely/js-sdk-datafile-manager" "^0.8.0"
-    "@optimizely/js-sdk-event-processor" "^0.8.0"
-    "@optimizely/js-sdk-logging" "^0.1.0"
-    "@optimizely/js-sdk-utils" "^0.4.0"
-    json-schema "^0.2.3"
-    murmurhash "0.0.2"
-
-"@optimizely/react-sdk@^2.4.2":
-  version "2.4.2"
-  resolved "https://registry.yarnpkg.com/@optimizely/react-sdk/-/react-sdk-2.4.2.tgz#d9b93faee81955531251253a771344a070ad16cf"
-  integrity sha512-Ffrw7mLAtXWLZNVFYJbZ7HW3gPGetNqS83T0P6r1MYvjRGeIG6nmJoQNEmwPgpBPoF34Y9aihNKFSEMCHjb20Q==
-  dependencies:
-    "@optimizely/js-sdk-logging" "^0.1.0"
-    "@optimizely/optimizely-sdk" "^4.4.3"
-    hoist-non-react-statics "^3.3.0"
-    prop-types "^15.6.2"
-    utility-types "^2.1.0 || ^3.0.0"
-
 "@primer/octicons-react@^9.6.0":
   version "9.6.0"
   resolved "https://registry.yarnpkg.com/@primer/octicons-react/-/octicons-react-9.6.0.tgz#996f621cb063757a4985cd6b45e59ed00e3444bf"
@@ -4964,13 +4883,6 @@ decompress-response@^3.3.0:
   integrity sha1-gKTdMjdIOEv6JICDYirt7Jgq3/M=
   dependencies:
     mimic-response "^1.0.0"
-
-decompress-response@^4.2.1:
-  version "4.2.1"
-  resolved "https://registry.yarnpkg.com/decompress-response/-/decompress-response-4.2.1.tgz#414023cc7a302da25ce2ec82d0d5238ccafd8986"
-  integrity sha512-jOSne2qbyE+/r8G1VU+G/82LBs2Fs4LAsTiLSHOCOMZQl2OKZ6i8i4IyHemTe+/yIXOtTcRQMzPcgyhoFlqPkw==
-  dependencies:
-    mimic-response "^2.0.0"
 
 dedent@^0.7.0:
   version "0.7.0"
@@ -8711,11 +8623,6 @@ json-schema@0.2.3:
   resolved "https://registry.yarnpkg.com/json-schema/-/json-schema-0.2.3.tgz#b480c892e59a2f05954ce727bd3f2a4e882f9e13"
   integrity sha1-tIDIkuWaLwWVTOcnvT8qTogvnhM=
 
-json-schema@^0.2.3:
-  version "0.2.5"
-  resolved "https://registry.yarnpkg.com/json-schema/-/json-schema-0.2.5.tgz#97997f50972dd0500214e208c407efa4b5d7063b"
-  integrity sha512-gWJOWYFrhQ8j7pVm0EM8Slr+EPVq1Phf6lvzvD/WCeqkrx/f2xBI0xOsRRS9xCn3I4vKtP519dvs3TP09r24wQ==
-
 json-stable-stringify-without-jsonify@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/json-stable-stringify-without-jsonify/-/json-stable-stringify-without-jsonify-1.0.1.tgz#9db7b59496ad3f3cfef30a75142d2d930ad72651"
@@ -9632,11 +9539,6 @@ mimic-response@^1.0.0, mimic-response@^1.0.1:
   resolved "https://registry.yarnpkg.com/mimic-response/-/mimic-response-1.0.1.tgz#4923538878eef42063cb8a3e3b0798781487ab1b"
   integrity sha512-j5EctnkH7amfV/q5Hgmoal1g2QHFJRraOtmx0JpIqkxhBhI/lJSl1nMpQ45hVarwNETOoWEimndZ4QK0RHxuxQ==
 
-mimic-response@^2.0.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/mimic-response/-/mimic-response-2.1.0.tgz#d13763d35f613d09ec37ebb30bac0469c0ee8f43"
-  integrity sha512-wXqjST+SLt7R009ySCglWBCFpjUygmCIfD790/kVbiGmUgfYGuB14PiTd5DwVxSV4NcYHjzMkoj5LjQZwTQLEA==
-
 mini-create-react-context@^0.4.0:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/mini-create-react-context/-/mini-create-react-context-0.4.1.tgz#072171561bfdc922da08a60c2197a497cc2d1d5e"
@@ -9811,11 +9713,6 @@ multicast-dns@^6.0.1:
   dependencies:
     dns-packet "^1.3.1"
     thunky "^1.0.2"
-
-murmurhash@0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/murmurhash/-/murmurhash-0.0.2.tgz#6f07bd8a1105e709c26fc89420cb5930c24585fe"
-  integrity sha1-bwe9ihEF5wnCb8iUIMtZMMJFhf4=
 
 mute-stream@0.0.7:
   version "0.0.7"
@@ -14441,11 +14338,6 @@ utila@~0.4:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/utila/-/utila-0.4.0.tgz#8a16a05d445657a3aea5eecc5b12a4fa5379772c"
   integrity sha1-ihagXURWV6Oupe7MWxKk+lN5dyw=
-
-"utility-types@^2.1.0 || ^3.0.0":
-  version "3.10.0"
-  resolved "https://registry.yarnpkg.com/utility-types/-/utility-types-3.10.0.tgz#ea4148f9a741015f05ed74fd615e1d20e6bed82b"
-  integrity sha512-O11mqxmi7wMKCo6HKFt5AhO4BwY3VV68YU07tgxfz8zJTIxr4BpsezN49Ffwy9j3ZpwwJp4fkRwjRzq3uWE6Rg==
 
 utils-merge@1.0.1:
   version "1.0.1"
