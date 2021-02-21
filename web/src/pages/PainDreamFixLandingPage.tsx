@@ -10,8 +10,7 @@ import landingFooterImage from "../assets/images/landing-page-footer.svg";
 
 import { GoogleOAuthButton } from "../components/GoogleOAuthButton";
 import { PageContainer } from "../components/PageContainer";
-import { useFeature } from "@optimizely/react-sdk";
-import { FeatureFlags } from "../constants/feature-flags";
+// import { FeatureFlags } from "../constants/feature-flags";
 import { JoinWaitlistButton } from "../components/JoinWaitlistButton";
 import { useLoginWithGoogle } from "../hooks/use-login-with-google";
 import { useCurrentUser } from "../hooks/use-current-user";
@@ -19,7 +18,7 @@ import { CurrentUserState } from "../contexts/CurrentUserContext";
 import { MailchimpNewsLetterSignupForm } from "../components/MailchimpNewsletterSubscribeForm";
 
 export const PainDreamFixLandingPage: React.FC = () => {
-  const [isSignUpEnabled] = useFeature(FeatureFlags.SIGN_UP);
+  const isSignUpEnabled = false;
   const loginWithGoogle = useLoginWithGoogle();
   const currentUser = useCurrentUser();
 

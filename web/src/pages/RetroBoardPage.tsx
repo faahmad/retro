@@ -19,7 +19,6 @@ import { RetroItem } from "../types/retro-item";
 import { useRetroState, RetroStateStatus } from "../hooks/use-retro-state";
 import analytics from "analytics.js";
 import { UserAvatar } from "../components/UserAvatar";
-import { OptimizelyFeature } from "@optimizely/react-sdk";
 import { useCurrentUser } from "../hooks/use-current-user";
 import { Retro } from "../types/retro";
 import { RetroColumnType } from "../types/retro-column";

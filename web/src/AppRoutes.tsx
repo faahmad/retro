@@ -1,6 +1,5 @@
 import React from "react";
 import { BrowserRouter, Route, Switch, useHistory } from "react-router-dom";
-import { OptimizelyProvider, createInstance, setLogger } from "@optimizely/react-sdk";
 import { Navbar } from "./components/Navbar";
 import { DesignPage } from "./pages/DesignPage";
 
@@ -33,53 +32,34 @@ import { PainDreamFixLandingPage } from "./pages/PainDreamFixLandingPage";
 // import { SignupPage } from "./pages/SignupPage";
 // import { FeatureFlags } from "./constants/feature-flags";
 // import { ExperimentalRoute } from "./components/ExperimentalRoute";
-        
-const optimizely = createInstance({
-  sdkKey: process.env.REACT_APP_OPTIMIZELY_SDK_KEY
-});
-if (process.env.NODE_ENV === "production") {
-  setLogger(null);
-}
 
 export const AppRoutes: React.FC = () => {
   const currentUser = useCurrentUser();
-  const { auth, isLoggedIn, state } = currentUser;
+  const { isLoggedIn, state } = currentUser;
 
   return (
-    <OptimizelyProvider
-      optimizely={optimizely}
-      /**
-       * 🤔
-       * (property) id: string
-       * Type 'string | null' is not assignable to type 'string'.
-       * Type 'null' is not assignable to type 'string'. ts(2322)
-       */
-      // @ts-ignore
-      user={{ id: isLoggedIn ? auth.uid : null }}
-    >
-      <ErrorBoundary FallbackComponent={ErrorFallback}>
-        <BrowserRouter>
-          <ScrollToTop />
-          <div className="mt-8 w-4/5 max-w-6xl m-auto">
-            <Navbar isLoggedIn={isLoggedIn} userState={state} />
-          </div>
-          <Switch>
-            <Route exact path="/privacy" component={PrivacyPolicyPage} />
-            <Route exact path="/terms" component={TermsOfServicePage} />
-            <Route exact path="/faq" component={FAQPage} />
-            <Route exact path="/design" component={DesignPage} />
-            <Route path="/podcast/:episodeNumber" component={PodcastEpisodePage} />
-            <Route path="/podcast" component={PodcastHomePage} />
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <BrowserRouter>
+        <ScrollToTop />
+        <div className="mt-8 w-4/5 max-w-6xl m-auto">
+          <Navbar isLoggedIn={isLoggedIn} userState={state} />
+        </div>
+        <Switch>
+          <Route exact path="/privacy" component={PrivacyPolicyPage} />
+          <Route exact path="/terms" component={TermsOfServicePage} />
+          <Route exact path="/faq" component={FAQPage} />
+          <Route exact path="/design" component={DesignPage} />
+          <Route path="/podcast/:episodeNumber" component={PodcastEpisodePage} />
+          <Route path="/podcast" component={PodcastHomePage} />
 
-            {isLoggedIn ? (
-              <AuthenticatedAppRoutes currentUser={currentUser} />
-            ) : (
-              <UnauthenticatedAppRoutes />
-            )}
-          </Switch>
-        </BrowserRouter>
-      </ErrorBoundary>
-    </OptimizelyProvider>
+          {isLoggedIn ? (
+            <AuthenticatedAppRoutes currentUser={currentUser} />
+          ) : (
+            <UnauthenticatedAppRoutes />
+          )}
+        </Switch>
+      </BrowserRouter>
+    </ErrorBoundary>
   );
 };
 
