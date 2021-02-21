@@ -1,10 +1,8 @@
 import React from "react";
 import { BrowserRouter, Route, Switch, useHistory } from "react-router-dom";
-import { OptimizelyProvider, createInstance, setLogger } from "@optimizely/react-sdk";
 import { Navbar } from "./components/Navbar";
 import { DesignPage } from "./pages/DesignPage";
-// import { LoginPage } from "./pages/LoginPage";
-// import { SignupPage } from "./pages/SignupPage";
+
 import { FAQPage } from "./pages/FAQPage";
 import { LandingPage } from "./pages/LandingPage";
 import { OnboardingPage } from "./pages/OnboardingPage";
@@ -22,60 +20,46 @@ import { Button } from "./components/Button";
 import { ErrorBoundary, FallbackProps } from "react-error-boundary";
 import { useCurrentUser } from "./hooks/use-current-user";
 import { useScrollToTop } from "./hooks/use-scroll-to-top";
-// import { FeatureFlags } from "./constants/feature-flags";
-// import { ExperimentalRoute } from "./components/ExperimentalRoute";
+
 import { getWorkspaceFromCurrentUser } from "./utils/workspace-utils";
 import { CurrentUserContextValues } from "./contexts/CurrentUserContext";
 import { useAnalyticsPageView } from "./hooks/use-analytics-page-view";
 import { WorkspaceStateProvider } from "./contexts/WorkspaceStateContext";
 import { PainDreamFixLandingPage } from "./pages/PainDreamFixLandingPage";
 
-const optimizely = createInstance({
-  sdkKey: process.env.REACT_APP_OPTIMIZELY_SDK_KEY
-});
-if (process.env.NODE_ENV === "production") {
-  setLogger(null);
-}
+// Comment these out before deploying to prod!
+// import { LoginPage } from "./pages/LoginPage";
+// import { SignupPage } from "./pages/SignupPage";
+// import { FeatureFlags } from "./constants/feature-flags";
+// import { ExperimentalRoute } from "./components/ExperimentalRoute";
 
 export const AppRoutes: React.FC = () => {
   const currentUser = useCurrentUser();
-  const { auth, isLoggedIn, state } = currentUser;
+  const { isLoggedIn, state } = currentUser;
 
   return (
-    <OptimizelyProvider
-      optimizely={optimizely}
-      /**
-       * 🤔
-       * (property) id: string
-       * Type 'string | null' is not assignable to type 'string'.
-       * Type 'null' is not assignable to type 'string'. ts(2322)
-       */
-      // @ts-ignore
-      user={{ id: isLoggedIn ? auth.uid : null }}
-    >
-      <ErrorBoundary FallbackComponent={ErrorFallback}>
-        <BrowserRouter>
-          <ScrollToTop />
-          <div className="mt-8 w-4/5 max-w-6xl m-auto">
-            <Navbar isLoggedIn={isLoggedIn} userState={state} />
-          </div>
-          <Switch>
-            <Route exact path="/privacy" component={PrivacyPolicyPage} />
-            <Route exact path="/terms" component={TermsOfServicePage} />
-            <Route exact path="/faq" component={FAQPage} />
-            <Route exact path="/design" component={DesignPage} />
-            <Route path="/podcast/:episodeNumber" component={PodcastEpisodePage} />
-            <Route path="/podcast" component={PodcastHomePage} />
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <BrowserRouter>
+        <ScrollToTop />
+        <div className="mt-8 w-4/5 max-w-6xl m-auto">
+          <Navbar isLoggedIn={isLoggedIn} userState={state} />
+        </div>
+        <Switch>
+          <Route exact path="/privacy" component={PrivacyPolicyPage} />
+          <Route exact path="/terms" component={TermsOfServicePage} />
+          <Route exact path="/faq" component={FAQPage} />
+          <Route exact path="/design" component={DesignPage} />
+          <Route path="/podcast/:episodeNumber" component={PodcastEpisodePage} />
+          <Route path="/podcast" component={PodcastHomePage} />
 
-            {isLoggedIn ? (
-              <AuthenticatedAppRoutes currentUser={currentUser} />
-            ) : (
-              <UnauthenticatedAppRoutes />
-            )}
-          </Switch>
-        </BrowserRouter>
-      </ErrorBoundary>
-    </OptimizelyProvider>
+          {isLoggedIn ? (
+            <AuthenticatedAppRoutes currentUser={currentUser} />
+          ) : (
+            <UnauthenticatedAppRoutes />
+          )}
+        </Switch>
+      </BrowserRouter>
+    </ErrorBoundary>
   );
 };
 
@@ -126,8 +110,9 @@ function AuthenticatedAppRoutes({
     if (!currentUser.isLoggedIn) {
       return;
     }
-    const redirectUrl = workspaceId ? `/workspaces/${workspaceId}` : "/onboarding";
-    history.push(redirectUrl);
+    if (!workspaceId) {
+      return history.push("/onboarding");
+    }
     //eslint-disable-next-line
   }, [currentUser.isLoggedIn, workspaceId]);
 
@@ -137,7 +122,7 @@ function AuthenticatedAppRoutes({
         <Route exact path="/onboarding" component={OnboardingPage} />
         <Route
           exact
-          path="/workspaces/:workspaceId/teams/:teamId/retros/:retroId"
+          path="/workspaces/:workspaceId/retros/:retroId"
           component={RetroBoardPage}
         />
         <Route exact path="/workspaces/:workspaceId/settings" component={SettingsPage} />

@@ -11,7 +11,6 @@ import {
 } from "../utils/workspace-utils";
 // import { CurrentUserState } from "../contexts/CurrentUserContext";
 // import { JoinWaitlistButton } from "./JoinWaitlistButton";
-// import { useFeature } from "@optimizely/react-sdk";
 // import { FeatureFlags } from "../constants/feature-flags";
 
 export const Navbar: React.FC<any> = ({ isLoggedIn, userState }) => {

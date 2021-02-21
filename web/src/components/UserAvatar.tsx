@@ -13,7 +13,7 @@ export function UserAvatar({
   isAnonymous = false,
   size = "md"
 }: UserAvatarProps) {
-  const sharedClassNames = "flex content-center bg-white rounded-full mr-2";
+  const sharedClassNames = "flex content-center bg-blue rounded-full mr-2";
   const divClassNames = "text-white items-center justify-center";
   const sizeMap = {
     sm: 25,
