@@ -15,7 +15,7 @@ type RetroStateSuccess = {
   status: RetroStateStatus.SUCCESS;
 } & Retro;
 
-type RetroStateValues = RetroStateLoading | RetroStateSuccess;
+export type RetroStateValues = RetroStateLoading | RetroStateSuccess;
 
 const initialState: RetroStateValues = {
   status: RetroStateStatus.LOADING
