@@ -15,9 +15,9 @@ import { useUpdateRetro } from "../hooks/use-update-retro";
 
 export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
   const params = useParams<{ retroId: Retro["id"] }>();
-  const retroState = useRetroState(params.retroId);
+  const { data, status, error } = useRetroState(params.retroId);
 
-  if (retroState.status === RetroStateStatus.LOADING) {
+  if (status === RetroStateStatus.LOADING) {
     return (
       <PageContainer>
         <p className="text-blue">Fetching retro...</p>
@@ -25,19 +25,28 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
     );
   }
 
-  return (
-    <React.Fragment>
+  if (status === RetroStateStatus.ERROR) {
+    return (
       <PageContainer>
-        <RetroHeader
-          id={retroState.id}
-          name={retroState.name}
-          createdAt={retroState.createdAt}
-        />
-        {/* <RetroBoard id={params.retroId} isActive={isActive} /> */}
+        <p className="text-blue">{error?.message}</p>
       </PageContainer>
-      <Footer />
-    </React.Fragment>
-  );
+    );
+  }
+
+  if (status === RetroStateStatus.SUCCESS && data !== null) {
+    return (
+      <React.Fragment>
+        <PageContainer>
+          <RetroHeader id={data.id} name={data.name} createdAt={data.createdAt} />
+          {/* <RetroBoard id={params.retroId} isActive={isActive} /> */}
+        </PageContainer>
+        <Footer />
+      </React.Fragment>
+    );
+  }
+
+  // This should never happen TBH.
+  return null;
 };
 
 interface RetroHeaderProps {

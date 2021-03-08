@@ -2,7 +2,6 @@ import * as React from "react";
 import { DragDropContext, Draggable, DropResult, Droppable } from "react-beautiful-dnd";
 import { v4 as uuidV4 } from "uuid";
 import Linkify from "react-linkify";
-import ReactModal from "react-modal";
 import analytics from "analytics.js";
 // Contexts
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
@@ -11,7 +10,6 @@ import { useCurrentUser } from "../hooks/use-current-user";
 // Components
 import { AddButton } from "../components/AddButton";
 import { LoadingText } from "../components/LoadingText";
-import { Button } from "../components/Button";
 import { UserAvatar } from "../components/UserAvatar";
 import { ThumbsUpIcon } from "../components/ThumbsUpIcon";
 // import { PencilEditIcon } from "../components/PencilEditIcon";
@@ -25,19 +23,12 @@ interface RetroBoardProps {
   state: RetroStateValues;
 }
 
-type CreateRetroItemParams = {
-  content: RetroItem["content"];
-  isAnonymous: RetroItem["isAnonymous"];
-};
-
 export function RetroBoard({ state }: RetroBoardProps) {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [
     columnTypeToAddItemTo,
     setColumnTypeToAddItemTo
   ] = React.useState<RetroColumnType>(RetroColumnType.GOOD);
-  const [initialRetroItem, setInitialRetroItem] = React.useState<RetroItem | null>(null);
-
   if (state.status === RetroStateStatus.LOADING) {
     return <LoadingText />;
   }
@@ -56,7 +47,7 @@ export function RetroBoard({ state }: RetroBoardProps) {
     return Promise.resolve();
   };
 
-  const handleClickLike = () => {};
+  const handleLikeItem = () => {};
 
   const handleDeleteItem = () => {
     return Promise.resolve();
@@ -66,15 +57,17 @@ export function RetroBoard({ state }: RetroBoardProps) {
     return;
   };
 
+  const { data } = state;
+
   if (state.status === RetroStateStatus.SUCCESS) {
     return (
       <React.Fragment>
         {isModalOpen && (
           <RetroItemModal
-            column={state.columns[columnTypeToAddItemTo || "good"]}
+            column={data?.columns[columnTypeToAddItemTo || "good"]}
             isOpen={isModalOpen}
             columnType={columnTypeToAddItemTo}
-            initialRetroItem={initialRetroItem}
+            // initialRetroItem={initialRetroItem}
             onToggle={handleCloseModal}
             onSubmit={handleAddItem}
             onEdit={handleEditItem}
@@ -83,10 +76,10 @@ export function RetroBoard({ state }: RetroBoardProps) {
         )}
         <div className="retro-board__grid">
           <DragDropContext onDragEnd={handleOnDragEnd}>
-            {state.columnOrder.map((columnType: RetroColumnType) => {
-              const column = state.columns[columnType];
+            {data?.columnOrder.map((columnType: RetroColumnType) => {
+              const column = data?.columns[columnType];
               const items = column.retroItemIds.map(
-                (itemId: RetroItem["id"]) => state.retroItems[itemId]
+                (itemId: RetroItem["id"]) => data?.retroItems[itemId]
               );
               return (
                 <RetroList
@@ -100,7 +93,7 @@ export function RetroBoard({ state }: RetroBoardProps) {
                     return;
                   }}
                   handleOnClickLike={handleClickEdit}
-                  handleOnClickEdit={handleClickLike}
+                  handleOnClickEdit={handleLikeItem}
                 />
               );
             })}
@@ -631,163 +624,3 @@ const EditButton: React.FC<EditButtonProps> = ({ onClick }) => {
     </div>
   );
 };
-
-interface RetroItemModalProps {
-  isOpen: boolean;
-  column: RetroColumn;
-  columnType: string | null;
-  onToggle: () => void;
-  onSubmit: (params: CreateRetroItemParams, column: string) => Promise<void>;
-  initialRetroItem?: RetroItem;
-  onEdit: (item: RetroItem, column: string) => Promise<void>;
-  onDelete: (itemId: RetroItem["id"], column: string) => Promise<void>;
-}
-
-interface RetroItemModalState {
-  columnType: string | "";
-  content: RetroItem["content"];
-  isAnonymous: RetroItem["isAnonymous"];
-  isSubmitting: boolean;
-}
-
-export class RetroItemModal extends React.Component<
-  RetroItemModalProps,
-  RetroItemModalState
-> {
-  constructor(props: RetroItemModalProps) {
-    super(props);
-    this.state = {
-      columnType: props.columnType || "",
-      content: props.initialRetroItem ? props.initialRetroItem.content : "",
-      isAnonymous: false,
-      isSubmitting: false
-    };
-  }
-  handlePostAnonymously = () => {
-    this.setState({ isAnonymous: true }, () => this.handleSubmit());
-    return;
-  };
-
-  handleSubmit = async () => {
-    const { content, columnType, isAnonymous } = this.state;
-    const { initialRetroItem } = this.props;
-    if (!content) {
-      return;
-    }
-    if (!columnType) {
-      return;
-    }
-    this.setState({ isSubmitting: true });
-    if (!initialRetroItem) {
-      await this.props.onSubmit({ content, isAnonymous }, columnType);
-    } else {
-      await this.props.onEdit({ ...initialRetroItem, content, isAnonymous }, columnType);
-    }
-    await this.setState({ isSubmitting: false });
-    this.props.onToggle();
-    return;
-  };
-  handleDelete = async () => {
-    const { onDelete, initialRetroItem, columnType, onToggle } = this.props;
-    this.setState({ isSubmitting: true });
-    if (initialRetroItem && columnType) {
-      onDelete(initialRetroItem!.id, columnType!);
-    }
-    await this.setState({ isSubmitting: false });
-    onToggle();
-    return;
-  };
-  render() {
-    const { isOpen, onToggle, initialRetroItem, column } = this.props;
-    const { content, isSubmitting } = this.state;
-
-    return (
-      <ReactModal
-        ariaHideApp={false}
-        isOpen={isOpen}
-        onRequestClose={onToggle}
-        style={{
-          content: {
-            maxWidth: "420px",
-            height: "530px",
-            padding: "20px",
-            width: "100%"
-          },
-          overlay: { background: "rgba(17, 38, 156, 0.6)" }
-        }}
-        className="bg-white shadow-red border m-auto absolute inset-0 border-red focus:outline-none z-50"
-        // IMPORTANT: closeTimeoutMS has to be the same as what is set in the tailwind.css file.
-        closeTimeoutMS={200}
-      >
-        <div>
-          <div>
-            <div className="text-blue">
-              <div className="flex justify-between mb-2">
-                <label htmlFor="content" className="text-blue font-bold text-sm">
-                  {column.title}
-                </label>
-                {initialRetroItem && (
-                  <button
-                    className="mb-2 text-xs"
-                    onClick={this.handleDelete}
-                    disabled={isSubmitting}
-                  >
-                    Delete
-                  </button>
-                )}
-              </div>
-              <textarea
-                className="w-full p-2 border border-red text-blue focus:outline-none"
-                id="retro-item-modal-content-text-input"
-                rows={10}
-                name="content"
-                value={content}
-                onChange={(e) => this.setState({ content: e.target.value })}
-              />
-            </div>
-          </div>
-          <div className="flex align-center justify-between mt-8">
-            {/*
-            FIXME: 2/18/2020
-            Tried to override the styles by passing in classNames,
-            but it wasn't working. Decided to use inline for time's sake,
-            however, we should be able to override any styles via the className prop.
-          */}
-            <Button
-              onClick={onToggle}
-              disabled={isSubmitting}
-              className="text-red border-none shadow-none"
-              style={{ width: "6rem", boxShadow: "none" }}
-            >
-              Cancel
-            </Button>
-            <div className="flex flex-col">
-              <Button
-                className="bg-blue text-white"
-                style={{ width: "10rem" }}
-                disabled={isSubmitting}
-                onClick={this.handleSubmit}
-              >
-                {isSubmitting ? "Submitting..." : "Submit"}
-              </Button>
-              {/* <OptimizelyFeature feature="anonymous_retro_item">
-                {(isEnabled) =>
-                  isEnabled ? (
-                    <Button
-                      className="text-blue text-sm mt-4"
-                      style={{ width: "10rem" }}
-                      disabled={isSubmitting}
-                      onClick={this.handlePostAnonymously}
-                    >
-                      {isSubmitting ? "Posting..." : "Post Anonymously"}
-                    </Button>
-                  ) : null
-                }
-              </OptimizelyFeature> */}
-            </div>
-          </div>
-        </div>
-      </ReactModal>
-    );
-  }
-}
