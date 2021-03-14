@@ -42,7 +42,7 @@ export function RetroBoard({ state, retroItems, onAddItem }: RetroBoardProps) {
     return setIsModalOpen(false);
   };
 
-  const handleAddItem = ({ content, type }) => {
+  const handleAddItem = ({ content, type }: any) => {
     return onAddItem({ content, type, workspaceId: state.data?.workspaceId });
   };
 
@@ -68,7 +68,7 @@ export function RetroBoard({ state, retroItems, onAddItem }: RetroBoardProps) {
     <React.Fragment>
       {isModalOpen && (
         <RetroItemModal
-          column={data?.columns[columnTypeToAddItemTo] || RetroColumnType.GOOD}
+          column={data?.columns[columnTypeToAddItemTo] || (RetroColumnType.GOOD as any)}
           isOpen={isModalOpen}
           columnType={columnTypeToAddItemTo}
           // initialRetroItem={initialRetroItem}
@@ -83,7 +83,7 @@ export function RetroBoard({ state, retroItems, onAddItem }: RetroBoardProps) {
           {data?.columnOrder.map((columnType: RetroColumnType) => {
             const column = data?.columns[columnType];
             const items = column.retroItemIds.map(
-              (itemId: RetroItem["id"]) => retroItems[itemId]
+              (itemId: RetroItem["id"]) => retroItems![itemId]
             );
             return (
               <RetroList
@@ -528,12 +528,12 @@ export const RetroListItem: React.FC<
 > = ({
   id,
   content,
-  isAnonymous,
+  // isAnonymous,
   likedBy,
   likeCount,
-  createdByDisplayName,
+  // createdByDisplayName,
   createdByUserId,
-  createdByPhotoURL,
+  // createdByPhotoURL,
   handleOnClickLike,
   handleOnClickEdit,
   index
@@ -556,11 +556,11 @@ export const RetroListItem: React.FC<
             {...provided.dragHandleProps}
           >
             <div className="flex content-center">
-              <UserAvatar
+              {/* <UserAvatar
                 displayName={createdByDisplayName}
                 photoURL={createdByPhotoURL}
                 isAnonymous={isAnonymous}
-              />
+              /> */}
               <div>
                 <Linkify>
                   <span className="text-break">{content}</span>
@@ -602,7 +602,7 @@ const LikeButton = ({ likeCount, likedBy, currentUserId, onClick }: LikeButtonPr
         onClick={onClick}
       >
         <div className="flex content-center items-center">
-          <ThumbsUpIcon filled={likedBy[currentUserId]} />
+          {/* <ThumbsUpIcon filled={likedBy[currentUserId]} /> */}
         </div>
       </button>
     </div>
