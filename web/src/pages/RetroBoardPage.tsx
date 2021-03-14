@@ -12,12 +12,24 @@ import { useRetroState, RetroStateStatus } from "../hooks/use-retro-state";
 import { Retro } from "../types/retro";
 
 import { useUpdateRetro } from "../hooks/use-update-retro";
+import {
+  useRetroItemsListener,
+  RetroItemsListenerStatus
+} from "../hooks/use-retro-items-listener";
+import { RetroBoard } from "../components/RetroBoard";
 
 export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
   const params = useParams<{ retroId: Retro["id"] }>();
-  const { data, status, error } = useRetroState(params.retroId);
+  // Important! useRetroItemsListener has to come first!
+  // Not the best, I know. But it's MVP!
+  const retroItems = useRetroItemsListener(params.retroId);
+  const { state, handleAddItem } = useRetroState(params.retroId);
+  const { data, status, error } = state;
 
-  if (status === RetroStateStatus.LOADING) {
+  if (
+    status === RetroStateStatus.LOADING ||
+    retroItems.status === RetroItemsListenerStatus.LOADING
+  ) {
     return (
       <PageContainer>
         <p className="text-blue">Fetching retro...</p>
@@ -38,7 +50,11 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
       <React.Fragment>
         <PageContainer>
           <RetroHeader id={data.id} name={data.name} createdAt={data.createdAt} />
-          {/* <RetroBoard id={params.retroId} isActive={isActive} /> */}
+          <RetroBoard
+            state={state}
+            retroItems={retroItems.data}
+            onAddItem={handleAddItem}
+          />
         </PageContainer>
         <Footer />
       </React.Fragment>
@@ -56,7 +72,7 @@ interface RetroHeaderProps {
 }
 function RetroHeader({ id, name, createdAt }: RetroHeaderProps) {
   const [localName, setLocalName] = React.useState(name);
-  const handleOnChange = (event) => {
+  const handleOnChange = (event: any) => {
     return setLocalName(event.currentTarget.value);
   };
 
@@ -67,6 +83,7 @@ function RetroHeader({ id, name, createdAt }: RetroHeaderProps) {
   const inputRef = React.useRef(null);
   React.useEffect(() => {
     if (isEditing) {
+      // @ts-ignore
       inputRef.current.focus();
     }
   }, [isEditing]);

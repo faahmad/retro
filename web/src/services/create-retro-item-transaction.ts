@@ -5,12 +5,11 @@ import { User } from "../types/user";
 import { Workspace } from "../types/workspace";
 import { RetroItem } from "../types/retro-item";
 import { getCountKeyByType } from "../utils/workspace-utils";
-import { getServerTimestamp, increment } from "../utils/firestore-utils";
+import { getServerTimestamp, increment, arrayUnion } from "../utils/firestore-utils";
 
 const db = firebase.firestore();
 const retroItemCollection = db.collection(FirestoreCollections.RETRO_ITEM);
-const retroItemRetroCollection = db.collection(FirestoreCollections.RETRO_ITEM_RETRO);
-const workspaceCollection = db.collection(FirestoreCollections.WORKSPACE);
+const retroCollection = db.collection(FirestoreCollections.RETRO);
 
 export interface CreateRetroItemTransactionParams {
   userId: User["id"];
@@ -36,6 +35,9 @@ export async function createRetroItemTransaction({
       type,
       content,
       workspaceId,
+      retroIds: {
+        [retroId]: retroId
+      },
       createdByUserId: userId,
       createdAt: getServerTimestamp(),
       likedBy: {},
@@ -44,22 +46,25 @@ export async function createRetroItemTransaction({
     };
     transaction.set(newRetroItemRef, newRetroItem);
 
-    // Create a composite document for a RetroItem Retro.
-    const retroItemRetroRef = retroItemRetroCollection.doc(
-      `${newRetroItemId}_${retroId}`
-    );
-    transaction.set(retroItemRetroRef, {
-      workspaceId,
-      retroId,
-      retroItemId: newRetroItemId,
-      recordCreatedAt: getServerTimestamp()
-    });
+    // Add the retroItem's uid to the retro.
+    const retroRef = retroCollection.doc(retroId);
+    const countKey = getCountKeyByType(newRetroItem.type);
+    const updates = {
+      retroItemIds: {
+        [newRetroItemId]: newRetroItemId
+      },
+      columns: {
+        [newRetroItem.type]: {
+          retroItemIds: arrayUnion(newRetroItemId)
+        }
+      },
+      retroItemsData: {
+        [countKey]: increment()
+      }
+    };
+    transaction.set(retroRef, updates, { merge: true });
 
-    // Update the count of the workspace's retroItemData.
-    const workspaceRef = workspaceCollection.doc(workspaceId);
-    const countKey = getCountKeyByType(type);
-    transaction.update(workspaceRef, {
-      [`retroItemsData.${countKey}`]: increment()
-    });
+    // Return the newly created RetroItem.
+    return newRetroItem;
   });
 }

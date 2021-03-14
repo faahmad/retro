@@ -28,8 +28,8 @@ import { WorkspaceStateProvider } from "./contexts/WorkspaceStateContext";
 import { PainDreamFixLandingPage } from "./pages/PainDreamFixLandingPage";
 
 // Comment these out before deploying to prod!
-// import { LoginPage } from "./pages/LoginPage";
-// import { SignupPage } from "./pages/SignupPage";
+import { LoginPage } from "./pages/LoginPage";
+import { SignupPage } from "./pages/SignupPage";
 // import { FeatureFlags } from "./constants/feature-flags";
 // import { ExperimentalRoute } from "./components/ExperimentalRoute";
 
@@ -75,18 +75,18 @@ const UnauthenticatedAppRoutes: React.FC = () => {
 
   return (
     <React.Fragment>
-      {/* <ExperimentalRoute
-        featureKey={FeatureFlags.SIGN_UP}
+      <Route
+        // featureKey={FeatureFlags.SIGN_UP}
         exact
         path="/login"
         component={LoginPage}
       />
-      <ExperimentalRoute
-        featureKey={FeatureFlags.SIGN_UP}
+      <Route
+        // featureKey={FeatureFlags.SIGN_UP}
         exact
         path="/signup"
         component={SignupPage}
-      /> */}
+      />
       <Route
         exact
         path="/"

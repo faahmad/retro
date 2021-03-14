@@ -1,9 +1,8 @@
 import * as React from "react";
 import { retroListener } from "../services/retro-listener";
 import { Retro } from "../types/retro";
-import { RetroColumnType } from "../types/retro-column";
-import { useUpdateRetro } from "../hooks/use-update-retro";
-import uuidV4 from "uuid/v4";
+import { useCreateRetroItem } from "../hooks/use-create-retro-item";
+import { RetroItem } from "../types/retro-item";
 
 export enum RetroStateStatus {
   LOADING = "LOADING",
@@ -25,7 +24,7 @@ type RetroStateSuccess = {
 
 type RetroStateError = {
   status: RetroStateStatus.ERROR;
-  data: null;
+  data: Retro | null;
   error: Error;
 };
 
@@ -58,24 +57,20 @@ type RetroActionError = {
   payload: Error;
 };
 
-type CreateItemParams = {
-  id: string;
-  content: string;
-};
-
 type RetroActionAddItem = {
   type: RetroActionTypes.RETRO_ADD_ITEM;
-  payload: {
-    content: string;
-    columnType: RetroColumnType;
-  };
+  payload: RetroItem;
 };
 
-type RetroAction = RetroActionLoading | RetroActionSnapshot | RetroActionError;
+type RetroAction =
+  | RetroActionLoading
+  | RetroActionSnapshot
+  | RetroActionError
+  | RetroActionAddItem;
 
 export function useRetroState(retroId: Retro["id"]) {
   const [state, dispatch] = React.useReducer(retroStateReducer, initialState);
-  const updateRetro = useUpdateRetro();
+  const createRetroItem = useCreateRetroItem();
 
   React.useEffect(() => {
     handleRetroLoading();
@@ -90,12 +85,29 @@ export function useRetroState(retroId: Retro["id"]) {
   };
 
   const handleRetroSnapshot = (retro: Retro) => {
+    console.log("handleRetroSnapshot");
     return dispatch({ type: RetroActionTypes.RETRO_SNAPSHOT, payload: retro });
   };
 
-  const handleAddItem = ({ content, columnType }) => {};
+  const handleAddItem = async (input: any) => {
+    try {
+      const newRetroItem = await createRetroItem({
+        retroId,
+        workspaceId: input.workspaceId,
+        content: input.content,
+        type: input.type
+      });
+      if (!newRetroItem) {
+        throw new Error("handleAddItem failed.");
+      }
+      dispatch({ type: RetroActionTypes.RETRO_ADD_ITEM, payload: newRetroItem });
+      return;
+    } catch (error) {
+      dispatch({ type: RetroActionTypes.RETRO_ERROR, payload: error });
+    }
+  };
 
-  return state;
+  return { state, handleAddItem };
 }
 
 function retroStateReducer(

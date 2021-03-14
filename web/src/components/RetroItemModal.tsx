@@ -2,12 +2,14 @@ import * as React from "react";
 import ReactModal from "react-modal";
 import { Button } from "../components/Button";
 import { RetroColumn, RetroColumnType } from "../types/retro-column";
+import { RetroItem } from "../types/retro-item";
 
 interface RetroItemModalProps {
   isOpen: boolean;
   column: RetroColumn;
   columnType: RetroColumnType;
   onToggle: () => void;
+  onAddItem: ({ content, type }: { content: string; type: RetroColumnType }) => void;
   // onSubmit: (params: CreateRetroItemParams, column: string) => Promise<void>;
   // initialRetroItem?: RetroItem;
   // onEdit: (item: RetroItem, column: string) => Promise<void>;
@@ -15,9 +17,8 @@ interface RetroItemModalProps {
 }
 
 interface RetroItemModalState {
-  columnType: string | "";
+  columnType: RetroColumnType;
   content: RetroItem["content"];
-  isAnonymous: RetroItem["isAnonymous"];
   isSubmitting: boolean;
 }
 
@@ -29,49 +30,36 @@ export class RetroItemModal extends React.Component<
     super(props);
     this.state = {
       columnType: props.columnType || "",
-      content: props.initialRetroItem ? props.initialRetroItem.content : "",
-      isAnonymous: false,
+      content: "",
       isSubmitting: false
     };
   }
-  handlePostAnonymously = () => {
-    this.setState({ isAnonymous: true }, () => this.handleSubmit());
-    return;
-  };
 
   handleSubmit = async () => {
-    const { content, columnType, isAnonymous } = this.state;
-    const { initialRetroItem } = this.props;
-    if (!content) {
-      return;
-    }
-    if (!columnType) {
+    const { content, columnType } = this.state;
+    if (!content || !columnType) {
       return;
     }
     this.setState({ isSubmitting: true });
-    if (!initialRetroItem) {
-      await this.props.onSubmit({ content, isAnonymous }, columnType);
-    } else {
-      await this.props.onEdit({ ...initialRetroItem, content, isAnonymous }, columnType);
-    }
+    this.props.onAddItem({ content, type: columnType });
     await this.setState({ isSubmitting: false });
     this.props.onToggle();
     return;
   };
 
-  handleDelete = async () => {
-    const { onDelete, initialRetroItem, columnType, onToggle } = this.props;
-    this.setState({ isSubmitting: true });
-    if (initialRetroItem && columnType) {
-      onDelete(initialRetroItem!.id, columnType!);
-    }
-    await this.setState({ isSubmitting: false });
-    onToggle();
-    return;
-  };
+  // handleDelete = async () => {
+  //   const { onDelete, initialRetroItem, columnType, onToggle } = this.props;
+  //   this.setState({ isSubmitting: true });
+  //   if (initialRetroItem && columnType) {
+  //     onDelete(initialRetroItem!.id, columnType!);
+  //   }
+  //   await this.setState({ isSubmitting: false });
+  //   onToggle();
+  //   return;
+  // };
 
   render() {
-    const { isOpen, onToggle, initialRetroItem, column } = this.props;
+    const { isOpen, onToggle, column } = this.props;
     const { content, isSubmitting } = this.state;
 
     return (
@@ -99,7 +87,7 @@ export class RetroItemModal extends React.Component<
                 <label htmlFor="content" className="text-blue font-bold text-sm">
                   {column.title}
                 </label>
-                {initialRetroItem && (
+                {/* {initialRetroItem && (
                   <button
                     className="mb-2 text-xs"
                     onClick={this.handleDelete}
@@ -107,7 +95,7 @@ export class RetroItemModal extends React.Component<
                   >
                     Delete
                   </button>
-                )}
+                )} */}
               </div>
               <textarea
                 className="w-full p-2 border border-red text-blue focus:outline-none"

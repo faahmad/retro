@@ -28,7 +28,7 @@ export async function createRetroTransaction({
     userIds: {
       [userId]: userId
     },
-    retroItems: {},
+    retroItemIds: {},
     retroItemsData: {
       goodCount: 0,
       badCount: 0,
