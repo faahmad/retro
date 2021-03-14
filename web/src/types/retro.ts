@@ -1,4 +1,3 @@
-import { RetroItem } from "../types/retro-item";
 import { TODO } from "./todo";
 import { User } from "./user";
 import { Workspace } from "./workspace";

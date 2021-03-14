@@ -85,7 +85,6 @@ export function useRetroState(retroId: Retro["id"]) {
   };
 
   const handleRetroSnapshot = (retro: Retro) => {
-    console.log("handleRetroSnapshot");
     return dispatch({ type: RetroActionTypes.RETRO_SNAPSHOT, payload: retro });
   };
 

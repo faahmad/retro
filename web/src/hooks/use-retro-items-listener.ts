@@ -38,7 +38,6 @@ export function useRetroItemsListener(retroId: Retro["id"]) {
   const [error, setError] = React.useState<RetroItemsListenerValues["error"]>(null);
 
   const handleSuccess = (retroItemsMap: RetroItemsMap) => {
-    console.log("handleSuccess");
     setData(retroItemsMap);
     setStatus(RetroItemsListenerStatus.SUCCESS);
     return;
