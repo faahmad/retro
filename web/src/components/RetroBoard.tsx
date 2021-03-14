@@ -1,5 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-vars */
-// @ts-nocheck
 import * as React from "react";
 import { DragDropContext, Draggable, DropResult, Droppable } from "react-beautiful-dnd";
 import { v4 as uuidV4 } from "uuid";
