@@ -30,3 +30,9 @@ export type RetroColumnQuestions = {
   title: "What do we have questions on?";
   retroItemIds: RetroItem["id"][];
 };
+
+export type RetroColumn =
+  | RetroColumnGood
+  | RetroColumnBad
+  | RetroColumnActions
+  | RetroColumnQuestions;

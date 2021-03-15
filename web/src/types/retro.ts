@@ -1,4 +1,3 @@
-import { RetroItem } from "../types/retro-item";
 import { TODO } from "./todo";
 import { User } from "./user";
 import { Workspace } from "./workspace";
@@ -17,7 +16,7 @@ export interface Retro {
   createdById: User["id"];
   createdAt?: TODO;
   userIds: { [userId: string]: User["id"] };
-  retroItems: { [retroItemId: string]: RetroItem };
+  retroItemIds: { [retroItemId: string]: string };
   retroItemsData: {
     goodCount: number;
     badCount: number;

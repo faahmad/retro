@@ -75,14 +75,14 @@ const UnauthenticatedAppRoutes: React.FC = () => {
 
   return (
     <React.Fragment>
-      {/* <ExperimentalRoute
-        featureKey={FeatureFlags.SIGN_UP}
+      {/* <Route
+        // featureKey={FeatureFlags.SIGN_UP}
         exact
         path="/login"
         component={LoginPage}
       />
-      <ExperimentalRoute
-        featureKey={FeatureFlags.SIGN_UP}
+      <Route
+        // featureKey={FeatureFlags.SIGN_UP}
         exact
         path="/signup"
         component={SignupPage}

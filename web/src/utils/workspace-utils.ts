@@ -1,6 +1,7 @@
 import { UserWorkspace } from "../types/user";
 import { Workspace } from "../types/workspace";
 import { CurrentUserContextValues } from "../contexts/CurrentUserContext";
+import { RetroColumnType } from "../types/retro-column";
 
 export function getWorkspaceFromCurrentUser(
   currentUser: CurrentUserContextValues
@@ -13,4 +14,14 @@ export function getWorkspaceFromCurrentUser(
 
 export function getRootUrlForWorkspace(workspace: Workspace | UserWorkspace) {
   return `/workspaces/${workspace.id}`;
+}
+
+export function getCountKeyByType(type: RetroColumnType) {
+  const typeToCountKeyMap = {
+    [RetroColumnType.GOOD]: "goodCount",
+    [RetroColumnType.BAD]: "badCount",
+    [RetroColumnType.ACTIONS]: "actionsCount",
+    [RetroColumnType.QUESTIONS]: "questionsCount"
+  };
+  return typeToCountKeyMap[type];
 }
