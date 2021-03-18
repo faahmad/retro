@@ -18,17 +18,18 @@ import { PencilEditIcon } from "../components/PencilEditIcon";
 // Types
 import { RetroItem, RetroItemsMap } from "../types/retro-item";
 import { RetroColumnType, RetroColumn } from "../types/retro-column";
-import { Retro } from "../types/retro";
 import { RetroStateValues, RetroStateStatus } from "../hooks/use-retro-state";
 import { RetroItemModal } from "./RetroItemModal";
+import { WorkspaceUser, WorkspaceUsersMap } from "../types/workspace-user";
 
 interface RetroBoardProps {
   state: RetroStateValues;
+  users: WorkspaceUsersMap;
   retroItems: RetroItemsMap | null;
   onAddItem: any;
 }
 
-export function RetroBoard({ state, retroItems, onAddItem }: RetroBoardProps) {
+export function RetroBoard({ state, retroItems, onAddItem, users }: RetroBoardProps) {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [
     columnTypeToAddItemTo,
@@ -91,6 +92,7 @@ export function RetroBoard({ state, retroItems, onAddItem }: RetroBoardProps) {
                 key={columnType}
                 type={columnType}
                 items={items}
+                users={users}
                 handleOnClickAdd={() => {
                   setIsModalOpen(true);
                   setColumnTypeToAddItemTo(columnType);
@@ -472,6 +474,7 @@ interface RetroListProps {
   title: RetroColumn["title"];
   type: RetroColumn["type"];
   items: any[];
+  users: WorkspaceUsersMap;
   handleOnClickAdd: () => void;
   handleOnClickLike: (itemId: RetroItem["id"]) => void;
   handleOnClickEdit: (columnType: string, initialRetroItem: RetroItem) => void;
@@ -481,10 +484,13 @@ export const RetroList: React.FC<RetroListProps> = ({
   title,
   type,
   items,
+  users,
   handleOnClickAdd,
   handleOnClickLike,
   handleOnClickEdit
 }) => {
+  console.log({ users });
+
   return (
     <div className="flex flex-col border border-red shadow shadow-red">
       <div className="bg-white flex px-4 pt-2 pb-4 justify-between items-end mb-2 border border-red">
@@ -504,6 +510,7 @@ export const RetroList: React.FC<RetroListProps> = ({
                   <RetroListItem
                     key={item.id}
                     index={index}
+                    author={users[item.createdByUserId]}
                     handleOnClickLike={handleOnClickLike}
                     handleOnClickEdit={() => handleOnClickEdit(type, item)}
                     {...item}
@@ -522,6 +529,7 @@ export const RetroList: React.FC<RetroListProps> = ({
 export const RetroListItem: React.FC<
   RetroItem & {
     index: number;
+    author: WorkspaceUser;
     handleOnClickLike: (itemId: RetroItem["id"]) => void;
     handleOnClickEdit: () => void;
   }
@@ -531,6 +539,7 @@ export const RetroListItem: React.FC<
   // isAnonymous,
   likedBy,
   likeCount,
+  author,
   // createdByDisplayName,
   createdByUserId,
   // createdByPhotoURL,
@@ -556,11 +565,13 @@ export const RetroListItem: React.FC<
             {...provided.dragHandleProps}
           >
             <div className="flex content-center">
-              {/* <UserAvatar
-                displayName={createdByDisplayName}
-                photoURL={createdByPhotoURL}
-                isAnonymous={isAnonymous}
-              /> */}
+              {author && (
+                <UserAvatar
+                  displayName={author.userDisplayName}
+                  photoURL={author.userPhotoURL}
+                  isAnonymous={false}
+                />
+              )}
               <div>
                 <Linkify>
                   <span className="text-break">{content}</span>

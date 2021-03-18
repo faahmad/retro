@@ -9,3 +9,7 @@ export interface WorkspaceUser {
   userRole: User["role"];
   workspaceId: Workspace["id"];
 }
+
+export interface WorkspaceUsersMap {
+  [userId: string]: WorkspaceUser;
+}
