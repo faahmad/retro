@@ -489,8 +489,6 @@ export const RetroList: React.FC<RetroListProps> = ({
   handleOnClickLike,
   handleOnClickEdit
 }) => {
-  console.log({ users });
-
   return (
     <div className="flex flex-col border border-red shadow shadow-red">
       <div className="bg-white flex px-4 pt-2 pb-4 justify-between items-end mb-2 border border-red">
