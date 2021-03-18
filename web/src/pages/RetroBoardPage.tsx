@@ -1,22 +1,18 @@
 import * as React from "react";
 import { RouteComponentProps, useParams } from "react-router-dom";
-
 import moment from "moment";
-
 import { Footer } from "../components/Footer";
-
 import { PageContainer } from "../components/PageContainer";
-
 import { useRetroState, RetroStateStatus } from "../hooks/use-retro-state";
-
 import { Retro } from "../types/retro";
-
 import { useUpdateRetro } from "../hooks/use-update-retro";
 import {
   useRetroItemsListener,
   RetroItemsListenerStatus
 } from "../hooks/use-retro-items-listener";
 import { RetroBoard } from "../components/RetroBoard";
+import { useWorkspaceState } from "../hooks/use-workspace-state";
+import { WorkspaceStateStatus } from "../contexts/WorkspaceStateContext";
 
 export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
   const params = useParams<{ retroId: Retro["id"] }>();
@@ -24,11 +20,13 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
   // Not the best, I know. But it's MVP!
   const retroItems = useRetroItemsListener(params.retroId);
   const { state, handleAddItem } = useRetroState(params.retroId);
+  const workspaceState = useWorkspaceState();
   const { data, status, error } = state;
 
   if (
     status === RetroStateStatus.LOADING ||
-    retroItems.status === RetroItemsListenerStatus.LOADING
+    retroItems.status === RetroItemsListenerStatus.LOADING ||
+    workspaceState.status === WorkspaceStateStatus.LOADING
   ) {
     return (
       <PageContainer>
@@ -52,6 +50,7 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
           <RetroHeader id={data.id} name={data.name} createdAt={data.createdAt} />
           <RetroBoard
             state={state}
+            users={workspaceState.users}
             retroItems={retroItems.data}
             onAddItem={handleAddItem}
           />

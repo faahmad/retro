@@ -1,7 +1,7 @@
 import * as React from "react";
 import { TODO } from "../types/todo";
 import { Workspace } from "../types/workspace";
-import { WorkspaceUser } from "../types/workspace-user";
+import { WorkspaceUsersMap } from "../types/workspace-user";
 import { WorkspaceInvite } from "../types/workspace-invite";
 import { workspaceListener } from "../services/workspace-listener";
 import { workspaceUsersListener } from "../services/workspace-users-listener";
@@ -9,7 +9,7 @@ import { workspaceInvitesListener } from "../services/workspace-invite-listener"
 import { workspaceRetrosListener } from "../services/workspace-retros-listener";
 import { Retro } from "../types/retro";
 
-enum WorkspaceStateStatus {
+export enum WorkspaceStateStatus {
   LOADING = "loading",
   SUCCESS = "success",
   ERROR = "error"
@@ -26,7 +26,7 @@ type WorkspaceStateValues = {
   status: WorkspaceStateStatus;
   error: string | null;
   isActive: boolean;
-  users: WorkspaceUser[];
+  users: WorkspaceUsersMap;
   invitedUsers: WorkspaceInvite[];
   retros: Retro[];
 } & Workspace;
@@ -35,7 +35,7 @@ const initialState: WorkspaceStateValues = {
   status: WorkspaceStateStatus.LOADING,
   error: null,
   isActive: false,
-  users: [],
+  users: {},
   invitedUsers: [],
   retros: [],
   id: "",
@@ -75,10 +75,10 @@ export function WorkspaceStateProvider({
       payload: workspaceData
     });
   };
-  const handleWorkspaceUsersQuerySnapshot = (workspaceUsers: WorkspaceUser[]) => {
+  const handleWorkspaceUsersQuerySnapshot = (workspaceUsersMap: WorkspaceUsersMap) => {
     return dispatch({
       type: WorkspaceStateActionTypes.WORKSPACE_USER_SNAPSHOT,
-      payload: workspaceUsers
+      payload: workspaceUsersMap
     });
   };
   const handleWorkspaceInvitesQuerySnapshot = (workspaceInvites: WorkspaceInvite[]) => {
@@ -186,9 +186,9 @@ function getIsInTrialMode(subscriptionStatus: Workspace["subscriptionStatus"]) {
 
 function reduceWorkspaceUser(
   state: WorkspaceStateValues,
-  workspaceUsers: WorkspaceUser[]
+  workspaceUsersMap: WorkspaceUsersMap
 ) {
-  return { ...state, users: workspaceUsers };
+  return { ...state, users: workspaceUsersMap };
 }
 function reduceWorkspaceInvite(
   state: WorkspaceStateValues,

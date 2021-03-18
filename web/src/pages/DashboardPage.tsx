@@ -52,7 +52,7 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
         <TeamMemberOverview
           workspaceName={workspaceState.name}
           workspaceId={workspaceState.id}
-          users={workspaceState.users}
+          users={Object.values(workspaceState.users)}
           invitedUsers={workspaceState.invitedUsers}
           isActive={workspaceState.isActive}
         />
