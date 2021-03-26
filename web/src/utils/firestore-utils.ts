@@ -8,6 +8,10 @@ export function increment() {
   return firebase.firestore.FieldValue.increment(1);
 }
 
+export function decrement() {
+  return firebase.firestore.FieldValue.increment(-1);
+}
+
 export function arrayUnion(element: any) {
   return firebase.firestore.FieldValue.arrayUnion(element);
 }
