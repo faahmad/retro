@@ -2,7 +2,11 @@ import * as React from "react";
 import { retroListener } from "../services/retro-listener";
 import { Retro } from "../types/retro";
 import { useCreateRetroItem } from "../hooks/use-create-retro-item";
+import { useDragDropRetroItem } from "../hooks/use-drag-drop-retro-item";
 import { RetroItem } from "../types/retro-item";
+import { RetroColumn, RetroColumnType } from "../types/retro-column";
+import omitBy from "lodash/omitBy";
+import isNil from "lodash/isNil";
 
 export enum RetroStateStatus {
   LOADING = "LOADING",
@@ -40,7 +44,8 @@ enum RetroActionTypes {
   RETRO_LOADING = "retro_loading",
   RETRO_SNAPSHOT = "retro_snapshot",
   RETRO_ERROR = "retro_error",
-  RETRO_ADD_ITEM = "retro_add_item"
+  RETRO_ADD_ITEM = "retro_add_item",
+  RETRO_DRAG_DROP_ITEM = "retro_drag_drop_item"
 }
 
 type RetroActionLoading = {
@@ -62,15 +67,27 @@ type RetroActionAddItem = {
   payload: RetroItem;
 };
 
+type RetroActionDragDropItem = {
+  type: RetroActionTypes.RETRO_DRAG_DROP_ITEM;
+  payload: {
+    prevColumnType: RetroColumnType;
+    prevColumn: RetroColumn;
+    nextColumnType?: RetroColumnType;
+    nextColumn?: RetroColumn;
+  };
+};
+
 type RetroAction =
   | RetroActionLoading
   | RetroActionSnapshot
   | RetroActionError
-  | RetroActionAddItem;
+  | RetroActionAddItem
+  | RetroActionDragDropItem;
 
 export function useRetroState(retroId: Retro["id"]) {
   const [state, dispatch] = React.useReducer(retroStateReducer, initialState);
   const createRetroItem = useCreateRetroItem();
+  const dragDropRetroItem = useDragDropRetroItem();
 
   React.useEffect(() => {
     handleRetroLoading();
@@ -106,7 +123,32 @@ export function useRetroState(retroId: Retro["id"]) {
     }
   };
 
-  return { state, handleAddItem };
+  const handleDragDrop = async (input: {
+    retroItemId: string;
+    prevColumnType: RetroColumnType;
+    prevColumn: RetroColumn;
+    nextColumnType?: RetroColumnType;
+    nextColumn?: RetroColumn;
+  }) => {
+    try {
+      // Optimistically update the board first to avoid the flicker.
+      const localUpdates = {
+        prevColumnType: input.prevColumnType,
+        prevColumn: input.prevColumn,
+        nextColumnType: input.nextColumnType,
+        nextColumn: input.nextColumn
+      };
+      dispatch({ type: RetroActionTypes.RETRO_DRAG_DROP_ITEM, payload: localUpdates });
+
+      const cleanedInput: any = omitBy(input, isNil);
+      await dragDropRetroItem({ retroId, ...cleanedInput });
+    } catch (error) {
+      // If the update fails, the items should revert automatically to their spots.
+      return;
+    }
+  };
+
+  return { state, handleAddItem, handleDragDrop };
 }
 
 function retroStateReducer(
@@ -122,6 +164,25 @@ function retroStateReducer(
     }
     case RetroActionTypes.RETRO_ERROR: {
       return { status: RetroStateStatus.ERROR, data: null, error: action.payload };
+    }
+    case RetroActionTypes.RETRO_DRAG_DROP_ITEM: {
+      const { prevColumn, prevColumnType, nextColumn, nextColumnType } = action.payload;
+      const updatedNextColumn =
+        nextColumnType && nextColumn ? { [nextColumnType]: nextColumn } : {};
+      // @ts-ignore
+      return {
+        ...state,
+        // @ts-ignore
+        data: {
+          ...state.data,
+          // @ts-ignore
+          columns: {
+            ...state.data?.columns,
+            ...updatedNextColumn,
+            [prevColumnType]: prevColumn
+          }
+        }
+      };
     }
     default: {
       return state;
