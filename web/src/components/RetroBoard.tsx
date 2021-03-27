@@ -27,9 +27,16 @@ interface RetroBoardProps {
   users: WorkspaceUsersMap;
   retroItems: RetroItemsMap | null;
   onAddItem: any;
+  onDragDrop: any;
 }
 
-export function RetroBoard({ state, retroItems, onAddItem, users }: RetroBoardProps) {
+export function RetroBoard({
+  state,
+  retroItems,
+  onAddItem,
+  users,
+  onDragDrop
+}: RetroBoardProps) {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [
     columnTypeToAddItemTo,
@@ -59,8 +66,67 @@ export function RetroBoard({ state, retroItems, onAddItem, users }: RetroBoardPr
   //   return Promise.resolve();
   // };
 
-  const handleOnDragEnd = () => {
-    return;
+  const handleOnDragEnd = (dropResult: DropResult) => {
+    const { destination, source, draggableId: retroItemId } = dropResult;
+
+    // Invalid.
+    if (!destination || !state || !state.data) {
+      return;
+    }
+
+    const prevColumnType = source.droppableId;
+    const nextColumnType = destination.droppableId;
+
+    // If you drag and drop in the same exact spot.
+    if (prevColumnType === nextColumnType && destination.index === source.index) {
+      return;
+    }
+
+    const prevColumn = state.data.columns[source.droppableId as RetroColumnType];
+    const nextColumn = state.data.columns[destination.droppableId as RetroColumnType];
+
+    // When dropping in the same column, update the order of the items.
+    if (prevColumn === nextColumn) {
+      const nextItemIds = [...prevColumn.retroItemIds];
+      nextItemIds.splice(source.index, 1);
+      nextItemIds.splice(destination.index, 0, retroItemId);
+      const updatedPrevColumn = {
+        ...prevColumn,
+        retroItemIds: nextItemIds
+      };
+      onDragDrop({
+        retroItemId,
+        prevColumnType,
+        prevColumn: updatedPrevColumn
+      });
+      return;
+    } else {
+      // When moving between columns.
+      const prevColumnItemIds = [...prevColumn.retroItemIds];
+      prevColumnItemIds.splice(source.index, 1);
+      const updatedPrevColumn = {
+        ...prevColumn,
+        retroItemIds: prevColumnItemIds
+      };
+      const nextColumnItemIds = [...nextColumn.retroItemIds];
+      nextColumnItemIds.splice(destination.index, 0, retroItemId);
+      const updatedNextColumn = {
+        ...nextColumn,
+        retroItemIds: nextColumnItemIds
+      };
+      onDragDrop({
+        retroItemId,
+        prevColumnType: prevColumn.type,
+        prevColumn: updatedPrevColumn,
+        nextColumnType: nextColumn.type,
+        nextColumn: updatedNextColumn
+      });
+      analytics.track("Retro Item Moved", {
+        start: prevColumn.type,
+        end: nextColumn.type
+      });
+      return;
+    }
   };
 
   const { data } = state;
@@ -534,13 +600,10 @@ export const RetroListItem: React.FC<
 > = ({
   id,
   content,
-  // isAnonymous,
   likedBy,
   likeCount,
   author,
-  // createdByDisplayName,
   createdByUserId,
-  // createdByPhotoURL,
   handleOnClickLike,
   handleOnClickEdit,
   index
@@ -611,7 +674,7 @@ const LikeButton = ({ likeCount, likedBy, currentUserId, onClick }: LikeButtonPr
         onClick={onClick}
       >
         <div className="flex content-center items-center">
-          {/* <ThumbsUpIcon filled={likedBy[currentUserId]} /> */}
+          <ThumbsUpIcon filled={!!likedBy[currentUserId] || false} />
         </div>
       </button>
     </div>

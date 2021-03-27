@@ -23,7 +23,7 @@ export async function createRetroTransaction({
     id: newRetroRef.id,
     workspaceId: workspaceId,
     createdById: userId,
-    name: "New Retro",
+    name: "Untitled retrospective",
     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
     userIds: {
       [userId]: userId
