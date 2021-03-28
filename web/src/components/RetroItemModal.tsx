@@ -6,7 +6,7 @@ import { RetroItem } from "../types/retro-item";
 
 interface RetroItemModalProps {
   isOpen: boolean;
-  column: RetroColumn;
+  columnTitle: RetroColumn["title"];
   columnType: RetroColumnType;
   onToggle: () => void;
   onAddItem: ({ content, type }: { content: string; type: RetroColumnType }) => void;
@@ -59,7 +59,7 @@ export class RetroItemModal extends React.Component<
   // };
 
   render() {
-    const { isOpen, onToggle, column } = this.props;
+    const { isOpen, onToggle, columnTitle } = this.props;
     const { content, isSubmitting } = this.state;
 
     return (
@@ -85,7 +85,7 @@ export class RetroItemModal extends React.Component<
             <div className="text-blue">
               <div className="flex justify-between mb-2">
                 <label htmlFor="content" className="text-blue font-bold text-sm">
-                  {column.title}
+                  {columnTitle}
                 </label>
                 {/* {initialRetroItem && (
                   <button

@@ -54,7 +54,7 @@ export function RetroBoard({
     return onAddItem({ content, type, workspaceId: state.data?.workspaceId });
   };
 
-  const handleClickEdit = () => {};
+  const handleClickEdit = (item: RetroItem) => {};
 
   // const handleEditItem = (item, column) => {
   //   return Promise.resolve();
@@ -135,7 +135,7 @@ export function RetroBoard({
     <React.Fragment>
       {isModalOpen && (
         <RetroItemModal
-          column={data?.columns[columnTypeToAddItemTo] || (RetroColumnType.GOOD as any)}
+          columnTitle={data?.columns[columnTypeToAddItemTo]["title"]}
           isOpen={isModalOpen}
           columnType={columnTypeToAddItemTo}
           // initialRetroItem={initialRetroItem}
