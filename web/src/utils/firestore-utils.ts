@@ -16,6 +16,6 @@ export function deleteValue() {
   return firebase.firestore.FieldValue.delete();
 }
 
-export function arrayUnion(element: any) {
+export function arrayUnion<Type>(element: Type) {
   return firebase.firestore.FieldValue.arrayUnion(element);
 }
