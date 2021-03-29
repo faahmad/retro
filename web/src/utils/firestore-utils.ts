@@ -12,6 +12,10 @@ export function decrement() {
   return firebase.firestore.FieldValue.increment(-1);
 }
 
+export function deleteValue() {
+  return firebase.firestore.FieldValue.delete();
+}
+
 export function arrayUnion(element: any) {
   return firebase.firestore.FieldValue.arrayUnion(element);
 }

@@ -3,10 +3,13 @@ import { retroListener } from "../services/retro-listener";
 import { Retro } from "../types/retro";
 import { useCreateRetroItem } from "../hooks/use-create-retro-item";
 import { useDragDropRetroItem } from "../hooks/use-drag-drop-retro-item";
+import { useUpdateRetroItem } from "../hooks/use-update-retro-item";
 import { RetroItem } from "../types/retro-item";
 import { RetroColumn, RetroColumnType } from "../types/retro-column";
 import omitBy from "lodash/omitBy";
 import isNil from "lodash/isNil";
+import { User } from "../types/user";
+import { decrement, deleteValue, increment } from "../utils/firestore-utils";
 
 export enum RetroStateStatus {
   LOADING = "LOADING",
@@ -45,6 +48,7 @@ enum RetroActionTypes {
   RETRO_SNAPSHOT = "retro_snapshot",
   RETRO_ERROR = "retro_error",
   RETRO_ADD_ITEM = "retro_add_item",
+  RETRO_UPDATE_ITEM = "retro_update_item",
   RETRO_DRAG_DROP_ITEM = "retro_drag_drop_item"
 }
 
@@ -67,6 +71,30 @@ type RetroActionAddItem = {
   payload: RetroItem;
 };
 
+type RetroActionEditItem = {
+  type: RetroActionTypes.RETRO_UPDATE_ITEM;
+  payload: {
+    id: RetroItem["id"];
+    content: RetroItem["content"];
+  };
+};
+
+type RetroActionUpvoteItem = {
+  type: RetroActionTypes.RETRO_UPDATE_ITEM;
+  payload: {
+    id: RetroItem["id"];
+    userId: User["id"];
+  };
+};
+
+type RetroActionDownvoteItem = {
+  type: RetroActionTypes.RETRO_UPDATE_ITEM;
+  payload: {
+    id: RetroItem["id"];
+    userId: User["id"];
+  };
+};
+
 type RetroActionDragDropItem = {
   type: RetroActionTypes.RETRO_DRAG_DROP_ITEM;
   payload: {
@@ -82,12 +110,16 @@ type RetroAction =
   | RetroActionSnapshot
   | RetroActionError
   | RetroActionAddItem
+  | RetroActionEditItem
+  | RetroActionUpvoteItem
+  | RetroActionDownvoteItem
   | RetroActionDragDropItem;
 
 export function useRetroState(retroId: Retro["id"]) {
   const [state, dispatch] = React.useReducer(retroStateReducer, initialState);
   const createRetroItem = useCreateRetroItem();
   const dragDropRetroItem = useDragDropRetroItem();
+  const updateRetroItem = useUpdateRetroItem();
 
   React.useEffect(() => {
     handleRetroLoading();
@@ -123,6 +155,50 @@ export function useRetroState(retroId: Retro["id"]) {
     }
   };
 
+  const handleEditItem = async (input: {
+    id: RetroItem["id"];
+    content: RetroItem["content"];
+  }) => {
+    try {
+      dispatch({ type: RetroActionTypes.RETRO_UPDATE_ITEM, payload: input });
+      await updateRetroItem(input.id, { content: input.content });
+      return;
+    } catch (error) {
+      dispatch({ type: RetroActionTypes.RETRO_ERROR, payload: error });
+      return;
+    }
+  };
+
+  const handleLikeItem = async (input: { id: RetroItem["id"]; userId: User["id"] }) => {
+    try {
+      dispatch({ type: RetroActionTypes.RETRO_UPDATE_ITEM, payload: input });
+      await updateRetroItem(input.id, {
+        [`likedBy.${input.userId}`]: input.userId,
+        // @ts-ignore
+        likeCount: increment()
+      });
+      return;
+    } catch (error) {
+      dispatch({ type: RetroActionTypes.RETRO_ERROR, payload: error });
+      return;
+    }
+  };
+
+  const handleUnlikeItem = async (input: { id: RetroItem["id"]; userId: User["id"] }) => {
+    try {
+      dispatch({ type: RetroActionTypes.RETRO_UPDATE_ITEM, payload: input });
+      await updateRetroItem(input.id, {
+        [`likedBy.${input.userId}`]: deleteValue(),
+        // @ts-ignore
+        likeCount: decrement()
+      });
+      return;
+    } catch (error) {
+      dispatch({ type: RetroActionTypes.RETRO_ERROR, payload: error });
+      return;
+    }
+  };
+
   const handleDragDrop = async (input: {
     retroItemId: string;
     prevColumnType: RetroColumnType;
@@ -139,7 +215,6 @@ export function useRetroState(retroId: Retro["id"]) {
         nextColumn: input.nextColumn
       };
       dispatch({ type: RetroActionTypes.RETRO_DRAG_DROP_ITEM, payload: localUpdates });
-
       const cleanedInput: any = omitBy(input, isNil);
       await dragDropRetroItem({ retroId, ...cleanedInput });
     } catch (error) {
@@ -147,8 +222,14 @@ export function useRetroState(retroId: Retro["id"]) {
       return;
     }
   };
-
-  return { state, handleAddItem, handleDragDrop };
+  return {
+    state,
+    handleAddItem,
+    handleDragDrop,
+    handleEditItem,
+    handleLikeItem,
+    handleUnlikeItem
+  };
 }
 
 function retroStateReducer(
