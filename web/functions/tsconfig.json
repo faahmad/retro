@@ -6,8 +6,9 @@
     "outDir": "build",
     "sourceMap": true,
     "strict": true,
-    "target": "es2017"
+    "target": "es2017",
+    "typeRoots": ["./node_modules/@types"]
   },
   "compileOnSave": true,
-  "include": ["src"]
+  "include": ["src/**/*"]
 }
