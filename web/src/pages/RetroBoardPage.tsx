@@ -19,9 +19,14 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
   // Important! useRetroItemsListener has to come first!
   // Not the best, I know. But it's MVP!
   const retroItems = useRetroItemsListener(params.retroId);
-  const { state, handleAddItem, handleDragDrop, handleEditItem } = useRetroState(
-    params.retroId
-  );
+  const {
+    state,
+    handleAddItem,
+    handleDragDrop,
+    handleEditItem,
+    handleLikeItem,
+    handleUnlikeItem
+  } = useRetroState(params.retroId);
   const workspaceState = useWorkspaceState();
   const { data, status, error } = state;
 
@@ -58,6 +63,8 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
             onEditItem={(retroItemId, content) =>
               handleEditItem({ content, id: retroItemId })
             }
+            onLikeItem={handleLikeItem}
+            onUnlikeItem={handleUnlikeItem}
             onDragDrop={handleDragDrop}
           />
         </PageContainer>

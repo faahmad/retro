@@ -18,6 +18,7 @@ import { RetroColumnType, RetroColumn } from "../types/retro-column";
 import { RetroStateValues, RetroStateStatus } from "../hooks/use-retro-state";
 import { RetroItemModal } from "./RetroItemModal";
 import { WorkspaceUser, WorkspaceUsersMap } from "../types/workspace-user";
+import { User } from "../types/user";
 
 interface RetroBoardProps {
   retroState: RetroStateValues;
@@ -34,6 +35,8 @@ interface RetroBoardProps {
   }) => void;
   onEditItem: (retroItemId: RetroItem["id"], content: RetroItem["content"]) => void;
   onDragDrop: any;
+  onLikeItem: any;
+  onUnlikeItem: any;
 }
 
 export function RetroBoard({
@@ -42,6 +45,8 @@ export function RetroBoard({
   retroItems,
   onAddItem,
   onEditItem,
+  onLikeItem,
+  onUnlikeItem,
   onDragDrop
 }: RetroBoardProps) {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
@@ -100,8 +105,6 @@ export function RetroBoard({
     onEditItem(retroItemId, content);
     return;
   };
-
-  const handleLikeItem = () => {};
 
   // const handleDeleteItem = () => {
   //   return Promise.resolve();
@@ -208,7 +211,8 @@ export function RetroBoard({
                 users={users}
                 onClickAdd={() => handleOnClickAdd(columnType)}
                 onClickEdit={handleOnClickEdit}
-                onClickLike={handleLikeItem}
+                onClickLike={onLikeItem}
+                onClickUnlike={onUnlikeItem}
               />
             );
           })}
@@ -585,7 +589,8 @@ interface RetroListProps {
   items: any[];
   users: WorkspaceUsersMap;
   onClickAdd: () => void;
-  onClickLike: (retroItemId: RetroItem["id"]) => void;
+  onClickLike: (input: any) => void;
+  onClickUnlike: (input: any) => void;
   onClickEdit: (retroItem: RetroItem) => void;
 }
 
@@ -596,6 +601,7 @@ export const RetroList: React.FC<RetroListProps> = ({
   users,
   onClickAdd,
   onClickLike,
+  onClickUnlike,
   onClickEdit
 }) => {
   return (
@@ -618,7 +624,8 @@ export const RetroList: React.FC<RetroListProps> = ({
                     key={item.id}
                     index={index}
                     author={users[item.createdByUserId]}
-                    onClickLike={() => onClickLike(item.id)}
+                    onClickLike={onClickLike}
+                    onClickUnlike={onClickUnlike}
                     onClickEdit={() => onClickEdit(item)}
                     {...item}
                   />
@@ -637,7 +644,8 @@ export const RetroListItem: React.FC<
   RetroItem & {
     index: number;
     author: WorkspaceUser;
-    onClickLike: () => void;
+    onClickLike: (input: any) => void;
+    onClickUnlike: (input: any) => void;
     onClickEdit: () => void;
   }
 > = ({
@@ -648,11 +656,20 @@ export const RetroListItem: React.FC<
   author,
   createdByUserId,
   onClickLike,
+  onClickUnlike,
   onClickEdit,
   index
 }) => {
   const currentUser = useCurrentUser();
   const authAccount = currentUser.auth!;
+
+  const handleLikeItem = () => {
+    const userId = currentUser!.data!.id;
+    const input = { id, userId };
+    // Toggle the like button.
+    likedBy[userId] ? onClickUnlike(input) : onClickLike(input);
+    return;
+  };
 
   return (
     <Draggable draggableId={id} index={index} isDragDisabled={false}>
@@ -691,7 +708,7 @@ export const RetroListItem: React.FC<
                 likeCount={likeCount}
                 likedBy={likedBy}
                 currentUserId={authAccount.uid}
-                onClick={onClickLike}
+                onClick={handleLikeItem}
               />
             </div>
           </li>

@@ -9,6 +9,7 @@ import { RetroColumn, RetroColumnType } from "../types/retro-column";
 import omitBy from "lodash/omitBy";
 import isNil from "lodash/isNil";
 import { User } from "../types/user";
+import { decrement, deleteValue, increment } from "../utils/firestore-utils";
 
 export enum RetroStateStatus {
   LOADING = "LOADING",
@@ -154,10 +155,43 @@ export function useRetroState(retroId: Retro["id"]) {
     }
   };
 
-  const handleEditItem = async (input: { id: string; content: string }) => {
+  const handleEditItem = async (input: {
+    id: RetroItem["id"];
+    content: RetroItem["content"];
+  }) => {
     try {
       dispatch({ type: RetroActionTypes.RETRO_UPDATE_ITEM, payload: input });
       await updateRetroItem(input.id, { content: input.content });
+      return;
+    } catch (error) {
+      dispatch({ type: RetroActionTypes.RETRO_ERROR, payload: error });
+      return;
+    }
+  };
+
+  const handleLikeItem = async (input: { id: RetroItem["id"]; userId: User["id"] }) => {
+    try {
+      dispatch({ type: RetroActionTypes.RETRO_UPDATE_ITEM, payload: input });
+      await updateRetroItem(input.id, {
+        [`likedBy.${input.userId}`]: input.userId,
+        // @ts-ignore
+        likeCount: increment()
+      });
+      return;
+    } catch (error) {
+      dispatch({ type: RetroActionTypes.RETRO_ERROR, payload: error });
+      return;
+    }
+  };
+
+  const handleUnlikeItem = async (input: { id: RetroItem["id"]; userId: User["id"] }) => {
+    try {
+      dispatch({ type: RetroActionTypes.RETRO_UPDATE_ITEM, payload: input });
+      await updateRetroItem(input.id, {
+        [`likedBy.${input.userId}`]: deleteValue(),
+        // @ts-ignore
+        likeCount: decrement()
+      });
       return;
     } catch (error) {
       dispatch({ type: RetroActionTypes.RETRO_ERROR, payload: error });
@@ -188,7 +222,14 @@ export function useRetroState(retroId: Retro["id"]) {
       return;
     }
   };
-  return { state, handleAddItem, handleDragDrop, handleEditItem };
+  return {
+    state,
+    handleAddItem,
+    handleDragDrop,
+    handleEditItem,
+    handleLikeItem,
+    handleUnlikeItem
+  };
 }
 
 function retroStateReducer(

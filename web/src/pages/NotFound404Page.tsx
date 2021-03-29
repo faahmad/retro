@@ -3,7 +3,6 @@ import { PageContainer } from "../components/PageContainer";
 import { Link } from "react-router-dom";
 
 export function NotFound404Page() {
-  console.log("Not found");
   return (
     <PageContainer>
       <h1>Oops! We couldn't find the page you were looking for.</h1>
