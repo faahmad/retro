@@ -1,4 +1,5 @@
 export interface WorkspaceInvite {
+  id: string;
   email: string;
   workspaceId: string;
   workspaceName: string;
@@ -10,6 +11,8 @@ export interface WorkspaceInvite {
 }
 
 export enum WorkspaceInviteStatus {
+  SENDING = "sending",
   SENT = "sent",
+  FAILED = "failed",
   ACCEPTED = "accepted"
 }
