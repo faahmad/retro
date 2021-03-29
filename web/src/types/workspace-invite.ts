@@ -12,6 +12,8 @@ export interface WorkspaceInvite {
 }
 
 export enum WorkspaceInviteStatus {
-  SENT = "sent", // this assumes that sendInvitationEmail doesn't fail.
+  SENDING = "sending",
+  SENT = "sent",
+  FAILED = "failed",
   ACCEPTED = "accepted"
 }

@@ -19,7 +19,7 @@ export function createWorkspaceInvite(params: CreateWorkspaceInviteParams) {
   );
   return workspaceInviteRef.set({
     ...params,
-    status: WorkspaceInviteStatus.SENT,
+    status: WorkspaceInviteStatus.SENDING,
     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
   } as WorkspaceInvite);

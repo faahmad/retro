@@ -11,7 +11,7 @@ export function workspaceInvitesListener(
 ) {
   return workspaceInviteCollection
     .where("workspaceId", "==", workspaceId)
-    .where("status", "==", WorkspaceInviteStatus.SENT)
+    .where("status", "!=", WorkspaceInviteStatus.ACCEPTED)
     .limit(8)
     .onSnapshot((workspaceInviteQuerySnapshot) => {
       let workspaceInvites: WorkspaceInvite[] = [];

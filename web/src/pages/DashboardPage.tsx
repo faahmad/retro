@@ -10,7 +10,7 @@ import { UpgradeToProBanner } from "../components/UpgradeToProBanner";
 import { useCurrentUser } from "../hooks/use-current-user";
 import { useWorkspaceState } from "../hooks/use-workspace-state";
 import { WorkspaceUser } from "../types/workspace-user";
-import { WorkspaceInvite } from "../types/workspace-invite";
+import { WorkspaceInvite, WorkspaceInviteStatus } from "../types/workspace-invite";
 import { Retro } from "../types/retro";
 import { Workspace } from "../types/workspace";
 import { useCreateRetro } from "../hooks/use-create-retro";
@@ -221,12 +221,18 @@ function WorkspaceUserItem({
   );
 }
 
-function WorkspaceInviteItem({ email }: WorkspaceInvite) {
+function WorkspaceInviteItem({ email, status }: WorkspaceInvite) {
+  const statusMap: any = {
+    [WorkspaceInviteStatus.SENDING]: "inviting...",
+    [WorkspaceInviteStatus.SENT]: "invited",
+    [WorkspaceInviteStatus.FAILED]: "failed"
+  };
+
   return (
     <div className="flex flex-col lg:flex-row text-center lg:text-left items-center mx-auto lg:mx-4 my-4 w-64">
       <PlaceholderAvatar char={email[0]} />
       <div className="flex flex-col flex-shrink ml-2">
-        <p className="text-blue text-xs font-black">invited</p>
+        <p className="text-blue text-xs font-black">{statusMap[status]}</p>
         <p className="text-blue text-sm font-light">{email}</p>
       </div>
     </div>
