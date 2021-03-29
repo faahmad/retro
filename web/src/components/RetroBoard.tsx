@@ -2,11 +2,8 @@
 /* eslint-disable no-unused-vars */
 import * as React from "react";
 import { DragDropContext, Draggable, DropResult, Droppable } from "react-beautiful-dnd";
-import { v4 as uuidV4 } from "uuid";
 import Linkify from "react-linkify";
 import analytics from "analytics.js";
-// Contexts
-import { CurrentUserContext } from "../contexts/CurrentUserContext";
 // Hooks
 import { useCurrentUser } from "../hooks/use-current-user";
 // Components
@@ -23,18 +20,28 @@ import { RetroItemModal } from "./RetroItemModal";
 import { WorkspaceUser, WorkspaceUsersMap } from "../types/workspace-user";
 
 interface RetroBoardProps {
-  state: RetroStateValues;
+  retroState: RetroStateValues;
   users: WorkspaceUsersMap;
   retroItems: RetroItemsMap | null;
-  onAddItem: any;
+  onAddItem: ({
+    content,
+    type,
+    workspaceId
+  }: {
+    content: RetroItem["content"];
+    type: RetroItem["type"];
+    workspaceId: RetroItem["workspaceId"];
+  }) => void;
+  onEditItem: (retroItemId: RetroItem["id"], content: RetroItem["content"]) => void;
   onDragDrop: any;
 }
 
 export function RetroBoard({
-  state,
+  retroState,
+  users,
   retroItems,
   onAddItem,
-  users,
+  onEditItem,
   onDragDrop
 }: RetroBoardProps) {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
@@ -42,7 +49,9 @@ export function RetroBoard({
     columnTypeToAddItemTo,
     setColumnTypeToAddItemTo
   ] = React.useState<RetroColumnType>(RetroColumnType.GOOD);
-  if (state.status === RetroStateStatus.LOADING) {
+  const [retroItem, setRetroItem] = React.useState<RetroItem | null>(null);
+
+  if (retroState.status === RetroStateStatus.LOADING) {
     return <LoadingText />;
   }
 
@@ -50,15 +59,47 @@ export function RetroBoard({
     return setIsModalOpen(false);
   };
 
-  const handleAddItem = ({ content, type }: any) => {
-    return onAddItem({ content, type, workspaceId: state.data?.workspaceId });
+  /**
+   * Opens the creation modal.
+   */
+  const handleOnClickAdd = (columnType: RetroColumnType) => {
+    setColumnTypeToAddItemTo(columnType);
+    setIsModalOpen(true);
+    return;
   };
 
-  const handleClickEdit = (item: RetroItem) => {};
+  /**
+   * Creates a new item.
+   */
+  const handleAddItem = ({
+    content,
+    type
+  }: {
+    content: RetroItem["content"];
+    type: RetroItem["type"];
+  }) => {
+    if (!retroState.data) {
+      return;
+    }
+    return onAddItem({ content, type, workspaceId: retroState.data.workspaceId });
+  };
 
-  // const handleEditItem = (item, column) => {
-  //   return Promise.resolve();
-  // };
+  /**
+   * Opens the edit modal.
+   */
+  const handleOnClickEdit = (retroItem: RetroItem) => {
+    setColumnTypeToAddItemTo(retroItem.type);
+    setRetroItem(retroItem);
+    setIsModalOpen(true);
+  };
+
+  /**
+   * Edits an existing item.
+   */
+  const handleEditItem = (retroItemId: RetroItem["id"], content: string) => {
+    onEditItem(retroItemId, content);
+    return;
+  };
 
   const handleLikeItem = () => {};
 
@@ -70,20 +111,21 @@ export function RetroBoard({
     const { destination, source, draggableId: retroItemId } = dropResult;
 
     // Invalid.
-    if (!destination || !state || !state.data) {
+    if (!destination || !retroState || !retroState.data) {
       return;
     }
 
     const prevColumnType = source.droppableId;
     const nextColumnType = destination.droppableId;
 
-    // If you drag and drop in the same exact spot.
+    // If you drag and drop in the same exact spot, return early.
     if (prevColumnType === nextColumnType && destination.index === source.index) {
       return;
     }
 
-    const prevColumn = state.data.columns[source.droppableId as RetroColumnType];
-    const nextColumn = state.data.columns[destination.droppableId as RetroColumnType];
+    const prevColumn = retroState.data.columns[source.droppableId as RetroColumnType];
+    const nextColumn =
+      retroState.data.columns[destination.droppableId as RetroColumnType];
 
     // When dropping in the same column, update the order of the items.
     if (prevColumn === nextColumn) {
@@ -121,6 +163,7 @@ export function RetroBoard({
         nextColumnType: nextColumn.type,
         nextColumn: updatedNextColumn
       });
+      // We're only tracking when the item is moved between columns.
       analytics.track("Retro Item Moved", {
         start: prevColumn.type,
         end: nextColumn.type
@@ -129,26 +172,30 @@ export function RetroBoard({
     }
   };
 
-  const { data } = state;
+  const { data } = retroState;
+
+  if (!data) {
+    return <div className="text-blue">Loading...</div>;
+  }
 
   return (
     <React.Fragment>
       {isModalOpen && (
         <RetroItemModal
-          columnTitle={data?.columns[columnTypeToAddItemTo]["title"]}
+          columnTitle={data.columns[columnTypeToAddItemTo]["title"]}
           isOpen={isModalOpen}
           columnType={columnTypeToAddItemTo}
-          // initialRetroItem={initialRetroItem}
           onToggle={handleCloseModal}
           onAddItem={handleAddItem}
-          // onEdit={() => {}}
+          retroItem={retroItem}
+          onEditItem={handleEditItem}
           // onDelete={handleDeleteItem}
         />
       )}
       <div className="retro-board__grid">
         <DragDropContext onDragEnd={handleOnDragEnd}>
           {data?.columnOrder.map((columnType: RetroColumnType) => {
-            const column = data?.columns[columnType];
+            const column = data.columns[columnType];
             const items = column.retroItemIds.map(
               (itemId: RetroItem["id"]) => retroItems![itemId]
             );
@@ -159,13 +206,9 @@ export function RetroBoard({
                 type={columnType}
                 items={items}
                 users={users}
-                handleOnClickAdd={() => {
-                  setIsModalOpen(true);
-                  setColumnTypeToAddItemTo(columnType);
-                  return;
-                }}
-                handleOnClickLike={handleClickEdit}
-                handleOnClickEdit={handleLikeItem}
+                onClickAdd={() => handleOnClickAdd(columnType)}
+                onClickEdit={handleOnClickEdit}
+                onClickLike={handleLikeItem}
               />
             );
           })}
@@ -541,9 +584,9 @@ interface RetroListProps {
   type: RetroColumn["type"];
   items: any[];
   users: WorkspaceUsersMap;
-  handleOnClickAdd: () => void;
-  handleOnClickLike: (itemId: RetroItem["id"]) => void;
-  handleOnClickEdit: (columnType: string, initialRetroItem: RetroItem) => void;
+  onClickAdd: () => void;
+  onClickLike: (retroItemId: RetroItem["id"]) => void;
+  onClickEdit: (retroItem: RetroItem) => void;
 }
 
 export const RetroList: React.FC<RetroListProps> = ({
@@ -551,15 +594,15 @@ export const RetroList: React.FC<RetroListProps> = ({
   type,
   items,
   users,
-  handleOnClickAdd,
-  handleOnClickLike,
-  handleOnClickEdit
+  onClickAdd,
+  onClickLike,
+  onClickEdit
 }) => {
   return (
     <div className="flex flex-col border border-red shadow shadow-red">
       <div className="bg-white flex px-4 pt-2 pb-4 justify-between items-end mb-2 border border-red">
         <p className="text-blue font-bold text-sm">{title}</p>
-        <AddButton className="self-end" onClick={handleOnClickAdd} />
+        <AddButton className="self-end" onClick={onClickAdd} />
       </div>
       <Droppable droppableId={type}>
         {(provided) => {
@@ -575,8 +618,8 @@ export const RetroList: React.FC<RetroListProps> = ({
                     key={item.id}
                     index={index}
                     author={users[item.createdByUserId]}
-                    handleOnClickLike={handleOnClickLike}
-                    handleOnClickEdit={() => handleOnClickEdit(type, item)}
+                    onClickLike={() => onClickLike(item.id)}
+                    onClickEdit={() => onClickEdit(item)}
                     {...item}
                   />
                 );
@@ -594,8 +637,8 @@ export const RetroListItem: React.FC<
   RetroItem & {
     index: number;
     author: WorkspaceUser;
-    handleOnClickLike: (itemId: RetroItem["id"]) => void;
-    handleOnClickEdit: () => void;
+    onClickLike: () => void;
+    onClickEdit: () => void;
   }
 > = ({
   id,
@@ -604,8 +647,8 @@ export const RetroListItem: React.FC<
   likeCount,
   author,
   createdByUserId,
-  handleOnClickLike,
-  handleOnClickEdit,
+  onClickLike,
+  onClickEdit,
   index
 }) => {
   const currentUser = useCurrentUser();
@@ -642,13 +685,13 @@ export const RetroListItem: React.FC<
 
             <div className="flex ml-2 items-center">
               {createdByUserId === authAccount.uid && (
-                <EditButton onClick={handleOnClickEdit} />
+                <EditButton onClick={onClickEdit} />
               )}
               <LikeButton
                 likeCount={likeCount}
                 likedBy={likedBy}
                 currentUserId={authAccount.uid}
-                onClick={() => handleOnClickLike(id)}
+                onClick={onClickLike}
               />
             </div>
           </li>

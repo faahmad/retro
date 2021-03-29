@@ -10,9 +10,9 @@ interface RetroItemModalProps {
   columnType: RetroColumnType;
   onToggle: () => void;
   onAddItem: ({ content, type }: { content: string; type: RetroColumnType }) => void;
-  // onSubmit: (params: CreateRetroItemParams, column: string) => Promise<void>;
-  // initialRetroItem?: RetroItem;
-  // onEdit: (item: RetroItem, column: string) => Promise<void>;
+  // RetroItem is defined when editing an existing item.
+  retroItem: RetroItem | null;
+  onEditItem: (retroItemId: RetroItem["id"], content: string) => void;
   // onDelete: (itemId: RetroItem["id"], column: string) => Promise<void>;
 }
 
@@ -30,12 +30,12 @@ export class RetroItemModal extends React.Component<
     super(props);
     this.state = {
       columnType: props.columnType || "",
-      content: "",
+      content: props.retroItem?.content || "",
       isSubmitting: false
     };
   }
 
-  handleSubmit = async () => {
+  handleAddItem = async () => {
     const { content, columnType } = this.state;
     if (!content || !columnType) {
       return;
@@ -47,19 +47,32 @@ export class RetroItemModal extends React.Component<
     return;
   };
 
-  // handleDelete = async () => {
-  //   const { onDelete, initialRetroItem, columnType, onToggle } = this.props;
-  //   this.setState({ isSubmitting: true });
-  //   if (initialRetroItem && columnType) {
-  //     onDelete(initialRetroItem!.id, columnType!);
-  //   }
-  //   await this.setState({ isSubmitting: false });
-  //   onToggle();
-  //   return;
-  // };
+  handleEditItem = async () => {
+    const { retroItem } = this.props;
+    const { content, columnType } = this.state;
+    if (!content || !columnType || !retroItem) {
+      return;
+    }
+    this.setState({ isSubmitting: true });
+    this.props.onEditItem(retroItem.id, content);
+    await this.setState({ isSubmitting: false });
+    this.props.onToggle();
+    return;
+  };
+
+  handleDelete = async () => {
+    // const { onDelete, initialRetroItem, columnType, onToggle } = this.props;
+    // this.setState({ isSubmitting: true });
+    // if (initialRetroItem && columnType) {
+    //   onDelete(initialRetroItem!.id, columnType!);
+    // }
+    // await this.setState({ isSubmitting: false });
+    // onToggle();
+    return;
+  };
 
   render() {
-    const { isOpen, onToggle, columnTitle } = this.props;
+    const { isOpen, onToggle, columnTitle, retroItem } = this.props;
     const { content, isSubmitting } = this.state;
 
     return (
@@ -87,7 +100,7 @@ export class RetroItemModal extends React.Component<
                 <label htmlFor="content" className="text-blue font-bold text-sm">
                   {columnTitle}
                 </label>
-                {/* {initialRetroItem && (
+                {retroItem && (
                   <button
                     className="mb-2 text-xs"
                     onClick={this.handleDelete}
@@ -95,7 +108,7 @@ export class RetroItemModal extends React.Component<
                   >
                     Delete
                   </button>
-                )} */}
+                )}
               </div>
               <textarea
                 className="w-full p-2 border border-red text-blue focus:outline-none"
@@ -121,7 +134,7 @@ export class RetroItemModal extends React.Component<
                 className="bg-blue text-white"
                 style={{ width: "10rem" }}
                 disabled={isSubmitting}
-                onClick={this.handleSubmit}
+                onClick={retroItem ? this.handleEditItem : this.handleAddItem}
               >
                 {isSubmitting ? "Submitting..." : "Submit"}
               </Button>
