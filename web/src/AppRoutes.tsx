@@ -1,10 +1,9 @@
 import React from "react";
-import { BrowserRouter, Route, Switch, useHistory } from "react-router-dom";
+import { BrowserRouter, Redirect, Route, Switch, useHistory } from "react-router-dom";
 import { Navbar } from "./components/Navbar";
 import { DesignPage } from "./pages/DesignPage";
 
 import { FAQPage } from "./pages/FAQPage";
-import { LandingPage } from "./pages/LandingPage";
 import { OnboardingPage } from "./pages/OnboardingPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { LoadingText } from "./components/LoadingText";
@@ -71,8 +70,6 @@ function ScrollToTop() {
 const UnauthenticatedAppRoutes: React.FC = () => {
   useAnalyticsPageView();
 
-  const isLandingPageXPEnabled = true;
-
   return (
     <React.Fragment>
       <Route
@@ -87,11 +84,7 @@ const UnauthenticatedAppRoutes: React.FC = () => {
         path="/signup"
         component={SignupPage}
       /> */}
-      <Route
-        exact
-        path="/"
-        component={isLandingPageXPEnabled ? PainDreamFixLandingPage : LandingPage}
-      />
+      <Route exact path="/" component={PainDreamFixLandingPage} />
     </React.Fragment>
   );
 };
@@ -127,6 +120,7 @@ function AuthenticatedAppRoutes({
         />
         <Route exact path="/workspaces/:workspaceId/settings" component={SettingsPage} />
         <Route exact path="/workspaces/:workspaceId" component={DashboardPage} />
+        <Redirect to={`/workspaces/${workspaceId}`} />
       </SubscriptionStatusProvider>
     </WorkspaceStateProvider>
   );
