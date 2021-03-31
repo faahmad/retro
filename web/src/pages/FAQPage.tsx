@@ -4,8 +4,10 @@ import { Link } from "react-router-dom";
 import landingFooterImage from "../assets/images/landing-page-footer.svg";
 
 import { PageContainer } from "../components/PageContainer";
+import { useAnalyticsPage, AnalyticsPage } from "../hooks/use-analytics-page";
 
 export const FAQPage: React.FC = () => {
+  useAnalyticsPage(AnalyticsPage.FAQ);
   return (
     <div>
       <div className="landing-page flex flex-col w-full justify-center my-8">

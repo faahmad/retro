@@ -15,8 +15,10 @@ import { Retro } from "../types/retro";
 import { Workspace } from "../types/workspace";
 import { useCreateRetro } from "../hooks/use-create-retro";
 import { RetroCard } from "../components/RetroCard";
+import { useAnalyticsPage, AnalyticsPage } from "../hooks/use-analytics-page";
 
 export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
+  useAnalyticsPage(AnalyticsPage.DASHBOARD);
   const currentUser = useCurrentUser();
   const workspaceState = useWorkspaceState();
 

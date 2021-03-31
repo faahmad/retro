@@ -3,8 +3,10 @@ import { PageContainer } from "../components/PageContainer";
 import { GoogleOAuthButton } from "../components/GoogleOAuthButton";
 import { useLoginWithGoogle } from "../hooks/use-login-with-google";
 import { Link } from "react-router-dom";
+import { AnalyticsPage, useAnalyticsPage } from "../hooks/use-analytics-page";
 
 export function SignupPage() {
+  useAnalyticsPage(AnalyticsPage.SIGNUP);
   const loginWithGoogle = useLoginWithGoogle();
 
   return (

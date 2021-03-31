@@ -13,8 +13,10 @@ import { useCreateWorkspace } from "../hooks/use-create-workspace";
 import { useGetWorkspaceInvitesByEmail } from "../hooks/use-get-workspace-invites-by-email";
 import { WorkspaceInvite } from "../types/workspace-invite";
 import { useJoinWorkspaceFromInvite } from "../hooks/use-join-workspace-from-invite";
+import { useAnalyticsPage, AnalyticsPage } from "../hooks/use-analytics-page";
 
 export function OnboardingPage() {
+  useAnalyticsPage(AnalyticsPage.ONBOARDING_PAGE);
   const currentUser = useCurrentUser();
 
   const [showForm, setShowForm] = React.useState(false);

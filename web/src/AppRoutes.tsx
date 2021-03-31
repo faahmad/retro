@@ -21,7 +21,6 @@ import { useScrollToTop } from "./hooks/use-scroll-to-top";
 
 import { getWorkspaceFromCurrentUser } from "./utils/workspace-utils";
 import { CurrentUserContextValues } from "./contexts/CurrentUserContext";
-import { useAnalyticsPageView } from "./hooks/use-analytics-page-view";
 import { WorkspaceStateProvider } from "./contexts/WorkspaceStateContext";
 import { PainDreamFixLandingPage } from "./pages/PainDreamFixLandingPage";
 
@@ -67,8 +66,6 @@ function ScrollToTop() {
 }
 
 const UnauthenticatedAppRoutes: React.FC = () => {
-  useAnalyticsPageView();
-
   return (
     <React.Fragment>
       <Route
@@ -93,7 +90,6 @@ function AuthenticatedAppRoutes({
 }: {
   currentUser: CurrentUserContextValues;
 }) {
-  useAnalyticsPageView();
   const history = useHistory();
   const workspace = getWorkspaceFromCurrentUser(currentUser);
   const workspaceId = workspace?.id;

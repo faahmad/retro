@@ -16,8 +16,10 @@ import { useLoginWithGoogle } from "../hooks/use-login-with-google";
 import { useCurrentUser } from "../hooks/use-current-user";
 import { CurrentUserState } from "../contexts/CurrentUserContext";
 import { MailchimpNewsLetterSignupForm } from "../components/MailchimpNewsletterSubscribeForm";
+import { useAnalyticsPage, AnalyticsPage } from "../hooks/use-analytics-page";
 
 export const PainDreamFixLandingPage: React.FC = () => {
+  useAnalyticsPage(AnalyticsPage.LANDING);
   const isSignUpEnabled = false;
   const loginWithGoogle = useLoginWithGoogle();
   const currentUser = useCurrentUser();

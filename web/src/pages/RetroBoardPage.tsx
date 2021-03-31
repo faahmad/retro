@@ -13,8 +13,10 @@ import {
 import { RetroBoard } from "../components/RetroBoard";
 import { useWorkspaceState } from "../hooks/use-workspace-state";
 import { WorkspaceStateStatus } from "../contexts/WorkspaceStateContext";
+import { AnalyticsPage, useAnalyticsPage } from "../hooks/use-analytics-page";
 
 export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
+  useAnalyticsPage(AnalyticsPage.RETRO_BOARD);
   const params = useParams<{ retroId: Retro["id"] }>();
   // Important! useRetroItemsListener has to come first!
   // Not the best, I know. But it's MVP!
