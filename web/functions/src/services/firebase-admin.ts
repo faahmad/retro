@@ -1,5 +1,7 @@
 import * as admin from "firebase-admin";
+import { logger } from "../lib/logger";
 import { FirestoreCollections } from "../constants/firestore-collections";
+import { Workspace } from "../types/workspace";
 
 const db = admin.firestore();
 
@@ -8,8 +10,19 @@ export async function getUserIdFromIdToken(idToken: string) {
     const decodedIdToken = await admin.auth().verifyIdToken(idToken);
     return decodedIdToken.uid;
   } catch (error) {
-    throw new Error("Invalid Id token.");
+    logger.prettyPrint(error);
+    throw error;
   }
+}
+
+export async function getWorkspaceIdByCustomerId(customerId: string) {
+  const querySnapshot = await db
+    .collection(FirestoreCollections.WORKSPACE)
+    .where("customerId", "==", customerId)
+    .get();
+  // This query should only return one document.
+  const [doc] = querySnapshot.docs;
+  return doc?.id || null;
 }
 
 interface UpdateWorkspaceParams {
@@ -27,7 +40,7 @@ export function updateWorkspace(id: string, params: UpdateWorkspaceParams) {
 
 export async function getWorkspace(id: string) {
   const workspaceDoc = await db.collection(FirestoreCollections.WORKSPACE).doc(id).get();
-  return workspaceDoc.data();
+  return workspaceDoc.data() as Workspace | undefined;
 }
 
 export async function getWorkspaceUsers(workspaceId: string) {

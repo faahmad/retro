@@ -2,6 +2,11 @@ import * as React from "react";
 import firebase from "../lib/firebase";
 import { User } from "../types/user";
 import { userListener } from "../services/user-listener";
+import {
+  deleteIdToken,
+  getIdTokenFromFirebaseUser,
+  saveIdToken
+} from "../services/auth-service";
 
 export enum CurrentUserState {
   LOADING = "loading",
@@ -42,12 +47,15 @@ export function CurrentUserProvider({ children }: { children: React.ReactNode })
     return firebaseUser ? handleOnAuthenticated(firebaseUser) : handleOnLoggedOut();
   };
   const handleOnAuthenticated = async (firebaseUser: firebase.User) => {
+    const idToken = await getIdTokenFromFirebaseUser(firebaseUser);
+    saveIdToken(idToken);
     return dispatch({
       type: CurrentUserActionTypes.AUTHENTICATED,
       payload: firebaseUser
     });
   };
   const handleOnLoggedOut = () => {
+    deleteIdToken();
     return dispatch({ type: CurrentUserActionTypes.LOGGED_OUT, payload: null });
   };
   React.useEffect(() => {

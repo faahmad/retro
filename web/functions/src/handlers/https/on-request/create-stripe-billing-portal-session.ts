@@ -19,8 +19,13 @@ export const createStripeBillingPortalSession = functions.https.onRequest((req, 
 
       const userId = await getUserIdFromIdToken(idToken);
       const workspace = await getWorkspace(workspaceId);
-      if (userId !== workspace?.owner?.id) {
+
+      if (userId !== workspace?.ownerId) {
         throw new Error("Unauthorized.");
+      }
+
+      if (!workspace.customerId) {
+        throw new Error("Invalid customerId.");
       }
 
       const billingPortalSession = await createBillingPortalSession({

@@ -14,13 +14,11 @@ export async function logOut() {
 }
 
 export function saveIdToken(idToken: string) {
-  localStorage.setItem("idToken", idToken);
   axios.defaults.headers.common["x-retro-auth"] = idToken;
   return;
 }
 
 export function deleteIdToken() {
-  localStorage.removeItem("idToken");
   axios.defaults.headers.common["x-retro-auth"] = undefined;
   return;
 }
