@@ -68,8 +68,6 @@ function BillingSettings({ workspaceId }: BillingSettingsProps) {
     return null;
   }
 
-  console.log({ subscription });
-
   return (
     <div className="text-red border border-red shadow p-8 flex flex-col mt-2">
       <div className="text-blue ml-2">
