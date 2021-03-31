@@ -9,8 +9,10 @@ import goodVibesImage from "../assets/images/good-vibes.svg";
 import landingFooterImage from "../assets/images/landing-page-footer.svg";
 
 import { PageContainer } from "../components/PageContainer";
+import { useAnalyticsPage, AnalyticsPage } from "../hooks/use-analytics-page";
 
 export const DesignPage: React.FC = () => {
+  useAnalyticsPage(AnalyticsPage.DESIGN);
   return (
     <div>
       <div className="flex flex-col w-full justify-center my-8">

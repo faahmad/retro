@@ -12,8 +12,10 @@ import { useCurrentUser } from "../hooks/use-current-user";
 import { WorkspaceStateStatus } from "../contexts/WorkspaceStateContext";
 import { axios } from "../lib/axios";
 import { getBaseURL } from "../services/stripe-service";
+import { useAnalyticsPage, AnalyticsPage } from "../hooks/use-analytics-page";
 
 export const SettingsPage = () => {
+  useAnalyticsPage(AnalyticsPage.SETTINGS);
   const currentUser = useCurrentUser();
   const workspaceState = useWorkspaceState();
 
