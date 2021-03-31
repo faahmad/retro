@@ -13,7 +13,6 @@ import { PrivacyPolicyPage } from "./pages/PrivacyPolicyPage";
 import { TermsOfServicePage } from "./pages/TermsOfServicePage";
 import { PodcastHomePage } from "./pages/PodcastHomePage";
 import { PodcastEpisodePage } from "./pages/PodcastEpisodePage";
-import { SubscriptionStatusProvider } from "./contexts/SubscriptionStatusContext";
 import { PageContainer } from "./components/PageContainer";
 import { Button } from "./components/Button";
 import { ErrorBoundary, FallbackProps } from "react-error-boundary";
@@ -111,17 +110,15 @@ function AuthenticatedAppRoutes({
 
   return (
     <WorkspaceStateProvider workspaceId={workspaceId}>
-      <SubscriptionStatusProvider workspaceId={workspaceId}>
-        <Route exact path="/onboarding" component={OnboardingPage} />
-        <Route
-          exact
-          path="/workspaces/:workspaceId/retros/:retroId"
-          component={RetroBoardPage}
-        />
-        <Route exact path="/workspaces/:workspaceId/settings" component={SettingsPage} />
-        <Route exact path="/workspaces/:workspaceId" component={DashboardPage} />
-        <Redirect to={`/workspaces/${workspaceId}`} />
-      </SubscriptionStatusProvider>
+      <Route exact path="/onboarding" component={OnboardingPage} />
+      <Route
+        exact
+        path="/workspaces/:workspaceId/retros/:retroId"
+        component={RetroBoardPage}
+      />
+      <Route exact path="/workspaces/:workspaceId/settings" component={SettingsPage} />
+      <Route exact path="/workspaces/:workspaceId" component={DashboardPage} />
+      <Redirect to={`/workspaces/${workspaceId}`} />
     </WorkspaceStateProvider>
   );
 }
