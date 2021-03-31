@@ -13,7 +13,7 @@ export const createCustomer = (name: string, email: string) => {
 export const subscribeCustomerToProPlan = (customerId: string) => {
   const params: Stripe.SubscriptionCreateParams = {
     customer: customerId,
-    items: [{ plan: StripeSubscriptionPlans.PRO }],
+    items: [{ plan: StripeSubscriptionPlans.PRO_YEARLY }],
     trial_from_plan: true
   };
   return stripe.subscriptions.create(params);
