@@ -4,7 +4,7 @@ import { axios } from "../lib/axios";
 
 export function authenticateWithGoogle() {
   const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
-  googleAuthProvider.addScope("https://www.googleapis.com/auth/contacts.readonly");
+  // googleAuthProvider.addScope("https://www.googleapis.com/auth/contacts.readonly");
   return firebase.auth().signInWithPopup(googleAuthProvider);
 }
 
