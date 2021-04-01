@@ -23,6 +23,8 @@ import { getWorkspaceFromCurrentUser } from "./utils/workspace-utils";
 import { CurrentUserContextValues } from "./contexts/CurrentUserContext";
 import { WorkspaceStateProvider } from "./contexts/WorkspaceStateContext";
 import { PainDreamFixLandingPage } from "./pages/PainDreamFixLandingPage";
+import { EarlyAccessPage } from "./pages/EarlyAccessPage";
+import { MagicLinkPage } from "./pages/MagicLinkPage";
 
 // Comment these out before deploying to prod!
 import { LoginPage } from "./pages/LoginPage";
@@ -80,6 +82,8 @@ const UnauthenticatedAppRoutes: React.FC = () => {
         path="/signup"
         component={SignupPage}
       /> */}
+      <Route exact path="/secret-auth/:code" component={EarlyAccessPage} />
+      <Route exact path="/magic-link" component={MagicLinkPage} />
       <Route exact path="/" component={PainDreamFixLandingPage} />
     </React.Fragment>
   );

@@ -46,7 +46,11 @@ export function createWorkspaceTransaction(input: CreateWorkspaceTransactionInpu
       subscriptionTrialEnd: null
     });
     // Create the workspaceUrl.
-    transaction.set(workspaceUrlRef, { url: input.url, workspaceId: newWorkspaceId });
+    transaction.set(workspaceUrlRef, {
+      name: input.name,
+      url: input.url,
+      workspaceId: newWorkspaceId
+    });
     // Add the workspace to the user's document.
     const userRef = userCollection.doc(input.userId);
     transaction.update(userRef, {

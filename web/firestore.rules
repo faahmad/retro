@@ -26,6 +26,11 @@ service cloud.firestore {
       allow create, read, update: if isUser(userId);
     }
 
+    match /earlyAccessCodes/{code} {
+      // Anyone can read.
+      allow read: if true;
+    }
+
     match /workspaceInvite/{workspaceInviteId} {
       // Users can read workspace invites so they can see if they have any.
       allow read: if isSignedIn(request);
@@ -45,8 +50,10 @@ service cloud.firestore {
     }
 
     match /workspaceURL/{workspaceURL} {
-      // Users can read/write a workspace url.
-      allow create, read: if isSignedIn(request);
+      // Users can create a workspace url.
+      allow create:  if isSignedIn(request);
+      // Anyone can read a workspace url.
+      allow read: if true;
     }
 
     match /workspace_user/{workspaceId_userId} {

@@ -66,7 +66,8 @@ const createWorkspaceFormValidationSchema = yup.object().shape({
   url: yup
     .string()
     .lowercase()
-    .matches(/[A-Za-z0-9-]+/, "Please only use letters, numbers, and dashes."),
+    .matches(/[A-Za-z0-9-]+/, "Please only use letters, numbers, and dashes.")
+    .required("Workspace URL is required."),
   allowedEmailDomain: yup
     .string()
     .lowercase()
@@ -156,6 +157,11 @@ const CreateWorkspaceForm: React.FC = () => {
               <p className="text-sm sm:text-xs md:text-xs lg:text-xs">
                 The name of your workspace. Keep it simple.
               </p>
+              {formik.touched.name && formik.errors.name && (
+                <p className="text-red text-sm sm:text-xs md:text-xs lg:text-xs">
+                  {formik.errors.name}
+                </p>
+              )}
             </div>
 
             <div className="flex flex-col mb-8">
@@ -163,7 +169,7 @@ const CreateWorkspaceForm: React.FC = () => {
                 htmlFor="url"
                 className="text-md sm:text-sm md:text-sm lg:text-sm font-black"
               >
-                Workspace URL (Optional)
+                Workspace URL
               </label>
               <div className="flex items-center">
                 www.retro.app/
@@ -180,6 +186,11 @@ const CreateWorkspaceForm: React.FC = () => {
                 Share this link to add anyone with an allowed email domain to your
                 workspace.
               </p>
+              {formik.touched.url && formik.errors.url && (
+                <p className="text-red text-sm sm:text-xs md:text-xs lg:text-xs">
+                  {formik.errors.url}
+                </p>
+              )}
             </div>
 
             <div className="flex flex-col mb-8">
@@ -205,6 +216,11 @@ const CreateWorkspaceForm: React.FC = () => {
                 Anyone with an email address at this domain can automatically join your
                 workspace.
               </p>
+              {formik.touched.allowedEmailDomain && formik.errors.allowedEmailDomain && (
+                <p className="text-red text-sm sm:text-xs md:text-xs lg:text-xs">
+                  {formik.errors.allowedEmailDomain}
+                </p>
+              )}
             </div>
 
             <Button

@@ -5,6 +5,7 @@ import analytics from "analytics.js";
 export enum AnalyticsPage {
   LANDING = "Landing Page",
   LOGIN = "Login Page",
+  EARLY_ACCESS = "Early Access Auth",
   SIGNUP = "Signup Page",
   NOT_FOUND = "Not Found 404",
   FAQ = "FAQ Page",

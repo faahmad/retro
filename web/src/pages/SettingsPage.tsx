@@ -29,7 +29,9 @@ export const SettingsPage = () => {
       <div className="text-red border border-red shadow p-8 flex mt-4">
         <UserAvatar
           size="xl"
-          displayName={currentUser.data?.displayName || undefined}
+          displayName={
+            currentUser.data?.displayName || currentUser.data?.email || undefined
+          }
           photoURL={currentUser.data?.photoUrl || undefined}
         />
         <div className="text-blue ml-2">
