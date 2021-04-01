@@ -332,7 +332,7 @@ export const RetroListItem: React.FC<
             <div className="flex content-center">
               {author && (
                 <UserAvatar
-                  displayName={author.userDisplayName}
+                  displayName={author.userDisplayName || author.userEmail}
                   photoURL={author.userPhotoURL}
                   isAnonymous={false}
                 />
