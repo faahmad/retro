@@ -17,6 +17,7 @@ export interface Workspace {
     actionsCount: number;
     questionsCount: number;
   };
+  userCount: number;
   customerId?: string;
   subscriptionId?: string;
 }

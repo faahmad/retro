@@ -3,11 +3,13 @@ import { FirestoreCollections } from "../constants/firestore-collections";
 import { CurrentUserContextValues } from "../contexts/CurrentUserContext";
 import { Workspace } from "../types/workspace";
 import { WorkspaceInvite, WorkspaceInviteStatus } from "../types/workspace-invite";
+import { increment } from "../utils/firestore-utils";
 
 const db = firebase.firestore();
 const workspaceInviteCollection = db.collection(FirestoreCollections.WORKSPACE_INVITE);
 const workspaceUserCollection = db.collection(FirestoreCollections.WORKSPACE_USER);
 const userCollection = db.collection(FirestoreCollections.USER);
+const workspaceCollection = db.collection(FirestoreCollections.WORKSPACE);
 
 export interface JoinWorkspaceFromInviteTransactionParams {
   auth: CurrentUserContextValues["auth"];
@@ -48,6 +50,10 @@ export function joinWorkspaceFromInviteTransaction(
     // Update the workspaceInvite doc.
     const workspaceInviteRef = workspaceInviteCollection.doc(input.workspaceInviteId);
     transaction.update(workspaceInviteRef, { status: WorkspaceInviteStatus.ACCEPTED });
+
+    // Increment the workspace's userCount.
+    const workspaceRef = workspaceCollection.doc(input.workspaceId);
+    transaction.update(workspaceRef, { userCount: increment() });
 
     return workspaceInviteRef;
   });

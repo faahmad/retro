@@ -228,16 +228,31 @@ interface JoinWorkspaceListProps {
 const JoinWorkspaceList: React.FC<JoinWorkspaceListProps> = ({ workspaceInvites }) => {
   const history = useHistory();
   const joinWorkspace = useJoinWorkspaceFromInvite();
+  const [hasError, setHasError] = React.useState(false);
 
   const handleJoinWorkspace = async (workspaceInvite: WorkspaceInvite) => {
-    await joinWorkspace(workspaceInvite);
-    history.push(`/workspaces/${workspaceInvite.workspaceId}`);
-    return;
+    try {
+      setHasError(false);
+      await joinWorkspace(workspaceInvite);
+      history.push(`/workspaces/${workspaceInvite.workspaceId}`);
+      return;
+    } catch {
+      setHasError(true);
+      return;
+    }
   };
 
   return (
     <div className="flex flex-col w-full justify-center my-8 text-blue">
       <div className="w-1/2 max-w-6xl m-auto">
+        {hasError && (
+          <div className="mb-4">
+            <ErrorMessageBanner
+              title="Couldn't join the workspace :("
+              message="Your team doesn't have any more seats. Please upgrade your account or create a new workspace."
+            />
+          </div>
+        )}
         <div className="text-center">
           <h1 className="text-2xl">Join your teammates on Retro</h1>
           <h3 className="text-lg">{`You've been invited to ${
