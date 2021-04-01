@@ -13,9 +13,11 @@ export const UpgradeToProBanner: React.FC<UpgradeToProBannerProps> = ({
   trialEnd,
   workspaceId
 }) => {
-  const { openBillingPortalFn, isOpeningPortal } = useOpenBillingPortal(workspaceId);
+  const { openBillingPortalFn, isOpeningPortal, error, isLoading } = useOpenBillingPortal(
+    workspaceId
+  );
 
-  if (!trialEnd) {
+  if (!trialEnd || isLoading || error) {
     return null;
   }
 
