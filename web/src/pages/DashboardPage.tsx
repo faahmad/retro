@@ -112,7 +112,7 @@ const RetroBoardsOverview: React.FC<{
       {retros.length !== 0 ? (
         <React.Fragment>
           <div className="flex flex-wrap">
-            {retros.map((retro) => {
+            {retros.slice(0, 2).map((retro) => {
               return (
                 <RetroCard
                   key={retro.id}
@@ -122,7 +122,7 @@ const RetroBoardsOverview: React.FC<{
               );
             })}
           </div>
-          {retros.length && (
+          {retros.length >= 2 && (
             <Link
               className="text-right underline text-sm"
               to={`/workspaces/${workspaceId}/retros`}

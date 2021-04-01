@@ -12,7 +12,7 @@ export function workspaceRetrosListener(
   return retroCollection
     .where("workspaceId", "==", workspaceId)
     .orderBy("createdAt", "asc")
-    .limitToLast(2)
+    .limitToLast(20)
     .onSnapshot((retroQuerySnapshot) => {
       let retros: Retro[] = [];
       retroQuerySnapshot.forEach((retroDoc) => {
