@@ -100,7 +100,8 @@ export class RetroItemModal extends React.Component<
                 <label htmlFor="content" className="text-blue font-bold text-sm">
                   {columnTitle}
                 </label>
-                {retroItem && (
+                {/* TODO: Allow user to delete an item. */}
+                {/* {retroItem && (
                   <button
                     className="mb-2 text-xs"
                     onClick={this.handleDelete}
@@ -108,7 +109,7 @@ export class RetroItemModal extends React.Component<
                   >
                     Delete
                   </button>
-                )}
+                )} */}
               </div>
               <textarea
                 className="w-full p-2 border border-red text-blue focus:outline-none"
