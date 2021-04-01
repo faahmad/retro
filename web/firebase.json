@@ -13,6 +13,9 @@
     "predeploy": "npm --prefix functions run build",
     "source": "functions"
   },
+  "firestore": {
+    "rules": "firestore.rules"
+  },
   "emulators": {
     "functions": {
       "port": 5001

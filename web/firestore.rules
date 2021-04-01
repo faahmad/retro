@@ -1,0 +1,77 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn(request) {
+      return request.auth.uid != null;
+    }
+    function isUser(userId) {
+      return request.auth.uid == userId;
+    }
+    function incomingData(request) {
+      return request.resource.data;
+    }
+    function isWorkspaceUser(database, workspaceId, userId) {
+      return exists(/databases/$(database)/documents/workspace_user/$(workspaceId + "_" + userId));
+    }
+    function hasEnoughSeats(database, workspaceId) {
+      return getAfter(/databases/$(database)/documents/workspace/$(workspaceId)).data.userCount <= 10;
+    }
+    function hasActiveAccount(database, workspaceId) {
+      let subscriptionStatus = get(/databases/$(database)/documents/workspace/$(workspaceId)).data.subscriptionStatus;
+      return subscriptionStatus == "trialing" || subscriptionStatus == "active";
+    }
+
+    match /user/{userId} {
+      // Users can read/write their own user document.
+      allow create, read, update: if isUser(userId);
+    }
+
+    match /workspaceInvite/{workspaceInviteId} {
+      // Users can read workspace invites so they can see if they have any.
+      allow read: if isSignedIn(request);
+      // Workspace users can invite their teammates.
+      allow create: if isWorkspaceUser(database, incomingData(request).workspaceId, request.auth.uid);
+      // Invited user can update themselves.
+      allow update: if resource.data.email == request.auth.token.email;
+    }
+
+    match /workspace/{workspaceId} {
+      // Users can create a workspace.
+      allow create: if isSignedIn(request);
+      // Workspace users can read their own workspace.
+      allow read: if isWorkspaceUser(database, workspaceId, request.auth.uid);
+      // Workspace users can update their workspace.
+      allow update: if existsAfter(/databases/$(database)/documents/workspace_user/$(workspaceId + "_" + request.auth.uid));
+    }
+
+    match /workspaceURL/{workspaceURL} {
+      // Users can read/write a workspace url.
+      allow create, read: if isSignedIn(request);
+    }
+
+    match /workspace_user/{workspaceId_userId} {
+      // User can create a WorkspaceUser for themselves.
+      allow create: if isSignedIn(request) && isUser(incomingData(request).userId) && hasEnoughSeats(database, incomingData(request).workspaceId); 
+      // Workspace users can read other users in their workspace.
+      allow read: if isWorkspaceUser(database, resource.data.workspaceId, request.auth.uid);
+      // Workspace user can update themselves.
+      allow update: if isUser(resource.data.userId);
+    }
+
+    match /retro/{retroId} {
+      // Workspace user can read a retro.
+      allow read: if isWorkspaceUser(database, resource.data.workspaceId, request.auth.uid);
+      // Workspace user can create/update a retro.
+      allow create, update: if hasActiveAccount(database, incomingData(request).workspaceId) && isWorkspaceUser(database, incomingData(request).workspaceId, request.auth.uid);
+    }
+
+    match /retroItem/{retroItemId} {
+      // FixMe: Workspace users should only be able to read their own workspace's items.
+      allow read: if isSignedIn(request);
+      // Workspace user can create a retroItem.
+      allow create: if hasActiveAccount(database, incomingData(request).workspaceId) && isWorkspaceUser(database, incomingData(request).workspaceId, request.auth.uid);
+      // Workspace user can update a retroItem.
+      allow update: if hasActiveAccount(database, resource.data.workspaceId) && isWorkspaceUser(database, resource.data.workspaceId, request.auth.uid);
+    }
+  }
+}
