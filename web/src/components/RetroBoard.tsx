@@ -199,10 +199,14 @@ export function RetroBoard({
       <div className="retro-board__grid">
         <DragDropContext onDragEnd={handleOnDragEnd}>
           {data?.columnOrder.map((columnType: RetroColumnType) => {
-            const column = data.columns[columnType];
-            const items = column.retroItemIds.map(
-              (itemId: RetroItem["id"]) => retroItems![itemId]
-            );
+            const column = data?.columns[columnType];
+            let items: RetroItem[] = [];
+            column?.retroItemIds.reduce((acc, id) => {
+              if (retroItems) {
+                acc.push(retroItems[id]);
+              }
+              return acc;
+            }, items);
             return (
               <RetroList
                 title={column.title}

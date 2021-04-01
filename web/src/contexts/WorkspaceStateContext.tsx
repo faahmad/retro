@@ -53,7 +53,8 @@ const initialState: WorkspaceStateValues = {
     badCount: 0,
     actionsCount: 0,
     questionsCount: 0
-  }
+  },
+  userCount: 0
 };
 
 export const WorkspaceStateContext = React.createContext<WorkspaceStateValues>(
