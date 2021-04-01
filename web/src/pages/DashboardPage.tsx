@@ -132,7 +132,7 @@ const RetroBoardsOverview: React.FC<{
           )}
         </React.Fragment>
       ) : (
-        <img className="mt-4" src={retroEmptyImage} alt="No Retros" />
+        <img className="mt-4 m-w-7xl self-center" src={retroEmptyImage} alt="No Retros" />
       )}
     </div>
   );
@@ -188,7 +188,11 @@ const TeamMemberOverview: React.FC<{
             ))}
           </div>
         ) : (
-          <img className="mt-4" src={teamMemberEmptyImage} alt="No Team Members" />
+          <img
+            className="mt-4 m-w-7xl self-center"
+            src={teamMemberEmptyImage}
+            alt="No Team Members"
+          />
         )}
       </div>
     </React.Fragment>
