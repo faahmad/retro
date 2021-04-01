@@ -97,7 +97,10 @@ const RetroBoardsOverview: React.FC<{
   return (
     <div className="flex flex-col h-full border border-red shadow shadow-red p-4 mt-8">
       <div className="flex justify-between items-center">
-        <p className="text-red text-xl font-black">Retros</p>
+        <div>
+          <p className="text-red text-xl font-black">Retros</p>
+          <p className="text-red text-sm">Your two most recent retros.</p>
+        </div>
         <div className="flex items-center">
           <p className="text-blue font-black hidden lg:block">Create Retro</p>
           <button
@@ -112,7 +115,7 @@ const RetroBoardsOverview: React.FC<{
       {retros.length !== 0 ? (
         <React.Fragment>
           <div className="flex flex-wrap">
-            {retros.map((retro) => {
+            {retros.slice(0, 2).map((retro) => {
               return (
                 <RetroCard
                   key={retro.id}
@@ -122,7 +125,7 @@ const RetroBoardsOverview: React.FC<{
               );
             })}
           </div>
-          {retros.length && (
+          {retros.length >= 2 && (
             <Link
               className="text-right underline text-sm"
               to={`/workspaces/${workspaceId}/retros`}

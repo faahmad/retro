@@ -12,6 +12,7 @@ export enum AnalyticsPage {
   DESIGN = "Design Page",
   ONBOARDING_PAGE = "Onboarding",
   DASHBOARD = "Dashboard",
+  RETRO_LIST = "Retro List",
   SETTINGS = "Settings Page",
   RETRO_BOARD = "Retro Board"
 }

@@ -28,6 +28,7 @@ import { MagicLinkPage } from "./pages/MagicLinkPage";
 
 // Comment these out before deploying to prod!
 import { LoginPage } from "./pages/LoginPage";
+import { RetroListPage } from "./pages/RetroListPage";
 // import { SignupPage } from "./pages/SignupPage";
 // import { FeatureFlags } from "./constants/feature-flags";
 // import { ExperimentalRoute } from "./components/ExperimentalRoute";
@@ -116,6 +117,7 @@ function AuthenticatedAppRoutes({
         path="/workspaces/:workspaceId/retros/:retroId"
         component={RetroBoardPage}
       />
+      <Route exact path="/workspaces/:workspaceId/retros" component={RetroListPage} />
       <Route exact path="/workspaces/:workspaceId/settings" component={SettingsPage} />
       <Route exact path="/workspaces/:workspaceId" component={DashboardPage} />
       <Redirect to={`/workspaces/${workspaceId}`} />
