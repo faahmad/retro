@@ -48,7 +48,7 @@ export function MagicLinkPage() {
     <PageContainer>
       <div>
         <h1 className="text-blue text-3xl mb-2">Email login link page</h1>
-        {error && <ErrorMessageBanner title={error.code} message={error.message} />}
+        {/* {error && <ErrorMessageBanner title={error.code} message={error.message} />} */}
         {!error && isLoading && <h3 className="text-blue mb-6">Logging you in...</h3>}
       </div>
     </PageContainer>
