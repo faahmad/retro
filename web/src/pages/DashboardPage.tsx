@@ -16,6 +16,7 @@ import { Workspace } from "../types/workspace";
 import { useCreateRetro } from "../hooks/use-create-retro";
 import { RetroCard } from "../components/RetroCard";
 import { useAnalyticsPage, AnalyticsPage } from "../hooks/use-analytics-page";
+import { useAnalyticsEvent, AnalyticsEvent } from "../hooks/use-analytics-event";
 
 export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
   useAnalyticsPage(AnalyticsPage.DASHBOARD);
@@ -47,6 +48,7 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
         )}
         <RetroBoardsOverview
           workspaceId={workspaceState.id}
+          workspaceOwnerId={workspaceState.ownerId}
           retros={workspaceState.retros}
           history={history}
           isActive={workspaceState.isActive}
@@ -54,6 +56,7 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
         <TeamMemberOverview
           workspaceName={workspaceState.name}
           workspaceId={workspaceState.id}
+          workspaceOwnerId={workspaceState.ownerId}
           users={Object.values(workspaceState.users)}
           invitedUsers={workspaceState.invitedUsers}
           isActive={workspaceState.isActive}
@@ -66,14 +69,21 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
 
 const RetroBoardsOverview: React.FC<{
   workspaceId: Workspace["id"];
+  workspaceOwnerId: Workspace["ownerId"];
   history: RouteComponentProps["history"];
   isActive: boolean;
   retros: Retro[];
-}> = ({ history, isActive, retros, workspaceId }) => {
+}> = ({ history, isActive, retros, workspaceId, workspaceOwnerId }) => {
   const createRetro = useCreateRetro();
+  const trackEvent = useAnalyticsEvent();
 
   const handleRedirectToRetroPage = (retro: Retro) => {
-    // analytics.track("Retro Opened", { ...retro });
+    trackEvent(AnalyticsEvent.RETRO_OPENED, {
+      ...retro,
+      location: AnalyticsPage.DASHBOARD,
+      retroCount: retros.length,
+      openedBy: retro.createdById === workspaceOwnerId ? "workspace-owner" : "member"
+    });
     return history.push(`/workspaces/${retro.workspaceId}/retros/${retro.id}`);
   };
 
@@ -81,17 +91,17 @@ const RetroBoardsOverview: React.FC<{
     if (!isActive) {
       return;
     }
-    const newRetroData = await createRetro(workspaceId);
-    if (newRetroData) {
-      return handleRedirectToRetroPage(newRetroData);
+    const retro = await createRetro(workspaceId);
+    if (retro) {
+      trackEvent(AnalyticsEvent.RETRO_CREATED, {
+        ...retro,
+        location: AnalyticsPage.DASHBOARD,
+        retroCount: retros.length,
+        createdBy: retro.createdById === workspaceOwnerId ? "workspace-owner" : "member"
+      });
+      return handleRedirectToRetroPage(retro);
     }
     return;
-    // const { data } = await createRetroMutation({
-    //   variables: { input: { teamId } }
-    // });
-    // createRetroBoardInFirebase(data.createRetro);
-    // analytics.track("Retro Created", { ...data.createRetro });
-    // return handleRedirectToRetroPage(data.createRetro);
   };
 
   return (
@@ -99,7 +109,9 @@ const RetroBoardsOverview: React.FC<{
       <div className="flex justify-between items-center">
         <div>
           <p className="text-red text-xl font-black">Retros</p>
-          <p className="text-red text-sm">Your two most recent retros.</p>
+          <p className="text-blue text-xs">
+            {!retros.length ? "" : "Your recent retros"}
+          </p>
         </div>
         <div className="flex items-center">
           <p className="text-blue font-black hidden lg:block">Create Retro</p>
@@ -144,10 +156,18 @@ const RetroBoardsOverview: React.FC<{
 const TeamMemberOverview: React.FC<{
   workspaceId: string;
   workspaceName: string;
+  workspaceOwnerId: string;
   users: WorkspaceUser[];
   invitedUsers: WorkspaceInvite[];
   isActive: boolean;
-}> = ({ workspaceId, workspaceName, users, isActive, invitedUsers }) => {
+}> = ({
+  workspaceId,
+  workspaceName,
+  users,
+  isActive,
+  invitedUsers,
+  workspaceOwnerId
+}) => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
 
   const handleToggleModal = async () => {
@@ -159,6 +179,9 @@ const TeamMemberOverview: React.FC<{
       <InviteUserToWorkspaceModal
         workspaceId={workspaceId}
         workspaceName={workspaceName}
+        workspaceOwnerId={workspaceOwnerId}
+        userCount={users.length}
+        invitedUserCount={invitedUsers.length}
         isOpen={isModalOpen}
         onRequestClose={handleToggleModal}
         onClick={handleToggleModal}

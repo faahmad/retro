@@ -26,10 +26,10 @@ export function useCreateWorkspaceInvite() {
       invitedByUserId: uid
     };
 
-    const workspaceInviteRef = await createWorkspaceInvite(params);
+    await createWorkspaceInvite(params);
     trackAnalyticsEvent(AnalyticsEvent.USER_INVITED, params);
 
-    return workspaceInviteRef;
+    return params;
   }
   return handleCreateWorkspaceInvite;
 }

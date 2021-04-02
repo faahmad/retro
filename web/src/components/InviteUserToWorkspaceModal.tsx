@@ -5,6 +5,8 @@ import { Button } from "./Button";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { useCreateWorkspaceInvite } from "../hooks/use-create-workspace-invite";
+import { useAnalyticsEvent, AnalyticsEvent } from "../hooks/use-analytics-event";
+import { AnalyticsPage } from "../hooks/use-analytics-page";
 interface InviteUserToWorkspaceModalProps {
   isOpen: boolean;
   onRequestClose: (
@@ -13,6 +15,9 @@ interface InviteUserToWorkspaceModalProps {
   onClick: () => void;
   workspaceId: string;
   workspaceName: string;
+  workspaceOwnerId: string;
+  userCount: number;
+  invitedUserCount: number;
 }
 
 export const InviteUserToWorkspaceModal: React.FC<InviteUserToWorkspaceModalProps> = ({
@@ -20,7 +25,10 @@ export const InviteUserToWorkspaceModal: React.FC<InviteUserToWorkspaceModalProp
   onRequestClose,
   onClick,
   workspaceId,
-  workspaceName
+  workspaceName,
+  workspaceOwnerId,
+  userCount,
+  invitedUserCount
 }) => {
   return (
     <ReactModal
@@ -37,8 +45,11 @@ export const InviteUserToWorkspaceModal: React.FC<InviteUserToWorkspaceModalProp
     >
       <img className="w-full" src={addTeamMemberImage} alt="Add your team member" />
       <InviteUserToWorkspaceForm
+        workspaceOwnerId={workspaceOwnerId}
         workspaceId={workspaceId}
         workspaceName={workspaceName}
+        userCount={userCount}
+        invitedUserCount={invitedUserCount}
         onClick={onClick}
       />
     </ReactModal>
@@ -48,19 +59,43 @@ export const InviteUserToWorkspaceModal: React.FC<InviteUserToWorkspaceModalProp
 const InviteUserToWorkspaceForm: React.FC<{
   workspaceId: string;
   workspaceName: string;
+  workspaceOwnerId: string;
+  userCount: number;
+  invitedUserCount: number;
   onClick: () => void;
-}> = ({ workspaceId, workspaceName, onClick }) => {
+}> = ({
+  workspaceId,
+  workspaceName,
+  onClick,
+  workspaceOwnerId,
+  userCount,
+  invitedUserCount
+}) => {
   const [submitButtonText, setSubmitButtonText] = React.useState("Send Invite");
   const [isDisabled, setIsDisabled] = React.useState(false);
   const createWorkspaceInvite = useCreateWorkspaceInvite();
+  const trackEvent = useAnalyticsEvent();
 
   const handleSubmit = async (values: any) => {
     setIsDisabled(true);
     setSubmitButtonText("Sending...");
-    await createWorkspaceInvite({
+    const workspaceInviteParams = await createWorkspaceInvite({
       workspaceId,
       workspaceName,
       email: values.email
+    });
+    trackEvent(AnalyticsEvent.USER_INVITED, {
+      workspaceId,
+      workspaceName,
+      userCount,
+      invitedUserCount,
+      method: "email",
+      email: values.email,
+      location: AnalyticsPage.DASHBOARD,
+      invitedBy:
+        workspaceInviteParams?.invitedByUserId === workspaceOwnerId
+          ? "workspace-owner"
+          : "member"
     });
     setSubmitButtonText("Sent!");
     onClick();

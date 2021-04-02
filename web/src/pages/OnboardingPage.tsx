@@ -14,6 +14,7 @@ import { useGetWorkspaceInvitesByEmail } from "../hooks/use-get-workspace-invite
 import { WorkspaceInvite } from "../types/workspace-invite";
 import { useJoinWorkspaceFromInvite } from "../hooks/use-join-workspace-from-invite";
 import { useAnalyticsPage, AnalyticsPage } from "../hooks/use-analytics-page";
+import { AnalyticsEvent, useAnalyticsEvent } from "../hooks/use-analytics-event";
 
 export function OnboardingPage() {
   useAnalyticsPage(AnalyticsPage.ONBOARDING_PAGE);
@@ -85,6 +86,7 @@ const CreateWorkspaceForm: React.FC = () => {
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
   const createWorkspace = useCreateWorkspace();
   const history = useHistory();
+  const trackEvent = useAnalyticsEvent();
 
   const handleSetErrorMessage = (message: string) => {
     return setErrorMessage(cleanDuplicateKeyErrorMessage(message));
@@ -98,6 +100,10 @@ const CreateWorkspaceForm: React.FC = () => {
         allowedEmailDomain: `@${values.allowedEmailDomain}`
       });
       setShowSuccessMessage(true);
+      trackEvent(AnalyticsEvent.WORKSPACE_CREATED, {
+        location: AnalyticsPage.ONBOARDING_PAGE,
+        workspaceId: workspaceRef?.id
+      });
       setTimeout(() => {
         history.push(`/workspaces/${workspaceRef!.id}`);
       }, 2000);
@@ -245,11 +251,17 @@ const JoinWorkspaceList: React.FC<JoinWorkspaceListProps> = ({ workspaceInvites 
   const history = useHistory();
   const joinWorkspace = useJoinWorkspaceFromInvite();
   const [hasError, setHasError] = React.useState(false);
+  const trackEvent = useAnalyticsEvent();
 
   const handleJoinWorkspace = async (workspaceInvite: WorkspaceInvite) => {
     try {
       setHasError(false);
       await joinWorkspace(workspaceInvite);
+      trackEvent(AnalyticsEvent.WORKSPACE_JOINED, {
+        ...workspaceInvite,
+        method: "invite",
+        location: AnalyticsPage.ONBOARDING_PAGE
+      });
       history.push(`/workspaces/${workspaceInvite.workspaceId}`);
       return;
     } catch {
