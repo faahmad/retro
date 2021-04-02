@@ -236,6 +236,7 @@ export function useRetroState(retroId: Retro["id"]) {
       trackEvent(AnalyticsEvent.RETRO_ITEM_MOVED, {
         prevColumnType: input.prevColumnType,
         nextColumnType: input.nextColumnType
+        // TODO: add movedBy "retro-owner" || "member"
       });
     } catch (error) {
       // If the update fails, the items should revert automatically to their spots.
