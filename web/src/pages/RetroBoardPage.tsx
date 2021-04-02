@@ -14,6 +14,8 @@ import { RetroBoard } from "../components/RetroBoard";
 import { useWorkspaceState } from "../hooks/use-workspace-state";
 import { WorkspaceStateStatus } from "../contexts/WorkspaceStateContext";
 import { AnalyticsPage, useAnalyticsPage } from "../hooks/use-analytics-page";
+import { AnalyticsEvent, useAnalyticsEvent } from "../hooks/use-analytics-event";
+import { useCurrentUser } from "../hooks/use-current-user";
 
 export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
   useAnalyticsPage(AnalyticsPage.RETRO_BOARD);
@@ -56,7 +58,12 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
     return (
       <React.Fragment>
         <PageContainer>
-          <RetroHeader id={data.id} name={data.name} createdAt={data.createdAt} />
+          <RetroHeader
+            id={data.id}
+            name={data.name}
+            createdAt={data.createdAt}
+            ownerId={data.createdById}
+          />
           <RetroBoard
             retroState={state}
             users={workspaceState.users}
@@ -83,8 +90,9 @@ interface RetroHeaderProps {
   id: string;
   name: string;
   createdAt: any;
+  ownerId: string;
 }
-function RetroHeader({ id, name, createdAt }: RetroHeaderProps) {
+function RetroHeader({ id, name, createdAt, ownerId }: RetroHeaderProps) {
   const [localName, setLocalName] = React.useState(name);
   const handleOnChange = (event: any) => {
     return setLocalName(event.currentTarget.value);
@@ -103,8 +111,17 @@ function RetroHeader({ id, name, createdAt }: RetroHeaderProps) {
   }, [isEditing]);
 
   const updateRetro = useUpdateRetro();
+  const trackEvent = useAnalyticsEvent();
+  const currentUser = useCurrentUser();
   const handleSave = async () => {
     await updateRetro(id, { name: localName });
+    trackEvent(AnalyticsEvent.RETRO_UPDATED, {
+      retroId: id,
+      createdAt,
+      fields: ["name"],
+      location: AnalyticsPage.RETRO_BOARD,
+      updatedBy: currentUser.auth?.uid === ownerId ? "retro-owner" : "member"
+    });
     handleToggleEditing();
     return;
   };

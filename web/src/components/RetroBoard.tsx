@@ -19,6 +19,7 @@ import { RetroStateValues, RetroStateStatus } from "../hooks/use-retro-state";
 import { RetroItemModal } from "./RetroItemModal";
 import { WorkspaceUser, WorkspaceUsersMap } from "../types/workspace-user";
 import { User } from "../types/user";
+import { AnalyticsEvent, useAnalyticsEvent } from "../hooks/use-analytics-event";
 
 interface RetroBoardProps {
   retroState: RetroStateValues;
@@ -55,13 +56,15 @@ export function RetroBoard({
     setColumnTypeToAddItemTo
   ] = React.useState<RetroColumnType>(RetroColumnType.GOOD);
   const [retroItem, setRetroItem] = React.useState<RetroItem | null>(null);
+  const trackEvent = useAnalyticsEvent();
 
   if (retroState.status === RetroStateStatus.LOADING) {
     return <LoadingText />;
   }
 
   const handleCloseModal = () => {
-    return setIsModalOpen(false);
+    setIsModalOpen(false);
+    trackEvent(AnalyticsEvent.RETRO_ITEM_MODAL_CLOSED);
   };
 
   /**
@@ -71,6 +74,7 @@ export function RetroBoard({
     setRetroItem(null);
     setColumnTypeToAddItemTo(columnType);
     setIsModalOpen(true);
+    trackEvent(AnalyticsEvent.RETRO_ITEM_MODAL_OPENED);
     return;
   };
 

@@ -10,6 +10,7 @@ import omitBy from "lodash/omitBy";
 import isNil from "lodash/isNil";
 import { User } from "../types/user";
 import { decrement, deleteValue, increment } from "../utils/firestore-utils";
+import { AnalyticsEvent, useAnalyticsEvent } from "./use-analytics-event";
 
 export enum RetroStateStatus {
   LOADING = "LOADING",
@@ -120,6 +121,7 @@ export function useRetroState(retroId: Retro["id"]) {
   const createRetroItem = useCreateRetroItem();
   const dragDropRetroItem = useDragDropRetroItem();
   const updateRetroItem = useUpdateRetroItem();
+  const trackEvent = useAnalyticsEvent();
 
   React.useEffect(() => {
     handleRetroLoading();
@@ -149,6 +151,13 @@ export function useRetroState(retroId: Retro["id"]) {
         throw new Error("handleAddItem failed.");
       }
       dispatch({ type: RetroActionTypes.RETRO_ADD_ITEM, payload: newRetroItem });
+      trackEvent(AnalyticsEvent.RETRO_ITEM_CREATED, {
+        ...newRetroItem,
+        createdBy:
+          state.data?.createdById === newRetroItem.createdByUserId
+            ? "retro-owner"
+            : "member"
+      });
       return;
     } catch (error) {
       dispatch({ type: RetroActionTypes.RETRO_ERROR, payload: error });
@@ -162,6 +171,9 @@ export function useRetroState(retroId: Retro["id"]) {
     try {
       dispatch({ type: RetroActionTypes.RETRO_UPDATE_ITEM, payload: input });
       await updateRetroItem(input.id, { content: input.content });
+      trackEvent(AnalyticsEvent.RETRO_ITEM_EDITED, {
+        retroItemId: input.id
+      });
       return;
     } catch (error) {
       dispatch({ type: RetroActionTypes.RETRO_ERROR, payload: error });
@@ -176,6 +188,10 @@ export function useRetroState(retroId: Retro["id"]) {
         [`likedBy.${input.userId}`]: input.userId,
         // @ts-ignore
         likeCount: increment()
+      });
+      trackEvent(AnalyticsEvent.RETRO_ITEM_LIKED, {
+        retroItemId: input.id,
+        likedBy: state.data?.createdById === input.userId ? "retro-owner" : "member"
       });
       return;
     } catch (error) {
@@ -217,6 +233,11 @@ export function useRetroState(retroId: Retro["id"]) {
       dispatch({ type: RetroActionTypes.RETRO_DRAG_DROP_ITEM, payload: localUpdates });
       const cleanedInput: any = omitBy(input, isNil);
       await dragDropRetroItem({ retroId, ...cleanedInput });
+      trackEvent(AnalyticsEvent.RETRO_ITEM_MOVED, {
+        prevColumnType: input.prevColumnType,
+        nextColumnType: input.nextColumnType
+        // TODO: add movedBy "retro-owner" || "member"
+      });
     } catch (error) {
       // If the update fails, the items should revert automatically to their spots.
       return;

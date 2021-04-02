@@ -2,10 +2,14 @@ import * as React from "react";
 import firebase from "../lib/firebase";
 import { PageContainer } from "../components/PageContainer";
 import { ErrorMessageBanner } from "../components/ErrorMessageBanner";
+import { AnalyticsPage, useAnalyticsPage } from "../hooks/use-analytics-page";
+import { AnalyticsEvent, useAnalyticsEvent } from "../hooks/use-analytics-event";
 
 export function MagicLinkPage() {
+  useAnalyticsPage(AnalyticsPage.MAGIC_LINK);
   const [isLoading, setIsLoading] = React.useState(true);
   const [error, setError] = React.useState<firebase.FirebaseError | null>(null);
+  const trackEvent = useAnalyticsEvent();
   React.useEffect(() => {
     if (firebase.auth().isSignInWithEmailLink(window.location.href)) {
       const email = window.localStorage.getItem("emailForSignIn");
@@ -16,7 +20,12 @@ export function MagicLinkPage() {
       firebase
         .auth()
         .signInWithEmailLink(email, window.location.href)
-        .then(() => {
+        .then((userCredential) => {
+          trackEvent(AnalyticsEvent.USER_CREATED, {
+            ...userCredential,
+            location: AnalyticsPage.MAGIC_LINK,
+            method: "magic-link"
+          });
           window.localStorage.removeItem("emailForSignIn");
           setIsLoading(false);
         })
@@ -32,6 +41,7 @@ export function MagicLinkPage() {
         message: "couldn't log you in"
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
