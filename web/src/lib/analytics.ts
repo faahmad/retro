@@ -8,7 +8,6 @@ if (process.env.NODE_ENV !== "test") {
     },
     Amplitude: {
       apiKey: process.env.REACT_APP_AMPLITUDE_API_KEY,
-      trackAllPages: true,
       trackReferrer: true
     },
     FullStory: {

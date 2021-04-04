@@ -1,7 +1,7 @@
 import * as React from "react";
 import firebase from "../lib/firebase";
 import { PageContainer } from "../components/PageContainer";
-import { ErrorMessageBanner } from "../components/ErrorMessageBanner";
+// import { ErrorMessageBanner } from "../components/ErrorMessageBanner";
 import { AnalyticsPage, useAnalyticsPage } from "../hooks/use-analytics-page";
 import { AnalyticsEvent, useAnalyticsEvent } from "../hooks/use-analytics-event";
 
