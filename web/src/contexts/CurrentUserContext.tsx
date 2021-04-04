@@ -7,6 +7,7 @@ import {
   getIdTokenFromFirebaseUser,
   saveIdToken
 } from "../services/auth-service";
+import analytics from "analytics.js";
 
 export enum CurrentUserState {
   LOADING = "loading",
@@ -49,6 +50,13 @@ export function CurrentUserProvider({ children }: { children: React.ReactNode })
   const handleOnAuthenticated = async (firebaseUser: firebase.User) => {
     const idToken = await getIdTokenFromFirebaseUser(firebaseUser);
     saveIdToken(idToken);
+    analytics.identify(firebaseUser.uid, {
+      email: firebaseUser.email,
+      name: firebaseUser.displayName,
+      provider: firebaseUser.providerId,
+      photoURL: firebaseUser.photoURL,
+      phoneNumber: firebaseUser.phoneNumber
+    });
     return dispatch({
       type: CurrentUserActionTypes.AUTHENTICATED,
       payload: firebaseUser

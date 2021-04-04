@@ -11,6 +11,7 @@ import isNil from "lodash/isNil";
 import { User } from "../types/user";
 import { decrement, deleteValue, increment } from "../utils/firestore-utils";
 import { AnalyticsEvent, useAnalyticsEvent } from "./use-analytics-event";
+import * as Sentry from "@sentry/react";
 
 export enum RetroStateStatus {
   LOADING = "LOADING",
@@ -161,6 +162,8 @@ export function useRetroState(retroId: Retro["id"]) {
       return;
     } catch (error) {
       dispatch({ type: RetroActionTypes.RETRO_ERROR, payload: error });
+      Sentry.captureException(error);
+      return;
     }
   };
 
@@ -177,6 +180,7 @@ export function useRetroState(retroId: Retro["id"]) {
       return;
     } catch (error) {
       dispatch({ type: RetroActionTypes.RETRO_ERROR, payload: error });
+      Sentry.captureException(error);
       return;
     }
   };
@@ -196,6 +200,7 @@ export function useRetroState(retroId: Retro["id"]) {
       return;
     } catch (error) {
       dispatch({ type: RetroActionTypes.RETRO_ERROR, payload: error });
+      Sentry.captureException(error);
       return;
     }
   };
@@ -211,6 +216,7 @@ export function useRetroState(retroId: Retro["id"]) {
       return;
     } catch (error) {
       dispatch({ type: RetroActionTypes.RETRO_ERROR, payload: error });
+      Sentry.captureException(error);
       return;
     }
   };
@@ -240,6 +246,7 @@ export function useRetroState(retroId: Retro["id"]) {
       });
     } catch (error) {
       // If the update fails, the items should revert automatically to their spots.
+      Sentry.captureException(error);
       return;
     }
   };

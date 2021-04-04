@@ -6,6 +6,11 @@ import { ApolloProvider } from "@apollo/react-hooks";
 import { AppRoutes } from "./AppRoutes";
 import * as serviceWorker from "./serviceWorker";
 import { CurrentUserProvider } from "./contexts/CurrentUserContext";
+import * as Sentry from "@sentry/react";
+
+Sentry.init({
+  dsn: process.env.REACT_APP_SENTRY_DSN
+});
 
 ReactDOM.render(
   <ApolloProvider client={apolloClient}>

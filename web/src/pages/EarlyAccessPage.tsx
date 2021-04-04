@@ -7,6 +7,7 @@ import { FirestoreCollections } from "../constants/firestore-collections";
 import { ErrorMessageBanner } from "../components/ErrorMessageBanner";
 import { NotificationBanner } from "../components/NotificationBanner";
 import { Button } from "../components/Button";
+import * as Sentry from "@sentry/react";
 
 interface EarlyAccessCode {
   id: string;
@@ -46,6 +47,7 @@ export function EarlyAccessPage() {
         return;
       } catch (error) {
         setErrorMessage(error.message);
+        Sentry.captureException(error);
         return;
       }
     };
@@ -80,6 +82,7 @@ export function EarlyAccessPage() {
       // Update the error state.
       setIsSending(false);
       setErrorMessage(error.message);
+      Sentry.captureException(error);
       return;
     }
   };

@@ -15,6 +15,7 @@ import { WorkspaceInvite } from "../types/workspace-invite";
 import { useJoinWorkspaceFromInvite } from "../hooks/use-join-workspace-from-invite";
 import { useAnalyticsPage, AnalyticsPage } from "../hooks/use-analytics-page";
 import { AnalyticsEvent, useAnalyticsEvent } from "../hooks/use-analytics-event";
+import * as Sentry from "@sentry/react";
 
 export function OnboardingPage() {
   useAnalyticsPage(AnalyticsPage.ONBOARDING_PAGE);
@@ -109,7 +110,9 @@ const CreateWorkspaceForm: React.FC = () => {
       }, 2000);
       return;
     } catch (error) {
-      return handleSetErrorMessage(error.message);
+      handleSetErrorMessage(error.message);
+      Sentry.captureException(error);
+      return;
     }
   };
 
@@ -133,7 +136,10 @@ const CreateWorkspaceForm: React.FC = () => {
         <div className="sm:w-1/2 md:w-1/2 lg:w-4/5 w-full max-w-6xl m-auto">
           {errorMessage && (
             <div className="mb-4">
-              <ErrorMessageBanner message={errorMessage} />
+              <ErrorMessageBanner
+                title="Oops, something went wrong. Our bad. Please try again."
+                message={errorMessage}
+              />
             </div>
           )}
           <div className="sm:text-center md:text-center lg:text-center">
@@ -250,12 +256,12 @@ interface JoinWorkspaceListProps {
 const JoinWorkspaceList: React.FC<JoinWorkspaceListProps> = ({ workspaceInvites }) => {
   const history = useHistory();
   const joinWorkspace = useJoinWorkspaceFromInvite();
-  const [hasError, setHasError] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState("");
   const trackEvent = useAnalyticsEvent();
 
   const handleJoinWorkspace = async (workspaceInvite: WorkspaceInvite) => {
     try {
-      setHasError(false);
+      setErrorMessage("");
       await joinWorkspace(workspaceInvite);
       trackEvent(AnalyticsEvent.WORKSPACE_JOINED, {
         ...workspaceInvite,
@@ -264,8 +270,9 @@ const JoinWorkspaceList: React.FC<JoinWorkspaceListProps> = ({ workspaceInvites 
       });
       history.push(`/workspaces/${workspaceInvite.workspaceId}`);
       return;
-    } catch {
-      setHasError(true);
+    } catch (error) {
+      setErrorMessage(error.message);
+      Sentry.captureException(error);
       return;
     }
   };
@@ -273,11 +280,11 @@ const JoinWorkspaceList: React.FC<JoinWorkspaceListProps> = ({ workspaceInvites 
   return (
     <div className="flex flex-col w-full justify-center my-8 text-blue">
       <div className="w-1/2 max-w-6xl m-auto">
-        {hasError && (
+        {errorMessage && (
           <div className="mb-4">
             <ErrorMessageBanner
               title="Couldn't join the workspace :("
-              message="Your team doesn't have any more seats. Please upgrade your account or create a new workspace."
+              message={errorMessage}
             />
           </div>
         )}
