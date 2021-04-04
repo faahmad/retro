@@ -88,6 +88,7 @@ const CreateWorkspaceForm: React.FC = () => {
   const createWorkspace = useCreateWorkspace();
   const history = useHistory();
   const trackEvent = useAnalyticsEvent();
+  const currentUser = useCurrentUser();
 
   const handleSetErrorMessage = (message: string) => {
     return setErrorMessage(cleanDuplicateKeyErrorMessage(message));
@@ -116,11 +117,12 @@ const CreateWorkspaceForm: React.FC = () => {
     }
   };
 
+  const email = currentUser.auth?.email || "";
   const formik = useFormik({
     initialValues: {
       name: "",
       url: "",
-      allowedEmailDomain: ""
+      allowedEmailDomain: email.slice(email.indexOf("@") + 1)
     },
     validationSchema: createWorkspaceFormValidationSchema,
     onSubmit: handleSubmit
@@ -226,7 +228,7 @@ const CreateWorkspaceForm: React.FC = () => {
               </div>
               <p className="text-sm sm:text-xs md:text-xs lg:text-xs">
                 Anyone with an email address at this domain can automatically join your
-                workspace.
+                workspace. We guessed yours!
               </p>
               {formik.touched.allowedEmailDomain && formik.errors.allowedEmailDomain && (
                 <p className="text-red text-sm sm:text-xs md:text-xs lg:text-xs">
