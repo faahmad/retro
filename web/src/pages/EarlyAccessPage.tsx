@@ -8,8 +8,11 @@ import { ErrorMessageBanner } from "../components/ErrorMessageBanner";
 import { NotificationBanner } from "../components/NotificationBanner";
 import { Button } from "../components/Button";
 import * as Sentry from "@sentry/react";
-import { GoogleOAuthButton } from "../components/GoogleOAuthButton";
-import { useLoginWithGoogle } from "../hooks/use-login-with-google";
+
+interface EarlyAccessCode {
+  id: string;
+  name: string;
+}
 
 export function EarlyAccessPage() {
   useAnalyticsPage(AnalyticsPage.EARLY_ACCESS);
