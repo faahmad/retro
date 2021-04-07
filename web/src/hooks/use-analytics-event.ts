@@ -7,6 +7,7 @@ export enum AnalyticsEvent {
   MAGIC_LINK_SENT = "Magic Link Sent",
   USER_CREATED = "User Created",
   USER_INVITED = "User Invited",
+  USER_SIGNED_IN = "User Signed In",
   WORKSPACE_CREATED = "Workspace Created",
   WORKSPACE_JOINED = "Workspace Joined",
   RETRO_OPENED = "Retro Opened",
