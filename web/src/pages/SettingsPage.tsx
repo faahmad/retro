@@ -26,7 +26,7 @@ export const SettingsPage = () => {
     workspaceState.status === WorkspaceStateStatus.SUCCESS &&
     currentUser.data?.id === workspaceState.ownerId;
 
-  const workspaceURL = `${window.location.origin}/secret-auth/${workspaceState.url}`;
+  const workspaceURL = `${window.location.origin}/join/${workspaceState.url}`;
   const handleCopyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(workspaceURL);

@@ -1,24 +1,32 @@
-import { joinWorkspaceFromInviteTransaction } from "../services/join-workspace-from-invite-transaction";
+import {
+  joinWorkspaceTransaction,
+  JoinWorkspaceTransactionParams
+} from "../services/join-workspace-transaction";
+import { Workspace } from "../types/workspace";
 import { WorkspaceInvite } from "../types/workspace-invite";
 import { useCurrentUser } from "./use-current-user";
 
-export function useJoinWorkspaceFromInvite() {
+export function useJoinWorkspace() {
   const currentUser = useCurrentUser();
-  async function joinWorkspace(workspaceInvite: WorkspaceInvite) {
+  async function joinWorkspace(input: {
+    workspaceId: Workspace["id"];
+    workspaceName: Workspace["name"];
+    workspaceInviteId?: WorkspaceInvite["id"];
+  }) {
     if (!currentUser.auth) {
       return;
     }
 
-    const params = {
+    const params: JoinWorkspaceTransactionParams = {
       auth: currentUser.auth,
-      workspaceId: workspaceInvite.workspaceId,
-      workspaceName: workspaceInvite.workspaceName,
-      workspaceInviteId: workspaceInvite.id
+      workspaceId: input.workspaceId,
+      workspaceName: input.workspaceName,
+      workspaceInviteId: input.id
     };
 
-    const workspaceInviteRef = await joinWorkspaceFromInviteTransaction(params);
+    await joinWorkspaceTransaction(params);
 
-    return workspaceInviteRef;
+    return;
   }
   return joinWorkspace;
 }

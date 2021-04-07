@@ -14,7 +14,6 @@ export function useLoginWithGoogle() {
   };
 
   const handleNewUser = async (userCredential: any) => {
-    analytics.identify(userCredential?.user?.uid);
     analytics.track("User Signed Up", {
       type: "organic",
       provider: "google"

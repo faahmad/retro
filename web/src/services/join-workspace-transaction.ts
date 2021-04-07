@@ -11,16 +11,14 @@ const workspaceUserCollection = db.collection(FirestoreCollections.WORKSPACE_USE
 const userCollection = db.collection(FirestoreCollections.USER);
 const workspaceCollection = db.collection(FirestoreCollections.WORKSPACE);
 
-export interface JoinWorkspaceFromInviteTransactionParams {
+export interface JoinWorkspaceTransactionParams {
   auth: CurrentUserContextValues["auth"];
-  workspaceInviteId: WorkspaceInvite["id"];
   workspaceId: Workspace["id"];
   workspaceName: Workspace["name"];
+  workspaceInviteId?: WorkspaceInvite["id"];
 }
 
-export function joinWorkspaceFromInviteTransaction(
-  input: JoinWorkspaceFromInviteTransactionParams
-) {
+export function joinWorkspaceTransaction(input: JoinWorkspaceTransactionParams) {
   return db.runTransaction(async (transaction) => {
     if (!input.auth) {
       throw new Error("User auth is undefined.");
@@ -47,14 +45,17 @@ export function joinWorkspaceFromInviteTransaction(
       userPhotoURL: input.auth.photoURL,
       userRole: "member"
     });
-    // Update the workspaceInvite doc.
-    const workspaceInviteRef = workspaceInviteCollection.doc(input.workspaceInviteId);
-    transaction.update(workspaceInviteRef, { status: WorkspaceInviteStatus.ACCEPTED });
+
+    if (input.workspaceInviteId) {
+      // Update the workspaceInvite doc.
+      const workspaceInviteRef = workspaceInviteCollection.doc(input.workspaceInviteId);
+      transaction.update(workspaceInviteRef, { status: WorkspaceInviteStatus.ACCEPTED });
+    }
 
     // Increment the workspace's userCount.
     const workspaceRef = workspaceCollection.doc(input.workspaceId);
     transaction.update(workspaceRef, { userCount: increment() });
 
-    return workspaceInviteRef;
+    return;
   });
 }

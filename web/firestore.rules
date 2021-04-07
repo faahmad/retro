@@ -58,7 +58,9 @@ service cloud.firestore {
 
     match /workspace_user/{workspaceId_userId} {
       // User can create a WorkspaceUser for themselves.
-      allow create: if isSignedIn(request) && isUser(incomingData(request).userId) && hasEnoughSeats(database, incomingData(request).workspaceId); 
+      allow create: if isSignedIn(request) 
+                    && isUser(incomingData(request).userId) 
+                    && hasEnoughSeats(database, incomingData(request).workspaceId); 
       // Workspace users can read other users in their workspace.
       allow read: if isWorkspaceUser(database, resource.data.workspaceId, request.auth.uid);
       // Workspace user can update themselves.
@@ -69,16 +71,19 @@ service cloud.firestore {
       // Workspace user can read a retro.
       allow read: if isWorkspaceUser(database, resource.data.workspaceId, request.auth.uid);
       // Workspace user can create/update a retro.
-      allow create, update: if hasActiveAccount(database, incomingData(request).workspaceId) && isWorkspaceUser(database, incomingData(request).workspaceId, request.auth.uid);
+      allow create, update: if hasActiveAccount(database, incomingData(request).workspaceId) 
+                            && isWorkspaceUser(database, incomingData(request).workspaceId, request.auth.uid);
     }
 
     match /retroItem/{retroItemId} {
       // FixMe: Workspace users should only be able to read their own workspace's items.
       allow read: if isSignedIn(request);
       // Workspace user can create a retroItem.
-      allow create: if hasActiveAccount(database, incomingData(request).workspaceId) && isWorkspaceUser(database, incomingData(request).workspaceId, request.auth.uid);
+      allow create: if hasActiveAccount(database, incomingData(request).workspaceId) 
+                    && isWorkspaceUser(database, incomingData(request).workspaceId, request.auth.uid);
       // Workspace user can update a retroItem.
-      allow update: if hasActiveAccount(database, resource.data.workspaceId) && isWorkspaceUser(database, resource.data.workspaceId, request.auth.uid);
+      allow update: if hasActiveAccount(database, resource.data.workspaceId) 
+                    && isWorkspaceUser(database, resource.data.workspaceId, request.auth.uid);
     }
   }
 }
