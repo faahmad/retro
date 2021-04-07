@@ -8,6 +8,7 @@ import {
   saveIdToken
 } from "../services/auth-service";
 import analytics from "analytics.js";
+import { AnalyticsEvent } from "../hooks/use-analytics-event";
 
 export enum CurrentUserState {
   LOADING = "loading",
@@ -53,10 +54,13 @@ export function CurrentUserProvider({ children }: { children: React.ReactNode })
     analytics.identify(firebaseUser.uid, {
       email: firebaseUser.email,
       name: firebaseUser.displayName,
-      provider: firebaseUser.providerId,
       photoURL: firebaseUser.photoURL,
       phoneNumber: firebaseUser.phoneNumber
     });
+    analytics.track(AnalyticsEvent.USER_SIGNED_IN, {
+      id: firebaseUser.uid,
+      provider: firebaseUser.providerId
+    })
     return dispatch({
       type: CurrentUserActionTypes.AUTHENTICATED,
       payload: firebaseUser

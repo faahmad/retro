@@ -8,11 +8,8 @@ import { ErrorMessageBanner } from "../components/ErrorMessageBanner";
 import { NotificationBanner } from "../components/NotificationBanner";
 import { Button } from "../components/Button";
 import * as Sentry from "@sentry/react";
-
-interface EarlyAccessCode {
-  id: string;
-  name: string;
-}
+import { GoogleOAuthButton } from "../components/GoogleOAuthButton";
+import { useLoginWithGoogle } from "../hooks/use-login-with-google";
 
 export function EarlyAccessPage() {
   useAnalyticsPage(AnalyticsPage.EARLY_ACCESS);
@@ -114,12 +111,17 @@ interface EarlyAccessAuthFormProps {
   onSubmit: (event: any) => void;
 }
 function EarlyAccessAuthForm({ name, isSending, onSubmit }: EarlyAccessAuthFormProps) {
+  const loginWithGoogle = useLoginWithGoogle();
   return (
-    <div>
+    <div className="flex flex-col items-center">
       <h1 className="text-blue text-3xl mb-2">{name} x Retro</h1>
       <h3 className="text-blue mb-6">
         This is your secret sign in (or up) page. Keep it safe!
       </h3>
+      <div className="text-blue text-red">
+        <GoogleOAuthButton onClick={loginWithGoogle}>Continue with</GoogleOAuthButton>
+      </div>
+      <div className="text-blue my-8">or</div>
       <form className="flex flex-col mb-12" onSubmit={onSubmit}>
         <div className="flex flex-col mb-4">
           <label className="text-blue text-sm" htmlFor="email">
