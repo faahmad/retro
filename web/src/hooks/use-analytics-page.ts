@@ -7,6 +7,7 @@ export enum AnalyticsPage {
   LOGIN = "Login Page",
   EARLY_ACCESS = "Early Access Auth",
   MAGIC_LINK = "Magic Link Page",
+  JOIN_WORKSPACE = "Join Workspace",
   SIGNUP = "Signup Page",
   NOT_FOUND = "Not Found 404",
   FAQ = "FAQ Page",

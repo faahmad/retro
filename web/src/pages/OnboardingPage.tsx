@@ -12,7 +12,7 @@ import { cleanDuplicateKeyErrorMessage } from "../utils/error-utils";
 import { useCreateWorkspace } from "../hooks/use-create-workspace";
 import { useGetWorkspaceInvitesByEmail } from "../hooks/use-get-workspace-invites-by-email";
 import { WorkspaceInvite } from "../types/workspace-invite";
-import { useJoinWorkspaceFromInvite } from "../hooks/use-join-workspace-from-invite";
+import { useJoinWorkspace } from "../hooks/use-join-workspace";
 import { useAnalyticsPage, AnalyticsPage } from "../hooks/use-analytics-page";
 import { AnalyticsEvent, useAnalyticsEvent } from "../hooks/use-analytics-event";
 import * as Sentry from "@sentry/react";
@@ -27,17 +27,16 @@ export function OnboardingPage() {
   };
 
   const { data, loading } = useGetWorkspaceInvitesByEmail(currentUser.auth?.email);
-
   const workspace = getWorkspaceFromCurrentUser(currentUser);
+
+  if (loading) {
+    return <LoadingText>Loading...</LoadingText>;
+  }
 
   // If the user already has a workspace,
   // we should redirect them to the DashboardPage.
   if (workspace) {
     return <Redirect to={`/workspaces/${workspace.id}`} />;
-  }
-
-  if (loading) {
-    return <LoadingText>Loading...</LoadingText>;
   }
 
   const hasPendingInvites = data.length !== 0;
@@ -88,6 +87,7 @@ const CreateWorkspaceForm: React.FC = () => {
   const createWorkspace = useCreateWorkspace();
   const history = useHistory();
   const trackEvent = useAnalyticsEvent();
+  const currentUser = useCurrentUser();
 
   const handleSetErrorMessage = (message: string) => {
     return setErrorMessage(cleanDuplicateKeyErrorMessage(message));
@@ -116,11 +116,12 @@ const CreateWorkspaceForm: React.FC = () => {
     }
   };
 
+  const email = currentUser.auth?.email || "";
   const formik = useFormik({
     initialValues: {
       name: "",
       url: "",
-      allowedEmailDomain: ""
+      allowedEmailDomain: email.slice(email.indexOf("@") + 1)
     },
     validationSchema: createWorkspaceFormValidationSchema,
     onSubmit: handleSubmit
@@ -144,7 +145,7 @@ const CreateWorkspaceForm: React.FC = () => {
           )}
           <div className="sm:text-center md:text-center lg:text-center">
             <h1 className="text-2xl">Let's set up a home for all your retros</h1>
-            <h3 className="text-lg">You can always create another workspace later.</h3>
+            {/* <h3 className="text-lg">You can always create another workspace later.</h3> */}
           </div>
 
           <hr className="mt-4 mb-6"></hr>
@@ -184,7 +185,7 @@ const CreateWorkspaceForm: React.FC = () => {
                 Workspace URL
               </label>
               <div className="flex items-center">
-                www.retro.app/
+                www.retro.app/join/
                 <input
                   id="url"
                   name="url"
@@ -226,7 +227,7 @@ const CreateWorkspaceForm: React.FC = () => {
               </div>
               <p className="text-sm sm:text-xs md:text-xs lg:text-xs">
                 Anyone with an email address at this domain can automatically join your
-                workspace.
+                workspace. We guessed yours!
               </p>
               {formik.touched.allowedEmailDomain && formik.errors.allowedEmailDomain && (
                 <p className="text-red text-sm sm:text-xs md:text-xs lg:text-xs">
@@ -255,14 +256,18 @@ interface JoinWorkspaceListProps {
 
 const JoinWorkspaceList: React.FC<JoinWorkspaceListProps> = ({ workspaceInvites }) => {
   const history = useHistory();
-  const joinWorkspace = useJoinWorkspaceFromInvite();
+  const joinWorkspace = useJoinWorkspace();
   const [errorMessage, setErrorMessage] = React.useState("");
   const trackEvent = useAnalyticsEvent();
 
   const handleJoinWorkspace = async (workspaceInvite: WorkspaceInvite) => {
     try {
       setErrorMessage("");
-      await joinWorkspace(workspaceInvite);
+      await joinWorkspace({
+        workspaceId: workspaceInvite.workspaceId,
+        workspaceName: workspaceInvite.workspaceName,
+        workspaceInviteId: workspaceInvite.id
+      });
       trackEvent(AnalyticsEvent.WORKSPACE_JOINED, {
         ...workspaceInvite,
         method: "invite",

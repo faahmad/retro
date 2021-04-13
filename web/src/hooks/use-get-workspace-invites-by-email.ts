@@ -5,14 +5,24 @@ import { WorkspaceInvite } from "../types/workspace-invite";
 export function useGetWorkspaceInvitesByEmail(email?: string | null) {
   const [workspaceInvites, setWorkspaceInvites] = React.useState<WorkspaceInvite[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
+
   React.useEffect(() => {
     if (!email) {
       return;
     }
+    let isMounted = true;
     setIsLoading(true);
-    getWorkspaceInvitesByEmail(email)
-      .then((invites) => setWorkspaceInvites(invites))
-      .then(() => setIsLoading(false));
+    const handleGetWorkspaceInvitesByEmail = async () => {
+      const invites = await getWorkspaceInvitesByEmail(email);
+      if (isMounted) {
+        setWorkspaceInvites(invites);
+        setIsLoading(false);
+      }
+    };
+    handleGetWorkspaceInvitesByEmail();
+    return () => {
+      isMounted = false;
+    };
   }, [email]);
   return { data: workspaceInvites, loading: isLoading };
 }

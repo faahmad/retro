@@ -8,18 +8,13 @@ export function useLoginWithGoogle() {
   const handleLoginWithGoogle = async () => {
     const userCredential = await authenticateWithGoogle();
     if (isNewUser(userCredential)) {
-      handleNewUser(userCredential);
+      analytics.track("User Signed Up", {
+        type: "organic",
+        provider: "google"
+      });
+      return history.push("/onboarding");
     }
     return;
-  };
-
-  const handleNewUser = async (userCredential: any) => {
-    analytics.identify(userCredential?.user?.uid);
-    analytics.track("User Signed Up", {
-      type: "organic",
-      provider: "google"
-    });
-    return history.push("/onboarding");
   };
 
   return handleLoginWithGoogle;
