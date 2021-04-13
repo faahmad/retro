@@ -12,7 +12,7 @@ import { cleanDuplicateKeyErrorMessage } from "../utils/error-utils";
 import { useCreateWorkspace } from "../hooks/use-create-workspace";
 import { useGetWorkspaceInvitesByEmail } from "../hooks/use-get-workspace-invites-by-email";
 import { WorkspaceInvite } from "../types/workspace-invite";
-import { useJoinWorkspace } from "../hooks/use-join-workspace-from-invite";
+import { useJoinWorkspace } from "../hooks/use-join-workspace";
 import { useAnalyticsPage, AnalyticsPage } from "../hooks/use-analytics-page";
 import { AnalyticsEvent, useAnalyticsEvent } from "../hooks/use-analytics-event";
 import * as Sentry from "@sentry/react";
@@ -27,17 +27,16 @@ export function OnboardingPage() {
   };
 
   const { data, loading } = useGetWorkspaceInvitesByEmail(currentUser.auth?.email);
-
   const workspace = getWorkspaceFromCurrentUser(currentUser);
+
+  if (loading) {
+    return <LoadingText>Loading...</LoadingText>;
+  }
 
   // If the user already has a workspace,
   // we should redirect them to the DashboardPage.
   if (workspace) {
     return <Redirect to={`/workspaces/${workspace.id}`} />;
-  }
-
-  if (loading) {
-    return <LoadingText>Loading...</LoadingText>;
   }
 
   const hasPendingInvites = data.length !== 0;
@@ -146,7 +145,7 @@ const CreateWorkspaceForm: React.FC = () => {
           )}
           <div className="sm:text-center md:text-center lg:text-center">
             <h1 className="text-2xl">Let's set up a home for all your retros</h1>
-            <h3 className="text-lg">You can always create another workspace later.</h3>
+            {/* <h3 className="text-lg">You can always create another workspace later.</h3> */}
           </div>
 
           <hr className="mt-4 mb-6"></hr>
