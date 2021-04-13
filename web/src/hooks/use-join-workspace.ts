@@ -12,7 +12,6 @@ export function useJoinWorkspace() {
     auth?: any;
     workspaceInviteId?: WorkspaceInvite["id"];
   }) {
-    console.log("Joining workspace...");
     const params: JoinWorkspaceTransactionParams = {
       auth: input.auth,
       workspaceId: input.workspaceId,

@@ -14,41 +14,6 @@ export function LoginPage() {
   useAnalyticsPage(AnalyticsPage.LOGIN);
   const [input, setInput] = React.useState("");
 
-  const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
-  const [success, setSuccess] = React.useState(false);
-  const [isSending, setIsSending] = React.useState(false);
-
-  const handleSubmit = async (event: any) => {
-    try {
-      // Stop the page from refreshing.
-      event.preventDefault();
-      // Clear the state.
-      setErrorMessage(null);
-      setSuccess(false);
-      setIsSending(true);
-      // Set up the params.
-      const email = event.target.email.value;
-      const actionCodeSettings = {
-        url: window.location.origin + "/magic-link",
-        handleCodeInApp: true
-      };
-      // Make the request.
-      await firebase.auth().sendSignInLinkToEmail(email, actionCodeSettings);
-      // Update the success state.
-      setIsSending(false);
-      setSuccess(true);
-      // Save the email for use on the /magic-link page.
-      window.localStorage.setItem("emailForSignIn", email);
-      return;
-    } catch (error) {
-      // Update the error state.
-      setIsSending(false);
-      setErrorMessage(error.message);
-      Sentry.captureException(error);
-      return;
-    }
-  };
-
   return (
     <PageContainer>
       <form className="flex flex-col items-center mb-16">
@@ -172,23 +137,3 @@ function TermsAndConditionsText() {
     </div>
   );
 }
-
-function TermsAndConditionsText() {
-  return (
-    <div className="text-pink sm:w-full lg:w-2/5 text-xs">
-      <p style={{ color: "rgba(55, 53, 47, 0.4)" }}>
-        By creating an account, you acknowledge that you have read and understood, and
-        agree to Retro's{" "}
-        <Link to="/terms" className="underline">
-          Terms & Conditions
-        </Link>{" "}
-        and{" "}
-        <Link to="/privacy" className="underline">
-          Privacy Policy
-        </Link>
-        .
-      </p>
-    </div>
-  );
-}
-
