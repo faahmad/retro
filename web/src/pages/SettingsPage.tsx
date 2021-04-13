@@ -15,25 +15,31 @@ import { getBaseURL } from "../services/stripe-service";
 import { useAnalyticsPage, AnalyticsPage } from "../hooks/use-analytics-page";
 import * as Sentry from "@sentry/react";
 import { Button } from "../components/Button";
+import { useAnalyticsEvent, AnalyticsEvent } from "../hooks/use-analytics-event";
 
 export const SettingsPage = () => {
   useAnalyticsPage(AnalyticsPage.SETTINGS);
   const currentUser = useCurrentUser();
   const workspaceState = useWorkspaceState();
   const [copyButtonText, setCopyButtonText] = React.useState("Copy");
+  const trackEvent = useAnalyticsEvent();
 
   const hasBillingAccess =
     workspaceState.status === WorkspaceStateStatus.SUCCESS &&
     currentUser.data?.id === workspaceState.ownerId;
 
-  const workspaceURL = `${window.location.origin}/join/${workspaceState.url}`;
+  const inviteLink = `${window.location.origin}/join/${workspaceState.url}`;
   const handleCopyToClipboard = async () => {
     try {
-      await navigator.clipboard.writeText(workspaceURL);
+      await navigator.clipboard.writeText(inviteLink);
       setCopyButtonText("Copied!");
       setTimeout(() => {
         setCopyButtonText("Copy");
       }, 2000);
+      trackEvent(AnalyticsEvent.INVITE_LINK_COPIED, {
+        inviteLink,
+        location: AnalyticsPage.SETTINGS
+      });
       return;
     } catch (error) {
       Sentry.captureException(error);
@@ -58,14 +64,13 @@ export const SettingsPage = () => {
         </div>
       </div>
 
-      <SettingsSectionContainer title="Workspace URL">
+      <SettingsSectionContainer title="Invite Link">
         <div className="flex flex-row items-end justify-between">
           <div>
-            <p className="text-blue text-xs mb-4">
-              Your team members can use this link to join you workspace after you invite
-              them.
+            <p className="text-blue text-xs mb-2">
+              Share this link with anyone you'd like to join this workspace.
             </p>
-            <p>{`${workspaceURL}`}</p>
+            <p>{`${inviteLink}`}</p>
           </div>
           <Button
             style={{ maxWidth: "8rem" }}
@@ -77,15 +82,14 @@ export const SettingsPage = () => {
         </div>
       </SettingsSectionContainer>
 
-      <AllowedEmailDomainsSection
-        isAdmin={workspaceState.ownerId === currentUser.auth?.uid}
-        allowedEmailDomains={workspaceState.allowedEmailDomains}
-        onSubmit={() => {}}
-      />
-
       {hasBillingAccess && (
         <div className="mt-8">
           <h5 className="text-blue">Admin Land</h5>
+          {/* <AllowedEmailDomainsSection
+            isAdmin={workspaceState.ownerId === currentUser.auth?.uid}
+            allowedEmailDomains={workspaceState.allowedEmailDomains}
+            onSubmit={() => {}}
+          /> */}
           <BillingSettings workspaceId={workspaceState.id} />
         </div>
       )}
@@ -183,83 +187,92 @@ function SettingsSectionContainer({
   );
 }
 
-function AllowedEmailDomainsSection({ allowedEmailDomains, isAdmin, onSubmit }: any) {
-  const [isEditing, setIsEditing] = React.useState(false);
+// function AllowedEmailDomainsSection({ allowedEmailDomains, isAdmin, onSubmit }: any) {
+//   const [isEditing, setIsEditing] = React.useState(false);
 
-  const handleSubmit = (event: any) => {
-    event.preventDefault();
-  };
+//   const handleSubmit = (event: any) => {
+//     event.preventDefault();
+//     setIsEditing(false);
+//   };
 
-  return (
-    <SettingsSectionContainer title="Allowed Email Domains">
-      {isEditing ? (
-        <form className="flex flex-row justify-between items-end" onSubmit={handleSubmit}>
-          <div>
-            <AllowedEmailDomainInputs
-              allowedEmailDomains={allowedEmailDomains}
-              onSubmit={onSubmit}
-            />
-          </div>
-          <Button
-            type="submit"
-            style={{ maxWidth: "8rem" }}
-            className="text-blue h-8 w-16"
-          >
-            Save
-          </Button>
-        </form>
-      ) : (
-        <div className="flex flex-row justify-between items-end">
-          <p>{`${allowedEmailDomains.reduce(
-            (string: string, domain: string, index: number) => {
-              return (
-                string + domain + (index + 1 === allowedEmailDomains.length ? "" : ", ")
-              );
-            },
-            ""
-          )}`}</p>
-          <Button
-            style={{ maxWidth: "8rem" }}
-            className="text-blue h-8 w-16"
-            onClick={() => setIsEditing(true)}
-          >
-            Edit
-          </Button>
-        </div>
-      )}
-    </SettingsSectionContainer>
-  );
-}
+//   return (
+//     <SettingsSectionContainer title="Allowed Email Domains">
+//       <div>
+//         <p className="text-blue text-xs mb-2">
+//           Anyone with an allowed email domain can automatically join your workspace.
+//         </p>
+//         {isEditing ? (
+//           <form
+//             className="flex flex-row justify-between items-end"
+//             onSubmit={handleSubmit}
+//           >
+//             <div>
+//               <AllowedEmailDomainInputs
+//                 allowedEmailDomains={allowedEmailDomains}
+//                 onSubmit={onSubmit}
+//               />
+//             </div>
+//             <Button
+//               type="submit"
+//               style={{ maxWidth: "8rem" }}
+//               className="text-blue h-8 w-16"
+//             >
+//               Save
+//             </Button>
+//           </form>
+//         ) : (
+//           <div className="flex flex-row justify-between items-end">
+//             <p>{`${allowedEmailDomains.reduce(
+//               (string: string, domain: string, index: number) => {
+//                 return (
+//                   string + domain + (index + 1 === allowedEmailDomains.length ? "" : ", ")
+//                 );
+//               },
+//               ""
+//             )}`}</p>
+//             <Button
+//               style={{ maxWidth: "8rem" }}
+//               className="text-blue h-8 w-16"
+//               onClick={() => setIsEditing(true)}
+//             >
+//               Edit
+//             </Button>
+//           </div>
+//         )}
+//       </div>
+//     </SettingsSectionContainer>
+//   );
+// }
 
-function AllowedEmailDomainInputs({ allowedEmailDomains }: any) {
-  const [one, two, three, four, five] = allowedEmailDomains.map((domain: string) =>
-    domain.replace("@", "")
-  );
+// function AllowedEmailDomainInputs({ allowedEmailDomains }: any) {
+//   const [one, two, three, four, five] = allowedEmailDomains.map((domain: string) =>
+//     domain.replace("@", "")
+//   );
 
-  return (
-    <div className="flex flex-col">
-      <EmailDomainInput name="0" value={one} pattern="[A-Za-z0-9.]" />
-      <EmailDomainInput name="1" value={two} pattern="[A-Za-z0-9.]" />
-      <EmailDomainInput name="2" value={three} pattern="[A-Za-z0-9.]" />
-      <EmailDomainInput name="3" value={four} pattern="[A-Za-z0-9.]" />
-      <EmailDomainInput name="4" value={five} pattern="[A-Za-z0-9.]" />
-    </div>
-  );
-}
+//   return (
+//     <div className="flex flex-col">
+//       <EmailDomainInput name="0" value={one} pattern="[A-Za-z0-9.]" />
+//       <EmailDomainInput name="1" value={two} pattern="[A-Za-z0-9.]" />
+//       <EmailDomainInput name="2" value={three} pattern="[A-Za-z0-9.]" />
+//       <EmailDomainInput name="3" value={four} pattern="[A-Za-z0-9.]" />
+//       <EmailDomainInput name="4" value={five} pattern="[A-Za-z0-9.]" />
+//     </div>
+//   );
+// }
 
-function EmailDomainInput({ value, onChange }: any) {
-  return (
-    <div className="flex">
-      @
-      <input
-        type="text"
-        defaultValue={value}
-        onChange={onChange}
-        className="border border-red h-12 mb-2 sm:h-8 md:h-8 lg:h-8 max-w-md outline-none px-1"
-      />
-    </div>
-  );
-}
+// function EmailDomainInput({ value, onChange }: any) {
+//   return (
+//     <div className="flex">
+//       @
+//       <input
+//         type="text"
+//         defaultValue={value}
+//         onChange={onChange}
+//         className="border border-red h-12 mb-2 sm:h-8 md:h-8 lg:h-8 max-w-md outline-none px-1"
+//       />
+//     </div>
+//   );
+// }
 
 // function RetroHeader({ id, name, createdAt, ownerId }: RetroHeaderProps) {
 //   const [localName, setLocalName] = React.useState(name);

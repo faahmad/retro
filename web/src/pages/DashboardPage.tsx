@@ -57,6 +57,7 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
           workspaceName={workspaceState.name}
           workspaceId={workspaceState.id}
           workspaceOwnerId={workspaceState.ownerId}
+          workspaceURL={workspaceState.url}
           users={Object.values(workspaceState.users)}
           invitedUsers={workspaceState.invitedUsers}
           isActive={workspaceState.isActive}
@@ -160,13 +161,15 @@ const TeamMemberOverview: React.FC<{
   users: WorkspaceUser[];
   invitedUsers: WorkspaceInvite[];
   isActive: boolean;
+  workspaceURL: string;
 }> = ({
   workspaceId,
   workspaceName,
   users,
   isActive,
   invitedUsers,
-  workspaceOwnerId
+  workspaceOwnerId,
+  workspaceURL
 }) => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
 
@@ -174,12 +177,15 @@ const TeamMemberOverview: React.FC<{
     await setIsModalOpen((prevIsModalOpen) => !prevIsModalOpen);
   };
 
+  const userCount = users.length;
+
   return (
     <React.Fragment>
       <InviteUserToWorkspaceModal
         workspaceId={workspaceId}
         workspaceName={workspaceName}
         workspaceOwnerId={workspaceOwnerId}
+        workspaceURL={workspaceURL}
         userCount={users.length}
         invitedUserCount={invitedUsers.length}
         isOpen={isModalOpen}
@@ -188,7 +194,12 @@ const TeamMemberOverview: React.FC<{
       />
       <div className="flex flex-col h-full border border-red shadow shadow-red p-4 mt-8">
         <div className="flex justify-between items-center">
-          <p className="text-red text-xl font-black">Team Members</p>
+          <div>
+            <p className="text-red text-xl font-black">Team Members</p>
+            <p className="text-blue text-xs">
+              {userCount > 1 ? `${userCount}/10 seats used` : ""}
+            </p>
+          </div>
           <div className="flex items-center">
             <p className="text-blue font-black hidden lg:block">Invite Member</p>
             <button
