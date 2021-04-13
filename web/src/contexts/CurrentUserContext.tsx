@@ -23,18 +23,22 @@ enum CurrentUserActionTypes {
   LOGGED_OUT = "logged_out"
 }
 
+type Callback = (input?: any) => void;
+
 export type CurrentUserContextValues = {
   auth: firebase.User | null;
   data: User | null;
   state: CurrentUserState;
   isLoggedIn: boolean;
+  handleEnqueueCallback: (callback: Callback) => void;
 };
 
 const initialValues = {
   auth: null,
   data: null,
   state: CurrentUserState.LOADING,
-  isLoggedIn: false
+  isLoggedIn: false,
+  handleEnqueueCallback: () => {}
 };
 
 export const CurrentUserContext = React.createContext<CurrentUserContextValues>(
@@ -43,6 +47,31 @@ export const CurrentUserContext = React.createContext<CurrentUserContextValues>(
 
 export function CurrentUserProvider({ children }: { children: React.ReactNode }) {
   const [values, dispatch] = React.useReducer(currentUserReducer, initialValues);
+
+  // Initialize the callback queue.
+  let [callbackQueue, setCallbackQueue] = React.useState<Callback[]>([]);
+  const handleEnqueueCallback = (callback: Callback) => {
+    setCallbackQueue([callback, ...callbackQueue]);
+    return;
+  };
+
+  React.useEffect(() => {
+    values.handleEnqueueCallback = handleEnqueueCallback;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const isAuthenticated = values.auth !== null;
+  React.useEffect(() => {
+    const handleInvokeCallbacks = async (firebaseUser: firebase.User) => {
+      await callbackQueue.reverse().map(async (callback) => await callback(firebaseUser));
+      setCallbackQueue([]);
+      return;
+    };
+    if (isAuthenticated) {
+      handleInvokeCallbacks(values.auth!);
+    }
+    return;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated]);
 
   // Auth listener
   const handleAuthStateChanged = async (firebaseUser: firebase.User | null) => {
@@ -60,11 +89,12 @@ export function CurrentUserProvider({ children }: { children: React.ReactNode })
     analytics.track(AnalyticsEvent.USER_SIGNED_IN, {
       id: firebaseUser.uid,
       provider: firebaseUser.providerId
-    })
-    return dispatch({
+    });
+    dispatch({
       type: CurrentUserActionTypes.AUTHENTICATED,
       payload: firebaseUser
     });
+    return;
   };
   const handleOnLoggedOut = () => {
     deleteIdToken();
@@ -125,10 +155,5 @@ function reduceUser(state: CurrentUserContextValues, data: any) {
 }
 
 function reduceLoggedOut() {
-  return {
-    auth: null,
-    data: null,
-    state: CurrentUserState.LOGGED_OUT,
-    isLoggedIn: false
-  };
+  return { ...initialValues, state: CurrentUserState.LOGGED_OUT };
 }
