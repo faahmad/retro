@@ -34,6 +34,17 @@ export class RetroItemModal extends React.Component<
       isSubmitting: false
     };
   }
+  handleKeydownEvent = (event: KeyboardEvent) => {
+    if ((event.metaKey || event.ctrlKey) && event.keyCode === 13) {
+      this.handleAddItem();
+    }
+  };
+  componentDidMount() {
+    document.addEventListener("keydown", this.handleKeydownEvent);
+  }
+  componentWillUnmount() {
+    document.removeEventListener("keydown", this.handleKeydownEvent);
+  }
 
   handleAddItem = async () => {
     const { content, columnType } = this.state;
