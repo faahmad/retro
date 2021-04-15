@@ -18,7 +18,6 @@ import { RetroColumnType, RetroColumn } from "../types/retro-column";
 import { RetroStateValues, RetroStateStatus } from "../hooks/use-retro-state";
 import { RetroItemModal } from "./RetroItemModal";
 import { WorkspaceUser, WorkspaceUsersMap } from "../types/workspace-user";
-import { User } from "../types/user";
 import { AnalyticsEvent, useAnalyticsEvent } from "../hooks/use-analytics-event";
 
 interface RetroBoardProps {
@@ -343,7 +342,7 @@ export const RetroListItem: React.FC<
               )}
               <div>
                 <Linkify>
-                  <span className="text-break">{content}</span>
+                  <span>{content}</span>
                 </Linkify>
               </div>
             </div>
