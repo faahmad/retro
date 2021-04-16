@@ -19,6 +19,7 @@ export enum AnalyticsEvent {
   RETRO_ITEM_MOVED = "Retro Item Moved",
   RETRO_ITEM_LIKED = "Retro Item Liked",
   RETRO_ITEM_EDITED = "Retro Item Edited",
+  RETRO_ITEM_DELETED = "Retro Item Deleted",
   INVITE_LINK_COPIED = "Invite Link Copied"
 }
 

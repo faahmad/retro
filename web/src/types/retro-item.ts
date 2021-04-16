@@ -23,4 +23,5 @@ export interface RetroItem {
   };
   likeCount: number;
   hasBeenEdited: boolean;
+  status?: "deleted";
 }
