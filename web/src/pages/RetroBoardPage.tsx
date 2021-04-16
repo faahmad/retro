@@ -29,7 +29,8 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
     handleDragDrop,
     handleEditItem,
     handleLikeItem,
-    handleUnlikeItem
+    handleUnlikeItem,
+    handleDeleteItem
   } = useRetroState(params.retroId);
   const workspaceState = useWorkspaceState();
   const { data, status, error } = state;
@@ -69,6 +70,7 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
             users={workspaceState.users}
             retroItems={retroItems.data}
             onAddItem={handleAddItem}
+            onDeleteItem={handleDeleteItem}
             onEditItem={(retroItemId, content) =>
               handleEditItem({ content, id: retroItemId })
             }

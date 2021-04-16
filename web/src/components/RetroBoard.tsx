@@ -37,6 +37,7 @@ interface RetroBoardProps {
   onDragDrop: any;
   onLikeItem: any;
   onUnlikeItem: any;
+  onDeleteItem: (retroItemId: RetroItem["id"]) => Promise<void>;
 }
 
 export function RetroBoard({
@@ -47,7 +48,8 @@ export function RetroBoard({
   onEditItem,
   onLikeItem,
   onUnlikeItem,
-  onDragDrop
+  onDragDrop,
+  onDeleteItem
 }: RetroBoardProps) {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [
@@ -196,7 +198,7 @@ export function RetroBoard({
           onAddItem={handleAddItem}
           retroItem={retroItem}
           onEditItem={handleEditItem}
-          // onDelete={handleDeleteItem}
+          onDeleteItem={onDeleteItem}
         />
       )}
       <div className="retro-board__grid">
