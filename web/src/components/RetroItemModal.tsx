@@ -13,7 +13,10 @@ interface RetroItemModalProps {
   // RetroItem is defined when editing an existing item.
   retroItem: RetroItem | null;
   onEditItem: (retroItemId: RetroItem["id"], content: string) => void;
-  onDeleteItem: (retroItemId: RetroItem["id"]) => Promise<void>;
+  onDeleteItem: (
+    retroItemId: RetroItem["id"],
+    columnType: RetroItem["type"]
+  ) => Promise<void>;
 }
 
 interface RetroItemModalState {
@@ -75,7 +78,7 @@ export class RetroItemModal extends React.Component<
     const { onDeleteItem, retroItem, columnType, onToggle } = this.props;
     this.setState({ isSubmitting: true });
     if (retroItem && columnType) {
-      await onDeleteItem(retroItem!.id);
+      await onDeleteItem(retroItem!.id, columnType);
     }
     await this.setState({ isSubmitting: false });
     onToggle();

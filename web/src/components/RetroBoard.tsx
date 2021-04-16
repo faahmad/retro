@@ -37,7 +37,10 @@ interface RetroBoardProps {
   onDragDrop: any;
   onLikeItem: any;
   onUnlikeItem: any;
-  onDeleteItem: (retroItemId: RetroItem["id"]) => Promise<void>;
+  onDeleteItem: (
+    retroItemId: RetroItem["id"],
+    columnType: RetroItem["type"]
+  ) => Promise<void>;
 }
 
 export function RetroBoard({

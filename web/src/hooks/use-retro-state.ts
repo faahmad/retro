@@ -102,7 +102,8 @@ type RetroActionDownvoteItem = {
 type RetroActionDeleteItem = {
   type: RetroActionTypes.RETRO_DELETE_ITEM;
   payload: {
-    id: RetroItem["id"];
+    retroItemId: RetroItem["id"];
+    column: RetroItem["type"];
   };
 };
 
@@ -232,7 +233,14 @@ export function useRetroState(retroId: Retro["id"]) {
     }
   };
 
-  const handleDeleteItem = async (retroItemId: RetroItem["id"]) => {
+  const handleDeleteItem = async (
+    retroItemId: RetroItem["id"],
+    column: RetroItem["type"]
+  ) => {
+    dispatch({
+      type: RetroActionTypes.RETRO_DELETE_ITEM,
+      payload: { retroItemId, column }
+    });
     await deleteRetroItem(retroItemId);
     return;
   };
@@ -290,6 +298,32 @@ function retroStateReducer(
     }
     case RetroActionTypes.RETRO_ERROR: {
       return { status: RetroStateStatus.ERROR, data: null, error: action.payload };
+    }
+    case RetroActionTypes.RETRO_DELETE_ITEM: {
+      const { retroItemId, column } = action.payload;
+      if (!state.data) {
+        return state;
+      }
+      let retroItemIds = state.data.retroItemIds;
+      // Delete the RetroItemId from the board.
+      delete retroItemIds[retroItemId];
+      // Remove the RetroItemId from the column.
+      const columnToUpdate = state.data.columns[column];
+      const items = columnToUpdate.retroItemIds.filter((id) => id !== retroItemId);
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          retroItemIds,
+          columns: {
+            ...state.data.columns,
+            [column]: {
+              ...columnToUpdate,
+              retroItemIds: items
+            }
+          }
+        }
+      };
     }
     case RetroActionTypes.RETRO_DRAG_DROP_ITEM: {
       const { prevColumn, prevColumnType, nextColumn, nextColumnType } = action.payload;
