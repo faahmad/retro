@@ -21,7 +21,7 @@ export function MagicLinkPage() {
         .auth()
         .signInWithEmailLink(email, window.location.href)
         .then((userCredential) => {
-          trackEvent(AnalyticsEvent.USER_CREATED, {
+          trackEvent(AnalyticsEvent.USER_SIGNED_IN, {
             ...userCredential,
             location: AnalyticsPage.MAGIC_LINK,
             method: "magic-link"
