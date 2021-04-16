@@ -11,8 +11,10 @@ import { useCurrentUser } from "../hooks/use-current-user";
 import { useAnalyticsEvent, AnalyticsEvent } from "../hooks/use-analytics-event";
 import { AnalyticsPage } from "../hooks/use-analytics-page";
 import firebase from "../lib/firebase";
+import { useAnalyticsPage } from "../hooks/use-analytics-page";
 
 export function JoinWorkspacePage() {
+  useAnalyticsPage(AnalyticsPage.JOIN_WORKSPACE);
   const currentUser = useCurrentUser();
   const params = useParams<{ workspaceURL: string }>();
   const joinWorkspace = useJoinWorkspace();
