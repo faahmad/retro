@@ -12,6 +12,7 @@ import { User } from "../types/user";
 import { decrement, deleteValue, increment } from "../utils/firestore-utils";
 import { AnalyticsEvent, useAnalyticsEvent } from "./use-analytics-event";
 import * as Sentry from "@sentry/react";
+import { useDeleteRetroItem } from "../hooks/use-delete-retro-item";
 
 export enum RetroStateStatus {
   LOADING = "LOADING",
@@ -51,7 +52,8 @@ enum RetroActionTypes {
   RETRO_ERROR = "retro_error",
   RETRO_ADD_ITEM = "retro_add_item",
   RETRO_UPDATE_ITEM = "retro_update_item",
-  RETRO_DRAG_DROP_ITEM = "retro_drag_drop_item"
+  RETRO_DRAG_DROP_ITEM = "retro_drag_drop_item",
+  RETRO_DELETE_ITEM = "retro_delete_item"
 }
 
 type RetroActionLoading = {
@@ -97,6 +99,13 @@ type RetroActionDownvoteItem = {
   };
 };
 
+type RetroActionDeleteItem = {
+  type: RetroActionTypes.RETRO_DELETE_ITEM;
+  payload: {
+    id: RetroItem["id"];
+  };
+};
+
 type RetroActionDragDropItem = {
   type: RetroActionTypes.RETRO_DRAG_DROP_ITEM;
   payload: {
@@ -115,7 +124,8 @@ type RetroAction =
   | RetroActionEditItem
   | RetroActionUpvoteItem
   | RetroActionDownvoteItem
-  | RetroActionDragDropItem;
+  | RetroActionDragDropItem
+  | RetroActionDeleteItem;
 
 export function useRetroState(retroId: Retro["id"]) {
   const [state, dispatch] = React.useReducer(retroStateReducer, initialState);
@@ -123,6 +133,7 @@ export function useRetroState(retroId: Retro["id"]) {
   const dragDropRetroItem = useDragDropRetroItem();
   const updateRetroItem = useUpdateRetroItem();
   const trackEvent = useAnalyticsEvent();
+  const deleteRetroItem = useDeleteRetroItem();
 
   React.useEffect(() => {
     handleRetroLoading();
@@ -221,6 +232,11 @@ export function useRetroState(retroId: Retro["id"]) {
     }
   };
 
+  const handleDeleteItem = async (retroItemId: RetroItem["id"]) => {
+    await deleteRetroItem(retroItemId);
+    return;
+  };
+
   const handleDragDrop = async (input: {
     retroItemId: string;
     prevColumnType: RetroColumnType;
@@ -256,7 +272,8 @@ export function useRetroState(retroId: Retro["id"]) {
     handleDragDrop,
     handleEditItem,
     handleLikeItem,
-    handleUnlikeItem
+    handleUnlikeItem,
+    handleDeleteItem
   };
 }
 

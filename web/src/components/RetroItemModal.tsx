@@ -13,7 +13,7 @@ interface RetroItemModalProps {
   // RetroItem is defined when editing an existing item.
   retroItem: RetroItem | null;
   onEditItem: (retroItemId: RetroItem["id"], content: string) => void;
-  // onDelete: (itemId: RetroItem["id"], column: string) => Promise<void>;
+  onDeleteItem: (retroItemId: RetroItem["id"]) => Promise<void>;
 }
 
 interface RetroItemModalState {
@@ -71,14 +71,14 @@ export class RetroItemModal extends React.Component<
     return;
   };
 
-  handleDelete = async () => {
-    // const { onDelete, initialRetroItem, columnType, onToggle } = this.props;
-    // this.setState({ isSubmitting: true });
-    // if (initialRetroItem && columnType) {
-    //   onDelete(initialRetroItem!.id, columnType!);
-    // }
-    // await this.setState({ isSubmitting: false });
-    // onToggle();
+  handleDeleteItem = async () => {
+    const { onDeleteItem, retroItem, columnType, onToggle } = this.props;
+    this.setState({ isSubmitting: true });
+    if (retroItem && columnType) {
+      await onDeleteItem(retroItem!.id);
+    }
+    await this.setState({ isSubmitting: false });
+    onToggle();
     return;
   };
 
@@ -112,15 +112,15 @@ export class RetroItemModal extends React.Component<
                   {columnTitle}
                 </label>
                 {/* TODO: Allow user to delete an item. */}
-                {/* {retroItem && (
+                {retroItem && (
                   <button
                     className="mb-2 text-xs"
-                    onClick={this.handleDelete}
+                    onClick={this.handleDeleteItem}
                     disabled={isSubmitting}
                   >
                     Delete
                   </button>
-                )} */}
+                )}
               </div>
               <textarea
                 className="w-full p-2 border border-red text-blue focus:outline-none"
