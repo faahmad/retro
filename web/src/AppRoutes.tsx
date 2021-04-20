@@ -30,9 +30,7 @@ import { JoinWorkspacePage } from "./pages/JoinWorkspacePage";
 // Comment these out before deploying to prod!
 import { LoginPage } from "./pages/LoginPage";
 import { RetroListPage } from "./pages/RetroListPage";
-// import { SignupPage } from "./pages/SignupPage";
-// import { FeatureFlags } from "./constants/feature-flags";
-// import { ExperimentalRoute } from "./components/ExperimentalRoute";
+import { SignupPage } from "./pages/SignupPage";
 
 export const AppRoutes: React.FC = () => {
   const currentUser = useCurrentUser();
@@ -72,18 +70,8 @@ function ScrollToTop() {
 const UnauthenticatedAppRoutes: React.FC = () => {
   return (
     <React.Fragment>
-      <Route
-        // featureKey={FeatureFlags.SIGN_UP}
-        exact
-        path="/login"
-        component={LoginPage}
-      />
-      {/* <Route
-        // featureKey={FeatureFlags.SIGN_UP}
-        exact
-        path="/signup"
-        component={SignupPage}
-      /> */}
+      <Route exact path="/login" component={LoginPage} />
+      <Route exact path="/signup" component={SignupPage} />
       <Route exact path="/join/:workspaceURL" component={JoinWorkspacePage} />
       <Route exact path="/secret-auth/:code" component={EarlyAccessPage} />
       <Route exact path="/magic-link" component={MagicLinkPage} />
