@@ -1,8 +1,9 @@
 import firebase from "../lib/firebase";
-import analytics from "analytics.js";
 
 export enum AnalyticsEvent {
   JOIN_WAITLIST_CLICKED = "Join Waitlist Link Clicked",
+  SIGNUP_BUTTON_CLICKED = "Signup Button Clicked",
+  LOGIN_BUTTON_CLICKED = "Login Button Clicked",
   JOINED_NEWSLETTER = "Joined Newsletter",
   MAGIC_LINK_SENT = "Magic Link Sent",
   USER_CREATED = "User Created",
@@ -26,7 +27,8 @@ export enum AnalyticsEvent {
 export function useAnalyticsEvent() {
   function handleAnalyticsEvent(eventName: AnalyticsEvent, eventProperties?: Object) {
     firebase.analytics().logEvent(eventName, eventProperties);
-    analytics.track(eventName, eventProperties);
+    // @ts-ignore
+    window.analytics.track(eventName, eventProperties);
     return;
   }
   return handleAnalyticsEvent;
