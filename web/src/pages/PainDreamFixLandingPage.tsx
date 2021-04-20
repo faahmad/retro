@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import { HeroImage } from "../images/HeroImage";
 import howItWorksInviteImage from "../assets/images/how-it-works-invite-image.svg";
@@ -8,25 +8,32 @@ import howItWorksAnalyzeImage from "../assets/images/how-it-works-analyze-image.
 import applicationScreenshotImage from "../assets/images/ui@2x.png";
 import landingFooterImage from "../assets/images/landing-page-footer.svg";
 
-import { GoogleOAuthButton } from "../components/GoogleOAuthButton";
 import { PageContainer } from "../components/PageContainer";
-// import { FeatureFlags } from "../constants/feature-flags";
-import { JoinWaitlistButton } from "../components/JoinWaitlistButton";
-import { useLoginWithGoogle } from "../hooks/use-login-with-google";
+
 import { useCurrentUser } from "../hooks/use-current-user";
 import { CurrentUserState } from "../contexts/CurrentUserContext";
-import { MailchimpNewsLetterSignupForm } from "../components/MailchimpNewsletterSubscribeForm";
 import { useAnalyticsPage, AnalyticsPage } from "../hooks/use-analytics-page";
+import { Button } from "../components/Button";
+import { useAnalyticsEvent, AnalyticsEvent } from "../hooks/use-analytics-event";
 
 export const PainDreamFixLandingPage: React.FC = () => {
   useAnalyticsPage(AnalyticsPage.LANDING);
-  const isSignUpEnabled = false;
-  const loginWithGoogle = useLoginWithGoogle();
+  const trackEvent = useAnalyticsEvent();
   const currentUser = useCurrentUser();
+  const history = useHistory();
 
   if (currentUser.state === CurrentUserState.LOADING) {
     return null;
   }
+
+  const handleClickSignup = (location: string) => {
+    trackEvent(AnalyticsEvent.SIGNUP_BUTTON_CLICKED, {
+      location,
+      buttonCopy: "Get 2 Months Free"
+    });
+    history.push("/signup");
+    return;
+  };
 
   return (
     <div>
@@ -41,12 +48,12 @@ export const PainDreamFixLandingPage: React.FC = () => {
                 An online retrospective tool that will keep your meetings fun, focused,
                 and productive.
               </h3>
-              <p className="text-blue text-lg mt-8">
-                <span className="font-black">Get 2 months free</span>{" "}
-                <br className="lg:hidden" />
-                when you join our newsletter.
-              </p>
-              <MailchimpNewsLetterSignupForm className="mt-4" location="hero" />
+              <Button
+                className="mt-4 w-full lg:w-64 bg-pink text-blue"
+                onClick={() => handleClickSignup("above_the_fold")}
+              >
+                Get 2 Months Free
+              </Button>
             </div>
             <div
               id="hero-image"
@@ -121,20 +128,12 @@ export const PainDreamFixLandingPage: React.FC = () => {
                 We’re on a mission to take over each team’s most dreaded weekly activity
                 and turn it into a fast win for everyone.
               </p>
-              {isSignUpEnabled ? (
-                <GoogleOAuthButton
-                  buttonClassName="mt-4 text-blue bg-pink"
-                  textClassName="justify-end"
-                  useGoogleIcon={false}
-                  onClick={loginWithGoogle}
-                >
-                  30 day free trial
-                </GoogleOAuthButton>
-              ) : (
-                <div className="mt-4">
-                  <JoinWaitlistButton />
-                </div>
-              )}
+              <Button
+                onClick={() => handleClickSignup("mission_statement")}
+                className="mt-4 w-full lg:w-64 bg-pink text-blue"
+              >
+                Get 2 Months Free
+              </Button>
             </div>
           </div>
         </PageContainer>
@@ -170,18 +169,21 @@ export const PainDreamFixLandingPage: React.FC = () => {
       </div>
       <PageContainer>
         <div className="text-blue">
-          <h3 className="text-xl lg:text-3xl font-black mb-3">
-            Get 2 months for free when you join our newsletter.
-          </h3>
+          <h3 className="text-xl lg:text-3xl font-black mb-3">Open Startup</h3>
           <p className="mb-3">
             We're embracing openness by sharing our metrics with everyone.
           </p>
           <p className="mb-3">
-            Every two weeks we'll share updates from the product, marketing, and business
-            sides of Retro.
+            Every couple of weeks we'll share updates from the product, marketing, and
+            business sides of Retro.
           </p>
         </div>
-        <MailchimpNewsLetterSignupForm location="landing bottom" />
+        <Button
+          onClick={() => handleClickSignup("open_startup")}
+          className="mt-4 w-full lg:w-64 bg-pink text-blue"
+        >
+          Get 2 Months Free
+        </Button>
       </PageContainer>
       <FAQFooter />
       <LandingPageFooter />
