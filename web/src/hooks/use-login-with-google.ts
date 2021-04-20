@@ -1,16 +1,18 @@
-import analytics from "analytics.js";
 import { authenticateWithGoogle, isNewUser } from "../services/auth-service";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
+import { AnalyticsEvent, useAnalyticsEvent } from "./use-analytics-event";
 
 export function useLoginWithGoogle() {
   const history = useHistory();
+  const location = useLocation();
+  const trackEvent = useAnalyticsEvent();
 
   const handleLoginWithGoogle = async () => {
     const userCredential = await authenticateWithGoogle();
     if (isNewUser(userCredential)) {
-      analytics.track("User Signed Up", {
-        type: "organic",
-        provider: "google"
+      trackEvent(AnalyticsEvent.USER_CREATED, {
+        location: location.pathname,
+        method: "google"
       });
       return history.push("/onboarding");
     }

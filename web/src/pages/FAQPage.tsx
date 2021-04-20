@@ -22,7 +22,7 @@ export const FAQPage: React.FC = () => {
           </div>
           <div className="mt-20 mb-20">
             <h3 className="text-blue font-bold text-2xl">What do I need to login?</h3>
-            <p className="text-xl text-blue">Just a Google associated email.</p>
+            <p className="text-xl text-blue">Just your work email.</p>
           </div>
           <div className="mt-20 mb-20">
             <h3 className="text-blue font-bold text-2xl">What is Retro?</h3>

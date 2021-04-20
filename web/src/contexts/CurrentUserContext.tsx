@@ -7,8 +7,7 @@ import {
   getIdTokenFromFirebaseUser,
   saveIdToken
 } from "../services/auth-service";
-import analytics from "analytics.js";
-import { AnalyticsEvent } from "../hooks/use-analytics-event";
+import { AnalyticsEvent, useAnalyticsEvent } from "../hooks/use-analytics-event";
 
 export enum CurrentUserState {
   LOADING = "loading",
@@ -47,6 +46,7 @@ export const CurrentUserContext = React.createContext<CurrentUserContextValues>(
 
 export function CurrentUserProvider({ children }: { children: React.ReactNode }) {
   const [values, dispatch] = React.useReducer(currentUserReducer, initialValues);
+  const trackEvent = useAnalyticsEvent();
 
   // Initialize the callback queue.
   let [callbackQueue, setCallbackQueue] = React.useState<Callback[]>([]);
@@ -73,6 +73,23 @@ export function CurrentUserProvider({ children }: { children: React.ReactNode })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated]);
 
+  const handleAnalytics = (firebaseUser: firebase.User) => {
+    const userProps = {
+      email: firebaseUser.email,
+      emailVerified: firebaseUser.emailVerified,
+      name: firebaseUser.displayName,
+      photoURL: firebaseUser.photoURL,
+      phoneNumber: firebaseUser.phoneNumber,
+      creationTime: firebaseUser.metadata.creationTime,
+      lastSignInTime: firebaseUser.metadata.lastSignInTime,
+      providers: firebaseUser.providerData.map((data) => data?.providerId)
+    };
+    // @ts-ignore
+    window.analytics.identify(firebaseUser.uid, userProps);
+    trackEvent(AnalyticsEvent.USER_SIGNED_IN, userProps);
+    return;
+  };
+
   // Auth listener
   const handleAuthStateChanged = async (firebaseUser: firebase.User | null) => {
     return firebaseUser ? handleOnAuthenticated(firebaseUser) : handleOnLoggedOut();
@@ -80,16 +97,7 @@ export function CurrentUserProvider({ children }: { children: React.ReactNode })
   const handleOnAuthenticated = async (firebaseUser: firebase.User) => {
     const idToken = await getIdTokenFromFirebaseUser(firebaseUser);
     saveIdToken(idToken);
-    analytics.identify(firebaseUser.uid, {
-      email: firebaseUser.email,
-      name: firebaseUser.displayName,
-      photoURL: firebaseUser.photoURL,
-      phoneNumber: firebaseUser.phoneNumber
-    });
-    analytics.track(AnalyticsEvent.USER_SIGNED_IN, {
-      id: firebaseUser.uid,
-      provider: firebaseUser.providerId
-    });
+    handleAnalytics(firebaseUser);
     dispatch({
       type: CurrentUserActionTypes.AUTHENTICATED,
       payload: firebaseUser

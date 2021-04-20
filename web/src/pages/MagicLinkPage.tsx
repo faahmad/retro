@@ -4,6 +4,7 @@ import { PageContainer } from "../components/PageContainer";
 // import { ErrorMessageBanner } from "../components/ErrorMessageBanner";
 import { AnalyticsPage, useAnalyticsPage } from "../hooks/use-analytics-page";
 import { AnalyticsEvent, useAnalyticsEvent } from "../hooks/use-analytics-event";
+import { isNewUser } from "../services/auth-service";
 
 export function MagicLinkPage() {
   useAnalyticsPage(AnalyticsPage.MAGIC_LINK);
@@ -21,11 +22,13 @@ export function MagicLinkPage() {
         .auth()
         .signInWithEmailLink(email, window.location.href)
         .then((userCredential) => {
-          trackEvent(AnalyticsEvent.USER_SIGNED_IN, {
-            ...userCredential,
-            location: AnalyticsPage.MAGIC_LINK,
-            method: "magic-link"
-          });
+          if (isNewUser(userCredential)) {
+            trackEvent(AnalyticsEvent.USER_CREATED, {
+              ...userCredential,
+              location: AnalyticsPage.MAGIC_LINK,
+              method: "magic-link"
+            });
+          }
           window.localStorage.removeItem("emailForSignIn");
           setIsLoading(false);
         })

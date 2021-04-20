@@ -9,13 +9,10 @@ import {
   getRootUrlForWorkspace,
   getWorkspaceFromCurrentUser
 } from "../utils/workspace-utils";
-// import { CurrentUserState } from "../contexts/CurrentUserContext";
-// import { JoinWaitlistButton } from "./JoinWaitlistButton";
-// import { FeatureFlags } from "../constants/feature-flags";
+import { AnalyticsEvent, useAnalyticsEvent } from "../hooks/use-analytics-event";
 
 export const Navbar: React.FC<any> = ({ isLoggedIn, userState }) => {
   const history = useHistory();
-  // const [isSignUpEnabled] = useFeature(FeatureFlags.SIGN_UP);
 
   const handleOnLogOut = async () => {
     await logOut();
@@ -33,8 +30,8 @@ export const Navbar: React.FC<any> = ({ isLoggedIn, userState }) => {
         )}
       </div>
       {!isLoggedIn ? (
-        <div>
-          <p className="text-blue">Launching Q2 2021</p>
+        <div className="flex flex-col">
+          <NavbarLoggedOutButtons />
         </div>
       ) : (
         <div className="flex flex-col z-0">
@@ -50,25 +47,43 @@ export const Navbar: React.FC<any> = ({ isLoggedIn, userState }) => {
   );
 };
 
-// function NavbarLoggedOutButtons() {
-//   const history = useHistory();
-//   return (
-//     <React.Fragment>
-//       <Button
-//         className="mt-10 sm:mb-0 lg:mb-2 sm:mt-0 md:mt-0 lg:mt-0 text-blue"
-//         onClick={() => history.push("/signup")}
-//       >
-//         Sign up for free
-//       </Button>
-//       <Button
-//         className="mt-10 sm:mt-0 md:mt-0 lg:mt-0 text-blue"
-//         onClick={() => history.push("/login")}
-//       >
-//         Log in
-//       </Button>
-//     </React.Fragment>
-//   );
-// }
+function NavbarLoggedOutButtons() {
+  const history = useHistory();
+  const trackEvent = useAnalyticsEvent();
+  const handleClickSignup = () => {
+    trackEvent(AnalyticsEvent.SIGNUP_BUTTON_CLICKED, {
+      location: "navbar",
+      buttonCopy: "Sign Up for free"
+    });
+    history.push("/signup");
+    return;
+  };
+  const handleClickLogin = () => {
+    trackEvent(AnalyticsEvent.LOGIN_BUTTON_CLICKED, {
+      location: "navbar",
+      buttonCopy: "Log in"
+    });
+    history.push("/login");
+    return;
+  };
+
+  return (
+    <React.Fragment>
+      <Button
+        className="mt-10 sm:mb-0 lg:mb-2 sm:mt-0 md:mt-0 lg:mt-0 text-blue"
+        onClick={handleClickSignup}
+      >
+        Sign up for free
+      </Button>
+      <Button
+        className="mt-10 sm:mt-0 md:mt-0 lg:mt-0 text-blue"
+        onClick={handleClickLogin}
+      >
+        Log in
+      </Button>
+    </React.Fragment>
+  );
+}
 
 const NavbarBrand: React.FC = () => {
   const currentUser = useCurrentUser();
