@@ -12,23 +12,10 @@ import * as Sentry from "@sentry/react";
 
 export function LoginPage() {
   useAnalyticsPage(AnalyticsPage.LOGIN);
-  const [input, setInput] = React.useState("");
 
   return (
     <PageContainer>
-      <form className="flex flex-col items-center mb-16">
-        <label className="text-blue" htmlFor="secure-login">
-          Secure login
-        </label>
-        <input
-          placeholder="What's the password?"
-          className="text-blue border border-red my-1 h-12 sm:h-8 md:h-8 lg:h-8 w-full max-w-md outline-none px-1"
-          type="text"
-          name="secure-login"
-          onChange={(e) => setInput(e.target.value)}
-        />
-      </form>
-      {input === "CrowdFox" && <LoginFormContainer />}
+      <LoginFormContainer />
     </PageContainer>
   );
 }
