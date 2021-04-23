@@ -16,9 +16,13 @@ import { WorkspaceStateStatus } from "../contexts/WorkspaceStateContext";
 import { AnalyticsPage, useAnalyticsPage } from "../hooks/use-analytics-page";
 import { AnalyticsEvent, useAnalyticsEvent } from "../hooks/use-analytics-event";
 import { useCurrentUser } from "../hooks/use-current-user";
+import { RetroItemsMap, RetroItem } from "../types/retro-item";
+import { RetroColumnType } from "../types/retro-column";
+import { RetroBoardActions } from "../components/RetroBoardActions";
 
 export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
   useAnalyticsPage(AnalyticsPage.RETRO_BOARD);
+  const trackEvent = useAnalyticsEvent();
   const params = useParams<{ retroId: Retro["id"] }>();
   // Important! useRetroItemsListener has to come first!
   // Not the best, I know. But it's MVP!
@@ -30,7 +34,8 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
     handleEditItem,
     handleLikeItem,
     handleUnlikeItem,
-    handleDeleteItem
+    handleDeleteItem,
+    handleUpdateColumnItems
   } = useRetroState(params.retroId);
   const workspaceState = useWorkspaceState();
   const { data, status, error } = state;
@@ -55,6 +60,45 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
     );
   }
 
+  const sortByLikes = (retroItems: RetroItemsMap, retroItemIds: RetroItem["id"][]) => {
+    return retroItemIds.sort((a, b) => retroItems[b].likeCount - retroItems[a].likeCount);
+  };
+  const getColumnItems = (columnType: RetroColumnType) => {
+    if (!data) {
+      return [];
+    }
+    return data.columns[columnType].retroItemIds;
+  };
+
+  const handleSortAllItemsByLikes = () => {
+    if (!retroItems.data || !data) {
+      return;
+    }
+    const updateColumnItemsInput = {
+      [RetroColumnType.GOOD]: sortByLikes(
+        retroItems.data,
+        getColumnItems(RetroColumnType.GOOD)
+      ),
+      [RetroColumnType.BAD]: sortByLikes(
+        retroItems.data,
+        getColumnItems(RetroColumnType.BAD)
+      ),
+      [RetroColumnType.ACTIONS]: sortByLikes(
+        retroItems.data,
+        getColumnItems(RetroColumnType.ACTIONS)
+      ),
+      [RetroColumnType.QUESTIONS]: sortByLikes(
+        retroItems.data,
+        getColumnItems(RetroColumnType.QUESTIONS)
+      )
+    };
+    trackEvent(AnalyticsEvent.RETRO_ITEMS_SORTED, {
+      method: "likeCount"
+    });
+    handleUpdateColumnItems(updateColumnItemsInput);
+    return;
+  };
+
   if (status === RetroStateStatus.SUCCESS && data !== null) {
     return (
       <React.Fragment>
@@ -65,6 +109,7 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
             createdAt={data.createdAt}
             ownerId={data.createdById}
           />
+          <RetroBoardActions onSortByLikes={handleSortAllItemsByLikes} />
           <RetroBoard
             retroState={state}
             users={workspaceState.users}
