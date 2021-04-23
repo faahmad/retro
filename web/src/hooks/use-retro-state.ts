@@ -13,6 +13,7 @@ import { decrement, deleteValue, increment } from "../utils/firestore-utils";
 import { AnalyticsEvent, useAnalyticsEvent } from "./use-analytics-event";
 import * as Sentry from "@sentry/react";
 import { useDeleteRetroItem } from "../hooks/use-delete-retro-item";
+import { useUpdateRetro } from "./use-update-retro";
 
 export enum RetroStateStatus {
   LOADING = "LOADING",
@@ -53,7 +54,8 @@ enum RetroActionTypes {
   RETRO_ADD_ITEM = "retro_add_item",
   RETRO_UPDATE_ITEM = "retro_update_item",
   RETRO_DRAG_DROP_ITEM = "retro_drag_drop_item",
-  RETRO_DELETE_ITEM = "retro_delete_item"
+  RETRO_DELETE_ITEM = "retro_delete_item",
+  RETRO_UPDATE = "retro_update"
 }
 
 type RetroActionLoading = {
@@ -116,6 +118,10 @@ type RetroActionDragDropItem = {
     nextColumn?: RetroColumn;
   };
 };
+type RetroActionUpdate = {
+  type: RetroActionTypes.RETRO_UPDATE;
+  payload: Retro;
+};
 
 type RetroAction =
   | RetroActionLoading
@@ -126,7 +132,8 @@ type RetroAction =
   | RetroActionUpvoteItem
   | RetroActionDownvoteItem
   | RetroActionDragDropItem
-  | RetroActionDeleteItem;
+  | RetroActionDeleteItem
+  | RetroActionUpdate;
 
 export function useRetroState(retroId: Retro["id"]) {
   const [state, dispatch] = React.useReducer(retroStateReducer, initialState);
@@ -135,6 +142,7 @@ export function useRetroState(retroId: Retro["id"]) {
   const updateRetroItem = useUpdateRetroItem();
   const trackEvent = useAnalyticsEvent();
   const deleteRetroItem = useDeleteRetroItem();
+  const updateRetro = useUpdateRetro();
 
   React.useEffect(() => {
     handleRetroLoading();
@@ -274,6 +282,30 @@ export function useRetroState(retroId: Retro["id"]) {
       return;
     }
   };
+
+  const handleUpdateColumnItems = async (
+    update: { [columnType in RetroColumnType]: RetroItem["id"][] }
+  ) => {
+    const updatedColumns = Object.keys(update).reduce(
+      (accumulator: any, columnType: any) => {
+        // @ts-ignore
+        let updatedColumn = state.data!.columns[columnType];
+        // @ts-ignore
+        updatedColumn.retroItemIds = update[columnType];
+        accumulator[columnType] = updatedColumn;
+        return accumulator;
+      },
+      {}
+    );
+    const updatedRetro: any = { ...state.data, columns: updatedColumns };
+    dispatch({
+      type: RetroActionTypes.RETRO_UPDATE,
+      payload: updatedRetro
+    });
+    await updateRetro(retroId, updatedRetro);
+    return;
+  };
+
   return {
     state,
     handleAddItem,
@@ -281,7 +313,8 @@ export function useRetroState(retroId: Retro["id"]) {
     handleEditItem,
     handleLikeItem,
     handleUnlikeItem,
-    handleDeleteItem
+    handleDeleteItem,
+    handleUpdateColumnItems
   };
 }
 
@@ -343,6 +376,10 @@ function retroStateReducer(
           }
         }
       };
+    }
+    case RetroActionTypes.RETRO_UPDATE: {
+      // @ts-ignore
+      return { ...state, data: action.payload };
     }
     default: {
       return state;
