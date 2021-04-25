@@ -39,7 +39,7 @@ export class RetroItemModal extends React.Component<
   }
   handleKeydownEvent = (event: KeyboardEvent) => {
     if ((event.metaKey || event.ctrlKey) && event.keyCode === 13) {
-      this.handleAddItem();
+      this.handleSubmit();
     }
   };
   componentDidMount() {
@@ -48,6 +48,10 @@ export class RetroItemModal extends React.Component<
   componentWillUnmount() {
     document.removeEventListener("keydown", this.handleKeydownEvent);
   }
+
+  handleSubmit = () => {
+    this.props.retroItem ? this.handleEditItem() : this.handleAddItem();
+  };
 
   handleAddItem = async () => {
     const { content, columnType } = this.state;
@@ -149,7 +153,7 @@ export class RetroItemModal extends React.Component<
                 className="bg-blue text-white"
                 style={{ width: "10rem" }}
                 disabled={isSubmitting}
-                onClick={retroItem ? this.handleEditItem : this.handleAddItem}
+                onClick={this.handleSubmit}
               >
                 {isSubmitting ? "Submitting..." : "Submit"}
               </Button>
