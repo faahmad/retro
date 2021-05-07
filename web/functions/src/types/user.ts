@@ -5,10 +5,10 @@ export interface User {
   createdAt: string;
   displayName: string;
   email: string;
-  phoneNumber: string | null;
-  photoUrl: string;
-  workspaces: UserWorkspace[];
-  role: "owner" | "member";
+  phoneNumber?: string;
+  photoUrl?: string;
+  workspaces?: UserWorkspace[];
+  role?: "owner" | "member";
 }
 
 export interface UserWorkspace {
