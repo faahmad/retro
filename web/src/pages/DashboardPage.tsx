@@ -33,14 +33,14 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
 
   const userId = currentUser?.auth?.uid;
   const isWorkspaceOwner = getIsWorkspaceOwner(workspaceState, userId || "");
-  const isInTrialMode = workspaceState.subscriptionStatus === "trialing";
+  const isInActiveMode = workspaceState.subscriptionStatus === "active";
 
   return (
     <div>
       <PageContainer>
         <p className="text-blue mb-2 underline">{workspaceState.name}</p>
         <h1 className="text-blue font-black text-3xl">Dashboard</h1>
-        {isInTrialMode && isWorkspaceOwner && (
+        {!isInActiveMode && isWorkspaceOwner && (
           <UpgradeToProBanner
             workspaceId={workspaceState.id}
             trialEnd={workspaceState.subscriptionTrialEnd}

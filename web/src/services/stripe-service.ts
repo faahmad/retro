@@ -16,6 +16,6 @@ export function createStripeBillingPortalSession(
   return axios.post(getBaseURL() + "/createStripeBillingPortalSession", params);
 }
 
-export function getStripeSubscriptionStatus(workspaceId: string) {
-  return axios.post(getBaseURL() + "/getStripeSubscriptionStatus", { workspaceId });
+export function getStripeSubscription(workspaceId: string) {
+  return axios.post(getBaseURL() + "/getStripeSubscription", { workspaceId });
 }
