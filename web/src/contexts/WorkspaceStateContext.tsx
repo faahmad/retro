@@ -8,6 +8,8 @@ import { workspaceUsersListener } from "../services/workspace-users-listener";
 import { workspaceInvitesListener } from "../services/workspace-invite-listener";
 import { workspaceRetrosListener } from "../services/workspace-retros-listener";
 import { Retro } from "../types/retro";
+import { useGetWorkspaceSubscription } from "../hooks/use-get-workspace-subscription";
+import { updateWorkspace } from "../services/update-workspace";
 
 export enum WorkspaceStateStatus {
   LOADING = "loading",
@@ -69,6 +71,17 @@ export function WorkspaceStateProvider({
   children: React.ReactNode;
 }) {
   const [values, dispatch] = React.useReducer(workspaceStateReducer, initialState);
+  const { subscription, isLoading }: any = useGetWorkspaceSubscription(workspaceId);
+  React.useEffect(() => {
+    if (workspaceId && subscription) {
+      updateWorkspace(workspaceId, {
+        subscriptionId: subscription.id,
+        subscriptionStatus: subscription.status,
+        subscriptionTrialEnd: subscription.trialEnd
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoading]);
 
   const handleWorkspaceSnapshot = (workspaceData: Workspace) => {
     return dispatch({
