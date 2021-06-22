@@ -5,6 +5,7 @@ import { PageContainer } from "../components/PageContainer";
 import { AnalyticsPage, useAnalyticsPage } from "../hooks/use-analytics-page";
 import { AnalyticsEvent, useAnalyticsEvent } from "../hooks/use-analytics-event";
 import { isNewUser } from "../services/auth-service";
+import { createUser } from "../services/create-user";
 
 export function MagicLinkPage() {
   useAnalyticsPage(AnalyticsPage.MAGIC_LINK);
@@ -21,8 +22,9 @@ export function MagicLinkPage() {
       firebase
         .auth()
         .signInWithEmailLink(email, window.location.href)
-        .then((userCredential) => {
+        .then(async (userCredential) => {
           if (isNewUser(userCredential)) {
+            await createUser(userCredential);
             trackEvent(AnalyticsEvent.USER_CREATED, {
               ...userCredential,
               location: AnalyticsPage.MAGIC_LINK,
