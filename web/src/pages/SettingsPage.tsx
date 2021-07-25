@@ -161,9 +161,6 @@ function SubscriptionActiveText({ amount, currentPeriodEnd, interval }: any) {
         {interval} and will renew on{" "}
         <span className="font-black">{moment.unix(currentPeriodEnd).calendar()}</span>.
       </p>
-      <p className="text-xs py-4">
-        The Pro Plan includes unlimited members, teams, and retros.
-      </p>
     </React.Fragment>
   );
 }
