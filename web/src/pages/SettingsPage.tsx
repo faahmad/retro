@@ -13,39 +13,39 @@ import { WorkspaceStateStatus } from "../contexts/WorkspaceStateContext";
 import { axios } from "../lib/axios";
 import { getBaseURL } from "../services/stripe-service";
 import { useAnalyticsPage, AnalyticsPage } from "../hooks/use-analytics-page";
-import * as Sentry from "@sentry/react";
-import { Button } from "../components/Button";
-import { useAnalyticsEvent, AnalyticsEvent } from "../hooks/use-analytics-event";
+// import * as Sentry from "@sentry/react";
+// import { Button } from "../components/Button";
+// import { useAnalyticsEvent, AnalyticsEvent } from "../hooks/use-analytics-event";
 
 export const SettingsPage = () => {
   useAnalyticsPage(AnalyticsPage.SETTINGS);
   const currentUser = useCurrentUser();
   const workspaceState = useWorkspaceState();
-  const [copyButtonText, setCopyButtonText] = React.useState("Copy");
-  const trackEvent = useAnalyticsEvent();
+  // const [copyButtonText, setCopyButtonText] = React.useState("Copy");
+  // const trackEvent = useAnalyticsEvent();
 
   const hasBillingAccess =
     workspaceState.status === WorkspaceStateStatus.SUCCESS &&
     currentUser.data?.id === workspaceState.ownerId;
 
-  const inviteLink = `${window.location.origin}/join/${workspaceState.url}`;
-  const handleCopyToClipboard = async () => {
-    try {
-      await navigator.clipboard.writeText(inviteLink);
-      setCopyButtonText("Copied!");
-      setTimeout(() => {
-        setCopyButtonText("Copy");
-      }, 2000);
-      trackEvent(AnalyticsEvent.INVITE_LINK_COPIED, {
-        inviteLink,
-        location: AnalyticsPage.SETTINGS
-      });
-      return;
-    } catch (error) {
-      Sentry.captureException(error);
-      setCopyButtonText("Try again");
-    }
-  };
+  // const inviteLink = `${window.location.origin}/join/${workspaceState.url}`;
+  // const handleCopyToClipboard = async () => {
+  //   try {
+  //     await navigator.clipboard.writeText(inviteLink);
+  //     setCopyButtonText("Copied!");
+  //     setTimeout(() => {
+  //       setCopyButtonText("Copy");
+  //     }, 2000);
+  //     trackEvent(AnalyticsEvent.INVITE_LINK_COPIED, {
+  //       inviteLink,
+  //       location: AnalyticsPage.SETTINGS
+  //     });
+  //     return;
+  //   } catch (error) {
+  //     Sentry.captureException(error);
+  //     setCopyButtonText("Try again");
+  //   }
+  // };
 
   return (
     <PageContainer>
@@ -64,7 +64,7 @@ export const SettingsPage = () => {
         </div>
       </div>
 
-      <SettingsSectionContainer title="Invite Link">
+      {/* <SettingsSectionContainer title="Invite Link">
         <div className="flex flex-row items-end justify-between">
           <div>
             <p className="text-blue text-xs mb-2">
@@ -80,7 +80,7 @@ export const SettingsPage = () => {
             {copyButtonText}
           </Button>
         </div>
-      </SettingsSectionContainer>
+      </SettingsSectionContainer> */}
 
       {hasBillingAccess && (
         <div className="mt-8">
@@ -168,24 +168,24 @@ function SubscriptionActiveText({ amount, currentPeriodEnd, interval }: any) {
   );
 }
 
-function SettingsSectionContainer({
-  title,
-  children
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="text-red border border-red shadow p-8 flex flex-col mt-2">
-      <div className="text-blue ml-2">
-        <div className="flex-grow flex flex-row justify-between">
-          <p className="text-xl font-black py-1">{title}</p>
-        </div>
-        {children}
-      </div>
-    </div>
-  );
-}
+// function SettingsSectionContainer({
+//   title,
+//   children
+// }: {
+//   title: string;
+//   children: React.ReactNode;
+// }) {
+//   return (
+//     <div className="text-red border border-red shadow p-8 flex flex-col mt-2">
+//       <div className="text-blue ml-2">
+//         <div className="flex-grow flex flex-row justify-between">
+//           <p className="text-xl font-black py-1">{title}</p>
+//         </div>
+//         {children}
+//       </div>
+//     </div>
+//   );
+// }
 
 // function AllowedEmailDomainsSection({ allowedEmailDomains, isAdmin, onSubmit }: any) {
 //   const [isEditing, setIsEditing] = React.useState(false);

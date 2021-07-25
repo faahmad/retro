@@ -7,7 +7,7 @@ import * as yup from "yup";
 import { useCreateWorkspaceInvite } from "../hooks/use-create-workspace-invite";
 import { useAnalyticsEvent, AnalyticsEvent } from "../hooks/use-analytics-event";
 import { AnalyticsPage } from "../hooks/use-analytics-page";
-import * as Sentry from "@sentry/react";
+// import * as Sentry from "@sentry/react";
 interface InviteUserToWorkspaceModalProps {
   isOpen: boolean;
   onRequestClose: (
@@ -33,28 +33,28 @@ export const InviteUserToWorkspaceModal: React.FC<InviteUserToWorkspaceModalProp
   userCount,
   invitedUserCount
 }) => {
-  const trackEvent = useAnalyticsEvent();
-  const [copyButtonText, setCopyButtonText] = React.useState("Copy");
-  const inviteLink = `${window.location.origin}/join/${workspaceURL}`;
-  const handleCopyToClipboard = async () => {
-    try {
-      await navigator.clipboard.writeText(inviteLink);
-      setCopyButtonText("Copied!");
-      setTimeout(() => {
-        setCopyButtonText("Copy");
-      }, 2000);
-      trackEvent(AnalyticsEvent.INVITE_LINK_COPIED, {
-        inviteLink,
-        location: AnalyticsPage.DASHBOARD,
-        component: "InviteUserToWorkspaceModal",
-        variant: "both"
-      });
-      return;
-    } catch (error) {
-      Sentry.captureException(error);
-      setCopyButtonText("Try again");
-    }
-  };
+  // const trackEvent = useAnalyticsEvent();
+  // const [copyButtonText, setCopyButtonText] = React.useState("Copy");
+  // const inviteLink = `${window.location.origin}/join/${workspaceURL}`;
+  // const handleCopyToClipboard = async () => {
+  //   try {
+  //     await navigator.clipboard.writeText(inviteLink);
+  //     setCopyButtonText("Copied!");
+  //     setTimeout(() => {
+  //       setCopyButtonText("Copy");
+  //     }, 2000);
+  //     trackEvent(AnalyticsEvent.INVITE_LINK_COPIED, {
+  //       inviteLink,
+  //       location: AnalyticsPage.DASHBOARD,
+  //       component: "InviteUserToWorkspaceModal",
+  //       variant: "both"
+  //     });
+  //     return;
+  //   } catch (error) {
+  //     Sentry.captureException(error);
+  //     setCopyButtonText("Try again");
+  //   }
+  // };
 
   return (
     <ReactModal
@@ -62,7 +62,7 @@ export const InviteUserToWorkspaceModal: React.FC<InviteUserToWorkspaceModalProp
       isOpen={isOpen}
       onRequestClose={onRequestClose}
       style={{
-        content: { maxWidth: "600px", maxHeight: "640px", padding: "20px" },
+        content: { maxWidth: "600px", maxHeight: "400px", padding: "20px" },
         overlay: { background: "rgba(17, 38, 156, 0.6)" }
       }}
       className="bg-white shadow-red border m-auto absolute inset-0 border-red focus:outline-none z-50"
@@ -72,7 +72,8 @@ export const InviteUserToWorkspaceModal: React.FC<InviteUserToWorkspaceModalProp
       <div className="flex items-center justify-center">
         <img src={addTeamMemberImage} alt="Add your team member" />
       </div>
-      <div className="flex flex-col p-4">
+
+      {/* <div className="flex flex-col p-4">
         <div className="flex justify-between items-end w-full text-blue py-1">
           <p className="text-xl font-black">Invite Link</p>
         </div>
@@ -90,7 +91,7 @@ export const InviteUserToWorkspaceModal: React.FC<InviteUserToWorkspaceModalProp
           </Button>
         </div>
       </div>
-      <div className="text-blue text-center my-2">or</div>
+      <div className="text-blue text-center my-2">or</div> */}
       <InviteUserToWorkspaceForm
         workspaceOwnerId={workspaceOwnerId}
         workspaceId={workspaceId}
