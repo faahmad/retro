@@ -168,24 +168,24 @@ function SubscriptionActiveText({ amount, currentPeriodEnd, interval }: any) {
   );
 }
 
-function SettingsSectionContainer({
-  title,
-  children
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="text-red border border-red shadow p-8 flex flex-col mt-2">
-      <div className="text-blue ml-2">
-        <div className="flex-grow flex flex-row justify-between">
-          <p className="text-xl font-black py-1">{title}</p>
-        </div>
-        {children}
-      </div>
-    </div>
-  );
-}
+// function SettingsSectionContainer({
+//   title,
+//   children
+// }: {
+//   title: string;
+//   children: React.ReactNode;
+// }) {
+//   return (
+//     <div className="text-red border border-red shadow p-8 flex flex-col mt-2">
+//       <div className="text-blue ml-2">
+//         <div className="flex-grow flex flex-row justify-between">
+//           <p className="text-xl font-black py-1">{title}</p>
+//         </div>
+//         {children}
+//       </div>
+//     </div>
+//   );
+// }
 
 // function AllowedEmailDomainsSection({ allowedEmailDomains, isAdmin, onSubmit }: any) {
 //   const [isEditing, setIsEditing] = React.useState(false);
