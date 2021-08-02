@@ -105,9 +105,7 @@ const CreateWorkspaceForm: React.FC = () => {
         location: AnalyticsPage.ONBOARDING_PAGE,
         workspaceId: workspaceRef?.id
       });
-      setTimeout(() => {
-        history.push(`/workspaces/${workspaceRef!.id}`);
-      }, 2000);
+      history.push("/onboarding/invites");
       return;
     } catch (error) {
       handleSetErrorMessage(error.message);

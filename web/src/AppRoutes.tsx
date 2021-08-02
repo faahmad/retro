@@ -25,6 +25,7 @@ import { WorkspaceStateProvider } from "./contexts/WorkspaceStateContext";
 import { PainDreamFixLandingPage } from "./pages/PainDreamFixLandingPage";
 import { EarlyAccessPage } from "./pages/EarlyAccessPage";
 import { MagicLinkPage } from "./pages/MagicLinkPage";
+import { OnboardingInvitesPage } from "./pages/OnboardingInvitesPage";
 // import { JoinWorkspacePage } from "./pages/JoinWorkspacePage";
 
 // Comment these out before deploying to prod!
@@ -101,6 +102,7 @@ function AuthenticatedAppRoutes({
 
   return (
     <WorkspaceStateProvider workspaceId={workspaceId}>
+      <Route exact path="/onboarding/invites" component={OnboardingInvitesPage} />
       <Route exact path="/onboarding" component={OnboardingPage} />
       <Route
         exact
