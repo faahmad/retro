@@ -21,9 +21,6 @@ export function RetroBoardActions(props: RetroBoardActionsProps) {
           </div>
         </Button>
       </div>
-      <div className="flex items-center justify-center text-center bg-blue text-white p-1 text-sm h-8 w-12 right-0">
-        New!
-      </div>
     </div>
   );
 }

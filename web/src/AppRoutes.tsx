@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Redirect, Route, Switch, useHistory } from "react-router-dom";
+import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import { Navbar } from "./components/Navbar";
 import { DesignPage } from "./pages/DesignPage";
 
@@ -25,9 +25,9 @@ import { WorkspaceStateProvider } from "./contexts/WorkspaceStateContext";
 import { PainDreamFixLandingPage } from "./pages/PainDreamFixLandingPage";
 import { EarlyAccessPage } from "./pages/EarlyAccessPage";
 import { MagicLinkPage } from "./pages/MagicLinkPage";
+import { OnboardingInvitesPage } from "./pages/OnboardingInvitesPage";
 // import { JoinWorkspacePage } from "./pages/JoinWorkspacePage";
 
-// Comment these out before deploying to prod!
 import { LoginPage } from "./pages/LoginPage";
 import { RetroListPage } from "./pages/RetroListPage";
 import { SignupPage } from "./pages/SignupPage";
@@ -85,22 +85,12 @@ function AuthenticatedAppRoutes({
 }: {
   currentUser: CurrentUserContextValues;
 }) {
-  const history = useHistory();
   const workspace = getWorkspaceFromCurrentUser(currentUser);
   const workspaceId = workspace?.id;
 
-  React.useEffect(() => {
-    if (!currentUser.isLoggedIn) {
-      return;
-    }
-    if (!workspaceId) {
-      return history.push("/onboarding");
-    }
-    //eslint-disable-next-line
-  }, [currentUser.isLoggedIn, workspaceId]);
-
   return (
     <WorkspaceStateProvider workspaceId={workspaceId}>
+      <Route exact path="/onboarding/invites" component={OnboardingInvitesPage} />
       <Route exact path="/onboarding" component={OnboardingPage} />
       <Route
         exact
@@ -110,7 +100,17 @@ function AuthenticatedAppRoutes({
       <Route exact path="/workspaces/:workspaceId/retros" component={RetroListPage} />
       <Route exact path="/workspaces/:workspaceId/settings" component={SettingsPage} />
       <Route exact path="/workspaces/:workspaceId" component={DashboardPage} />
-      <Redirect to={`/workspaces/${workspaceId}`} />
+      <Route
+        exact
+        path="/login"
+        render={() =>
+          workspace ? (
+            <Redirect to={`/workspaces/${workspaceId}`} />
+          ) : (
+            <Redirect to="/onboarding" />
+          )
+        }
+      />
     </WorkspaceStateProvider>
   );
 }

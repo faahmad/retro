@@ -10,8 +10,16 @@ import { NotificationBanner } from "../components/NotificationBanner";
 import { Button } from "../components/Button";
 import * as Sentry from "@sentry/react";
 
+import { useCurrentUser } from "../hooks/use-current-user";
+import { LoadingText } from "../components/LoadingText";
+
 export function LoginPage() {
   useAnalyticsPage(AnalyticsPage.LOGIN);
+
+  const currentUser = useCurrentUser();
+  if (currentUser.state === "loading") {
+    return <LoadingText>Loading...</LoadingText>;
+  }
 
   return (
     <PageContainer>

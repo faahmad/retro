@@ -1,5 +1,5 @@
 import React from "react";
-import { RouteComponentProps, Link } from "react-router-dom";
+import { RouteComponentProps, Link, useHistory } from "react-router-dom";
 import teamMemberEmptyImage from "../assets/images/team-member-empty-image.svg";
 import retroEmptyImage from "../assets/images/retro-empty-image.svg";
 import { InviteUserToWorkspaceModal } from "../components/InviteUserToWorkspaceModal";
@@ -17,11 +17,21 @@ import { useCreateRetro } from "../hooks/use-create-retro";
 import { RetroCard } from "../components/RetroCard";
 import { useAnalyticsPage, AnalyticsPage } from "../hooks/use-analytics-page";
 import { useAnalyticsEvent, AnalyticsEvent } from "../hooks/use-analytics-event";
+import { getWorkspaceFromCurrentUser } from "../utils/workspace-utils";
 
 export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
   useAnalyticsPage(AnalyticsPage.DASHBOARD);
-  const currentUser = useCurrentUser();
   const workspaceState = useWorkspaceState();
+  const currentUser = useCurrentUser();
+  const workspace = getWorkspaceFromCurrentUser(currentUser);
+
+  if (currentUser.state === "loading") {
+    return <LoadingText>Fetching your account...</LoadingText>;
+  }
+
+  if (!workspace) {
+    return <RedirectToOnboarding />;
+  }
 
   if (workspaceState.status === "loading") {
     return <LoadingText>Fetching workspace...</LoadingText>;
@@ -294,4 +304,10 @@ function PlaceholderAvatar({ char }: { char: string }) {
 
 function getIsWorkspaceOwner(workspace: any, userId: string) {
   return workspace?.ownerId === userId;
+}
+
+function RedirectToOnboarding() {
+  const history = useHistory();
+  history.push("/onboarding");
+  return null;
 }

@@ -105,9 +105,7 @@ const CreateWorkspaceForm: React.FC = () => {
         location: AnalyticsPage.ONBOARDING_PAGE,
         workspaceId: workspaceRef?.id
       });
-      setTimeout(() => {
-        history.push(`/workspaces/${workspaceRef!.id}`);
-      }, 2000);
+      history.push("/onboarding/invites");
       return;
     } catch (error) {
       handleSetErrorMessage(error.message);
@@ -134,6 +132,7 @@ const CreateWorkspaceForm: React.FC = () => {
   return (
     <div className="create-workspace-page flex flex-col w-full justify-center my-8 text-blue">
       <PageContainer>
+        <p className="text-xs mb-2">Step 1 of 2</p>
         <div className="sm:w-1/2 md:w-1/2 lg:w-4/5 w-full max-w-6xl m-auto">
           {errorMessage && (
             <div className="mb-4">
