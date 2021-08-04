@@ -6,11 +6,13 @@ import { AnalyticsPage, useAnalyticsPage } from "../hooks/use-analytics-page";
 import { AnalyticsEvent, useAnalyticsEvent } from "../hooks/use-analytics-event";
 import { isNewUser } from "../services/auth-service";
 import { createUser } from "../services/create-user";
+import { useHistory } from "react-router-dom";
 
 export function MagicLinkPage() {
   useAnalyticsPage(AnalyticsPage.MAGIC_LINK);
   const [isLoading, setIsLoading] = React.useState(true);
   const [error, setError] = React.useState<firebase.FirebaseError | null>(null);
+  const history = useHistory();
   const trackEvent = useAnalyticsEvent();
   React.useEffect(() => {
     if (firebase.auth().isSignInWithEmailLink(window.location.href)) {
@@ -33,6 +35,7 @@ export function MagicLinkPage() {
           }
           window.localStorage.removeItem("emailForSignIn");
           setIsLoading(false);
+          history.push("/login");
         })
         .catch((error) => {
           setError(error);

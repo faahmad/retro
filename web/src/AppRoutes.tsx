@@ -102,8 +102,14 @@ function AuthenticatedAppRoutes({
       <Route exact path="/workspaces/:workspaceId" component={DashboardPage} />
       <Route
         exact
-        path="/"
-        render={() => <Redirect to={`/workspaces/${workspaceId}`} />}
+        path="/login"
+        render={() =>
+          workspace ? (
+            <Redirect to={`/workspaces/${workspaceId}`} />
+          ) : (
+            <Redirect to="/onboarding" />
+          )
+        }
       />
     </WorkspaceStateProvider>
   );
