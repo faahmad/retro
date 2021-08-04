@@ -132,6 +132,7 @@ const CreateWorkspaceForm: React.FC = () => {
   return (
     <div className="create-workspace-page flex flex-col w-full justify-center my-8 text-blue">
       <PageContainer>
+        <p className="text-xs mb-2">Step 1 of 2</p>
         <div className="sm:w-1/2 md:w-1/2 lg:w-4/5 w-full max-w-6xl m-auto">
           {errorMessage && (
             <div className="mb-4">
