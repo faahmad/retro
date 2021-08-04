@@ -111,6 +111,17 @@ function AuthenticatedAppRoutes({
           )
         }
       />
+      <Route
+        exact
+        path="/"
+        render={() =>
+          workspace ? (
+            <Redirect to={`/workspaces/${workspaceId}`} />
+          ) : (
+            <Redirect to="/onboarding" />
+          )
+        }
+      />
     </WorkspaceStateProvider>
   );
 }
