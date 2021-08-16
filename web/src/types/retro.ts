@@ -36,3 +36,11 @@ export interface Retro {
     RetroColumnType.QUESTIONS
   ];
 }
+
+export interface RetroChildRef {
+  countdownTimer: {
+    startAt: TODO;
+    milliseconds: number;
+    state: "CLOSED" | "PAUSED" | "COUNTING";
+  };
+}
