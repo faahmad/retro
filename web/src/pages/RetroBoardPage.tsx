@@ -40,26 +40,6 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
   const workspaceState = useWorkspaceState();
   const { data, status, error } = state;
 
-  if (
-    status === RetroStateStatus.LOADING ||
-    retroItems.status === RetroItemsListenerStatus.LOADING ||
-    workspaceState.status === WorkspaceStateStatus.LOADING
-  ) {
-    return (
-      <PageContainer>
-        <p className="text-blue">Fetching retro...</p>
-      </PageContainer>
-    );
-  }
-
-  if (status === RetroStateStatus.ERROR) {
-    return (
-      <PageContainer>
-        <p className="text-blue">{error?.message}</p>
-      </PageContainer>
-    );
-  }
-
   const sortByLikes = (retroItems: RetroItemsMap, retroItemIds: RetroItem["id"][]) => {
     return retroItemIds.sort((a, b) => retroItems[b].likeCount - retroItems[a].likeCount);
   };
@@ -99,6 +79,26 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
     return;
   };
 
+  if (
+    status === RetroStateStatus.LOADING ||
+    retroItems.status === RetroItemsListenerStatus.LOADING ||
+    workspaceState.status === WorkspaceStateStatus.LOADING
+  ) {
+    return (
+      <PageContainer>
+        <p className="text-blue">Fetching retro...</p>
+      </PageContainer>
+    );
+  }
+
+  if (status === RetroStateStatus.ERROR) {
+    return (
+      <PageContainer>
+        <p className="text-blue">{error?.message}</p>
+      </PageContainer>
+    );
+  }
+
   if (status === RetroStateStatus.SUCCESS && data !== null) {
     return (
       <React.Fragment>
@@ -109,7 +109,10 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
             createdAt={data.createdAt}
             ownerId={data.createdById}
           />
-          <RetroBoardActions onSortByLikes={handleSortAllItemsByLikes} />
+          <RetroBoardActions
+            retroId={data.id}
+            onSortByLikes={handleSortAllItemsByLikes}
+          />
           <RetroBoard
             retroState={state}
             users={workspaceState.users}

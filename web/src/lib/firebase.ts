@@ -3,6 +3,7 @@ import "firebase/auth";
 import "firebase/firestore";
 import "firebase/storage";
 import "firebase/analytics";
+import "firebase/database";
 
 firebase.initializeApp({
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -16,14 +17,16 @@ firebase.initializeApp({
 });
 
 firebase.analytics();
-const db = firebase.firestore();
+const database = firebase.database();
+const firestore = firebase.firestore();
 
 if (window.location.hostname === "localhost") {
   firebase.auth().useEmulator("http://localhost:9099/");
-  db.settings({
+  firestore.settings({
     host: "localhost:8080",
     ssl: false
   });
+  database.useEmulator("localhost", 9000);
 }
 
 export default firebase;
