@@ -29,19 +29,20 @@ export function RetroCountdownTimer({ timer }: RetroCountdownTimerPropsT) {
       >
         {symbol}
       </SmallButton>
-
-      <SmallButton
-        style={{ boxShadow: "none", borderColor: "white" }}
-        onClick={timer.reset}
-      >
-        <Restart />
-      </SmallButton>
       <SmallButton
         style={{ boxShadow: "none", borderColor: "white", fontSize: "0.75em" }}
         onClick={timer.add1Min}
       >
         +1m
       </SmallButton>
+      {timer.isPaused ? (
+        <SmallButton
+          style={{ boxShadow: "none", borderColor: "white" }}
+          onClick={timer.reset}
+        >
+          <Restart />
+        </SmallButton>
+      ) : null}
     </div>
   );
 }
