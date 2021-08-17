@@ -67,17 +67,6 @@ export function useRetroCountdownTimer(retroId: Retro["id"]): RetroCountdownTime
     return;
   };
 
-  React.useEffect(() => {
-    const initialzeTimer = () => {
-      handleUpdate([
-        { key: "milliseconds", value: initialTime },
-        { key: "state", value: CountdownTimerState.CLOSED }
-      ]);
-    };
-    initialzeTimer();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   let milliseconds = countdownTimer?.milliseconds;
   React.useEffect(() => {
     if (milliseconds) {
@@ -129,6 +118,7 @@ export function useRetroCountdownTimer(retroId: Retro["id"]): RetroCountdownTime
     () => {
       const diff = Date.now() - countdownTimer?.startAt - serverTimeOffset;
       setTimeLeft((countdownTimer?.milliseconds || 0) - diff);
+
       if (timeLeft < 0) {
         window.clearInterval(intervalRef.current);
         handleChangeTime(0);
@@ -139,9 +129,16 @@ export function useRetroCountdownTimer(retroId: Retro["id"]): RetroCountdownTime
   );
 
   const isOpen = countdownTimer && countdownTimer.state !== CountdownTimerState.CLOSED;
+  const initializeTimer = () => {
+    handleUpdate([{ key: "milliseconds", value: initialTime }]);
+    setTimeLeft(initialTime);
+  };
   const handleToggleTimer = async () => {
     const nextState = isOpen ? CountdownTimerState.CLOSED : CountdownTimerState.PAUSED;
     await handleUpdate([{ key: "state", value: nextState }]);
+    if (nextState === CountdownTimerState.PAUSED) {
+      initializeTimer();
+    }
     handleTrack(AnalyticsEvent.RETRO_TIMER_TOGGLED, { nextState });
     return;
   };
