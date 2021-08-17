@@ -2,6 +2,8 @@ import * as React from "react";
 import firebase from "../lib/firebase";
 import { Retro, RetroChildRef } from "../types/retro";
 import { RealtimeDatabaseRefs } from "../constants/realtime-database-refs";
+import { useCurrentUser } from "./use-current-user";
+import { AnalyticsEvent, useAnalyticsEvent } from "./use-analytics-event";
 
 type CountdownTimerT = RetroChildRef["countdownTimer"];
 type CountdownTimerUpdateFieldT = { key: keyof CountdownTimerT; value: any };
@@ -32,6 +34,17 @@ export function useRetroCountdownTimer(retroId: Retro["id"]): RetroCountdownTime
   const serverTimeOffset = useServerTimeOffset();
   const [timeLeft, setTimeLeft] = React.useState(0);
   const initialTime = 600_000;
+
+  const currentUser = useCurrentUser();
+  const track = useAnalyticsEvent();
+  const handleTrack = (event: AnalyticsEvent, properties: object = {}) => {
+    track(event, {
+      retroId,
+      userId: currentUser?.data?.id,
+      ...properties
+    });
+    return;
+  };
 
   React.useEffect(() => {
     const ref = getRetroRef(retroId);
@@ -78,16 +91,19 @@ export function useRetroCountdownTimer(retroId: Retro["id"]): RetroCountdownTime
 
   const handleChangeTime = (milliseconds: number) => {
     handleUpdate([{ key: "milliseconds", value: milliseconds }]);
+    handleTrack(AnalyticsEvent.RETRO_TIMER_UPDATED, { milliseconds });
     return;
   };
 
   const handleAdd1Min = () => {
     handleChangeTime((countdownTimer?.milliseconds || 0) + 60_000);
+    handleTrack(AnalyticsEvent.RETRO_TIMER_ADD_1);
     return;
   };
 
   const handleResetTime = () => {
     handleChangeTime(initialTime);
+    handleTrack(AnalyticsEvent.RETRO_TIMER_RESET);
     return;
   };
 
@@ -96,6 +112,7 @@ export function useRetroCountdownTimer(retroId: Retro["id"]): RetroCountdownTime
       { key: "state", value: CountdownTimerState.COUNTING },
       { key: "startAt", value: _getServerTimestamp() }
     ]);
+    handleTrack(AnalyticsEvent.RETRO_TIMER_STARTED);
     return;
   };
 
@@ -104,6 +121,7 @@ export function useRetroCountdownTimer(retroId: Retro["id"]): RetroCountdownTime
       { key: "state", value: CountdownTimerState.PAUSED },
       { key: "milliseconds", value: timeLeft > 0 ? timeLeft : 0 }
     ]);
+    handleTrack(AnalyticsEvent.RETRO_TIMER_PAUSED, { timeLeft });
     return;
   };
 
@@ -124,6 +142,7 @@ export function useRetroCountdownTimer(retroId: Retro["id"]): RetroCountdownTime
   const handleToggleTimer = async () => {
     const nextState = isOpen ? CountdownTimerState.CLOSED : CountdownTimerState.PAUSED;
     await handleUpdate([{ key: "state", value: nextState }]);
+    handleTrack(AnalyticsEvent.RETRO_TIMER_TOGGLED, { nextState });
     return;
   };
 
