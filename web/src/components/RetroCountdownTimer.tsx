@@ -30,6 +30,7 @@ export function RetroCountdownTimer({ timer }: RetroCountdownTimerPropsT) {
         {symbol}
       </SmallButton>
       <SmallButton
+        disabled={timer.isAdd1MinDisabled}
         style={{ boxShadow: "none", borderColor: "white", fontSize: "0.75em" }}
         onClick={timer.add1Min}
       >
@@ -81,7 +82,7 @@ function TimerDisplayInput({
 
   const handleChangeMinutes = (event: any) => {
     const minutes = sanitize(event.target.value);
-    if (parseInt(minutes) > 99) {
+    if (parseInt(minutes) > 59) {
       return;
     }
     setMinutes(minutes);
@@ -100,7 +101,6 @@ function TimerDisplayInput({
   const handleOnBlur = () => {
     const minutes = formRef.current.minutes.value;
     const seconds = formRef.current.seconds.value;
-
     const milliseconds = moment.duration({ minutes, seconds }).asMilliseconds();
     onChange(milliseconds);
     return;
@@ -112,7 +112,7 @@ function TimerDisplayInput({
         name="minutes"
         type="number"
         min="00"
-        max="99"
+        max="59"
         maxLength={2}
         step="1"
         className="border w-16 h-8 text-center bg-white text-blue border-red"

@@ -25,6 +25,13 @@ export type RetroCountdownTimerT = {
   setTime: (milliseconds: number) => void;
   reset: () => void;
   add1Min: () => void;
+  isAdd1MinDisabled: boolean;
+};
+
+const Milliseconds = {
+  oneMinute: 60_000,
+  tenMinutes: 600_000,
+  oneHour: 3_600_000
 };
 
 export function useRetroCountdownTimer(retroId: Retro["id"]): RetroCountdownTimerT {
@@ -33,7 +40,7 @@ export function useRetroCountdownTimer(retroId: Retro["id"]): RetroCountdownTime
   );
   const serverTimeOffset = useServerTimeOffset();
   const [timeLeft, setTimeLeft] = React.useState(0);
-  const initialTime = 600_000;
+  const initialTime = Milliseconds.tenMinutes;
 
   const currentUser = useCurrentUser();
   const track = useAnalyticsEvent();
@@ -51,7 +58,7 @@ export function useRetroCountdownTimer(retroId: Retro["id"]): RetroCountdownTime
     if (ref) {
       ref.on("value", (snapshot) => {
         const data = snapshot.val();
-        setCountdownTimer(data.countdownTimer);
+        setCountdownTimer(data?.countdownTimer);
       });
       return () => ref.off();
     }
@@ -85,7 +92,11 @@ export function useRetroCountdownTimer(retroId: Retro["id"]): RetroCountdownTime
   };
 
   const handleAdd1Min = () => {
-    handleChangeTime((countdownTimer?.milliseconds || 0) + 60_000);
+    const nextTime = (countdownTimer?.milliseconds || 0) + Milliseconds.oneMinute;
+    if (nextTime > Milliseconds.oneHour) {
+      return;
+    }
+    handleChangeTime((countdownTimer?.milliseconds || 0) + Milliseconds.oneMinute);
     handleTrack(AnalyticsEvent.RETRO_TIMER_ADD_1);
     return;
   };
@@ -155,7 +166,8 @@ export function useRetroCountdownTimer(retroId: Retro["id"]): RetroCountdownTime
     pause: handlePauseTimer,
     setTime: handleChangeTime,
     reset: handleResetTime,
-    add1Min: handleAdd1Min
+    add1Min: handleAdd1Min,
+    isAdd1MinDisabled: timeLeft > Milliseconds.oneHour - Milliseconds.oneMinute
   };
 }
 
