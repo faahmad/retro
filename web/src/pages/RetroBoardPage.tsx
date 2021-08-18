@@ -19,6 +19,10 @@ import { useCurrentUser } from "../hooks/use-current-user";
 import { RetroItemsMap, RetroItem } from "../types/retro-item";
 import { RetroColumnType } from "../types/retro-column";
 import { RetroBoardActions } from "../components/RetroBoardActions";
+import {
+  RetroBoardUserSettings,
+  useUserSettings
+} from "../components/RetroBoardUserSettings";
 
 export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
   useAnalyticsPage(AnalyticsPage.RETRO_BOARD);
@@ -39,6 +43,7 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
   } = useRetroState(params.retroId);
   const workspaceState = useWorkspaceState();
   const { data, status, error } = state;
+  const { settings } = useUserSettings();
 
   const sortByLikes = (retroItems: RetroItemsMap, retroItemIds: RetroItem["id"][]) => {
     return retroItemIds.sort((a, b) => retroItems[b].likeCount - retroItems[a].likeCount);
@@ -102,17 +107,22 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
   if (status === RetroStateStatus.SUCCESS && data !== null) {
     return (
       <React.Fragment>
-        <PageContainer>
+        <PageContainer
+          className={settings?.isFullscreen ? "my-16 px-8 m-auto" : undefined}
+        >
           <RetroHeader
             id={data.id}
             name={data.name}
             createdAt={data.createdAt}
             ownerId={data.createdById}
           />
-          <RetroBoardActions
-            retroId={data.id}
-            onSortByLikes={handleSortAllItemsByLikes}
-          />
+          <div className="flex justify-between flex-wrap">
+            <RetroBoardActions
+              retroId={data.id}
+              onSortByLikes={handleSortAllItemsByLikes}
+            />
+            <RetroBoardUserSettings />
+          </div>
           <RetroBoard
             retroState={state}
             users={workspaceState.users}
