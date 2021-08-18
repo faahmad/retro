@@ -9,10 +9,15 @@ export interface User {
   photoUrl: string;
   workspaces: UserWorkspace[];
   role: "owner" | "member";
+  settings?: UserSettings;
 }
 
 export interface UserWorkspace {
   id: Workspace["id"];
   name: Workspace["name"];
   url: Workspace["url"];
+}
+
+export interface UserSettings {
+  isFullscreen: boolean;
 }
