@@ -69,11 +69,6 @@ export const PainDreamFixLandingPage: React.FC = () => {
           </div>
         </PageContainer>
 
-        <div className="my-8 w-full mx-auto lg:w-1/2">
-          <hr className="text-blue" />
-        </div>
-
-        <PainSection />
         <div className="landing-page__how-it-works relative w-full min-h-full vertical-stripes-blue border border-blue mt-8">
           <div className="w-full min-h-full -z-1 absolute horizontal-stripes-blue"></div>
           <div className="sm:w-full lg:w-4/5 m-auto p-4 py-8">
@@ -167,6 +162,13 @@ export const PainDreamFixLandingPage: React.FC = () => {
           </PageContainer>
         </div>
       </div>
+
+      <PainSection />
+
+      <div className="my-8 w-full mx-auto lg:w-1/2">
+        <hr className="text-blue" />
+      </div>
+
       <PageContainer>
         <div className="text-blue">
           <h3 className="text-xl lg:text-3xl font-black mb-3">Open Startup</h3>
