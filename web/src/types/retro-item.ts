@@ -24,4 +24,14 @@ export interface RetroItem {
   likeCount: number;
   hasBeenEdited: boolean;
   status?: "deleted";
+  itemType?: RetroItemType;
+  groupedRetroItemIds?: RetroItem["id"][];
+  groupDescription?: string;
+  groupContainerId?: string;
+}
+
+export enum RetroItemType {
+  ITEM = "ITEM",
+  GROUP_CONTAINER = "GROUP_CONTAINER",
+  GROUP_ITEM = "GROUP_ITEM"
 }

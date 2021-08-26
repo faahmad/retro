@@ -13,7 +13,7 @@ import { UserAvatar } from "../components/UserAvatar";
 import { ThumbsUpIcon } from "../components/ThumbsUpIcon";
 import { PencilEditIcon } from "../components/PencilEditIcon";
 // Types
-import { RetroItem, RetroItemsMap } from "../types/retro-item";
+import { RetroItem, RetroItemsMap, RetroItemType } from "../types/retro-item";
 import { RetroColumnType, RetroColumn } from "../types/retro-column";
 import { RetroStateValues, RetroStateStatus } from "../hooks/use-retro-state";
 import { RetroItemModal } from "./RetroItemModal";
@@ -41,6 +41,10 @@ interface RetroBoardProps {
     retroItemId: RetroItem["id"],
     columnType: RetroItem["type"]
   ) => Promise<void>;
+  onCombine: (
+    groupContainerRetroItem: RetroItem,
+    groupedRetroItem: RetroItem
+  ) => Promise<void>;
 }
 
 export function RetroBoard({
@@ -52,6 +56,7 @@ export function RetroBoard({
   onLikeItem,
   onUnlikeItem,
   onDragDrop,
+  onCombine,
   onDeleteItem
 }: RetroBoardProps) {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
@@ -115,11 +120,22 @@ export function RetroBoard({
     return;
   };
 
-  // const handleDeleteItem = () => {
-  //   return Promise.resolve();
-  // };
+  const handleCombineItems = (groupContainerId: string, retroItemId: string) => {
+    if (!retroItems) {
+      return;
+    }
+    let groupContainerRetroItem = retroItems[groupContainerId];
+    let groupedRetroItem = retroItems[retroItemId];
+    onCombine(groupContainerRetroItem, groupedRetroItem);
+    return;
+  };
 
   const handleOnDragEnd = (dropResult: DropResult) => {
+    if (dropResult.combine) {
+      handleCombineItems(dropResult.combine.draggableId, dropResult.draggableId);
+      return;
+    }
+
     const { destination, source, draggableId: retroItemId } = dropResult;
 
     // Invalid.
@@ -226,6 +242,7 @@ export function RetroBoard({
                 onClickEdit={handleOnClickEdit}
                 onClickLike={onLikeItem}
                 onClickUnlike={onUnlikeItem}
+                retroItemsMap={retroItems || {}}
               />
             );
           })}
@@ -244,6 +261,7 @@ interface RetroListProps {
   onClickLike: (input: any) => void;
   onClickUnlike: (input: any) => void;
   onClickEdit: (retroItem: RetroItem) => void;
+  retroItemsMap: RetroItemsMap;
 }
 
 export const RetroList: React.FC<RetroListProps> = ({
@@ -254,7 +272,8 @@ export const RetroList: React.FC<RetroListProps> = ({
   onClickAdd,
   onClickLike,
   onClickUnlike,
-  onClickEdit
+  onClickEdit,
+  retroItemsMap
 }) => {
   return (
     <div className="flex flex-col border border-red shadow shadow-red">
@@ -262,7 +281,7 @@ export const RetroList: React.FC<RetroListProps> = ({
         <p className="text-blue font-bold text-sm">{title}</p>
         <AddButton className="self-end" onClick={onClickAdd} />
       </div>
-      <Droppable droppableId={type}>
+      <Droppable droppableId={type} isCombineEnabled>
         {(provided) => {
           return (
             <ul
@@ -271,7 +290,16 @@ export const RetroList: React.FC<RetroListProps> = ({
               {...provided.droppableProps}
             >
               {items.map((item: RetroItem, index) => {
-                return (
+                return item.itemType === RetroItemType.GROUP_CONTAINER ? (
+                  <RetroItemGroup
+                    key={item.id}
+                    index={index}
+                    retroItem={item}
+                    onClickLike={onClickLike}
+                    onClickUnlike={onClickUnlike}
+                    retroItemsMap={retroItemsMap}
+                  />
+                ) : (
                   <RetroListItem
                     key={item.id}
                     index={index}
@@ -329,11 +357,12 @@ export const RetroListItem: React.FC<
         return (
           <li
             ref={provided.innerRef}
-            className={`retro-list-item flex content-center justify-between p-2 mb-1 mx-2 bg-white text-blue text-sm active:outline-none focus:outline-none ${
+            className={`flex content-center justify-between p-2 mb-1 mx-2 bg-white text-blue text-sm active:outline-none focus:outline-none ${
               snapshot.isDragging
                 ? "shadow shadow-blue border border-blue bg-pink-1/2"
                 : "border border-red"
-            }`}
+            }
+            ${snapshot.combineTargetFor ? "bg-pink-1/2" : "bg-white"}`}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
           >
@@ -411,3 +440,105 @@ const EditButton: React.FC<EditButtonProps> = ({ onClick }) => {
     </div>
   );
 };
+
+type RetroItemGroupPropsT = {
+  index: number;
+  retroItem: RetroItem;
+  onClickLike: any;
+  onClickUnlike: any;
+  retroItemsMap: RetroItemsMap;
+};
+
+function RetroItemGroup({
+  retroItem,
+  index,
+  onClickLike,
+  onClickUnlike,
+  retroItemsMap
+}: RetroItemGroupPropsT) {
+  const [isInputOpen, setIsInputOpen] = React.useState(false);
+  const handleOnBlur = (event: any) => {
+    console.log({ value: event.target.value });
+    setIsInputOpen(false);
+    return;
+  };
+
+  const currentUser = useCurrentUser();
+  const currentUserId = currentUser.auth!.uid;
+
+  const handleLikeItem = () => {
+    const input = { id: retroItem.id, userId: currentUserId };
+    // Toggle the like button.
+    retroItem.likedBy[currentUserId] ? onClickUnlike(input) : onClickLike(input);
+    return;
+  };
+
+  return (
+    <Draggable draggableId={retroItem.id} index={index} isDragDisabled={false}>
+      {(provided, snapshot) => {
+        return (
+          <li
+            ref={provided.innerRef}
+            className={`flex justify-between p-2 mb-1 mx-2 bg-white text-blue text-sm active:outline-none focus:outline-none ${
+              snapshot.isDragging
+                ? "shadow shadow-blue border border-blue bg-pink-1/2"
+                : "border border-red"
+            }
+              ${snapshot.combineTargetFor ? "bg-pink-1/2" : "bg-white"}`}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+          >
+            <div className="flex flex-col flex-grow">
+              {isInputOpen ? (
+                <input
+                  className="border w-1/2 h-8 bg-white text-blue border-red focus:outline-none px-1"
+                  name="groupDescription"
+                  placeholder="Untitled Group"
+                  defaultValue={retroItem.groupDescription}
+                  onBlur={handleOnBlur}
+                />
+              ) : (
+                <div
+                  className=" h-8 text-lg text-blue font-black"
+                  onClick={() => setIsInputOpen(true)}
+                >
+                  {retroItem.groupDescription
+                    ? retroItem.groupDescription
+                    : "Untitled Group"}
+                </div>
+              )}
+
+              <div>
+                <Linkify>
+                  <ul>
+                    <li className="mb-2">
+                      <span>{retroItem.content}</span>
+                    </li>
+                    {retroItem.groupedRetroItemIds?.map((id) => {
+                      return (
+                        <li key={id} className="mb-2">
+                          <span>{retroItemsMap[id].content}</span>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </Linkify>
+              </div>
+            </div>
+
+            <div>
+              <div className="flex ml-2 items-center">
+                <LikeButton
+                  likeCount={retroItem.likeCount}
+                  likedBy={retroItem.likedBy}
+                  currentUserId={currentUserId}
+                  onClick={handleLikeItem}
+                />
+              </div>
+            </div>
+          </li>
+        );
+      }}
+    </Draggable>
+  );
+}

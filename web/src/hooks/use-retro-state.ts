@@ -4,7 +4,7 @@ import { Retro } from "../types/retro";
 import { useCreateRetroItem } from "../hooks/use-create-retro-item";
 import { useDragDropRetroItem } from "../hooks/use-drag-drop-retro-item";
 import { useUpdateRetroItem } from "../hooks/use-update-retro-item";
-import { RetroItem } from "../types/retro-item";
+import { RetroItem, RetroItemType } from "../types/retro-item";
 import { RetroColumn, RetroColumnType } from "../types/retro-column";
 import omitBy from "lodash/omitBy";
 import isNil from "lodash/isNil";
@@ -14,6 +14,7 @@ import { AnalyticsEvent, useAnalyticsEvent } from "./use-analytics-event";
 import * as Sentry from "@sentry/react";
 import { useDeleteRetroItem } from "../hooks/use-delete-retro-item";
 import { useUpdateRetro } from "./use-update-retro";
+import { combineRetroItemTransaction } from "../services/combine-retro-items-transaction";
 
 export enum RetroStateStatus {
   LOADING = "LOADING",
@@ -55,7 +56,8 @@ enum RetroActionTypes {
   RETRO_UPDATE_ITEM = "retro_update_item",
   RETRO_DRAG_DROP_ITEM = "retro_drag_drop_item",
   RETRO_DELETE_ITEM = "retro_delete_item",
-  RETRO_UPDATE = "retro_update"
+  RETRO_UPDATE = "retro_update",
+  RETRO_COMBINE_ITEMS = "retro_combine_items"
 }
 
 type RetroActionLoading = {
@@ -118,9 +120,18 @@ type RetroActionDragDropItem = {
     nextColumn?: RetroColumn;
   };
 };
+
 type RetroActionUpdate = {
   type: RetroActionTypes.RETRO_UPDATE;
   payload: Retro;
+};
+
+type RetroActionCombineItems = {
+  type: RetroActionTypes.RETRO_COMBINE_ITEMS;
+  payload: {
+    groupedRetroItemId: string;
+    column: RetroColumnType;
+  };
 };
 
 type RetroAction =
@@ -132,6 +143,7 @@ type RetroAction =
   | RetroActionUpvoteItem
   | RetroActionDownvoteItem
   | RetroActionDragDropItem
+  | RetroActionCombineItems
   | RetroActionDeleteItem
   | RetroActionUpdate;
 
@@ -283,6 +295,36 @@ export function useRetroState(retroId: Retro["id"]) {
     }
   };
 
+  const handleCombine = async (
+    groupContainerRetroItem: RetroItem,
+    groupedRetroItem: RetroItem
+  ) => {
+    // Optimistically update the board locally.
+    // Change the itemType of the groupContainerRetroItem to "GROUP_CONTAINER".
+    groupContainerRetroItem.itemType = RetroItemType.GROUP_CONTAINER;
+    // Add the groupedRetroItem's id to the array.
+    groupContainerRetroItem.groupedRetroItemIds = [
+      ...(groupContainerRetroItem.groupedRetroItemIds || []),
+      groupedRetroItem.id
+    ];
+    // Change the itemType of the groupedRetroItem to "GROUP_ITEM"/
+    groupedRetroItem.itemType = RetroItemType.GROUP_ITEM;
+    // Add the groupContainerRetroItem's id to the groupedRetroItem.
+    groupedRetroItem.groupContainerId = groupContainerRetroItem.id;
+    // Update locally.
+    dispatch({
+      type: RetroActionTypes.RETRO_COMBINE_ITEMS,
+      payload: { groupedRetroItemId: groupedRetroItem.id, column: groupedRetroItem.type }
+    });
+    // Update in firestore.
+    await combineRetroItemTransaction({
+      retroId,
+      groupContainerRetroItem,
+      groupedRetroItem
+    });
+    return;
+  };
+
   const handleUpdateColumnItems = async (
     update: { [columnType in RetroColumnType]: RetroItem["id"][] }
   ) => {
@@ -310,6 +352,7 @@ export function useRetroState(retroId: Retro["id"]) {
     state,
     handleAddItem,
     handleDragDrop,
+    handleCombine,
     handleEditItem,
     handleLikeItem,
     handleUnlikeItem,
@@ -342,7 +385,7 @@ function retroStateReducer(
       delete retroItemIds[retroItemId];
       // Remove the RetroItemId from the column.
       const columnToUpdate = state.data.columns[column];
-      const items = columnToUpdate.retroItemIds.filter((id) => id !== retroItemId);
+      const items = removeItemFromColumn(retroItemId, columnToUpdate);
       return {
         ...state,
         data: {
@@ -381,8 +424,33 @@ function retroStateReducer(
       // @ts-ignore
       return { ...state, data: action.payload };
     }
+    case RetroActionTypes.RETRO_COMBINE_ITEMS: {
+      if (!state.data) {
+        return state;
+      }
+      const { groupedRetroItemId, column } = action.payload;
+      const columnToUpdate = state.data.columns[column];
+      const items = removeItemFromColumn(groupedRetroItemId, columnToUpdate);
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          columns: {
+            ...state.data.columns,
+            [column]: {
+              ...columnToUpdate,
+              retroItemIds: items
+            }
+          }
+        }
+      };
+    }
     default: {
       return state;
     }
   }
+}
+
+function removeItemFromColumn(retroItemId: string, column: RetroColumn): string[] {
+  return column.retroItemIds.filter((id) => id !== retroItemId);
 }

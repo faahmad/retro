@@ -35,6 +35,7 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
     state,
     handleAddItem,
     handleDragDrop,
+    handleCombine,
     handleEditItem,
     handleLikeItem,
     handleUnlikeItem,
@@ -135,6 +136,7 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
             onLikeItem={handleLikeItem}
             onUnlikeItem={handleUnlikeItem}
             onDragDrop={handleDragDrop}
+            onCombine={handleCombine}
           />
         </PageContainer>
         <Footer />
