@@ -37,6 +37,7 @@ export class RetroItemModal extends React.Component<
       isSubmitting: false
     };
   }
+
   handleKeydownEvent = (event: KeyboardEvent) => {
     if ((event.metaKey || event.ctrlKey) && event.keyCode === 13) {
       this.handleSubmit();
@@ -129,13 +130,9 @@ export class RetroItemModal extends React.Component<
                   </button>
                 )}
               </div>
-              <textarea
-                className="w-full p-2 border border-red text-blue focus:outline-none"
-                id="retro-item-modal-content-text-input"
-                rows={10}
-                name="content"
-                value={content}
-                onChange={(e) => this.setState({ content: e.target.value })}
+              <TextArea
+                content={content}
+                onChange={(e: any) => this.setState({ content: e.target.value })}
               />
             </div>
           </div>
@@ -163,4 +160,23 @@ export class RetroItemModal extends React.Component<
       </ReactModal>
     );
   }
+}
+
+function TextArea({ content, onChange }: any) {
+  const textArea = React.useRef<any>(null);
+  React.useEffect(() => {
+    textArea?.current?.focus();
+  }, []);
+
+  return (
+    <textarea
+      ref={textArea}
+      className="w-full p-2 border border-red text-blue focus:outline-none"
+      id="retro-item-modal-content-text-input"
+      rows={10}
+      name="content"
+      value={content}
+      onChange={onChange}
+    />
+  );
 }
