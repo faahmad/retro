@@ -457,6 +457,13 @@ function RetroItemGroup({
   retroItemsMap
 }: RetroItemGroupPropsT) {
   const [isInputOpen, setIsInputOpen] = React.useState(false);
+  const [groupName, setGroupName] = React.useState(retroItem.groupDescription);
+
+  const handleToggleInput = () => {
+    setIsInputOpen(!isInputOpen);
+    return;
+  };
+
   const handleOnBlur = (event: any) => {
     console.log({ value: event.target.value });
     setIsInputOpen(false);
@@ -489,24 +496,24 @@ function RetroItemGroup({
             {...provided.dragHandleProps}
           >
             <div className="flex flex-col flex-grow">
-              {isInputOpen ? (
-                <input
-                  className="border w-1/2 h-8 bg-white text-blue border-red focus:outline-none px-1"
-                  name="groupDescription"
-                  placeholder="Untitled Group"
-                  defaultValue={retroItem.groupDescription}
-                  onBlur={handleOnBlur}
-                />
-              ) : (
-                <div
-                  className=" h-8 text-lg text-blue font-black"
-                  onClick={() => setIsInputOpen(true)}
-                >
-                  {retroItem.groupDescription
-                    ? retroItem.groupDescription
-                    : "Untitled Group"}
-                </div>
-              )}
+              <div className="flex bg-red">
+                <EditButton onClick={handleToggleInput} />
+                {isInputOpen ? (
+                  <input
+                    className="border w-1/2 h-8 bg-white text-blue border-red focus:outline-none px-1"
+                    name="groupDescription"
+                    placeholder="Untitled Group"
+                    defaultValue={retroItem.groupDescription}
+                    onBlur={handleOnBlur}
+                  />
+                ) : (
+                  <div className=" h-8 text-lg text-blue font-black">
+                    {retroItem.groupDescription
+                      ? retroItem.groupDescription
+                      : "Untitled Group"}
+                  </div>
+                )}
+              </div>
 
               <div>
                 <Linkify>
