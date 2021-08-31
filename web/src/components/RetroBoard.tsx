@@ -9,7 +9,7 @@ import { useCurrentUser } from "../hooks/use-current-user";
 // Components
 import { AddButton } from "../components/AddButton";
 import { LoadingText } from "../components/LoadingText";
-import { UserAvatar } from "../components/UserAvatar";
+// import { UserAvatar } from "../components/UserAvatar";
 import { ThumbsUpIcon } from "../components/ThumbsUpIcon";
 import { PencilEditIcon } from "../components/PencilEditIcon";
 // Types
@@ -338,13 +338,13 @@ export const RetroListItem: React.FC<
             {...provided.dragHandleProps}
           >
             <div className="flex content-center">
-              {author && (
+              {/* {author && (
                 <UserAvatar
                   displayName={author.userDisplayName || author.userEmail}
                   photoURL={author.userPhotoURL}
                   isAnonymous={false}
                 />
-              )}
+              )} */}
               <div>
                 <Linkify>
                   <span>{content}</span>
