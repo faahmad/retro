@@ -12,10 +12,12 @@ export function RetroBoardUserSettings() {
     <div className="flex">
       <div className="flex mb-4">
         <div>
-          {/* <p className="text-blue text-xs text-right">Size</p> */}
+          <p className="text-blue text-xs text-right">
+            {settings?.isFullscreen ? "Shrink" : "Expand"}
+          </p>
           <button
             aria-label="edit title button"
-            className="flex items-center px-4 border border-blue text-2xl font-black focus:outline-none h-10 w-10 active:transform-1"
+            className="flex items-center px-4 border border-blue text-blue text-2xl font-black focus:outline-none h-10 w-full active:transform-1"
             onClick={toggleFullscreen}
           >
             {settings?.isFullscreen ? <Collapse /> : <Expand />}
@@ -26,8 +28,38 @@ export function RetroBoardUserSettings() {
   );
 }
 
-const Expand = () => <span className="text-blue">&#x2192;</span>;
-const Collapse = () => <span className="text-blue">&#x2190;</span>;
+const Expand = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="h-6 w-6"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"
+    />
+  </svg>
+);
+const Collapse = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="h-6 w-6"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M11 19l-7-7 7-7m8 14l-7-7 7-7"
+    />
+  </svg>
+);
 
 export function useUserSettings() {
   const currentUser = useCurrentUser();

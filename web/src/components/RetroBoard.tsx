@@ -8,10 +8,11 @@ import analytics from "analytics.js";
 import { useCurrentUser } from "../hooks/use-current-user";
 // Components
 import { AddButton } from "../components/AddButton";
+import { EditButton } from "../components/EditButton";
 import { LoadingText } from "../components/LoadingText";
+import { EditableText } from "../components/EditableText";
 // import { UserAvatar } from "../components/UserAvatar";
 import { ThumbsUpIcon } from "../components/ThumbsUpIcon";
-import { PencilEditIcon } from "../components/PencilEditIcon";
 // Types
 import { RetroItem, RetroItemsMap, RetroItemType } from "../types/retro-item";
 import { RetroColumnType, RetroColumn } from "../types/retro-column";
@@ -45,6 +46,7 @@ interface RetroBoardProps {
     groupContainerRetroItem: RetroItem,
     groupedRetroItem: RetroItem
   ) => Promise<void>;
+  onUpdateGroupDescription: (id: string, text: string) => void;
 }
 
 export function RetroBoard({
@@ -57,7 +59,8 @@ export function RetroBoard({
   onUnlikeItem,
   onDragDrop,
   onCombine,
-  onDeleteItem
+  onDeleteItem,
+  onUpdateGroupDescription
 }: RetroBoardProps) {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [
@@ -243,6 +246,7 @@ export function RetroBoard({
                 onClickLike={onLikeItem}
                 onClickUnlike={onUnlikeItem}
                 retroItemsMap={retroItems || {}}
+                onUpdateGroupDescription={onUpdateGroupDescription}
               />
             );
           })}
@@ -261,6 +265,7 @@ interface RetroListProps {
   onClickLike: (input: any) => void;
   onClickUnlike: (input: any) => void;
   onClickEdit: (retroItem: RetroItem) => void;
+  onUpdateGroupDescription: (id: string, text: string) => void;
   retroItemsMap: RetroItemsMap;
 }
 
@@ -273,7 +278,8 @@ export const RetroList: React.FC<RetroListProps> = ({
   onClickLike,
   onClickUnlike,
   onClickEdit,
-  retroItemsMap
+  retroItemsMap,
+  onUpdateGroupDescription
 }) => {
   return (
     <div className="flex flex-col border border-red shadow shadow-red">
@@ -298,6 +304,7 @@ export const RetroList: React.FC<RetroListProps> = ({
                     onClickLike={onClickLike}
                     onClickUnlike={onClickUnlike}
                     retroItemsMap={retroItemsMap}
+                    onUpdateGroupDescription={onUpdateGroupDescription}
                   />
                 ) : (
                   <RetroListItem
@@ -367,13 +374,6 @@ export const RetroListItem: React.FC<
             {...provided.dragHandleProps}
           >
             <div className="flex content-center">
-              {/* {author && (
-                <UserAvatar
-                  displayName={author.userDisplayName || author.userEmail}
-                  photoURL={author.userPhotoURL}
-                  isAnonymous={false}
-                />
-              )} */}
               <div>
                 <Linkify>
                   <span>{content}</span>
@@ -422,31 +422,13 @@ const LikeButton = ({ likeCount, likedBy, currentUserId, onClick }: LikeButtonPr
   );
 };
 
-interface EditButtonProps {
-  onClick: () => void;
-}
-
-const EditButton: React.FC<EditButtonProps> = ({ onClick }) => {
-  return (
-    <div className="flex items-center justify-center mr-2">
-      <button
-        className="rounded-full h-8 w-8 focus:outline-none active:transform-1"
-        onClick={onClick}
-      >
-        <div className={`flex justify-center items-end`}>
-          <PencilEditIcon />
-        </div>
-      </button>
-    </div>
-  );
-};
-
 type RetroItemGroupPropsT = {
   index: number;
   retroItem: RetroItem;
   onClickLike: any;
   onClickUnlike: any;
   retroItemsMap: RetroItemsMap;
+  onUpdateGroupDescription: (id: string, text: string) => void;
 };
 
 function RetroItemGroup({
@@ -454,22 +436,9 @@ function RetroItemGroup({
   index,
   onClickLike,
   onClickUnlike,
-  retroItemsMap
+  retroItemsMap,
+  onUpdateGroupDescription
 }: RetroItemGroupPropsT) {
-  const [isInputOpen, setIsInputOpen] = React.useState(false);
-  const [groupName, setGroupName] = React.useState(retroItem.groupDescription);
-
-  const handleToggleInput = () => {
-    setIsInputOpen(!isInputOpen);
-    return;
-  };
-
-  const handleOnBlur = (event: any) => {
-    console.log({ value: event.target.value });
-    setIsInputOpen(false);
-    return;
-  };
-
   const currentUser = useCurrentUser();
   const currentUserId = currentUser.auth!.uid;
 
@@ -477,6 +446,11 @@ function RetroItemGroup({
     const input = { id: retroItem.id, userId: currentUserId };
     // Toggle the like button.
     retroItem.likedBy[currentUserId] ? onClickUnlike(input) : onClickLike(input);
+    return;
+  };
+
+  const handleUpdateGroupDescription = (text: string) => {
+    onUpdateGroupDescription(retroItem.id, text);
     return;
   };
 
@@ -496,23 +470,11 @@ function RetroItemGroup({
             {...provided.dragHandleProps}
           >
             <div className="flex flex-col flex-grow">
-              <div className="flex bg-red">
-                <EditButton onClick={handleToggleInput} />
-                {isInputOpen ? (
-                  <input
-                    className="border w-1/2 h-8 bg-white text-blue border-red focus:outline-none px-1"
-                    name="groupDescription"
-                    placeholder="Untitled Group"
-                    defaultValue={retroItem.groupDescription}
-                    onBlur={handleOnBlur}
-                  />
-                ) : (
-                  <div className=" h-8 text-lg text-blue font-black">
-                    {retroItem.groupDescription
-                      ? retroItem.groupDescription
-                      : "Untitled Group"}
-                  </div>
-                )}
+              <div>
+                <EditableText
+                  defaultValue={retroItem.groupDescription}
+                  onSubmit={handleUpdateGroupDescription}
+                />
               </div>
 
               <div>

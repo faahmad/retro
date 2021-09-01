@@ -28,7 +28,9 @@ export enum AnalyticsEvent {
   RETRO_TIMER_PAUSED = "Retro Timer Paused",
   RETRO_TIMER_RESET = "Retro Timer Reset",
   RETRO_TIMER_ADD_1 = "Retro Timer Add 1 Min",
-  INVITE_LINK_COPIED = "Invite Link Copied",
+  RETRO_GROUP_CREATED = "Retro Group Created",
+  RETRO_GROUP_DESCRIPTION_UPDATED = "Retro Group Description Updated",
+  INVITE_LINK_COPIED = "Invite Link Copied", // Deprecated
   SKIPPED_ONBOARDING_INVITES = "Skipped Onboarding Invites"
 }
 

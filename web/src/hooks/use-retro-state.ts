@@ -325,6 +325,19 @@ export function useRetroState(retroId: Retro["id"]) {
     return;
   };
 
+  const handleUpdateGroupDescription = async (
+    groupContainerRetroItemId: string,
+    groupDescription: string
+  ) => {
+    try {
+      await updateRetroItem(groupContainerRetroItemId, { groupDescription });
+      trackEvent(AnalyticsEvent.RETRO_GROUP_DESCRIPTION_UPDATED, { groupDescription });
+      return;
+    } catch (error) {
+      Sentry.captureException(error);
+    }
+  };
+
   const handleUpdateColumnItems = async (
     update: { [columnType in RetroColumnType]: RetroItem["id"][] }
   ) => {
@@ -357,7 +370,8 @@ export function useRetroState(retroId: Retro["id"]) {
     handleLikeItem,
     handleUnlikeItem,
     handleDeleteItem,
-    handleUpdateColumnItems
+    handleUpdateColumnItems,
+    handleUpdateGroupDescription
   };
 }
 

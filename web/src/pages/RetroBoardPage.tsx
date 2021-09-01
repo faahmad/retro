@@ -40,7 +40,8 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
     handleLikeItem,
     handleUnlikeItem,
     handleDeleteItem,
-    handleUpdateColumnItems
+    handleUpdateColumnItems,
+    handleUpdateGroupDescription
   } = useRetroState(params.retroId);
   const workspaceState = useWorkspaceState();
   const { data, status, error } = state;
@@ -137,6 +138,7 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
             onUnlikeItem={handleUnlikeItem}
             onDragDrop={handleDragDrop}
             onCombine={handleCombine}
+            onUpdateGroupDescription={handleUpdateGroupDescription}
           />
         </PageContainer>
         <Footer />
