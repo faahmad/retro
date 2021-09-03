@@ -299,19 +299,25 @@ export function useRetroState(retroId: Retro["id"]) {
     groupContainerRetroItem: RetroItem,
     groupedRetroItem: RetroItem
   ) => {
-    // Optimistically update the board locally.
-    // Change the itemType of the groupContainerRetroItem to "GROUP_CONTAINER".
-    groupContainerRetroItem.itemType = RetroItemType.GROUP_CONTAINER;
-    // Add the groupedRetroItem's id to the array.
+    // Combine the retro items.
     groupContainerRetroItem.groupedRetroItemIds = [
       ...(groupContainerRetroItem.groupedRetroItemIds || []),
-      groupedRetroItem.id
+      // Add the groupedRetroItem's id to the array.
+      groupedRetroItem.id,
+      // Note: In case the groupedRetroItem is also a group, add it's grouped items to the new group.
+      // The groupedRetroItemIds of the groupedItemRetro will still point to their original groupContainer.
+      // Not sure if this will cause any issues, because I don't think we are actually doing anything with this value.
+      ...(groupedRetroItem.groupedRetroItemIds || [])
     ];
-    // Change the itemType of the groupedRetroItem to "GROUP_ITEM"/
+    // Change the itemType of the groupContainerRetroItem to "GROUP_CONTAINER".
+    groupContainerRetroItem.itemType = RetroItemType.GROUP_CONTAINER;
+    // Change the itemType of the groupedRetroItem to "GROUP_ITEM"
     groupedRetroItem.itemType = RetroItemType.GROUP_ITEM;
+    // Incase the groupedRetroItem was a group, clear it's description.
+    groupedRetroItem.groupDescription = "";
     // Add the groupContainerRetroItem's id to the groupedRetroItem.
     groupedRetroItem.groupContainerId = groupContainerRetroItem.id;
-    // Update locally.
+    // Optimistically update the board locally.
     dispatch({
       type: RetroActionTypes.RETRO_COMBINE_ITEMS,
       payload: { groupedRetroItemId: groupedRetroItem.id, column: groupedRetroItem.type }

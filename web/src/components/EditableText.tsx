@@ -1,7 +1,17 @@
 import * as React from "react";
 import { EditButton } from "./EditButton";
 
-export function EditableText({ defaultValue, onSubmit }: any) {
+type EditableTextPropsT = {
+  onSubmit: (text: string) => void;
+  defaultValue?: string;
+  placeholder?: string;
+};
+
+export function EditableText({
+  defaultValue,
+  onSubmit,
+  placeholder
+}: EditableTextPropsT) {
   const textInput = React.useRef<any>(null);
   const formRef = React.useRef<any>(null);
 
@@ -64,7 +74,7 @@ export function EditableText({ defaultValue, onSubmit }: any) {
         onMouseEnter={() => setShowEditIcon(true)}
         onMouseLeave={() => setShowEditIcon(false)}
       >
-        <span>{defaultValue || "Untitled group"}</span>
+        <span>{defaultValue || placeholder || "Untitled"}</span>
         {showEditIcon && <EditButton onClick={handleOpenInput} />}
       </div>
     </form>

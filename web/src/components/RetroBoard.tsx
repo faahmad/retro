@@ -20,6 +20,7 @@ import { RetroStateValues, RetroStateStatus } from "../hooks/use-retro-state";
 import { RetroItemModal } from "./RetroItemModal";
 import { WorkspaceUser, WorkspaceUsersMap } from "../types/workspace-user";
 import { AnalyticsEvent, useAnalyticsEvent } from "../hooks/use-analytics-event";
+import { rest } from "lodash";
 
 interface RetroBoardProps {
   retroState: RetroStateValues;
@@ -408,7 +409,7 @@ interface LikeButtonProps {
 
 const LikeButton = ({ likeCount, likedBy, currentUserId, onClick }: LikeButtonProps) => {
   return (
-    <div className="flex items-center content-center">
+    <div title="Like" className="flex items-center content-center">
       <span>{likeCount}</span>
       <button
         className="rounded-full focus:outline-none active:transform-1 h-8 w-8"
@@ -454,6 +455,13 @@ function RetroItemGroup({
     return;
   };
 
+  const groupedRetroItemIds = retroItem?.groupedRetroItemIds || [];
+  const first3GroupedItems = groupedRetroItemIds.slice(0, 3);
+  const rest = groupedRetroItemIds.slice(3);
+
+  console.log({ first3GroupedItems });
+  console.log({ rest });
+
   return (
     <Draggable draggableId={retroItem.id} index={index} isDragDisabled={false}>
       {(provided, snapshot) => {
@@ -473,6 +481,7 @@ function RetroItemGroup({
               <div>
                 <EditableText
                   defaultValue={retroItem.groupDescription}
+                  placeholder={retroItem.content}
                   onSubmit={handleUpdateGroupDescription}
                 />
               </div>
@@ -480,16 +489,14 @@ function RetroItemGroup({
               <div>
                 <Linkify>
                   <ul>
-                    <li className="mb-2">
-                      <span>{retroItem.content}</span>
-                    </li>
-                    {retroItem.groupedRetroItemIds?.map((id) => {
+                    {first3GroupedItems?.map((id) => {
                       return (
                         <li key={id} className="mb-2">
                           <span>{retroItemsMap[id].content}</span>
                         </li>
                       );
                     })}
+                    {rest.length ? <li>{`+${rest.length} more...`}</li> : null}
                   </ul>
                 </Linkify>
               </div>
@@ -497,6 +504,7 @@ function RetroItemGroup({
 
             <div>
               <div className="flex ml-2 items-center">
+                <UngroupButton onClick={() => {}} />
                 <LikeButton
                   likeCount={retroItem.likeCount}
                   likedBy={retroItem.likedBy}
@@ -509,5 +517,39 @@ function RetroItemGroup({
         );
       }}
     </Draggable>
+  );
+}
+
+function UngroupButton({ onClick }: any) {
+  return (
+    <div title="Ungroup" className="flex items-center content-center mr-1">
+      <button
+        className="rounded-full focus:outline-none active:transform-1 h-8 w-8"
+        onClick={onClick}
+      >
+        <div className="flex content-center items-center">
+          <HeroiconViewList />
+        </div>
+      </button>
+    </div>
+  );
+}
+
+function HeroiconViewList() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className="h-6 w-6"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M4 6h16M4 10h16M4 14h16M4 18h16"
+      />
+    </svg>
   );
 }
