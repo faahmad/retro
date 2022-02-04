@@ -1,3 +1,5 @@
 runtime: nodejs
-api_version: "1.0"
-env: flexible
+env: flex
+automatic_scaling:
+  min_instances: 0
+  max_instances: 1
