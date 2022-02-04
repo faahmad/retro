@@ -9,6 +9,7 @@ import { useCurrentUser } from "../hooks/use-current-user";
 // Components
 import { AddButton } from "../components/AddButton";
 import { LoadingText } from "../components/LoadingText";
+import { RetroBoardSidePanel } from "./RetroBoardSidePanel";
 // import { UserAvatar } from "../components/UserAvatar";
 import { ThumbsUpIcon } from "../components/ThumbsUpIcon";
 import { PencilEditIcon } from "../components/PencilEditIcon";
@@ -192,6 +193,7 @@ export function RetroBoard({
 
   return (
     <React.Fragment>
+      <RetroBoardSidePanel />
       {isModalOpen && (
         <RetroItemModal
           columnTitle={data.columns[columnTypeToAddItemTo]["title"]}
