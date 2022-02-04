@@ -1,4 +1,4 @@
-# This file specifies files that are *not* uploaded to Google Cloud Platform
+# This file specifies files that are *not* uploaded to Google Cloud
 # using gcloud. It follows the same syntax as .gitignore, with the addition of
 # "#!include" directives (which insert the entries of the given .gitignore-style
 # file at that point).
@@ -11,9 +11,7 @@
 # from your .gitignore file, remove the corresponding line
 # below:
 .git
-#.gitignore
+.gitignore
 
 # Node.js dependencies:
 node_modules/
-
-# custom

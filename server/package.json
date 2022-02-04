@@ -2,53 +2,10 @@
   "private": true,
   "name": "retro-server",
   "version": "1.0.0",
-  "main": "src/index.js",
+  "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "env-cmd -e development nodemon --exec babel-node src/index.js",
-    "start:test": "env-cmd -e test nodemon --exec babel-node src/index.js",
-    "test": "env-cmd -e test jest --runInBand",
-    "build": "babel src -d build -s --copy-files",
-    "start": "node build/index.js",
-    "predeploy": "yarn run build",
-    "deploy": "gcloud app deploy --quiet",
-    "browse": "gcloud app browse",
-    "logs": "gcloud app logs tail -s default",
-    "lint": "eslint src",
-    "prettier": "prettier \"src/**/*.{js,json,ts}\" --write",
-    "db:drop": "sequelize db:drop",
-    "firestore:drop": "firebase firestore:delete --project dev --all-collections -y",
-    "db:create": "sequelize db:create"
+    "start": "node index.js"
   },
-  "devDependencies": {
-    "@babel/cli": "^7.7.4",
-    "@babel/core": "^7.6.4",
-    "@babel/node": "^7.6.3",
-    "@babel/preset-env": "^7.6.3",
-    "eslint": "^6.5.1",
-    "eslint-config-airbnb": "^18.0.1",
-    "eslint-plugin-jest": "^23.1.1",
-    "faker": "^4.1.0",
-    "firebase-tools": "^8.4.3",
-    "jest": "^24.9.0",
-    "nodemon": "^1.19.4",
-    "prettier": "^2.0.5",
-    "supertest": "^4.0.2"
-  },
-  "dependencies": {
-    "apollo-server": "^2.9.6",
-    "apollo-server-express": "^2.9.6",
-    "cors": "^2.8.5",
-    "dotenv": "^8.2.0",
-    "env-cmd": "^10.0.1",
-    "express": "^4.17.1",
-    "firebase-admin": "^8.9.0",
-    "graphql": "^14.5.8",
-    "graphql-iso-date": "^3.6.1",
-    "lodash": "^4.17.15",
-    "pg": "^7.12.1",
-    "sequelize": "^5.21.1",
-    "sequelize-cli": "^5.5.1",
-    "stripe": "^8.51.0"
-  }
+  "dependencies": {}
 }
