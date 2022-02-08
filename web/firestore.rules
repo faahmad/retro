@@ -13,9 +13,6 @@ service cloud.firestore {
     function isWorkspaceUser(database, workspaceId, userId) {
       return exists(/databases/$(database)/documents/workspace_user/$(workspaceId + "_" + userId));
     }
-    function hasEnoughSeats(database, workspaceId) {
-      return getAfter(/databases/$(database)/documents/workspace/$(workspaceId)).data.userCount <= 10;
-    }
     function hasActiveAccount(database, workspaceId) {
       let subscriptionStatus = getAfter(/databases/$(database)/documents/workspace/$(workspaceId)).data.subscriptionStatus;
       return subscriptionStatus == "trialing" || subscriptionStatus == "active";
@@ -66,8 +63,6 @@ service cloud.firestore {
       allow create: if isSignedIn(request) 
                     && isUser(incomingData(request).userId) 
                     && hasActiveAccount(database, incomingData(request).workspaceId)
-                    // && hasAllowedEmailDomain(database, incomingData(request).workspaceId, request.auth.token.email)
-                    && hasEnoughSeats(database, incomingData(request).workspaceId); 
       // Workspace users can read other users in their workspace.
       allow read: if isWorkspaceUser(database, resource.data.workspaceId, request.auth.uid);
       // Workspace user can update themselves.
