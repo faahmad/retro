@@ -6,8 +6,8 @@
     "lint": "tslint --project tsconfig.json",
     "prettier": "prettier \"src/**/*.{js,json,ts}\" --write",
     "build": "tsc",
-    "deploy:dev": "firebase deploy --project dev --only functions",
-    "deploy:prod": "firebase deploy --project prod --only functions",
+    "predeploy": "yarn build",
+    "deploy": "firebase deploy --project prod --only functions",
     "logs": "firebase functions:log",
     "config:get": "firebase functions:config:get > .runtimeconfig.json"
   },
