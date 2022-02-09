@@ -206,9 +206,7 @@ const TeamMemberOverview: React.FC<{
         <div className="flex justify-between items-center">
           <div>
             <p className="text-red text-xl font-black">Team Members</p>
-            <p className="text-blue text-xs">
-              {userCount > 1 ? `${userCount}/10 seats used` : ""}
-            </p>
+            <p className="text-blue text-xs">{userCount} team members</p>
           </div>
           <div className="flex items-center">
             <p className="text-blue font-black hidden lg:block">Invite Member</p>
