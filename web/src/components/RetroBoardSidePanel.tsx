@@ -1,69 +1,45 @@
-/*
-  This example requires Tailwind CSS v2.0+ 
-  
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
-*/
 import * as React from "react";
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/outline";
-import { LinkIcon, PlusSmIcon, QuestionMarkCircleIcon } from "@heroicons/react/solid";
-
-const team = [
-  {
-    name: "Tom Cook",
-    email: "tomcook@example.com",
-    href: "#",
-    imageUrl:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-  },
-  {
-    name: "Whitney Francis",
-    email: "whitneyfrancis@example.com",
-    href: "#",
-    imageUrl:
-      "https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-  },
-  {
-    name: "Leonard Krasner",
-    email: "leonardkrasner@example.com",
-    href: "#",
-    imageUrl:
-      "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-  },
-  {
-    name: "Floyd Miles",
-    email: "floydmiles@example.com",
-    href: "#",
-    imageUrl:
-      "https://images.unsplash.com/photo-1463453091185-61582044d556?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-  },
-  {
-    name: "Emily Selman",
-    email: "emilyselman@example.com",
-    href: "#",
-    imageUrl:
-      "https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-  }
-];
+import { useParams } from "react-router-dom";
+import { Retro } from "../types/retro";
+import { useRetroState } from "../hooks/use-retro-state";
+import moment from "moment";
+import { useUpdateRetro } from "../hooks/use-update-retro";
+import { useAnalyticsEvent, AnalyticsEvent } from "../hooks/use-analytics-event";
+import { AnalyticsPage } from "../hooks/use-analytics-page";
+import firebase from "../lib/firebase";
 
 export function RetroBoardSidePanel({ isOpen, toggle }: any) {
-  const [open, setOpen] = useState(true);
+  const params = useParams<{ retroId: Retro["id"] }>();
+  const { state } = useRetroState(params.retroId);
+
+  const name = state?.data?.name;
+  const createdAt = moment(state?.data?.createdAt?.toDate()).format("YYYY-MM-DD");
+
+  const updateRetro = useUpdateRetro();
+  const trackEvent = useAnalyticsEvent();
+  async function handleSave(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    // @ts-ignore
+    const createdAtJSDate = moment(event.target.createdAt.value, "YYYY-MM-DD").toDate();
+    await updateRetro(params.retroId, {
+      // @ts-ignore
+      name: event.target?.name?.value,
+      // @ts-ignore
+      createdAt: firebase.firestore.Timestamp.fromDate(createdAtJSDate)
+    });
+    trackEvent(AnalyticsEvent.RETRO_UPDATED, {
+      location: AnalyticsPage.RETRO_BOARD
+    });
+    toggle();
+    return;
+  }
 
   return (
-    <Transition.Root show={open} as={Fragment}>
-      <Dialog as="div" className="fixed inset-0 overflow-hidden" onClose={setOpen}>
+    <Transition.Root show={isOpen} as={Fragment}>
+      <Dialog as="div" className="fixed inset-0 overflow-hidden" onClose={toggle}>
         <div className="absolute inset-0 overflow-hidden">
           <Dialog.Overlay className="absolute inset-0" />
 
@@ -78,18 +54,21 @@ export function RetroBoardSidePanel({ isOpen, toggle }: any) {
               leaveTo="translate-x-full"
             >
               <div className="w-screen max-w-md border border-blue">
-                <form className="h-full divide-y divide-gray-200 flex flex-col bg-blue text-white shadow-xl">
+                <form
+                  className="h-full divide-y divide-gray-200 flex flex-col bg-blue text-white shadow-xl"
+                  onSubmit={handleSave}
+                >
                   <div className="flex-1 h-0 overflow-y-auto">
                     <div className="py-6 px-4 bg-indigo-700 sm:px-6">
                       <div className="flex items-center justify-between">
                         <Dialog.Title className="text-lg font-medium text-white">
-                          Facilitator Controls
+                          Retro Settings
                         </Dialog.Title>
                         <div className="ml-3 h-7 flex items-center">
                           <button
                             type="button"
                             className="bg-indigo-700 rounded-md text-indigo-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
-                            onClick={() => setOpen(false)}
+                            onClick={toggle}
                           >
                             <span className="sr-only">Close panel</span>
                             <XIcon className="h-6 w-6" aria-hidden="true" />
@@ -97,7 +76,9 @@ export function RetroBoardSidePanel({ isOpen, toggle }: any) {
                         </div>
                       </div>
                       <div className="mt-1">
-                        <p className="text-sm text-indigo-300">Only you have the power</p>
+                        <p className="text-sm text-indigo-300">
+                          Only facilitators can adjust these
+                        </p>
                       </div>
                     </div>
                     <div className="flex-1 flex flex-col justify-between">
@@ -105,7 +86,7 @@ export function RetroBoardSidePanel({ isOpen, toggle }: any) {
                         <div className="space-y-6 pt-6 pb-5">
                           <div>
                             <label
-                              htmlFor="project-name"
+                              htmlFor="name"
                               className="block text-sm font-medium text-gray-900"
                             >
                               Name
@@ -113,101 +94,27 @@ export function RetroBoardSidePanel({ isOpen, toggle }: any) {
                             <div className="mt-1">
                               <input
                                 type="text"
-                                name="project-name"
-                                id="project-name"
+                                name="name"
+                                id="name"
                                 className="border border-red px-1 block w-full shadow-sm text-blue h-8"
-                                placeholder="Untitled Retrospective"
-                              />
-                            </div>
-                          </div>
-                          <div>
-                            <label
-                              htmlFor="description"
-                              className="block text-sm font-medium text-gray-900"
-                            >
-                              Context
-                            </label>
-                            <div className="mt-1">
-                              <textarea
-                                id="description"
-                                name="description"
-                                rows={4}
-                                className="border border-red w-full px-1 block text-blue shadow-sm"
-                                defaultValue={""}
-                                placeholder="Optionally set the stage for your team"
+                                defaultValue={name}
                               />
                             </div>
                           </div>
                           <div>
                             <label
                               className="block text-sm font-medium text-gray-900"
-                              htmlFor="date"
+                              htmlFor="createdAt"
                             >
                               Date
                             </label>
                             <input
                               className="text-blue"
                               type="date"
-                              id="date"
-                              name="date"
-                              value="2018-07-22"
-                              min="2018-01-01"
+                              id="createdAt"
+                              name="createdAt"
+                              defaultValue={createdAt}
                             />
-                          </div>
-                          <div>
-                            <h3 className="text-sm font-medium text-gray-900">
-                              Team Members
-                            </h3>
-                            <div className="mt-2">
-                              <div className="flex space-x-2">
-                                {team.map((person) => (
-                                  <a
-                                    key={person.email}
-                                    href={person.href}
-                                    className="rounded-full hover:opacity-75"
-                                  >
-                                    <img
-                                      className="inline-block h-8 w-8 rounded-full"
-                                      src={person.imageUrl}
-                                      alt={person.name}
-                                    />
-                                  </a>
-                                ))}
-                                <button
-                                  type="button"
-                                  className="flex-shrink-0 bg-white inline-flex h-8 w-8 items-center justify-center rounded-full border-2 border-dashed border-gray-200 text-gray-400 hover:text-gray-500 hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                >
-                                  <span className="sr-only">Add team member</span>
-                                  <PlusSmIcon className="h-5 w-5" aria-hidden="true" />
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="pt-4 pb-6">
-                          <div className="flex text-sm">
-                            <a
-                              href="#"
-                              className="group inline-flex items-center font-medium text-indigo-600 hover:text-indigo-900"
-                            >
-                              <LinkIcon
-                                className="h-5 w-5 text-indigo-500 group-hover:text-indigo-900"
-                                aria-hidden="true"
-                              />
-                              <span className="ml-2">Copy link</span>
-                            </a>
-                          </div>
-                          <div className="mt-4 flex text-sm">
-                            <a
-                              href="#"
-                              className="group inline-flex items-center text-gray-500 hover:text-gray-900"
-                            >
-                              <QuestionMarkCircleIcon
-                                className="h-5 w-5 text-gray-400 group-hover:text-gray-500"
-                                aria-hidden="true"
-                              />
-                              <span className="ml-2">Learn more about sharing</span>
-                            </a>
                           </div>
                         </div>
                       </div>
@@ -217,7 +124,7 @@ export function RetroBoardSidePanel({ isOpen, toggle }: any) {
                     <button
                       type="button"
                       className="bg-white py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium text-blue hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                      onClick={() => setOpen(false)}
+                      onClick={toggle}
                     >
                       Cancel
                     </button>
