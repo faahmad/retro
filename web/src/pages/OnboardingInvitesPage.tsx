@@ -4,7 +4,7 @@ import { Button } from "../components/Button";
 import { Link, useHistory } from "react-router-dom";
 import { useCreateWorkspaceInvite } from "../hooks/use-create-workspace-invite";
 import { useAnalyticsEvent } from "../hooks/use-analytics-event";
-import { useWorkspaceState } from "../hooks/use-workspace-state";
+import { useGetWorkspace } from "../hooks/use-get-workspace";
 import { LoadingText } from "../components/LoadingText";
 import { AnalyticsEvent } from "../hooks/use-analytics-event";
 import { AnalyticsPage, useAnalyticsPage } from "../hooks/use-analytics-page";
@@ -14,7 +14,7 @@ export function OnboardingInvitesPage() {
 
   const createWorkspaceInvite = useCreateWorkspaceInvite();
   const trackEvent = useAnalyticsEvent();
-  const workspaceState = useWorkspaceState();
+  const workspaceState = useGetWorkspace();
   const history = useHistory();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {

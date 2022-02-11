@@ -3,12 +3,13 @@ import { RetroCard } from "../components/RetroCard";
 import { ErrorMessageBanner } from "../components/ErrorMessageBanner";
 import { LoadingText } from "../components/LoadingText";
 import { PageContainer } from "../components/PageContainer";
-import { WorkspaceStateStatus } from "../contexts/WorkspaceStateContext";
-import { useWorkspaceState } from "../hooks/use-workspace-state";
+import { WorkspaceStateStatus } from "../hooks/use-get-workspace";
+import { useGetWorkspace } from "../hooks/use-get-workspace";
 import { Retro } from "../types/retro";
 import { useHistory } from "react-router-dom";
 import analytics from "analytics.js";
 import { AnalyticsPage, useAnalyticsPage } from "../hooks/use-analytics-page";
+import { Navbar } from "../components/Navbar";
 
 export function RetroListPage() {
   useAnalyticsPage(AnalyticsPage.RETRO_LIST);
@@ -17,7 +18,7 @@ export function RetroListPage() {
     analytics.track("Retro Opened", { ...retro, location: AnalyticsPage.RETRO_LIST });
     return history.push(`/workspaces/${retro.workspaceId}/retros/${retro.id}`);
   };
-  const { status, retros, name } = useWorkspaceState();
+  const { status, retros, name } = useGetWorkspace();
 
   if (status === WorkspaceStateStatus.LOADING) {
     return <LoadingText>Loading...</LoadingText>;
@@ -27,6 +28,7 @@ export function RetroListPage() {
 
   return (
     <PageContainer>
+      <Navbar isLoggedIn />
       {hasError && (
         <ErrorMessageBanner message="It was probably us. Please try again in a couple minutes." />
       )}

@@ -8,8 +8,9 @@ import { workspaceUsersListener } from "../services/workspace-users-listener";
 import { workspaceInvitesListener } from "../services/workspace-invite-listener";
 import { workspaceRetrosListener } from "../services/workspace-retros-listener";
 import { Retro } from "../types/retro";
-import { useGetWorkspaceSubscription } from "../hooks/use-get-workspace-subscription";
+import { useGetWorkspaceSubscription } from "./use-get-workspace-subscription";
 import { updateWorkspace } from "../services/update-workspace";
+import { useParams } from "react-router-dom";
 
 export enum WorkspaceStateStatus {
   LOADING = "loading",
@@ -59,18 +60,9 @@ const initialState: WorkspaceStateValues = {
   userCount: 0
 };
 
-export const WorkspaceStateContext = React.createContext<WorkspaceStateValues>(
-  initialState
-);
-
-export function WorkspaceStateProvider({
-  workspaceId,
-  children
-}: {
-  workspaceId?: Workspace["id"];
-  children: React.ReactNode;
-}) {
+export function useGetWorkspace() {
   const [values, dispatch] = React.useReducer(workspaceStateReducer, initialState);
+  const workspaceId = useParams<any>().workspaceId;
   const { subscription, isLoading }: any = useGetWorkspaceSubscription(workspaceId);
   React.useEffect(() => {
     if (workspaceId && subscription) {
@@ -138,11 +130,7 @@ export function WorkspaceStateProvider({
     };
   }, [workspaceId]);
 
-  return (
-    <WorkspaceStateContext.Provider value={values}>
-      {children}
-    </WorkspaceStateContext.Provider>
-  );
+  return values;
 }
 
 function workspaceStateReducer(

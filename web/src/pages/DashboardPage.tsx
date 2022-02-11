@@ -1,14 +1,12 @@
 import React from "react";
-import { RouteComponentProps, Link, useHistory } from "react-router-dom";
+import { RouteComponentProps, Link } from "react-router-dom";
 import teamMemberEmptyImage from "../assets/images/team-member-empty-image.svg";
 import retroEmptyImage from "../assets/images/retro-empty-image.svg";
 import { InviteUserToWorkspaceModal } from "../components/InviteUserToWorkspaceModal";
-import { LoadingText } from "../components/LoadingText";
 import { Footer } from "../components/Footer";
 import { PageContainer } from "../components/PageContainer";
 import { UpgradeToProBanner } from "../components/UpgradeToProBanner";
 import { useCurrentUser } from "../hooks/use-current-user";
-import { useWorkspaceState } from "../hooks/use-workspace-state";
 import { WorkspaceUser } from "../types/workspace-user";
 import { WorkspaceInvite, WorkspaceInviteStatus } from "../types/workspace-invite";
 import { Retro } from "../types/retro";
@@ -17,37 +15,22 @@ import { useCreateRetro } from "../hooks/use-create-retro";
 import { RetroCard } from "../components/RetroCard";
 import { useAnalyticsPage, AnalyticsPage } from "../hooks/use-analytics-page";
 import { useAnalyticsEvent, AnalyticsEvent } from "../hooks/use-analytics-event";
-import { getWorkspaceFromCurrentUser } from "../utils/workspace-utils";
+import { useGetWorkspace } from "../hooks/use-get-workspace";
+import { Navbar } from "../components/Navbar";
 
 export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
   useAnalyticsPage(AnalyticsPage.DASHBOARD);
-  const workspaceState = useWorkspaceState();
+  const workspaceState = useGetWorkspace();
+
   const currentUser = useCurrentUser();
-  const workspace = getWorkspaceFromCurrentUser(currentUser);
-
-  if (currentUser.state === "loading") {
-    return <LoadingText>Fetching your account...</LoadingText>;
-  }
-
-  if (!workspace) {
-    return <RedirectToOnboarding />;
-  }
-
-  if (workspaceState.status === "loading") {
-    return <LoadingText>Fetching workspace...</LoadingText>;
-  }
-
-  if (workspaceState.status === "error") {
-    return <LoadingText>Uh oh...something went wrong.</LoadingText>;
-  }
-
   const userId = currentUser?.auth?.uid;
   const isWorkspaceOwner = getIsWorkspaceOwner(workspaceState, userId || "");
   const isInActiveMode = workspaceState.subscriptionStatus === "active";
 
   return (
-    <div>
+    <React.Fragment>
       <PageContainer>
+        <Navbar isLoggedIn={true} />
         <p className="text-blue mb-2 underline">{workspaceState.name}</p>
         <h1 className="text-blue font-black text-3xl">Dashboard</h1>
         {!isInActiveMode && isWorkspaceOwner && (
@@ -74,7 +57,7 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
         />
       </PageContainer>
       <Footer />
-    </div>
+    </React.Fragment>
   );
 };
 
@@ -302,10 +285,4 @@ function PlaceholderAvatar({ char }: { char: string }) {
 
 function getIsWorkspaceOwner(workspace: any, userId: string) {
   return workspace?.ownerId === userId;
-}
-
-function RedirectToOnboarding() {
-  const history = useHistory();
-  history.push("/onboarding");
-  return null;
 }
