@@ -11,8 +11,7 @@ import {
   RetroItemsListenerStatus
 } from "../hooks/use-retro-items-listener";
 import { RetroBoard } from "../components/RetroBoard";
-import { useWorkspaceState } from "../hooks/use-workspace-state";
-import { WorkspaceStateStatus } from "../contexts/WorkspaceStateContext";
+import { useGetWorkspace, WorkspaceStateStatus } from "../hooks/use-get-workspace";
 import { AnalyticsPage, useAnalyticsPage } from "../hooks/use-analytics-page";
 import { AnalyticsEvent, useAnalyticsEvent } from "../hooks/use-analytics-event";
 import { useCurrentUser } from "../hooks/use-current-user";
@@ -41,7 +40,7 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
     handleDeleteItem,
     handleUpdateColumnItems
   } = useRetroState(params.retroId);
-  const workspaceState = useWorkspaceState();
+  const workspaceState = useGetWorkspace();
   const { data, status, error } = state;
   const { settings } = useUserSettings();
 

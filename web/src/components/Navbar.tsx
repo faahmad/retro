@@ -3,7 +3,6 @@ import { Link, useHistory } from "react-router-dom";
 import { animated, useTransition } from "react-spring";
 import { Button } from "./Button";
 import { RetroPinkLogo } from "./RetroPinkLogo";
-import { logOut } from "../services/auth-service";
 import { useCurrentUser } from "../hooks/use-current-user";
 import {
   getRootUrlForWorkspace,
@@ -11,16 +10,9 @@ import {
 } from "../utils/workspace-utils";
 import { AnalyticsEvent, useAnalyticsEvent } from "../hooks/use-analytics-event";
 
-export const Navbar: React.FC<any> = ({ isLoggedIn, userState }) => {
-  const history = useHistory();
-
-  const handleOnLogOut = async () => {
-    await logOut();
-    history.push("/");
-  };
-
+export const Navbar: React.FC<any> = ({ isLoggedIn }) => {
   return (
-    <nav className="navbar flex flex-wrap justify-between items-baseline sm:mb-1 lg:mb-4">
+    <nav className="navbar flex flex-wrap justify-between items-baseline sm:mb-1 lg:mb-16">
       <div className="flex items-center">
         <NavbarBrand />
         {isLoggedIn && (
@@ -33,16 +25,7 @@ export const Navbar: React.FC<any> = ({ isLoggedIn, userState }) => {
         <div className="flex flex-col">
           <NavbarLoggedOutButtons />
         </div>
-      ) : (
-        <div className="flex flex-col z-0">
-          <Button
-            className="mt-10 sm:mt-0 md:mt-0 lg:mt-0 text-blue text-right"
-            onClick={handleOnLogOut}
-          >
-            Sign Out
-          </Button>
-        </div>
-      )}
+      ) : null}
     </nav>
   );
 };
