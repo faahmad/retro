@@ -12,5 +12,5 @@ export const alertWorkspaceCreated = functions.firestore
   .onCreate((snapshot) => {
     const workspace = snapshot.data() as Workspace;
     const message = `New workspace! ${workspace.name} was created by ${workspace.ownerEmail}.`;
-    return isProd ? testPublishMessage(message) : publishMessage(message);
+    return isProd ? publishMessage(message) : testPublishMessage(message);
   });
