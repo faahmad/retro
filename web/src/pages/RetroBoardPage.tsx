@@ -5,7 +5,6 @@ import { Footer } from "../components/Footer";
 import { PageContainer } from "../components/PageContainer";
 import { useRetroState, RetroStateStatus } from "../hooks/use-retro-state";
 import { Retro } from "../types/retro";
-import { useUpdateRetro } from "../hooks/use-update-retro";
 import {
   useRetroItemsListener,
   RetroItemsListenerStatus
@@ -22,6 +21,9 @@ import {
   RetroBoardUserSettings,
   useUserSettings
 } from "../components/RetroBoardUserSettings";
+import { RetroBoardSidePanel } from "../components/RetroBoardSidePanel";
+
+import { AdjustmentsIcon } from "@heroicons/react/outline";
 
 export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
   useAnalyticsPage(AnalyticsPage.RETRO_BOARD);
@@ -43,6 +45,12 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
   const workspaceState = useGetWorkspace();
   const { data, status, error } = state;
   const { settings } = useUserSettings();
+  const currentUser = useCurrentUser();
+
+  const [isSidePanelOpen, setIsSidePanelOpen] = React.useState(false);
+  function handleToggleSidePanel() {
+    setIsSidePanelOpen(!isSidePanelOpen);
+  }
 
   const sortByLikes = (retroItems: RetroItemsMap, retroItemIds: RetroItem["id"][]) => {
     return retroItemIds.sort((a, b) => retroItems[b].likeCount - retroItems[a].likeCount);
@@ -106,15 +114,21 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
   if (status === RetroStateStatus.SUCCESS && data !== null) {
     return (
       <React.Fragment>
+        <RetroBoardSidePanel isOpen={isSidePanelOpen} toggle={handleToggleSidePanel} />
         <PageContainer
           className={settings?.isFullscreen ? "my-16 px-8 m-auto" : undefined}
         >
-          <RetroHeader
-            id={data.id}
-            name={data.name}
-            createdAt={data.createdAt}
-            ownerId={data.createdById}
-          />
+          <div className="flex text-blue items-baseline justify-between mb-8">
+            <RetroHeader name={data.name} createdAt={data.createdAt} />
+            {data?.createdById === currentUser?.data?.id ? (
+              <button
+                onClick={handleToggleSidePanel}
+                className="h-10 w-10 flex items-center justify-center bg-blue text-white ml-3 border border-red shadow shadow-red text-2xl hover:bg-pink-1/2 active:transform-1 focus:outline-none"
+              >
+                <AdjustmentsIcon className="h-8 w-8" />
+              </button>
+            ) : null}
+          </div>
           <div className="flex justify-between flex-wrap">
             <RetroBoardActions
               retroId={data.id}
@@ -146,80 +160,49 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
 };
 
 interface RetroHeaderProps {
-  id: string;
   name: string;
   createdAt: any;
-  ownerId: string;
 }
-function RetroHeader({ id, name, createdAt, ownerId }: RetroHeaderProps) {
-  const [localName, setLocalName] = React.useState(name);
-  const handleOnChange = (event: any) => {
-    return setLocalName(event.currentTarget.value);
-  };
+function RetroHeader({ name, createdAt }: RetroHeaderProps) {
+  // const [localName, setLocalName] = React.useState(name);
+  // const handleOnChange = (event: any) => {
+  //   return setLocalName(event.currentTarget.value);
+  // };
 
-  const [isEditing, setisEditing] = React.useState(false);
-  const handleToggleEditing = () => {
-    return setisEditing((prevState) => !prevState);
-  };
-  const inputRef = React.useRef(null);
-  React.useEffect(() => {
-    if (isEditing) {
-      // @ts-ignore
-      inputRef.current.focus();
-    }
-  }, [isEditing]);
+  // const [isEditing, setisEditing] = React.useState(false);
+  // const handleToggleEditing = () => {
+  //   return setisEditing((prevState) => !prevState);
+  // };
+  // const inputRef = React.useRef(null);
+  // React.useEffect(() => {
+  //   if (isEditing) {
+  //     // @ts-ignore
+  //     inputRef.current.focus();
+  //   }
+  // }, [isEditing]);
 
-  const updateRetro = useUpdateRetro();
-  const trackEvent = useAnalyticsEvent();
-  const currentUser = useCurrentUser();
-  const handleSave = async () => {
-    await updateRetro(id, { name: localName });
-    trackEvent(AnalyticsEvent.RETRO_UPDATED, {
-      retroId: id,
-      createdAt,
-      fields: ["name"],
-      location: AnalyticsPage.RETRO_BOARD,
-      updatedBy: currentUser.auth?.uid === ownerId ? "retro-owner" : "member"
-    });
-    handleToggleEditing();
-    return;
-  };
+  // const updateRetro = useUpdateRetro();
+  // const trackEvent = useAnalyticsEvent();
+  // const currentUser = useCurrentUser();
+  // const handleSave = async () => {
+  //   await updateRetro(id, { name: localName });
+  //   trackEvent(AnalyticsEvent.RETRO_UPDATED, {
+  //     retroId: id,
+  //     createdAt,
+  //     fields: ["name"],
+  //     location: AnalyticsPage.RETRO_BOARD,
+  //     updatedBy: currentUser.auth?.uid === ownerId ? "retro-owner" : "member"
+  //   });
+  //   handleToggleEditing();
+  //   return;
+  // };
 
   return (
-    <div className="flex text-blue items-baseline justify-between mb-8">
-      <div className="flex flex-col flex-grow flex-nowrap">
-        {!isEditing ? (
-          <h1 className="text-4xl font-bold">{name || "Retro Board"}</h1>
-        ) : (
-          <input
-            ref={inputRef}
-            type="text"
-            name="name"
-            value={localName}
-            onChange={handleOnChange}
-            className="border border-red my-1 h-12 w-4/5 lg:w-full max-w-md outline-none text-xl px-1"
-          />
-        )}
-        <span className="text-xs font-normal">
-          Created {moment(createdAt.toDate()).format("L")}
-        </span>
-      </div>
-      {!isEditing ? (
-        <button
-          aria-label="edit title button"
-          className="flex items-center px-4 border border blue"
-          onClick={handleToggleEditing}
-        >
-          <span>Edit</span>
-        </button>
-      ) : (
-        <button
-          className="flex items-center px-4 bg-blue text-white"
-          onClick={handleSave}
-        >
-          Save
-        </button>
-      )}
+    <div className="flex flex-col flex-grow flex-nowrap">
+      <h1 className="text-4xl font-bold">{name || "Retro Board"}</h1>
+      <span className="text-xs font-normal">
+        Created {moment(createdAt.toDate()).format("L")}
+      </span>
     </div>
   );
 }
