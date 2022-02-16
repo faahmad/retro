@@ -22,7 +22,7 @@
 .firebase/*
 .runtimeconfig.json
 firestore-debug.log
-
+database-debug.log
 
 
 npm-debug.log*

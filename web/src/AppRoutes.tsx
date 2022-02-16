@@ -73,7 +73,6 @@ const UnauthenticatedAppRoutes: React.FC = () => {
  * Routes that are only accesible if you are logged in.
  */
 function AuthenticatedAppRoutes() {
-  debugger;
   return (
     <React.Fragment>
       <Route exact path="/onboarding" component={OnboardingPage} />
