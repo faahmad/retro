@@ -8,6 +8,7 @@ import firebase from "../lib/firebase";
 import { ErrorMessageBanner } from "../components/ErrorMessageBanner";
 import { NotificationBanner } from "../components/NotificationBanner";
 import { Button } from "../components/Button";
+import { Navbar } from "../components/Navbar";
 import * as Sentry from "@sentry/react";
 
 import { useCurrentUser } from "../hooks/use-current-user";
@@ -23,6 +24,7 @@ export function LoginPage() {
 
   return (
     <PageContainer>
+      <Navbar isLoggedIn={false} />
       <LoginFormContainer />
     </PageContainer>
   );

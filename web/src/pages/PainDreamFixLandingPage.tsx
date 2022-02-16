@@ -9,6 +9,7 @@ import applicationScreenshotImage from "../assets/images/ui@2x.png";
 import landingFooterImage from "../assets/images/landing-page-footer.svg";
 
 import { PageContainer } from "../components/PageContainer";
+import { Navbar } from "../components/Navbar";
 
 import { useCurrentUser } from "../hooks/use-current-user";
 import { CurrentUserState } from "../contexts/CurrentUserContext";
@@ -39,6 +40,7 @@ export const PainDreamFixLandingPage: React.FC = () => {
     <div>
       <div className="landing-page flex flex-col w-full justify-center">
         <PageContainer>
+          <Navbar isLoggedIn={false} />
           <div className="flex flex-col-reverse text-center lg:flex-row lg:items-center lg:text-left">
             <div id="hero-title" className="w-full lg:w-1/2 mt-4 lg:mt-0">
               <h2 className="text-blue font-black text-xl lg:text-2xl">
