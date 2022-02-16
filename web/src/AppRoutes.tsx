@@ -21,7 +21,6 @@ import { WorkspaceListPage } from "./pages/WorkspaceListPage";
 
 import { PainDreamFixLandingPage } from "./pages/PainDreamFixLandingPage";
 import { MagicLinkPage } from "./pages/MagicLinkPage";
-import { OnboardingInvitesPage } from "./pages/OnboardingInvitesPage";
 
 import { LoginPage } from "./pages/LoginPage";
 import { RetroListPage } from "./pages/RetroListPage";
@@ -76,7 +75,6 @@ const UnauthenticatedAppRoutes: React.FC = () => {
 function AuthenticatedAppRoutes() {
   return (
     <React.Fragment>
-      <Route exact path="/onboarding/invites" component={OnboardingInvitesPage} />
       <Route exact path="/onboarding" component={OnboardingPage} />
       <Route
         exact
