@@ -17,6 +17,7 @@ export interface Retro {
   createdAt?: TODO;
   userIds: { [userId: string]: User["id"] };
   retroItemIds: { [retroItemId: string]: string };
+  isIncognito?: boolean;
   retroItemsData: {
     goodCount: number;
     badCount: number;

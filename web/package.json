@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "yarn start",
-    "emulate": "firebase emulators:start --project dev",
+    "emulate": "firebase emulators:start --project prod",
     "start": "react-scripts start",
     "test": "react-scripts test",
     "build": "react-scripts build",
