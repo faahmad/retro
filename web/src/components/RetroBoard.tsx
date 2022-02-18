@@ -19,6 +19,7 @@ import { RetroStateValues, RetroStateStatus } from "../hooks/use-retro-state";
 import { RetroItemModal } from "./RetroItemModal";
 import { WorkspaceUser, WorkspaceUsersMap } from "../types/workspace-user";
 import { AnalyticsEvent, useAnalyticsEvent } from "../hooks/use-analytics-event";
+import { EyeOffIcon } from "@heroicons/react/outline";
 
 interface RetroBoardProps {
   retroState: RetroStateValues;
@@ -222,6 +223,7 @@ export function RetroBoard({
                 type={columnType}
                 items={items}
                 users={users}
+                isIncognito={data?.isIncognito}
                 onClickAdd={() => handleOnClickAdd(columnType)}
                 onClickEdit={handleOnClickEdit}
                 onClickLike={onLikeItem}
@@ -240,6 +242,7 @@ interface RetroListProps {
   type: RetroColumn["type"];
   items: any[];
   users: WorkspaceUsersMap;
+  isIncognito?: boolean;
   onClickAdd: () => void;
   onClickLike: (input: any) => void;
   onClickUnlike: (input: any) => void;
@@ -251,6 +254,7 @@ export const RetroList: React.FC<RetroListProps> = ({
   type,
   items,
   users,
+  isIncognito,
   onClickAdd,
   onClickLike,
   onClickUnlike,
@@ -276,6 +280,7 @@ export const RetroList: React.FC<RetroListProps> = ({
                     key={item.id}
                     index={index}
                     author={users[item.createdByUserId]}
+                    isIncognito={isIncognito}
                     onClickLike={onClickLike}
                     onClickUnlike={onClickUnlike}
                     onClickEdit={() => onClickEdit(item)}
@@ -296,6 +301,7 @@ export const RetroListItem: React.FC<
   RetroItem & {
     index: number;
     author: WorkspaceUser;
+    isIncognito?: boolean;
     onClickLike: (input: any) => void;
     onClickUnlike: (input: any) => void;
     onClickEdit: () => void;
@@ -305,6 +311,7 @@ export const RetroListItem: React.FC<
   content,
   likedBy,
   likeCount,
+  isIncognito,
   author,
   createdByUserId,
   onClickLike,
@@ -314,6 +321,8 @@ export const RetroListItem: React.FC<
 }) => {
   const currentUser = useCurrentUser();
   const authAccount = currentUser.auth!;
+
+  const isAuthor = createdByUserId === authAccount.uid;
 
   const handleLikeItem = () => {
     const userId = currentUser!.data!.id;
@@ -338,24 +347,19 @@ export const RetroListItem: React.FC<
             {...provided.dragHandleProps}
           >
             <div className="flex content-center">
-              {/* {author && (
-                <UserAvatar
-                  displayName={author.userDisplayName || author.userEmail}
-                  photoURL={author.userPhotoURL}
-                  isAnonymous={false}
-                />
-              )} */}
-              <div>
-                <Linkify>
+              <Linkify>
+                {isIncognito && !isAuthor ? (
+                  <div className="flex items-center" title="Incognito item until lifted">
+                    <EyeOffIcon className="h-4 w-4 text-blue" />
+                  </div>
+                ) : (
                   <span>{content}</span>
-                </Linkify>
-              </div>
+                )}
+              </Linkify>
             </div>
 
             <div className="flex ml-2 items-center">
-              {createdByUserId === authAccount.uid && (
-                <EditButton onClick={onClickEdit} />
-              )}
+              {isAuthor && <EditButton onClick={onClickEdit} />}
               <LikeButton
                 likeCount={likeCount}
                 likedBy={likedBy}
