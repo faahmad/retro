@@ -143,7 +143,7 @@ export const PainDreamFixLandingPage: React.FC = () => {
                 </h3>
                 <p className="text-xl text-white">
                   Our pricing is dead simple. Pay the same price forever regardless of how
-                  meetings you have.
+                  your team grows and how many meetings you have.
                 </p>
               </div>
               <div className="w-full mt-10 sm:w-1/2 md:w-1/2 lg:w-1/2 sm:mt-0 md:mt-0 lg:mt-0 sm:ml-4 md:ml-4 lg:w-ml-4 sm:text-right  md:text-right  lg:text-right">
@@ -155,7 +155,7 @@ export const PainDreamFixLandingPage: React.FC = () => {
                   <br />
                   1 Workspace
                   <br />
-                  10 Team Members
+                  Unlimited Team Members
                   <br />
                   Unlimited Boards
                 </p>
@@ -178,8 +178,8 @@ export const PainDreamFixLandingPage: React.FC = () => {
             We're embracing openness by sharing our metrics with everyone.
           </p>
           <p className="mb-3">
-            Every couple of weeks we'll share updates from the product, marketing, and
-            business sides of Retro.
+            We send emails that include updates from the product, marketing, and business
+            sides of Retro.
           </p>
         </div>
         <Button
@@ -233,7 +233,7 @@ export const LandingPageFooter = () => {
           Privacy Policy
         </Link>
       </div>
-      <p className="text-blue">&copy; 2020, Retro Technology</p>
+      <p className="text-blue">&copy; 2022, Retro Technology</p>
     </footer>
   );
 };
@@ -309,7 +309,7 @@ const PainSection = () => {
                   You wouldn't have to nag your team about retrospectives.
                 </li>
                 <li className="pl-8 pb-2">
-                  Your retrospectives were focused and produtive.
+                  Your retrospectives were focused and productive.
                 </li>
                 <li className="pl-8 pb-2">You walked away with actionable insights.</li>
                 <li className="pl-8 pb-2">
