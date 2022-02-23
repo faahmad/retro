@@ -20,8 +20,7 @@ export function getCountKeyByType(type: RetroColumnType) {
   const typeToCountKeyMap = {
     [RetroColumnType.GOOD]: "goodCount",
     [RetroColumnType.BAD]: "badCount",
-    [RetroColumnType.ACTIONS]: "actionsCount",
-    [RetroColumnType.QUESTIONS]: "questionsCount"
+    [RetroColumnType.ACTIONS]: "actionsCount"
   };
   return typeToCountKeyMap[type];
 }

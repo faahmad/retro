@@ -50,19 +50,9 @@ export async function createRetroTransaction({
         type: RetroColumnType.ACTIONS,
         title: "What do we need to do?",
         retroItemIds: []
-      },
-      questions: {
-        type: RetroColumnType.QUESTIONS,
-        title: "What do we have questions on?",
-        retroItemIds: []
       }
     },
-    columnOrder: [
-      RetroColumnType.GOOD,
-      RetroColumnType.BAD,
-      RetroColumnType.ACTIONS,
-      RetroColumnType.QUESTIONS
-    ]
+    columnOrder: [RetroColumnType.GOOD, RetroColumnType.BAD, RetroColumnType.ACTIONS]
   };
   await newRetroRef.set(newRetroData);
   return newRetroData;

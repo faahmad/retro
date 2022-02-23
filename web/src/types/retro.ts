@@ -5,8 +5,7 @@ import {
   RetroColumnType,
   RetroColumnGood,
   RetroColumnBad,
-  RetroColumnActions,
-  RetroColumnQuestions
+  RetroColumnActions
 } from "./retro-column";
 
 export interface Retro {
@@ -18,6 +17,7 @@ export interface Retro {
   userIds: { [userId: string]: User["id"] };
   retroItemIds: { [retroItemId: string]: string };
   isIncognito?: boolean;
+  stage?: "Brainstorm" | "Vote";
   retroItemsData: {
     goodCount: number;
     badCount: number;
@@ -28,14 +28,8 @@ export interface Retro {
     [RetroColumnType.GOOD]: RetroColumnGood;
     [RetroColumnType.BAD]: RetroColumnBad;
     [RetroColumnType.ACTIONS]: RetroColumnActions;
-    [RetroColumnType.QUESTIONS]: RetroColumnQuestions;
   };
-  columnOrder: [
-    RetroColumnType.GOOD,
-    RetroColumnType.BAD,
-    RetroColumnType.ACTIONS,
-    RetroColumnType.QUESTIONS
-  ];
+  columnOrder: [RetroColumnType.GOOD, RetroColumnType.BAD, RetroColumnType.ACTIONS];
 }
 
 export interface RetroChildRef {
