@@ -2,22 +2,19 @@
 // https://github.com/tailwindcss/tailwindcss/blob/master/stubs/defaultConfig.stub.js
 module.exports = {
   theme: {
-    boxShadow: theme => ({
+    boxShadow: (theme) => ({
       default: `${theme("spacing.1")} ${theme("spacing.1")} currentColor`,
       red: `${theme("spacing.1")} ${theme("spacing.1")} ${theme("colors.red")}`,
-      blue: `${theme("spacing.1")} ${theme("spacing.1")} ${theme(
-        "colors.blue"
-      )}`,
-      pink: `${theme("spacing.1")} ${theme("spacing.1")} ${theme(
-        "colors.pink"
-      )}`
+      blue: `${theme("spacing.1")} ${theme("spacing.1")} ${theme("colors.blue")}`,
+      pink: `${theme("spacing.1")} ${theme("spacing.1")} ${theme("colors.pink")}`
     }),
     colors: {
       blue: "#11269c",
       red: "#ff596a",
       pink: "#ff94b8",
       white: "#ffffff",
-      black: "#000000"
+      black: "#000000",
+      gray: "#6b7280"
     },
     fontFamily: {
       display: ["Source Code Pro", "monospace"],
@@ -25,10 +22,10 @@ module.exports = {
     },
     extend: {
       height: {
-        "72": "18rem",
-        "80": "20rem",
-        "88": "22rem",
-        "96": "24rem"
+        72: "18rem",
+        80: "20rem",
+        88: "22rem",
+        96: "24rem"
       },
       maxWidth: {
         "7xl": "80rem",
