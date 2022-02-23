@@ -90,7 +90,7 @@ export function RetroBoardSidePanel({ isOpen, toggle }: any) {
                           <div>
                             <label
                               htmlFor="name"
-                              className="block text-sm font-medium text-gray-900"
+                              className="block text-sm font-medium text-white"
                             >
                               Name
                             </label>
@@ -106,7 +106,7 @@ export function RetroBoardSidePanel({ isOpen, toggle }: any) {
                           </div>
                           <div>
                             <label
-                              className="block text-sm font-medium text-gray-900"
+                              className="block text-sm font-medium text-white"
                               htmlFor="createdAt"
                             >
                               Date
@@ -124,7 +124,9 @@ export function RetroBoardSidePanel({ isOpen, toggle }: any) {
                     </div>
                     <div className="p-6">
                       <fieldset>
-                        <legend className="text-sm font-medium text-gray">Privacy</legend>
+                        <legend className="text-sm font-medium text-white">
+                          Privacy
+                        </legend>
                         <div className="mt-2 space-y-5">
                           <div className="relative flex items-start">
                             <div className="flex items-center h-5">
@@ -133,7 +135,7 @@ export function RetroBoardSidePanel({ isOpen, toggle }: any) {
                                 name="isIncognito"
                                 aria-describedby="isIncognito-description"
                                 type="checkbox"
-                                className="h-4 w-4 text-red border-gray"
+                                className="h-4 w-4 text-red border-white"
                                 defaultChecked={isIncognito}
                               />
                             </div>
@@ -146,7 +148,7 @@ export function RetroBoardSidePanel({ isOpen, toggle }: any) {
                               </label>
                               <p
                                 id="isIncognito-description"
-                                className="text-gray text-xs"
+                                className="text-white text-xs"
                               >
                                 Hide what people are writing during brainstorm.
                               </p>
