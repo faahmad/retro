@@ -5,18 +5,17 @@ import { useRetroState } from "../hooks/use-retro-state";
 type Step = {
   id: string;
   name: "Brainstorm" | "Vote";
-  href: string;
   status: "current" | "upcoming" | "complete";
 };
 
 // Eventually we will have more stages, but for now only supporting
 // Brainstorm and Vote.
 const steps: Step[] = [
-  { id: "01", name: "Brainstorm", href: "#", status: "current" },
-  // { id: "02", name: "Group", href: "#", status: "upcoming" },
-  { id: "02", name: "Vote", href: "#", status: "upcoming" }
-  // { id: "04", name: "Discuss", href: "#", status: "upcoming" },
-  // { id: "05", name: "Review", href: "#", status: "upcoming" }
+  { id: "01", name: "Brainstorm", status: "current" },
+  // { id: "02", name: "Group",  status: "upcoming" },
+  { id: "02", name: "Vote", status: "upcoming" }
+  // { id: "04", name: "Discuss",  status: "upcoming" },
+  // { id: "05", name: "Review",  status: "upcoming" }
 ];
 
 function reducer(
@@ -71,7 +70,7 @@ export function RetroBoardStageStepper({ retroId }: { retroId: string }) {
             onClick={() => handleChangeStage(step.name)}
           >
             {step.status === "complete" ? (
-              <a href={step.href} className="group flex items-center w-full">
+              <div className="group flex items-center w-full">
                 <span className="px-6 py-4 flex items-center text-sm font-medium">
                   <span className="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-blue rounded-full group-hover:bg-blue">
                     <CheckIcon className="w-6 h-6 text-white" aria-hidden="true" />
@@ -80,10 +79,9 @@ export function RetroBoardStageStepper({ retroId }: { retroId: string }) {
                     {step.name}
                   </span>
                 </span>
-              </a>
+              </div>
             ) : step.status === "current" ? (
-              <a
-                href={step.href}
+              <div
                 className="px-6 py-4 flex items-center text-sm font-medium"
                 aria-current="step"
               >
@@ -93,9 +91,9 @@ export function RetroBoardStageStepper({ retroId }: { retroId: string }) {
                 <span className="ml-4 text-sm font-medium text-blue hover:underline">
                   {step.name}
                 </span>
-              </a>
+              </div>
             ) : (
-              <a href={step.href} className="group flex items-center">
+              <div className="group flex items-center">
                 <span className="px-6 py-4 flex items-center text-sm font-medium ">
                   <span className="flex-shrink-0 w-10 h-10 flex items-center justify-center border-2 border-gray rounded-full">
                     <span className="text-gray">{step.id}</span>
@@ -104,7 +102,7 @@ export function RetroBoardStageStepper({ retroId }: { retroId: string }) {
                     {step.name}
                   </span>
                 </span>
-              </a>
+              </div>
             )}
 
             {stepIdx !== steps.length - 1 ? (
