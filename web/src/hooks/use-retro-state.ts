@@ -306,6 +306,16 @@ export function useRetroState(retroId: Retro["id"]) {
     return;
   };
 
+  const handleChangeStage = async (stage: "Brainstorm" | "Vote") => {
+    const updatedRetro: any = { ...state.data, stage };
+    dispatch({
+      type: RetroActionTypes.RETRO_UPDATE,
+      payload: updatedRetro
+    });
+    await updateRetro(retroId, updatedRetro);
+    return;
+  };
+
   return {
     state,
     handleAddItem,
@@ -314,7 +324,8 @@ export function useRetroState(retroId: Retro["id"]) {
     handleLikeItem,
     handleUnlikeItem,
     handleDeleteItem,
-    handleUpdateColumnItems
+    handleUpdateColumnItems,
+    handleChangeStage
   };
 }
 

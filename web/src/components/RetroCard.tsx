@@ -1,8 +1,7 @@
 import * as React from "react";
 import { Retro } from "../types/retro";
 import moment from "moment";
-import { ThumbsUpIcon } from "../components/ThumbsUpIcon";
-import { QuestionIcon } from "../images/QuestionIcon";
+import { FlagIcon, ThumbDownIcon, ThumbUpIcon } from "@heroicons/react/outline";
 
 interface RetroCardProps {
   retro: Retro;
@@ -27,23 +26,17 @@ export function RetroCard({ retro, onClick }: RetroCardProps) {
       </div>
       <div className="flex flex-col justify-around h-full w-full p-4">
         <div className="flex items-center">
-          <ThumbsUpIcon />
+          <ThumbUpIcon className="h-6 w-6 text-blue" />
           <p className="ml-2 text-blue text-sm">{retro.retroItemsData.goodCount} Good</p>
         </div>
         <div className="flex items-center">
-          <ThumbsUpIcon />
+          <ThumbDownIcon className="h-6 w-6 text-blue" />
           <p className="ml-2 text-blue text-sm">{retro.retroItemsData.badCount} Bad</p>
         </div>
         <div className="flex items-center">
-          <ThumbsUpIcon />
+          <FlagIcon className="h-6 w-6 text-blue" />
           <p className="ml-2 text-blue text-sm">
             {retro.retroItemsData.actionsCount} Actions
-          </p>
-        </div>
-        <div className="flex items-center">
-          <QuestionIcon />
-          <p className="ml-2 text-blue text-sm">
-            {retro.retroItemsData.questionsCount} Questions
           </p>
         </div>
       </div>
