@@ -22,6 +22,7 @@ import { RetroBoardSidePanel } from "../components/RetroBoardSidePanel";
 
 import { AdjustmentsIcon, ArrowSmLeftIcon } from "@heroicons/react/outline";
 import { RetroBoardStageStepper } from "../components/RetroBoardStageStepper";
+import { RetroBoardPresentationMode } from "../components/RetroBoardPresentationMode";
 
 export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
   useAnalyticsPage(AnalyticsPage.RETRO_BOARD);
@@ -138,25 +139,31 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
               <div className="mr-4">
                 <RetroBoardStageStepper retroId={params.retroId} />
               </div>
-              <RetroBoardActions
-                retroId={data.id}
-                onSortByLikes={handleSortAllItemsByLikes}
-              />
+              {data?.stage === "Brainstorm" || data?.stage === "Vote" ? (
+                <RetroBoardActions
+                  retroId={data.id}
+                  onSortByLikes={handleSortAllItemsByLikes}
+                />
+              ) : null}
             </div>
           ) : null}
-          <RetroBoard
-            retroState={state}
-            users={workspaceState.users}
-            retroItems={retroItems.data}
-            onAddItem={handleAddItem}
-            onDeleteItem={handleDeleteItem}
-            onEditItem={(retroItemId, content) =>
-              handleEditItem({ content, id: retroItemId })
-            }
-            onLikeItem={handleLikeItem}
-            onUnlikeItem={handleUnlikeItem}
-            onDragDrop={handleDragDrop}
-          />
+          {data?.stage === "Discuss" ? (
+            <RetroBoardPresentationMode />
+          ) : (
+            <RetroBoard
+              retroState={state}
+              users={workspaceState.users}
+              retroItems={retroItems.data}
+              onAddItem={handleAddItem}
+              onDeleteItem={handleDeleteItem}
+              onEditItem={(retroItemId, content) =>
+                handleEditItem({ content, id: retroItemId })
+              }
+              onLikeItem={handleLikeItem}
+              onUnlikeItem={handleUnlikeItem}
+              onDragDrop={handleDragDrop}
+            />
+          )}
         </PageContainer>
         <Footer />
       </React.Fragment>

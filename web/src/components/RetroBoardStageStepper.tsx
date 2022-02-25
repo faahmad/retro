@@ -2,26 +2,26 @@ import * as React from "react";
 import { CheckIcon } from "@heroicons/react/solid";
 import { useRetroState } from "../hooks/use-retro-state";
 
-type Step = {
+export type RetroStep = {
   id: string;
-  name: "Brainstorm" | "Vote";
+  name: "Brainstorm" | "Vote" | "Discuss";
   status: "current" | "upcoming" | "complete";
 };
 
 // Eventually we will have more stages, but for now only supporting
 // Brainstorm and Vote.
-const steps: Step[] = [
+const steps: RetroStep[] = [
   { id: "01", name: "Brainstorm", status: "current" },
   // { id: "02", name: "Group",  status: "upcoming" },
-  { id: "02", name: "Vote", status: "upcoming" }
-  // { id: "04", name: "Discuss",  status: "upcoming" },
+  { id: "02", name: "Vote", status: "upcoming" },
+  { id: "03", name: "Discuss", status: "upcoming" }
   // { id: "05", name: "Review",  status: "upcoming" }
 ];
 
 function reducer(
-  state: Step[],
-  action: { type: string; payload: "Brainstorm" | "Vote" }
-): Step[] {
+  state: RetroStep[],
+  action: { type: string; payload: RetroStep["name"] }
+): RetroStep[] {
   switch (action.type) {
     case "change": {
       const index = steps.findIndex((step) => step.name === action.payload);
