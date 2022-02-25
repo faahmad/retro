@@ -134,19 +134,16 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
               </button>
             ) : null}
           </div>
-          {isOwner ? (
-            <div className="flex justify-between items-center flex-wrap">
-              <div className="mr-4">
-                <RetroBoardStageStepper retroId={params.retroId} />
-              </div>
-              {data?.stage === "Brainstorm" || data?.stage === "Vote" ? (
-                <RetroBoardActions
-                  retroId={data.id}
-                  onSortByLikes={handleSortAllItemsByLikes}
-                />
-              ) : null}
+
+          <div className="flex justify-between items-center flex-wrap">
+            <div className="mr-4 mb-2">
+              <RetroBoardStageStepper isOwner={isOwner} retroId={params.retroId} />
             </div>
-          ) : null}
+            {(data?.stage === "Brainstorm" || data?.stage === "Vote") && isOwner ? (
+              <RetroBoardActions retroId={data.id} />
+            ) : null}
+          </div>
+
           {data?.stage === "Discuss" ? (
             <RetroBoardPresentationMode />
           ) : (

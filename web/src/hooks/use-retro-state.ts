@@ -317,6 +317,16 @@ export function useRetroState(retroId: Retro["id"]) {
     return;
   };
 
+  const handleChangePresentationIndex = async (nextIndex: number) => {
+    const updatedRetro: any = { ...state.data, presentationModeIndex: nextIndex };
+    dispatch({
+      type: RetroActionTypes.RETRO_UPDATE,
+      payload: updatedRetro
+    });
+    await updateRetro(retroId, updatedRetro);
+    return;
+  };
+
   return {
     state,
     handleAddItem,
@@ -326,7 +336,8 @@ export function useRetroState(retroId: Retro["id"]) {
     handleUnlikeItem,
     handleDeleteItem,
     handleUpdateColumnItems,
-    handleChangeStage
+    handleChangeStage,
+    handleChangePresentationIndex
   };
 }
 

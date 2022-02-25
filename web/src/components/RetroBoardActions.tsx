@@ -1,12 +1,10 @@
 import * as React from "react";
 import { Button } from "./Button";
-import { ThumbsUpIcon } from "./ThumbsUpIcon";
 import { RetroCountdownTimer } from "./RetroCountdownTimer";
 import { useRetroCountdownTimer } from "../hooks/use-retro-countdown-timer";
 
 interface RetroBoardActionsProps {
   retroId: string;
-  onSortByLikes: () => void;
 }
 
 export function RetroBoardActions(props: RetroBoardActionsProps) {
@@ -15,16 +13,6 @@ export function RetroBoardActions(props: RetroBoardActionsProps) {
   return (
     <div className="flex">
       <div className="flex p-4 mb-4 border border-red items-center justify-center">
-        <Button
-          style={{ width: "10rem" }}
-          className="text-blue w-20"
-          onClick={props.onSortByLikes}
-        >
-          <div className="flex items-end justify-center w-full">
-            <span className="mr-1">Sort By</span>
-            <ThumbsUpIcon filled={true} />
-          </div>
-        </Button>
         <Button
           style={{ width: "10rem" }}
           className={`text-blue w-20 ml-4 ${

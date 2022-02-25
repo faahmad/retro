@@ -19,6 +19,7 @@ export interface Retro {
   retroItemIds: { [retroItemId: string]: string };
   isIncognito?: boolean;
   stage?: RetroStep["name"];
+  presentationModeIndex?: number;
   retroItemsData: {
     goodCount: number;
     badCount: number;
