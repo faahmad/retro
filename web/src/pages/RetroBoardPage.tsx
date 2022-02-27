@@ -47,6 +47,16 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
   const { settings } = useUserSettings();
   const currentUser = useCurrentUser();
 
+  // add conditional, if (currentUser.auth === null) return <userNameModal/>
+  /**
+   * Current thought process:
+
+    link takes the user to workspace
+    if not authed, then a modal opens prompting for a username (coniditonal in the RetroBoardPage component)
+    on submission create an anon user with username
+    then get returning userId and create a workspace_user with workspaceId and userId
+   */
+
   const [isSidePanelOpen, setIsSidePanelOpen] = React.useState(false);
   function handleToggleSidePanel() {
     setIsSidePanelOpen(!isSidePanelOpen);
