@@ -13,9 +13,6 @@ service cloud.firestore {
     function isWorkspaceUser(database, workspaceId, userId) {
       return exists(/databases/$(database)/documents/workspace_user/$(workspaceId + "_" + userId));
     }
-    function isAdmin(auth) {
-      return auth.token.admin == true;
-    }
     function hasActiveAccount(database, workspaceId) {
       let subscriptionStatus = getAfter(/databases/$(database)/documents/workspace/$(workspaceId)).data.subscriptionStatus;
       return subscriptionStatus == "trialing" || subscriptionStatus == "active";
@@ -49,7 +46,7 @@ service cloud.firestore {
       // Users can create a workspace.
       allow create: if isSignedIn(request);
       // Workspace users can read their own workspace.
-      allow read: if isWorkspaceUser(database, workspaceId, request.auth.uid) || isAdmin(request.auth);
+      allow read: if isWorkspaceUser(database, workspaceId, request.auth.uid);
       // Workspace users can update their workspace.
       allow update: if existsAfter(/databases/$(database)/documents/workspace_user/$(workspaceId + "_" + request.auth.uid));
     }
@@ -67,18 +64,18 @@ service cloud.firestore {
                     && isUser(incomingData(request).userId) 
                     && hasActiveAccount(database, incomingData(request).workspaceId)
       // Workspace users can read other users in their workspace.
-      allow read: if isWorkspaceUser(database, resource.data.workspaceId, request.auth.uid) || isAdmin(request.auth);
+      allow read: if isWorkspaceUser(database, resource.data.workspaceId, request.auth.uid);
       // Workspace user can update themselves.
       allow update: if isUser(resource.data.userId);
     }
 
     match /retro/{retroId} {
       // Workspace user can read a retro.
-      allow read: if isWorkspaceUser(database, resource.data.workspaceId, request.auth.uid) || isAdmin(request.auth);
+      allow read: if isWorkspaceUser(database, resource.data.workspaceId, request.auth.uid);
       // Workspace user can create/update a retro.
       allow create, update: if hasActiveAccount(database, incomingData(request).workspaceId) 
-                            && isWorkspaceUser(database, incomingData(request).workspaceId, request.auth.uid) 
-                            || isAdmin(request.auth);
+                            && isWorkspaceUser(database, incomingData(request).workspaceId, request.auth.uid);
+                            
     }
 
     match /retroItem/{retroItemId} {
@@ -86,12 +83,10 @@ service cloud.firestore {
       allow read: if isSignedIn(request);
       // Workspace user can create a retroItem.
       allow create: if hasActiveAccount(database, incomingData(request).workspaceId) 
-                    && isWorkspaceUser(database, incomingData(request).workspaceId, request.auth.uid)
-                    || isAdmin(reqeust.auth);
+                    && isWorkspaceUser(database, incomingData(request).workspaceId, request.auth.uid);
       // Workspace user can update a retroItem.
       allow update: if hasActiveAccount(database, resource.data.workspaceId) 
-                    && isWorkspaceUser(database, resource.data.workspaceId, request.auth.uid)
-                    || isAdmin(request.auth);
+                    && isWorkspaceUser(database, resource.data.workspaceId, request.auth.uid);
     }
   }
 }
