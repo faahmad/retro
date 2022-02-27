@@ -25,6 +25,7 @@ import { MagicLinkPage } from "./pages/MagicLinkPage";
 import { LoginPage } from "./pages/LoginPage";
 import { RetroListPage } from "./pages/RetroListPage";
 import { SignupPage } from "./pages/SignupPage";
+import { AnonAuthLoginPage } from "./pages/AnonAuthLoginPage";
 
 export const AppRoutes: React.FC = () => {
   const currentUser = useCurrentUser();
@@ -65,6 +66,11 @@ const UnauthenticatedAppRoutes: React.FC = () => {
       <Route exact path="/login" component={LoginPage} />
       <Route exact path="/signup" component={SignupPage} />
       <Route exact path="/magic-link" component={MagicLinkPage} />
+      <Route
+        exact
+        path="/workspaces/:workspaceId/retros/:retroId"
+        component={AnonAuthLoginPage}
+      />
     </React.Fragment>
   );
 };
