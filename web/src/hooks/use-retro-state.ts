@@ -314,6 +314,9 @@ export function useRetroState(retroId: Retro["id"]) {
       payload: updatedRetro
     });
     await updateRetro(retroId, updatedRetro);
+    trackEvent(AnalyticsEvent.RETRO_STAGE_CHANGED, {
+      stage
+    });
     return;
   };
 

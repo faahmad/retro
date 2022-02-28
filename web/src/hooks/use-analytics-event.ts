@@ -28,6 +28,7 @@ export enum AnalyticsEvent {
   RETRO_TIMER_PAUSED = "Retro Timer Paused",
   RETRO_TIMER_RESET = "Retro Timer Reset",
   RETRO_TIMER_ADD_1 = "Retro Timer Add 1 Min",
+  RETRO_STAGE_CHANGED = "Retro Stage Changed",
   INVITE_LINK_COPIED = "Invite Link Copied",
   SKIPPED_ONBOARDING_INVITES = "Skipped Onboarding Invites"
 }

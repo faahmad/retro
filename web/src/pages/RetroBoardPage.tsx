@@ -139,9 +139,7 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
             <div className="mr-4 mb-2">
               <RetroBoardStageStepper isOwner={isOwner} retroId={params.retroId} />
             </div>
-            {(data?.stage === "Brainstorm" || data?.stage === "Vote") && isOwner ? (
-              <RetroBoardActions retroId={data.id} />
-            ) : null}
+            <RetroBoardActions retroId={data.id} />
           </div>
 
           {data?.stage === "Discuss" ? (

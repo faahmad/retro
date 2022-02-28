@@ -64,7 +64,7 @@ export function RetroBoardStageStepper({
     }
     dispatch({ type: "change", payload: retroStage! });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [retroStage]);
+  }, [retro.status, retroStage]);
 
   return (
     <nav aria-label="retro-stage">
