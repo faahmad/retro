@@ -3,7 +3,6 @@ import { Button } from "./Button";
 import { ThumbsUpIcon } from "./ThumbsUpIcon";
 import { RetroCountdownTimer } from "./RetroCountdownTimer";
 import { useRetroCountdownTimer } from "../hooks/use-retro-countdown-timer";
-import "../styles/amazingFix.css";
 
 interface RetroBoardActionsProps {
   retroId: string;
@@ -13,8 +12,8 @@ interface RetroBoardActionsProps {
 export function RetroBoardActions(props: RetroBoardActionsProps) {
   const timer = useRetroCountdownTimer(props.retroId);
 
-  const handleCopyLink = () => {
-    navigator.clipboard.writeText(window.location.href);
+  const handleCopyLink = async () => {
+    await navigator.clipboard.writeText(window.location.href);
     throw alert("Retro Invite Link Copied to Clipboard");
   }
 
@@ -23,7 +22,7 @@ export function RetroBoardActions(props: RetroBoardActionsProps) {
       <div className="flex p-4 mb-4 border border-red items-center justify-center">
         <Button
           style={{ width: "10rem" }}
-          className="text-blue w-20 amazing-Fix"
+          className="text-blue w-20 mr-4"
           onClick={handleCopyLink}
         >
           <div>
