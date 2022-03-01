@@ -96,7 +96,6 @@ function RetroBoardPresentationCard({ retroItem }: { retroItem: RetroItem }) {
         <p className="text-blue text-lg">{retroItem.content}</p>
       </div>
       <div className="px-4 py-4 sm:px-6">
-        {/* Content goes here */}
         <div className="flex justify-between">
           <div className="flex items-center">
             <ThumbUpIcon className="text-gray h-6 w-6 mr-1" />
