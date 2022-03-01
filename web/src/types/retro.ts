@@ -7,6 +7,7 @@ import {
   RetroColumnBad,
   RetroColumnActions
 } from "./retro-column";
+import { RetroStep } from "../components/RetroBoardStageStepper";
 
 export interface Retro {
   id: string;
@@ -17,7 +18,8 @@ export interface Retro {
   userIds: { [userId: string]: User["id"] };
   retroItemIds: { [retroItemId: string]: string };
   isIncognito?: boolean;
-  stage?: "Brainstorm" | "Vote";
+  stage?: RetroStep["name"];
+  presentationModeIndex?: number;
   retroItemsData: {
     goodCount: number;
     badCount: number;

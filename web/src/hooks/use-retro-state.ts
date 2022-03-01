@@ -14,6 +14,7 @@ import { AnalyticsEvent, useAnalyticsEvent } from "./use-analytics-event";
 import * as Sentry from "@sentry/react";
 import { useDeleteRetroItem } from "../hooks/use-delete-retro-item";
 import { useUpdateRetro } from "./use-update-retro";
+import { RetroStep } from "../components/RetroBoardStageStepper";
 
 export enum RetroStateStatus {
   LOADING = "LOADING",
@@ -306,8 +307,21 @@ export function useRetroState(retroId: Retro["id"]) {
     return;
   };
 
-  const handleChangeStage = async (stage: "Brainstorm" | "Vote") => {
+  const handleChangeStage = async (stage: RetroStep["name"]) => {
     const updatedRetro: any = { ...state.data, stage };
+    dispatch({
+      type: RetroActionTypes.RETRO_UPDATE,
+      payload: updatedRetro
+    });
+    await updateRetro(retroId, updatedRetro);
+    trackEvent(AnalyticsEvent.RETRO_STAGE_CHANGED, {
+      stage
+    });
+    return;
+  };
+
+  const handleChangePresentationIndex = async (nextIndex: number) => {
+    const updatedRetro: any = { ...state.data, presentationModeIndex: nextIndex };
     dispatch({
       type: RetroActionTypes.RETRO_UPDATE,
       payload: updatedRetro
@@ -325,7 +339,8 @@ export function useRetroState(retroId: Retro["id"]) {
     handleUnlikeItem,
     handleDeleteItem,
     handleUpdateColumnItems,
-    handleChangeStage
+    handleChangeStage,
+    handleChangePresentationIndex
   };
 }
 

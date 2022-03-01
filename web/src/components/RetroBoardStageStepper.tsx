@@ -1,27 +1,27 @@
 import * as React from "react";
 import { CheckIcon } from "@heroicons/react/solid";
-import { useRetroState } from "../hooks/use-retro-state";
+import { RetroStateStatus, useRetroState } from "../hooks/use-retro-state";
 
-type Step = {
+export type RetroStep = {
   id: string;
-  name: "Brainstorm" | "Vote";
+  name: "Brainstorm" | "Vote" | "Discuss";
   status: "current" | "upcoming" | "complete";
 };
 
 // Eventually we will have more stages, but for now only supporting
 // Brainstorm and Vote.
-const steps: Step[] = [
+const steps: RetroStep[] = [
   { id: "01", name: "Brainstorm", status: "current" },
   // { id: "02", name: "Group",  status: "upcoming" },
-  { id: "02", name: "Vote", status: "upcoming" }
-  // { id: "04", name: "Discuss",  status: "upcoming" },
+  { id: "02", name: "Vote", status: "upcoming" },
+  { id: "03", name: "Discuss", status: "upcoming" }
   // { id: "05", name: "Review",  status: "upcoming" }
 ];
 
 function reducer(
-  state: Step[],
-  action: { type: string; payload: "Brainstorm" | "Vote" }
-): Step[] {
+  state: RetroStep[],
+  action: { type: string; payload: RetroStep["name"] }
+): RetroStep[] {
   switch (action.type) {
     case "change": {
       const index = steps.findIndex((step) => step.name === action.payload);
@@ -44,21 +44,27 @@ function reducer(
   }
 }
 
-export function RetroBoardStageStepper({ retroId }: { retroId: string }) {
+export function RetroBoardStageStepper({
+  retroId,
+  isOwner
+}: {
+  retroId: string;
+  isOwner: boolean;
+}) {
   const { state: retro, handleChangeStage } = useRetroState(retroId);
   const retroStage = retro?.data?.stage;
   const [state, dispatch] = React.useReducer(reducer, steps);
 
   React.useEffect(() => {
-    if (!retroStage) {
+    if (retro.status !== RetroStateStatus.LOADING && !retroStage) {
       // retroStage isn't present on older retros, so we default to brainstorm
       // for backwards compatibility.
       handleChangeStage("Brainstorm");
       return;
     }
-    dispatch({ type: "change", payload: retroStage });
+    dispatch({ type: "change", payload: retroStage! });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [retroStage]);
+  }, [retro.status, retroStage]);
 
   return (
     <nav aria-label="retro-stage">
@@ -67,7 +73,12 @@ export function RetroBoardStageStepper({ retroId }: { retroId: string }) {
           <li
             key={step.name}
             className="relative md:flex-1 md:flex"
-            onClick={() => handleChangeStage(step.name)}
+            onClick={() => {
+              if (!isOwner) {
+                return;
+              }
+              handleChangeStage(step.name);
+            }}
           >
             {step.status === "complete" ? (
               <div className="group flex items-center w-full">
@@ -75,7 +86,11 @@ export function RetroBoardStageStepper({ retroId }: { retroId: string }) {
                   <span className="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-blue rounded-full group-hover:bg-blue">
                     <CheckIcon className="w-6 h-6 text-white" aria-hidden="true" />
                   </span>
-                  <span className="ml-4 text-sm font-medium text-blue hover:underline">
+                  <span
+                    className={`ml-4 text-sm font-medium text-blue ${
+                      isOwner ? "hover:underline cursor-pointer" : ""
+                    }`}
+                  >
                     {step.name}
                   </span>
                 </span>
@@ -88,7 +103,11 @@ export function RetroBoardStageStepper({ retroId }: { retroId: string }) {
                 <span className="flex-shrink-0 w-10 h-10 flex items-center justify-center border-2 border-blue rounded-full">
                   <span className="text-blue">{step.id}</span>
                 </span>
-                <span className="ml-4 text-sm font-medium text-blue hover:underline">
+                <span
+                  className={`ml-4 text-sm font-medium text-blue ${
+                    isOwner ? "hover:underline cursor-pointer" : ""
+                  }`}
+                >
                   {step.name}
                 </span>
               </div>
@@ -98,7 +117,11 @@ export function RetroBoardStageStepper({ retroId }: { retroId: string }) {
                   <span className="flex-shrink-0 w-10 h-10 flex items-center justify-center border-2 border-gray rounded-full">
                     <span className="text-gray">{step.id}</span>
                   </span>
-                  <span className="ml-4 text-sm font-medium text-gray group-hover:text-gray hover:underline">
+                  <span
+                    className={`ml-4 text-sm font-medium text-gray group-hover:text-gray ${
+                      isOwner ? "hover:underline cursor-pointer" : ""
+                    }`}
+                  >
                     {step.name}
                   </span>
                 </span>

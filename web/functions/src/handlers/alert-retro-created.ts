@@ -8,7 +8,7 @@ import { isProd } from "../constants/is-prod";
 /**
  * When a Retro is created, post an alert in Discord.
  */
-export const alertWorkspaceCreated = functions.firestore
+export const alertRetroCreated = functions.firestore
   .document(`${FirestoreCollections.RETRO}/{retroId}`)
   .onCreate(async (snapshot) => {
     const retro = snapshot.data() as Retro;
