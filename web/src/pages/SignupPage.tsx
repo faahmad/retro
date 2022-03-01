@@ -10,7 +10,7 @@ export function SignupPage() {
   return (
     <PageContainer>
       <Navbar isLoggedIn={false} />
-      <LoginFormContainer />
+      <LoginFormContainer title="Sign up" type="signup" />
     </PageContainer>
   );
 }

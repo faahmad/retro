@@ -2,17 +2,19 @@ import * as React from "react";
 import { GoogleOAuthButton } from "../components/GoogleOAuthButton";
 import { useLoginWithGoogle } from "../hooks/use-login-with-google";
 import { PageContainer } from "../components/PageContainer";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useAnalyticsPage, AnalyticsPage } from "../hooks/use-analytics-page";
 import firebase from "../lib/firebase";
 import { ErrorMessageBanner } from "../components/ErrorMessageBanner";
-import { NotificationBanner } from "../components/NotificationBanner";
 import { Button } from "../components/Button";
 import { Navbar } from "../components/Navbar";
 import * as Sentry from "@sentry/react";
 
 import { useCurrentUser } from "../hooks/use-current-user";
 import { LoadingText } from "../components/LoadingText";
+import { isNewUser } from "../services/auth-service";
+import { createUser } from "../services/create-user";
+import { AnalyticsEvent, useAnalyticsEvent } from "../hooks/use-analytics-event";
 
 export function LoginPage() {
   useAnalyticsPage(AnalyticsPage.LOGIN);
@@ -25,37 +27,73 @@ export function LoginPage() {
   return (
     <PageContainer>
       <Navbar isLoggedIn={false} />
-      <LoginFormContainer />
+      <LoginFormContainer title="Sign in" type="signin" />
     </PageContainer>
   );
 }
 
-export function LoginFormContainer({ onSuccess, title }: any) {
+export function LoginFormContainer({
+  title,
+  type
+}: {
+  title: string;
+  type: "signup" | "signin";
+}) {
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
-  const [success, setSuccess] = React.useState(false);
   const [isSending, setIsSending] = React.useState(false);
+  const history = useHistory();
+  const trackEvent = useAnalyticsEvent();
 
-  const handleSubmit = async (event: any) => {
+  const handleSignUp = async (event: any) => {
     try {
       // Stop the page from refreshing.
       event.preventDefault();
       // Clear the state.
       setErrorMessage(null);
-      setSuccess(false);
       setIsSending(true);
       // Set up the params.
       const email = event.target.email.value;
-      const actionCodeSettings = {
-        url: window.location.origin + "/magic-link",
-        handleCodeInApp: true
-      };
+      const password = event.target.password.value;
       // Make the request.
-      await firebase.auth().sendSignInLinkToEmail(email, actionCodeSettings);
+      const userCredential = await firebase
+        .auth()
+        .createUserWithEmailAndPassword(email, password);
+      if (isNewUser(userCredential)) {
+        await createUser(userCredential);
+        trackEvent(AnalyticsEvent.USER_CREATED, {
+          ...userCredential,
+          location: AnalyticsPage.SIGNUP,
+          method: "email password"
+        });
+      }
       // Update the success state.
       setIsSending(false);
-      setSuccess(true);
-      // Save the email for use on the /magic-link page.
-      window.localStorage.setItem("emailForSignIn", email);
+      history.push("/onboarding");
+      return;
+    } catch (error) {
+      // Update the error state.
+      setIsSending(false);
+      setErrorMessage(error.message);
+      Sentry.captureException(error);
+      return;
+    }
+  };
+
+  const handleSignIn = async (event: any) => {
+    try {
+      // Stop the page from refreshing.
+      event.preventDefault();
+      // Clear the state.
+      setErrorMessage(null);
+      setIsSending(true);
+      // Set up the params.
+      const email = event.target.email.value;
+      const password = event.target.password.value;
+      // Make the request.
+      await firebase.auth().signInWithEmailAndPassword(email, password);
+      // Update the success state.
+      setIsSending(false);
+      history.push("/");
       return;
     } catch (error) {
       // Update the error state.
@@ -72,21 +110,22 @@ export function LoginFormContainer({ onSuccess, title }: any) {
       <LoginForm
         title={title}
         isSending={isSending}
-        onSubmit={handleSubmit}
-        onSuccess={onSuccess}
+        onSubmit={type === "signin" ? handleSignIn : handleSignUp}
       />
-      {success && (
-        <NotificationBanner
-          title="Success!"
-          message="A login link has been sent to your email."
-        />
-      )}
     </PageContainer>
   );
 }
 
 // Private components.
-function LoginForm({ isSending, onSubmit, title = "Sign in (or up)" }: any) {
+function LoginForm({
+  isSending,
+  onSubmit,
+  title
+}: {
+  isSending: boolean;
+  onSubmit: (event: any) => Promise<void>;
+  title: string;
+}) {
   const loginWithGoogle = useLoginWithGoogle();
   return (
     <div className="flex flex-col items-center">
@@ -96,7 +135,7 @@ function LoginForm({ isSending, onSubmit, title = "Sign in (or up)" }: any) {
       </div>
       <div className="text-blue my-8">or</div>
       <form className="flex flex-col mb-12" onSubmit={onSubmit}>
-        <div className="flex flex-col mb-4">
+        <div className="flex flex-col mb-1">
           <label className="text-blue text-sm" htmlFor="email">
             Work email
           </label>
@@ -107,8 +146,18 @@ function LoginForm({ isSending, onSubmit, title = "Sign in (or up)" }: any) {
             className="text-blue border border-red my-1 h-12 sm:h-8 md:h-8 lg:h-8 w-full max-w-md outline-none px-1"
           />
         </div>
+        <div className="flex flex-col mb-4">
+          <label className="text-blue text-sm" htmlFor="password">
+            Password
+          </label>
+          <input
+            type="password"
+            name="password"
+            className="text-blue border border-red my-1 h-12 sm:h-8 md:h-8 lg:h-8 w-full max-w-md outline-none px-1"
+          />
+        </div>
         <Button disabled={isSending} className="text-red" type="submit">
-          {isSending ? "Sending..." : "Email a login link"}
+          {isSending ? "Sending..." : "Submit"}
         </Button>
       </form>
       <TermsAndConditionsText />
