@@ -359,7 +359,7 @@ export const RetroListItem: React.FC<
           >
             <div className="flex content-center">
               <Linkify>
-                {isIncognito && !isAuthor ? (
+                {isIncognito && stage === "Brainstorm" && !isAuthor ? (
                   <div className="flex items-center" title="Incognito item until lifted">
                     <EyeOffIcon className="h-4 w-4 text-blue" />
                   </div>
