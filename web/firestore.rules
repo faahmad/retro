@@ -13,6 +13,10 @@ service cloud.firestore {
     function isWorkspaceUser(database, workspaceId, userId) {
       return exists(/databases/$(database)/documents/workspace_user/$(workspaceId + "_" + userId));
     }
+    function isWorkspaceOwner(database, workspaceId, userId) {
+      let role = getAfter(/databases/$(database)/documents/workspace_user/$(workspaceId + "_" + userId)).data.userRole;
+      return role == "owner";
+    }
     function isAdmin(auth) {
       return auth.token.admin == true;
     }
@@ -69,7 +73,7 @@ service cloud.firestore {
       // Workspace users can read other users in their workspace.
       allow read: if isWorkspaceUser(database, resource.data.workspaceId, request.auth.uid) || isAdmin(request.auth);
       // Workspace user can update themselves.
-      allow update: if isUser(resource.data.userId);
+      allow update: if isUser(resource.data.userId) || isWorkspaceOwner(database, resource.data.workspaceId, request.auth.uid);
     }
 
     match /retro/{retroId} {
