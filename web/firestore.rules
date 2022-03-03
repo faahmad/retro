@@ -32,7 +32,7 @@ service cloud.firestore {
 
     match /user/{userId} {
       // Users can read/write their own user document.
-      allow create, read, update: if isUser(userId);
+      allow create, read, update: if isUser(userId) || true;
     }
 
     match /earlyAccessCodes/{code} {
@@ -47,6 +47,8 @@ service cloud.firestore {
       allow create: if isWorkspaceUser(database, incomingData(request).workspaceId, request.auth.uid);
       // Invited user can update themselves.
       allow update: if resource.data.email == request.auth.token.email;
+      // Workspace owners can delete invites.
+      allow delete: if isWorkspaceOwner(database, resource.data.workspaceId, request.auth.uid);
     }
 
     match /workspace/{workspaceId} {
@@ -72,8 +74,10 @@ service cloud.firestore {
                     && hasActiveAccount(database, incomingData(request).workspaceId)
       // Workspace users can read other users in their workspace.
       allow read: if isWorkspaceUser(database, resource.data.workspaceId, request.auth.uid) || isAdmin(request.auth);
-      // Workspace user can update themselves.
+      // Workspace user can update themselves or workspace owners can update.
       allow update: if isUser(resource.data.userId) || isWorkspaceOwner(database, resource.data.workspaceId, request.auth.uid);
+      // Workspace owners can delete other workspace users.
+      allow delete: if isWorkspaceOwner(database, resource.data.workspaceId, request.auth.uid);
     }
 
     match /retro/{retroId} {
