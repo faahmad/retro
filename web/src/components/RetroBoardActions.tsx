@@ -10,10 +10,14 @@ interface RetroBoardActionsProps {
 export function RetroBoardActions(props: RetroBoardActionsProps) {
   const timer = useRetroCountdownTimer(props.retroId);
 
-  const handleCopyLink = async () => {
+  const [isCopied, setIsCopied] = React.useState(false);
+  async function handleCopyLink() {
     await navigator.clipboard.writeText(window.location.href);
-    throw alert("Retro Invite Link Copied to Clipboard");
-  };
+    setIsCopied(true);
+    setTimeout(() => {
+      setIsCopied(false);
+    }, 2000);
+  }
 
   return (
     <div className="flex">
@@ -23,7 +27,7 @@ export function RetroBoardActions(props: RetroBoardActionsProps) {
           className="text-blue w-20 mr-4"
           onClick={handleCopyLink}
         >
-          <div>Invite Link</div>
+          <div>{isCopied ? "Copied!" : "Copy Link"}</div>
         </Button>
 
         <Button

@@ -9,6 +9,9 @@ import firebase from "../lib/firebase";
 import * as Sentry from "@sentry/react";
 import { isNewUser } from "../services/auth-service";
 import { User } from "../types/user";
+import { useCurrentUser } from "../hooks/use-current-user";
+import { CurrentUserState } from "../contexts/CurrentUserContext";
+import { increment } from "../utils/firestore-utils";
 
 function useCreateAnonWorkspaceUser() {
   async function handleCreate(input: {
@@ -46,6 +49,15 @@ function useCreateAnonWorkspaceUser() {
         userPhotoURL: null,
         userRole: "member"
       });
+
+      // Increment the workspace's userCount.
+      const workspaceRef = firebase
+        .firestore()
+        .collection(FirestoreCollections.WORKSPACE)
+        .doc(input.workspaceId);
+      await transaction.update(workspaceRef, {
+        userCount: increment()
+      });
     });
   }
 
@@ -58,6 +70,7 @@ export function AnonAuthLoginPage() {
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
   const [isSending, setIsSending] = React.useState(false);
   const [userName, setUserName] = React.useState("");
+  const currentUser = useCurrentUser();
 
   // need to get the workspace name somehow
   const handleSubmit = async (e: any) => {
@@ -81,6 +94,14 @@ export function AnonAuthLoginPage() {
       return;
     }
   };
+
+  if (currentUser.state === CurrentUserState.LOADING) {
+    return (
+      <PageContainer>
+        <p className="text-blue">Loading...</p>
+      </PageContainer>
+    );
+  }
 
   return (
     <PageContainer>
