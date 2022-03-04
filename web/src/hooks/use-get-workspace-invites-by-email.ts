@@ -8,6 +8,7 @@ export function useGetWorkspaceInvitesByEmail(email?: string | null) {
 
   React.useEffect(() => {
     if (!email) {
+      setIsLoading(false);
       return;
     }
     let isMounted = true;
