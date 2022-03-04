@@ -121,7 +121,7 @@ function AnonLoginForm({
   onSubmit,
   userName,
   setUserName,
-  title = "Sign in Anonymously"
+  title = "Set your username to join your team"
 }: any) {
   return (
     <div className="flex flex-col items-center">
