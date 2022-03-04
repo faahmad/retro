@@ -4,31 +4,55 @@ import { PageContainer } from "../components/PageContainer";
 import { Button } from "../components/Button";
 import { TermsAndConditionsText } from "./LoginPage";
 import { ErrorMessageBanner } from "../components/ErrorMessageBanner";
-import { useCurrentUser } from "../hooks/use-current-user";
 import { FirestoreCollections } from "../constants/firestore-collections";
 import firebase from "../lib/firebase";
 import * as Sentry from "@sentry/react";
+import { isNewUser } from '../services/auth-service';
 
-const db = firebase.firestore();
-const workspaceCollection = db.collection(FirestoreCollections.WORKSPACE);
+function useCreateAnonWorkspaceUser() {
+
+  async function handleCreate(input: { workspaceId: string, userId: string, displayName: string}) {
+
+    return firebase.firestore().runTransaction(async (transaction) => {
+      const workspaceUserRef = firebase.firestore().collection(FirestoreCollections.WORKSPACE_USER).doc(
+        `${input.workspaceId}_${input.userId}`
+      );
+      await transaction.set(workspaceUserRef, {
+        userDisplayName: input.displayName,
+        workspaceId: input.workspaceId,
+        userId: input.userId,
+        userEmail: null,
+        userPhotoURL: null,
+        userRole: "member"
+      });
+    })
+  }
+
+  return handleCreate
+}
 
 export function AnonAuthLoginPage() {
-    const currentUser = useCurrentUser();
-    const { workspaceId } = useParams();
+    const { workspaceId } = useParams<{workspaceId: string}>();
+    const createAnonWorkspaceUser = useCreateAnonWorkspaceUser();
     const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
     const [isSending, setIsSending] = React.useState(false);
-    const [userName, setUserName] = React.useState();
+    const [userName, setUserName] = React.useState("");
 
     // need to get the workspace name somehow
     const handleSubmit = async (e: any) => {
         try {
             e.preventDefault()
-            console.log(workspaceCollection, "WORKSPACE COLLECTION");
-            const workspaceStuff = await workspaceCollection.doc(workspaceId).get();
-            console.log(workspaceStuff, "WORKSPACE STUFF")
-            const firebaseReturn: any = await firebase.auth().signInAnonymously();
-            console.log(currentUser, "CURRENT USER");
-            console.log(firebaseReturn, "FIREBASE RETURN");
+            if (!userName.trim()) throw new Error("Invalid user name");
+
+            const userCredential = await firebase.auth().signInAnonymously();
+
+            if (isNewUser(userCredential) && userCredential.user) {
+              await createAnonWorkspaceUser({
+                workspaceId,
+                displayName: userName,
+                userId: userCredential.user?.uid
+              })
+            }
         } catch (error) {
             setIsSending(false);
             setErrorMessage(error.message);
