@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { XIcon } from "@heroicons/react/outline";
+import { XIcon, QuestionMarkCircleIcon, LinkIcon } from "@heroicons/react/outline";
 import { useParams } from "react-router-dom";
 import { Retro } from "../types/retro";
 import { useRetroState } from "../hooks/use-retro-state";
@@ -40,6 +40,15 @@ export function RetroBoardSidePanel({ isOpen, toggle }: any) {
     return;
   }
 
+  const [isCopied, setIsCopied] = React.useState(false);
+  async function handleCopyLink() {
+    await navigator.clipboard.writeText(window.location.href);
+    setIsCopied(true);
+    setTimeout(() => {
+      setIsCopied(false);
+    }, 2000);
+  }
+
   return (
     <Transition.Root show={isOpen} as={Fragment}>
       <Dialog as="div" className="fixed inset-0 overflow-hidden" onClose={toggle}>
@@ -63,7 +72,7 @@ export function RetroBoardSidePanel({ isOpen, toggle }: any) {
                 >
                   <div className="flex-1 h-0 overflow-y-auto">
                     <div className="py-6 px-4 bg-indigo-700 sm:px-6">
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center">
                         <Dialog.Title className="text-lg font-medium text-white">
                           Retro Settings
                         </Dialog.Title>
@@ -84,7 +93,7 @@ export function RetroBoardSidePanel({ isOpen, toggle }: any) {
                         </p>
                       </div>
                     </div>
-                    <div className="flex-1 flex flex-col justify-between">
+                    <div className="flex-1 flex flex-col">
                       <div className="px-4 divide-y divide-gray-200 sm:px-6">
                         <div className="space-y-6 pt-6 pb-5">
                           <div>
@@ -156,6 +165,35 @@ export function RetroBoardSidePanel({ isOpen, toggle }: any) {
                           </div>
                         </div>
                       </fieldset>
+                      <div className="border-t-2 inset-0 border-gray mt-4 pt-4 pb-6">
+                        <div className="flex text-sm">
+                          <button
+                            type="button"
+                            className="group inline-flex items-center font-medium hover:text-pink"
+                            onClick={handleCopyLink}
+                          >
+                            <LinkIcon
+                              className="h-5 w-5 text-indigo-500 group-hover:text-indigo-900"
+                              aria-hidden="true"
+                            />
+                            <span className="ml-2">Copy link </span>
+                          </button>
+                          <span className="text-white ml-4">
+                            {isCopied ? "Copied!" : ""}
+                          </span>
+                        </div>
+                        <div className="mt-4 flex text-sm">
+                          <div className="group inline-flex items-center text-gray">
+                            <QuestionMarkCircleIcon
+                              className="h-5 w-5 text-gray"
+                              aria-hidden="true"
+                            />
+                            <span className="ml-2">
+                              Share this link with your team so they can join your retro
+                            </span>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div className="flex-shrink-0 px-4 py-4 flex justify-end">

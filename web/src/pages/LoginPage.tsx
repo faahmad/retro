@@ -165,7 +165,7 @@ function LoginForm({
   );
 }
 
-function TermsAndConditionsText() {
+export function TermsAndConditionsText() {
   return (
     <div className="text-pink sm:w-full lg:w-2/5 text-xs">
       <p style={{ color: "rgba(55, 53, 47, 0.4)" }}>

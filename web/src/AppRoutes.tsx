@@ -24,6 +24,7 @@ import { PainDreamFixLandingPage } from "./pages/PainDreamFixLandingPage";
 import { LoginPage } from "./pages/LoginPage";
 import { RetroListPage } from "./pages/RetroListPage";
 import { SignupPage } from "./pages/SignupPage";
+import { AnonAuthLoginPage } from "./pages/AnonAuthLoginPage";
 
 export const AppRoutes: React.FC = () => {
   const currentUser = useCurrentUser();
@@ -63,6 +64,11 @@ const UnauthenticatedAppRoutes: React.FC = () => {
       <Route exact path="/" component={PainDreamFixLandingPage} />
       <Route exact path="/login" component={LoginPage} />
       <Route exact path="/signup" component={SignupPage} />
+      <Route
+        exact
+        path="/workspaces/:workspaceId/retros/:retroId"
+        component={AnonAuthLoginPage}
+      />
     </React.Fragment>
   );
 };

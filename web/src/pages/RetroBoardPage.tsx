@@ -12,10 +12,8 @@ import {
 import { RetroBoard } from "../components/RetroBoard";
 import { useGetWorkspace, WorkspaceStateStatus } from "../hooks/use-get-workspace";
 import { AnalyticsPage, useAnalyticsPage } from "../hooks/use-analytics-page";
-import { AnalyticsEvent, useAnalyticsEvent } from "../hooks/use-analytics-event";
 import { useCurrentUser } from "../hooks/use-current-user";
-import { RetroItemsMap, RetroItem } from "../types/retro-item";
-import { RetroColumnType } from "../types/retro-column";
+
 import { RetroBoardActions } from "../components/RetroBoardActions";
 import { useUserSettings } from "../components/RetroBoardUserSettings";
 import { RetroBoardSidePanel } from "../components/RetroBoardSidePanel";
@@ -23,11 +21,11 @@ import { RetroBoardSidePanel } from "../components/RetroBoardSidePanel";
 import { AdjustmentsIcon, ArrowSmLeftIcon } from "@heroicons/react/outline";
 import { RetroBoardStageStepper } from "../components/RetroBoardStageStepper";
 import { RetroBoardPresentationMode } from "../components/RetroBoardPresentationMode";
+import { Workspace } from "../types/workspace";
 
 export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
   useAnalyticsPage(AnalyticsPage.RETRO_BOARD);
-  const trackEvent = useAnalyticsEvent();
-  const params = useParams<{ retroId: Retro["id"] }>();
+  const params = useParams<{ retroId: Retro["id"]; workspaceId: Workspace["id"] }>();
   // Important! useRetroItemsListener has to come first!
   // Not the best, I know. But it's MVP!
   const retroItems = useRetroItemsListener(params.retroId);
@@ -38,8 +36,7 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
     handleEditItem,
     handleLikeItem,
     handleUnlikeItem,
-    handleDeleteItem,
-    handleUpdateColumnItems
+    handleDeleteItem
   } = useRetroState(params.retroId);
   const workspaceState = useGetWorkspace();
   const { data, status, error } = state;
@@ -51,41 +48,6 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
   function handleToggleSidePanel() {
     setIsSidePanelOpen(!isSidePanelOpen);
   }
-
-  const sortByLikes = (retroItems: RetroItemsMap, retroItemIds: RetroItem["id"][]) => {
-    return retroItemIds.sort((a, b) => retroItems[b].likeCount - retroItems[a].likeCount);
-  };
-  const getColumnItems = (columnType: RetroColumnType) => {
-    if (!data) {
-      return [];
-    }
-    return data.columns[columnType].retroItemIds;
-  };
-
-  const handleSortAllItemsByLikes = () => {
-    if (!retroItems.data || !data) {
-      return;
-    }
-    const updateColumnItemsInput = {
-      [RetroColumnType.GOOD]: sortByLikes(
-        retroItems.data,
-        getColumnItems(RetroColumnType.GOOD)
-      ),
-      [RetroColumnType.BAD]: sortByLikes(
-        retroItems.data,
-        getColumnItems(RetroColumnType.BAD)
-      ),
-      [RetroColumnType.ACTIONS]: sortByLikes(
-        retroItems.data,
-        getColumnItems(RetroColumnType.ACTIONS)
-      )
-    };
-    trackEvent(AnalyticsEvent.RETRO_ITEMS_SORTED, {
-      method: "likeCount"
-    });
-    handleUpdateColumnItems(updateColumnItemsInput);
-    return;
-  };
 
   if (
     status === RetroStateStatus.LOADING ||
@@ -118,7 +80,7 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
           className={settings?.isFullscreen ? "my-8 px-8 m-auto" : "my-8 px-8 m-auto"}
         >
           <button
-            onClick={() => history.goBack()}
+            onClick={() => history.push(`/workspaces/${params.workspaceId}`)}
             className="h-10 w-10 mb-4 flex items-center justify-center bg-white text-blue text-2xl hover:bg-pink-1/2 active:transform-1 focus:outline-none"
           >
             <ArrowSmLeftIcon className="h-8 w-8" />
@@ -173,40 +135,8 @@ interface RetroHeaderProps {
   name: string;
   createdAt: any;
 }
+
 function RetroHeader({ name, createdAt }: RetroHeaderProps) {
-  // const [localName, setLocalName] = React.useState(name);
-  // const handleOnChange = (event: any) => {
-  //   return setLocalName(event.currentTarget.value);
-  // };
-
-  // const [isEditing, setisEditing] = React.useState(false);
-  // const handleToggleEditing = () => {
-  //   return setisEditing((prevState) => !prevState);
-  // };
-  // const inputRef = React.useRef(null);
-  // React.useEffect(() => {
-  //   if (isEditing) {
-  //     // @ts-ignore
-  //     inputRef.current.focus();
-  //   }
-  // }, [isEditing]);
-
-  // const updateRetro = useUpdateRetro();
-  // const trackEvent = useAnalyticsEvent();
-  // const currentUser = useCurrentUser();
-  // const handleSave = async () => {
-  //   await updateRetro(id, { name: localName });
-  //   trackEvent(AnalyticsEvent.RETRO_UPDATED, {
-  //     retroId: id,
-  //     createdAt,
-  //     fields: ["name"],
-  //     location: AnalyticsPage.RETRO_BOARD,
-  //     updatedBy: currentUser.auth?.uid === ownerId ? "retro-owner" : "member"
-  //   });
-  //   handleToggleEditing();
-  //   return;
-  // };
-
   return (
     <div className="flex flex-col flex-grow flex-nowrap">
       <h1 className="text-2xl font-bold">{name || "Retro Board"}</h1>

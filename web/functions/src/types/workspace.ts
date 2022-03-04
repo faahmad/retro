@@ -17,4 +17,5 @@ export interface Workspace {
   };
   customerId?: string;
   subscriptionId?: string;
+  userCount: number;
 }

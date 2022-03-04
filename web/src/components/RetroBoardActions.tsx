@@ -10,9 +10,26 @@ interface RetroBoardActionsProps {
 export function RetroBoardActions(props: RetroBoardActionsProps) {
   const timer = useRetroCountdownTimer(props.retroId);
 
+  const [isCopied, setIsCopied] = React.useState(false);
+  async function handleCopyLink() {
+    await navigator.clipboard.writeText(window.location.href);
+    setIsCopied(true);
+    setTimeout(() => {
+      setIsCopied(false);
+    }, 2000);
+  }
+
   return (
     <div className="flex">
       <div className="flex p-4 mb-4 border border-red items-center justify-center">
+        <Button
+          style={{ width: "10rem" }}
+          className="text-blue w-20 mr-4"
+          onClick={handleCopyLink}
+        >
+          <div>{isCopied ? "Copied!" : "Copy Link"}</div>
+        </Button>
+
         <Button
           style={{ width: "10rem" }}
           className={`text-blue w-20 ml-4 ${
