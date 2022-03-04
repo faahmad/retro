@@ -2,11 +2,11 @@ import { User } from "./user";
 import { Workspace } from "./workspace";
 
 export interface WorkspaceUser {
-  userDisplayName: User["displayName"];
-  userEmail: User["email"];
+  userDisplayName: User["displayName"] | null;
+  userEmail: User["email"] | null;
   userId: User["id"];
-  userPhotoURL: User["photoUrl"];
-  userRole: User["role"];
+  userPhotoURL: User["photoUrl"] | null;
+  userRole: "member" | "owner";
   workspaceId: Workspace["id"];
 }
 

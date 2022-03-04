@@ -7,7 +7,7 @@ export interface WorkspaceInvite {
   invitedByUserId: string;
   invitedByUserDisplayName: string;
   status: WorkspaceInviteStatus;
-  createdAt: FirestoreTimestamp;
+  createdAt: any;
   updatedAt: FirestoreTimestamp;
 }
 

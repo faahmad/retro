@@ -2,13 +2,12 @@ import { Workspace } from "./workspace";
 
 export interface User {
   id: string;
-  createdAt: string;
+  createdAt: any;
   displayName: string;
-  email: string;
+  email: string | null;
   phoneNumber: string | null;
-  photoUrl: string;
+  photoUrl: string | null;
   workspaces: UserWorkspace[];
-  role: "owner" | "member";
   settings?: UserSettings;
 }
 
