@@ -20,7 +20,6 @@ import { useScrollToTop } from "./hooks/use-scroll-to-top";
 import { WorkspaceListPage } from "./pages/WorkspaceListPage";
 
 import { PainDreamFixLandingPage } from "./pages/PainDreamFixLandingPage";
-import { MagicLinkPage } from "./pages/MagicLinkPage";
 
 import { LoginPage } from "./pages/LoginPage";
 import { RetroListPage } from "./pages/RetroListPage";
@@ -65,7 +64,6 @@ const UnauthenticatedAppRoutes: React.FC = () => {
       <Route exact path="/" component={PainDreamFixLandingPage} />
       <Route exact path="/login" component={LoginPage} />
       <Route exact path="/signup" component={SignupPage} />
-      <Route exact path="/magic-link" component={MagicLinkPage} />
       <Route
         exact
         path="/workspaces/:workspaceId/retros/:retroId"

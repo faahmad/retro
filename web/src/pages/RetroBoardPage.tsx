@@ -1,5 +1,5 @@
 import * as React from "react";
-import { RouteComponentProps, useParams } from "react-router-dom";
+import { RouteComponentProps, useHistory, useParams } from "react-router-dom";
 import moment from "moment";
 import { Footer } from "../components/Footer";
 import { PageContainer } from "../components/PageContainer";
@@ -17,13 +17,12 @@ import { useCurrentUser } from "../hooks/use-current-user";
 import { RetroItemsMap, RetroItem } from "../types/retro-item";
 import { RetroColumnType } from "../types/retro-column";
 import { RetroBoardActions } from "../components/RetroBoardActions";
-import {
-  RetroBoardUserSettings,
-  useUserSettings
-} from "../components/RetroBoardUserSettings";
+import { useUserSettings } from "../components/RetroBoardUserSettings";
 import { RetroBoardSidePanel } from "../components/RetroBoardSidePanel";
 
-import { AdjustmentsIcon } from "@heroicons/react/outline";
+import { AdjustmentsIcon, ArrowSmLeftIcon } from "@heroicons/react/outline";
+import { RetroBoardStageStepper } from "../components/RetroBoardStageStepper";
+import { RetroBoardPresentationMode } from "../components/RetroBoardPresentationMode";
 
 export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
   useAnalyticsPage(AnalyticsPage.RETRO_BOARD);
@@ -46,6 +45,7 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
   const { data, status, error } = state;
   const { settings } = useUserSettings();
   const currentUser = useCurrentUser();
+  const history = useHistory();
 
 
 
@@ -91,10 +91,6 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
       [RetroColumnType.ACTIONS]: sortByLikes(
         retroItems.data,
         getColumnItems(RetroColumnType.ACTIONS)
-      ),
-      [RetroColumnType.QUESTIONS]: sortByLikes(
-        retroItems.data,
-        getColumnItems(RetroColumnType.QUESTIONS)
       )
     };
     trackEvent(AnalyticsEvent.RETRO_ITEMS_SORTED, {
@@ -124,16 +120,25 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
     );
   }
 
+  const isOwner = data?.createdById === currentUser?.data?.id;
+
   if (status === RetroStateStatus.SUCCESS && data !== null) {
     return (
       <React.Fragment>
         <RetroBoardSidePanel isOpen={isSidePanelOpen} toggle={handleToggleSidePanel} />
+
         <PageContainer
-          className={settings?.isFullscreen ? "my-16 px-8 m-auto" : undefined}
+          className={settings?.isFullscreen ? "my-8 px-8 m-auto" : "my-8 px-8 m-auto"}
         >
-          <div className="flex text-blue items-baseline justify-between mb-8">
+          <button
+            onClick={() => history.goBack()}
+            className="h-10 w-10 mb-4 flex items-center justify-center bg-white text-blue text-2xl hover:bg-pink-1/2 active:transform-1 focus:outline-none"
+          >
+            <ArrowSmLeftIcon className="h-8 w-8" />
+          </button>
+          <div className="flex text-blue items-center justify-between mb-8">
             <RetroHeader name={data.name} createdAt={data.createdAt} />
-            {data?.createdById === currentUser?.data?.id ? (
+            {isOwner ? (
               <button
                 onClick={handleToggleSidePanel}
                 className="h-10 w-10 flex items-center justify-center bg-blue text-white ml-3 border border-red shadow shadow-red text-2xl hover:bg-pink-1/2 active:transform-1 focus:outline-none"
@@ -142,26 +147,31 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
               </button>
             ) : null}
           </div>
-          <div className="flex justify-between flex-wrap">
-            <RetroBoardActions
-              retroId={data.id}
-              onSortByLikes={handleSortAllItemsByLikes}
-            />
-            <RetroBoardUserSettings />
+
+          <div className="flex justify-between items-center flex-wrap">
+            <div className="mr-4 mb-2">
+              <RetroBoardStageStepper isOwner={isOwner} retroId={params.retroId} />
+            </div>
+            <RetroBoardActions retroId={data.id} />
           </div>
-          <RetroBoard
-            retroState={state}
-            users={workspaceState.users}
-            retroItems={retroItems.data}
-            onAddItem={handleAddItem}
-            onDeleteItem={handleDeleteItem}
-            onEditItem={(retroItemId, content) =>
-              handleEditItem({ content, id: retroItemId })
-            }
-            onLikeItem={handleLikeItem}
-            onUnlikeItem={handleUnlikeItem}
-            onDragDrop={handleDragDrop}
-          />
+
+          {data?.stage === "Discuss" ? (
+            <RetroBoardPresentationMode />
+          ) : (
+            <RetroBoard
+              retroState={state}
+              users={workspaceState.users}
+              retroItems={retroItems.data}
+              onAddItem={handleAddItem}
+              onDeleteItem={handleDeleteItem}
+              onEditItem={(retroItemId, content) =>
+                handleEditItem({ content, id: retroItemId })
+              }
+              onLikeItem={handleLikeItem}
+              onUnlikeItem={handleUnlikeItem}
+              onDragDrop={handleDragDrop}
+            />
+          )}
         </PageContainer>
         <Footer />
       </React.Fragment>
@@ -212,7 +222,7 @@ function RetroHeader({ name, createdAt }: RetroHeaderProps) {
 
   return (
     <div className="flex flex-col flex-grow flex-nowrap">
-      <h1 className="text-4xl font-bold">{name || "Retro Board"}</h1>
+      <h1 className="text-2xl font-bold">{name || "Retro Board"}</h1>
       <span className="text-xs font-normal">
         Created {moment(createdAt.toDate()).format("L")}
       </span>

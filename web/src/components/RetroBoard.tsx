@@ -20,6 +20,7 @@ import { RetroItemModal } from "./RetroItemModal";
 import { WorkspaceUser, WorkspaceUsersMap } from "../types/workspace-user";
 import { AnalyticsEvent, useAnalyticsEvent } from "../hooks/use-analytics-event";
 import { EyeOffIcon } from "@heroicons/react/outline";
+import { Retro } from "../types/retro";
 
 interface RetroBoardProps {
   retroState: RetroStateValues;
@@ -136,8 +137,9 @@ export function RetroBoard({
       return;
     }
 
-    const prevColumn = retroState.data.columns[source.droppableId as RetroColumnType];
-    const nextColumn =
+    const prevColumn: any =
+      retroState.data.columns[source.droppableId as RetroColumnType];
+    const nextColumn: any =
       retroState.data.columns[destination.droppableId as RetroColumnType];
 
     // When dropping in the same column, update the order of the items.
@@ -223,6 +225,7 @@ export function RetroBoard({
                 type={columnType}
                 items={items}
                 users={users}
+                stage={data?.stage}
                 isIncognito={data?.isIncognito}
                 onClickAdd={() => handleOnClickAdd(columnType)}
                 onClickEdit={handleOnClickEdit}
@@ -243,6 +246,7 @@ interface RetroListProps {
   items: any[];
   users: WorkspaceUsersMap;
   isIncognito?: boolean;
+  stage: Retro["stage"];
   onClickAdd: () => void;
   onClickLike: (input: any) => void;
   onClickUnlike: (input: any) => void;
@@ -258,13 +262,17 @@ export const RetroList: React.FC<RetroListProps> = ({
   onClickAdd,
   onClickLike,
   onClickUnlike,
-  onClickEdit
+  onClickEdit,
+  stage = "Brainstorm"
 }) => {
   return (
     <div className="flex flex-col border border-red shadow shadow-red">
-      <div className="bg-white flex px-4 pt-2 pb-4 justify-between items-end mb-2 border border-red">
+      <div className="bg-white flex px-4 pt-2 pb-4 justify-between items-center mb-2 border border-red h-20">
         <p className="text-blue font-bold text-sm">{title}</p>
-        <AddButton className="self-end" onClick={onClickAdd} />
+        {/* Only display the add button during the Brainstorm stage */}
+        {stage === "Brainstorm" ? (
+          <AddButton className="self-end" onClick={onClickAdd} />
+        ) : null}
       </div>
       <Droppable droppableId={type}>
         {(provided) => {
@@ -284,6 +292,7 @@ export const RetroList: React.FC<RetroListProps> = ({
                     onClickLike={onClickLike}
                     onClickUnlike={onClickUnlike}
                     onClickEdit={() => onClickEdit(item)}
+                    stage={stage}
                     {...item}
                   />
                 );
@@ -302,6 +311,7 @@ export const RetroListItem: React.FC<
     index: number;
     author: WorkspaceUser;
     isIncognito?: boolean;
+    stage: Retro["stage"];
     onClickLike: (input: any) => void;
     onClickUnlike: (input: any) => void;
     onClickEdit: () => void;
@@ -317,7 +327,8 @@ export const RetroListItem: React.FC<
   onClickLike,
   onClickUnlike,
   onClickEdit,
-  index
+  index,
+  stage
 }) => {
   const currentUser = useCurrentUser();
   const authAccount = currentUser.auth!;
@@ -348,7 +359,7 @@ export const RetroListItem: React.FC<
           >
             <div className="flex content-center">
               <Linkify>
-                {isIncognito && !isAuthor ? (
+                {isIncognito && stage === "Brainstorm" && !isAuthor ? (
                   <div className="flex items-center" title="Incognito item until lifted">
                     <EyeOffIcon className="h-4 w-4 text-blue" />
                   </div>
@@ -360,12 +371,14 @@ export const RetroListItem: React.FC<
 
             <div className="flex ml-2 items-center">
               {isAuthor && <EditButton onClick={onClickEdit} />}
-              <LikeButton
-                likeCount={likeCount}
-                likedBy={likedBy}
-                currentUserId={authAccount.uid}
-                onClick={handleLikeItem}
-              />
+              {stage === "Vote" && (
+                <LikeButton
+                  likeCount={likeCount}
+                  likedBy={likedBy}
+                  currentUserId={authAccount.uid}
+                  onClick={handleLikeItem}
+                />
+              )}
             </div>
           </li>
         );
