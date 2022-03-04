@@ -7,7 +7,6 @@ import { UserWorkspace } from "../types/user";
 export function WorkspaceListPage() {
   const currentUser = useCurrentUser();
 
-  console.log({ currentUserState: currentUser?.state });
   if (currentUser.state === "loading") {
     return (
       <PageContainer>
