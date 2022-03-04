@@ -182,6 +182,17 @@ export function RetroBoardSidePanel({ isOpen, toggle }: any) {
                             {isCopied ? "Copied!" : ""}
                           </span>
                         </div>
+                        <div className="mt-4 flex text-sm">
+                          <div className="group inline-flex items-center text-gray">
+                            <QuestionMarkCircleIcon
+                              className="h-5 w-5 text-gray"
+                              aria-hidden="true"
+                            />
+                            <span className="ml-2">
+                              Share this link with your team so they can join your retro
+                            </span>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
