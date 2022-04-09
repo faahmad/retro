@@ -12,7 +12,6 @@ import { FirestoreCollections } from "../../../constants/firestore-collections";
 export const createStripeCustomerSubscription = functions.firestore
   .document(`${FirestoreCollections.WORKSPACE}/{workspaceId}`)
   .onCreate(async (workspaceSnapshot) => {
-    logger.log({ isFunctionsEmulator: process.env.FUNCTIONS_EMULATOR });
     const workspace = workspaceSnapshot.data() as Workspace;
     logger.prettyPrint({ workspace });
     if (!workspace) {
