@@ -66,6 +66,7 @@ export function useGetWorkspace() {
   const { subscription, isLoading }: any = useGetWorkspaceSubscription(workspaceId);
   React.useEffect(() => {
     if (workspaceId && subscription) {
+      console.log({ workspaceId, subscription });
       updateWorkspace(workspaceId, {
         subscriptionId: subscription.id,
         subscriptionStatus: subscription.status,

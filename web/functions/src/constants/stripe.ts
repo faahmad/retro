@@ -1,6 +1,4 @@
-import { projectIds } from "./project-ids";
-
-const isProd = process.env.GCLOUD_PROJECT === projectIds.prod;
+const isDev = process.env.FUNCTIONS_EMULATOR === "true";
 
 enum DevStripeSubscriptionPlans {
   PRO_MONTHLY = "plan_HFppfQJn3jDBFj",
@@ -10,6 +8,6 @@ enum ProdStripeSubscriptionPlans {
   PRO_MONTHLY = "plan_HGB5FTkzgHuvyk",
   PRO_YEARLY = "price_1Ias3mKZLl59Zw3X4RclJTyN"
 }
-export const StripeSubscriptionPlans = isProd
-  ? ProdStripeSubscriptionPlans
-  : DevStripeSubscriptionPlans;
+export const StripeSubscriptionPlans = isDev
+  ? DevStripeSubscriptionPlans
+  : ProdStripeSubscriptionPlans;

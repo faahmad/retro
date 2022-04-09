@@ -17,6 +17,7 @@ import { Navbar } from "../components/Navbar";
 import { WorkspaceUsersTable } from "../components/WorkspaceUsersTable";
 import { logOut } from "../services/auth-service";
 import { useHistory } from "react-router-dom";
+import { BannerTrialEnded } from "../components/BannerTrialEnded";
 
 export const SettingsPage = () => {
   useAnalyticsPage(AnalyticsPage.SETTINGS);
@@ -91,6 +92,7 @@ type BillingSettingsProps = {
 function BillingSettings({ workspaceId }: BillingSettingsProps) {
   const { openBillingPortalFn, isOpeningPortal } = useOpenBillingPortal(workspaceId);
   const [subscription, setSubscription] = React.useState<any>(null);
+  const isTrialing = subscription?.status === "trialing";
   const isSubscriptionActive = subscription?.status === "active";
 
   React.useEffect(() => {
@@ -129,12 +131,14 @@ function BillingSettings({ workspaceId }: BillingSettingsProps) {
             currentPeriodEnd={subscription.currentPeriodEnd}
             interval={subscription.items[0].interval}
           />
-        ) : (
+        ) : isTrialing ? (
           <UpgradeToProBanner
-            trialEnd={subscription.trialEnd}
             workspaceId={workspaceId}
+            trialEnd={subscription.trialEnd}
           />
-        )}
+        ) : !isSubscriptionActive ? (
+          <BannerTrialEnded workspaceId={workspaceId} />
+        ) : null}
       </div>
     </div>
   );
