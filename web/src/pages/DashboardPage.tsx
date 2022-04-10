@@ -4,6 +4,7 @@ import retroEmptyImage from "../assets/images/retro-empty-image.svg";
 import { Footer } from "../components/Footer";
 import { PageContainer } from "../components/PageContainer";
 import { UpgradeToProBanner } from "../components/UpgradeToProBanner";
+import { BannerTrialEnded } from "../components/BannerTrialEnded";
 import { useCurrentUser } from "../hooks/use-current-user";
 import { Retro } from "../types/retro";
 import { Workspace } from "../types/workspace";
@@ -21,6 +22,7 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
   const currentUser = useCurrentUser();
   const userId = currentUser?.auth?.uid;
   const isWorkspaceOwner = getIsWorkspaceOwner(workspaceState, userId || "");
+  const isTrialing = workspaceState.subscriptionStatus === "trialing";
   const isInActiveMode = workspaceState.subscriptionStatus === "active";
 
   return (
@@ -29,12 +31,14 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
         <Navbar isLoggedIn={true} />
         <p className="text-blue mb-2 underline">{workspaceState.name}</p>
         <h1 className="text-blue font-black text-3xl">Dashboard</h1>
-        {!isInActiveMode && isWorkspaceOwner && (
+        {isWorkspaceOwner && isTrialing ? (
           <UpgradeToProBanner
             workspaceId={workspaceState.id}
             trialEnd={workspaceState.subscriptionTrialEnd}
           />
-        )}
+        ) : isWorkspaceOwner && !isInActiveMode ? (
+          <BannerTrialEnded workspaceId={workspaceState.id} />
+        ) : null}
         <RetroBoardsOverview
           workspaceId={workspaceState.id}
           workspaceOwnerId={workspaceState.ownerId}

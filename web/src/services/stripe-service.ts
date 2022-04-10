@@ -2,7 +2,7 @@ import { axios } from "../lib/axios";
 
 export function getBaseURL() {
   return process.env.NODE_ENV === "development"
-    ? "http://localhost:5001/retro-dev-786/us-central1"
+    ? "http://localhost:5001/retro-prod-786/us-central1"
     : process.env.REACT_APP_FIREBASE_CLOUD_FUNCTIONS_URL;
 }
 
