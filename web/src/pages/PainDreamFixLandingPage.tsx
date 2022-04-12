@@ -30,7 +30,7 @@ export const PainDreamFixLandingPage: React.FC = () => {
   const handleClickSignup = (location: string) => {
     trackEvent(AnalyticsEvent.SIGNUP_BUTTON_CLICKED, {
       location,
-      buttonCopy: "Get 30 Days Free"
+      buttonCopy: "Get 14 Days Free"
     });
     history.push("/signup");
     return;
@@ -54,7 +54,7 @@ export const PainDreamFixLandingPage: React.FC = () => {
                 className="mt-4 w-full lg:w-64 bg-pink text-blue"
                 onClick={() => handleClickSignup("above_the_fold")}
               >
-                Get 30 Days Free
+                Get 14 Days Free
               </Button>
             </div>
             <div
@@ -129,7 +129,7 @@ export const PainDreamFixLandingPage: React.FC = () => {
                 onClick={() => handleClickSignup("mission_statement")}
                 className="mt-4 w-full lg:w-64 bg-pink text-blue"
               >
-                Get 30 Days Free
+                Get 14 Days Free
               </Button>
             </div>
           </div>
@@ -186,7 +186,7 @@ export const PainDreamFixLandingPage: React.FC = () => {
           onClick={() => handleClickSignup("open_startup")}
           className="mt-4 w-full lg:w-64 bg-pink text-blue"
         >
-          Get 30 Days Free
+          Get 14 Days Free
         </Button>
       </PageContainer>
       <FAQFooter />
