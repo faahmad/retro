@@ -7,6 +7,7 @@ export enum FirestoreCollections {
   RETRO = "retro",
   RETRO_ITEM = "retroItem",
   EARLY_ACCESS_CODES = "earlyAccessCodes",
+  ACTION_ITEM = "actionItem",
   // composite collections
   WORKSPACE_USER = "workspace_user",
   RETRO_ITEM_RETRO = "retroItem_retro"
