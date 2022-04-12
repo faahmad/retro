@@ -139,7 +139,7 @@ export const PainDreamFixLandingPage: React.FC = () => {
             <div className="mt-20 mb-20 flex flex-col lg:flex-row max-w-6xl m-auto">
               <div className="w-full sm:w-1/2 md:w-1/2 lg:w-1/2 sm:ml-4 md:ml-4 lg:w-ml-4">
                 <h3 className="text-3xl text-white font-black mb-3">
-                  Try it for free for a month, then simple pricing forever.
+                  Try it for free for two weeks, then simple pricing forever.
                 </h3>
                 <p className="text-xl text-white">
                   Our pricing is dead simple. Pay the same price forever regardless of how
