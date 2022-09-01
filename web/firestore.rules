@@ -99,5 +99,9 @@ service cloud.firestore {
       allow update: if hasActiveAccount(database, resource.data.workspaceId) 
                     && isWorkspaceUser(database, resource.data.workspaceId, request.auth.uid);
     }
+
+    match /actionItem/{workspaceId} {
+      allow read, create, update: if isSignedIn(request);
+    }
   }
 }

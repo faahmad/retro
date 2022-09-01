@@ -14,7 +14,8 @@ module.exports = {
       pink: "#ff94b8",
       white: "#ffffff",
       black: "#000000",
-      gray: "#6b7280"
+      gray: "#6b7280",
+      green: "#34d399"
     },
     fontFamily: {
       display: ["Source Code Pro", "monospace"],
