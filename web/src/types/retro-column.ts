@@ -2,8 +2,7 @@ import { RetroItem } from "./retro-item";
 
 export enum RetroColumnType {
   GOOD = "good",
-  BAD = "bad",
-  ACTIONS = "actions"
+  BAD = "bad"
 }
 
 export type RetroColumnGood = {
@@ -18,10 +17,4 @@ export type RetroColumnBad = {
   retroItemIds: RetroItem["id"][];
 };
 
-export type RetroColumnActions = {
-  type: RetroColumnType.ACTIONS;
-  title: "What do we need to do?";
-  retroItemIds: RetroItem["id"][];
-};
-
-export type RetroColumn = RetroColumnGood | RetroColumnBad | RetroColumnActions;
+export type RetroColumn = RetroColumnGood | RetroColumnBad;

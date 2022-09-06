@@ -30,7 +30,8 @@ export enum AnalyticsEvent {
   RETRO_TIMER_ADD_1 = "Retro Timer Add 1 Min",
   RETRO_STAGE_CHANGED = "Retro Stage Changed",
   INVITE_LINK_COPIED = "Invite Link Copied",
-  SKIPPED_ONBOARDING_INVITES = "Skipped Onboarding Invites"
+  SKIPPED_ONBOARDING_INVITES = "Skipped Onboarding Invites",
+  ACTION_ITEM_CREATED = "Action Item Created"
 }
 
 export function useAnalyticsEvent() {

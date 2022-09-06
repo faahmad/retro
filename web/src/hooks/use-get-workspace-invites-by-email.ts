@@ -25,5 +25,6 @@ export function useGetWorkspaceInvitesByEmail(email?: string | null) {
       isMounted = false;
     };
   }, [email]);
+
   return { data: workspaceInvites, loading: isLoading };
 }

@@ -14,6 +14,7 @@ import { useAnalyticsPage, AnalyticsPage } from "../hooks/use-analytics-page";
 import { useAnalyticsEvent, AnalyticsEvent } from "../hooks/use-analytics-event";
 import { useGetWorkspace } from "../hooks/use-get-workspace";
 import { Navbar } from "../components/Navbar";
+import { ActionItemsList } from "../components/RetroBoardPresentationMode";
 
 export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
   useAnalyticsPage(AnalyticsPage.DASHBOARD);
@@ -46,6 +47,13 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
           history={history}
           isActive={workspaceState.isActive}
         />
+        <div className="flex flex-col h-full border border-red shadow shadow-red p-4 mt-4">
+          <ActionItemsList
+            hideForm
+            workspaceId={workspaceState.id}
+            isOwner={isWorkspaceOwner}
+          />
+        </div>
       </PageContainer>
       <Footer />
     </React.Fragment>

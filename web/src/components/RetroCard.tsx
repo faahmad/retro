@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Retro } from "../types/retro";
 import moment from "moment";
-import { FlagIcon, ThumbDownIcon, ThumbUpIcon } from "@heroicons/react/outline";
+import { ThumbDownIcon, ThumbUpIcon } from "@heroicons/react/outline";
 
 interface RetroCardProps {
   retro: Retro;
@@ -32,12 +32,6 @@ export function RetroCard({ retro, onClick }: RetroCardProps) {
         <div className="flex items-center">
           <ThumbDownIcon className="h-6 w-6 text-blue" />
           <p className="ml-2 text-blue text-sm">{retro.retroItemsData.badCount} Bad</p>
-        </div>
-        <div className="flex items-center">
-          <FlagIcon className="h-6 w-6 text-blue" />
-          <p className="ml-2 text-blue text-sm">
-            {retro.retroItemsData.actionsCount} Actions
-          </p>
         </div>
       </div>
     </div>
