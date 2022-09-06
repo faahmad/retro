@@ -133,14 +133,16 @@ function RetroBoardPresentationCard({ retroItem }: { retroItem: RetroItem }) {
   );
 }
 
-function ActionItemsList({
+export function ActionItemsList({
   retroId,
   workspaceId,
-  isOwner
+  isOwner,
+  hideForm
 }: {
-  retroId: string;
+  retroId?: string;
   workspaceId: string;
   isOwner: boolean;
+  hideForm?: boolean;
 }) {
   const [showCompleted, setShowCompleted] = React.useState(false);
   const { actionItems, createActionItem, toggleActionItemStatus } = useActionItemHelpers(
@@ -148,6 +150,10 @@ function ActionItemsList({
   );
 
   async function handleSubmit(event: any) {
+    if (!retroId) {
+      return;
+    }
+
     event.preventDefault();
     const form = event.target;
     await createActionItem({ content: form.content.value, workspaceId, retroId });
@@ -163,7 +169,7 @@ function ActionItemsList({
           <p className="text-gray">Actions we agree to take on as a team.</p>
         </div>
 
-        {isOwner && (
+        {isOwner && !hideForm && (
           <form className="mb-4" onSubmit={handleSubmit}>
             <label htmlFor="content" className="block text-sm font-medium text-blue">
               Action item
@@ -234,6 +240,7 @@ function ActionItemsList({
                     <div className="flex">
                       <button
                         className="mr-2"
+                        disabled={!isOwner}
                         onClick={() => {
                           toggleActionItemStatus(item.id, item.status);
                         }}
@@ -259,9 +266,7 @@ function ActionItemsList({
               })}
           </ul>
         ) : (
-          <p className="text-gray text-xs">
-            Your open actions will be displayed here. Try adding one!
-          </p>
+          <p className="text-gray text-xs">...</p>
         )}
       </div>
     </>

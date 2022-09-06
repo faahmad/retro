@@ -19,8 +19,7 @@ export function getRootUrlForWorkspace(workspace: Workspace | UserWorkspace) {
 export function getCountKeyByType(type: RetroColumnType) {
   const typeToCountKeyMap = {
     [RetroColumnType.GOOD]: "goodCount",
-    [RetroColumnType.BAD]: "badCount",
-    [RetroColumnType.ACTIONS]: "actionsCount"
+    [RetroColumnType.BAD]: "badCount"
   };
   return typeToCountKeyMap[type];
 }

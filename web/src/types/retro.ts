@@ -1,12 +1,7 @@
 import { TODO } from "./todo";
 import { User } from "./user";
 import { Workspace } from "./workspace";
-import {
-  RetroColumnType,
-  RetroColumnGood,
-  RetroColumnBad,
-  RetroColumnActions
-} from "./retro-column";
+import { RetroColumnType, RetroColumnGood, RetroColumnBad } from "./retro-column";
 import { RetroStep } from "../components/RetroBoardStageStepper";
 
 export interface Retro {
@@ -29,9 +24,8 @@ export interface Retro {
   columns: {
     [RetroColumnType.GOOD]: RetroColumnGood;
     [RetroColumnType.BAD]: RetroColumnBad;
-    [RetroColumnType.ACTIONS]: RetroColumnActions;
   };
-  columnOrder: [RetroColumnType.GOOD, RetroColumnType.BAD, RetroColumnType.ACTIONS];
+  columnOrder: [RetroColumnType.GOOD, RetroColumnType.BAD];
 }
 
 export interface RetroChildRef {
