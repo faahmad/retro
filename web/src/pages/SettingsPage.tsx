@@ -18,6 +18,9 @@ import { WorkspaceUsersTable } from "../components/WorkspaceUsersTable";
 import { logOut } from "../services/auth-service";
 import { useHistory } from "react-router-dom";
 import { BannerTrialEnded } from "../components/BannerTrialEnded";
+import { Workspace } from "../types/workspace";
+import { Button } from "../components/Button";
+import { updateWorkspace } from "../services/update-workspace";
 
 export const SettingsPage = () => {
   useAnalyticsPage(AnalyticsPage.SETTINGS);
@@ -74,6 +77,7 @@ export const SettingsPage = () => {
       {hasBillingAccess && (
         <div className="mt-8 p-4 border border-blue border-dashed">
           <h5 className="text-blue text-xl underline">Workspace Owner Controls</h5>
+          <GeneralSettings workspaceId={workspaceState.id} name={workspaceState.name} />
           <BillingSettings workspaceId={workspaceState.id} />
           <div className="my-4" />
           <WorkspaceUsersTable
@@ -85,6 +89,69 @@ export const SettingsPage = () => {
     </PageContainer>
   );
 };
+
+function GeneralSettings({
+  workspaceId,
+  name
+}: {
+  workspaceId: Workspace["id"];
+  name: Workspace["name"];
+}) {
+  const [isEditing, setIsEditing] = React.useState(false);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    // @ts-ignore
+    const nextName = event.currentTarget.name?.value as string;
+    await updateWorkspace(workspaceId, { name: nextName });
+    setIsEditing(false);
+  };
+
+  return (
+    <div className="text-red border border-red shadow p-8 flex flex-col mt-2 mb-4">
+      <div className="text-blue ml-2">
+        <p className="text-xl font-black py-1">General</p>
+        {isEditing ? (
+          <form onSubmit={handleSubmit}>
+            <div className="flex justify-between">
+              <div className="flex-1">
+                <label htmlFor="name" className="block text-sm font-medium">
+                  Name
+                </label>
+                <input
+                  id="name"
+                  type="text"
+                  name="name"
+                  className="border border-red px-1 block shadow-sm text-blue h-8 w-1/2 mt-1"
+                  defaultValue={name}
+                />
+              </div>
+              <Button style={{ maxWidth: "8rem" }} className="flex-2" type="submit">
+                Save
+              </Button>
+            </div>
+          </form>
+        ) : (
+          <div className="flex justify-between">
+            <div className="flex-1">
+              <label htmlFor="name" className="block text-sm font-medium">
+                Name
+              </label>
+              <p>{name}</p>
+            </div>
+            <Button
+              style={{ maxWidth: "8rem" }}
+              className="flex-2"
+              onClick={() => setIsEditing(true)}
+            >
+              Edit
+            </Button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
 
 type BillingSettingsProps = {
   workspaceId: string;
@@ -111,7 +178,7 @@ function BillingSettings({ workspaceId }: BillingSettingsProps) {
   }
 
   return (
-    <div className="text-red border border-red shadow p-8 flex flex-col mt-2">
+    <div className="text-red border border-red shadow p-8 flex flex-col mt-2 mb-4">
       <div className="text-blue ml-2">
         <div className="flex-grow flex flex-row justify-between">
           <p className="text-xl font-black py-1">Billing</p>
