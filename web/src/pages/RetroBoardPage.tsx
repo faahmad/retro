@@ -22,10 +22,12 @@ import { AdjustmentsIcon, ArrowSmLeftIcon } from "@heroicons/react/outline";
 import { RetroBoardStageStepper } from "../components/RetroBoardStageStepper";
 import { RetroBoardPresentationMode } from "../components/RetroBoardPresentationMode";
 import { Workspace } from "../types/workspace";
+import { useUpdateLastActive } from "../hooks/use-update-last-active";
 
 export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
   useAnalyticsPage(AnalyticsPage.RETRO_BOARD);
   const params = useParams<{ retroId: Retro["id"]; workspaceId: Workspace["id"] }>();
+  useUpdateLastActive(params.workspaceId);
   // Important! useRetroItemsListener has to come first!
   // Not the best, I know. But it's MVP!
   const retroItems = useRetroItemsListener(params.retroId);

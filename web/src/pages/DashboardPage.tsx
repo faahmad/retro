@@ -15,10 +15,12 @@ import { useAnalyticsEvent, AnalyticsEvent } from "../hooks/use-analytics-event"
 import { useGetWorkspace } from "../hooks/use-get-workspace";
 import { Navbar } from "../components/Navbar";
 import { ActionItemsList } from "../components/RetroBoardPresentationMode";
+import { useUpdateLastActive } from "../hooks/use-update-last-active";
 
 export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
   useAnalyticsPage(AnalyticsPage.DASHBOARD);
   const workspaceState = useGetWorkspace();
+  useUpdateLastActive(workspaceState.id);
 
   const currentUser = useCurrentUser();
   const userId = currentUser?.auth?.uid;
