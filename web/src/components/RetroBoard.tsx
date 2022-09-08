@@ -370,7 +370,7 @@ export const RetroListItem: React.FC<
             </div>
 
             <div className="flex ml-2 items-center">
-              {isAuthor && <EditButton onClick={onClickEdit} />}
+              {isAuthor && stage === "Brainstorm" && <EditButton onClick={onClickEdit} />}
               {stage === "Vote" && (
                 <LikeButton
                   likeCount={likeCount}
