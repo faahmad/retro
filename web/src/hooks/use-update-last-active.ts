@@ -14,5 +14,6 @@ export function useUpdateLastActive(workspaceId: Workspace["id"]) {
         lastActiveAt: getServerTimestamp()
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 }

@@ -23,6 +23,7 @@ import { RetroBoardStageStepper } from "../components/RetroBoardStageStepper";
 import { RetroBoardPresentationMode } from "../components/RetroBoardPresentationMode";
 import { Workspace } from "../types/workspace";
 import { useUpdateLastActive } from "../hooks/use-update-last-active";
+import { RetroReviewPage } from "./RetroReviewPage";
 
 export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
   useAnalyticsPage(AnalyticsPage.RETRO_BOARD);
@@ -106,9 +107,11 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
             <RetroBoardActions retroId={data.id} />
           </div>
 
-          {data?.stage === "Discuss" ? (
-            <RetroBoardPresentationMode />
-          ) : (
+          {data?.stage === "Review" && <RetroReviewPage />}
+
+          {data?.stage === "Discuss" && <RetroBoardPresentationMode />}
+
+          {(data?.stage === "Brainstorm" || data?.stage === "Vote") && (
             <RetroBoard
               retroState={state}
               users={workspaceState.users}

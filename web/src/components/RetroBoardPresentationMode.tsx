@@ -256,7 +256,7 @@ export function ActionItemsList({
                         <p className="text-blue text-sm">{item.content}</p>
                         {createdAt && (
                           <p className="text-gray text-xs">
-                            Created {moment(createdAt).fromNow()}
+                            Created {moment(createdAt).format("L")}
                           </p>
                         )}
                       </div>

@@ -4,7 +4,7 @@ import { RetroStateStatus, useRetroState } from "../hooks/use-retro-state";
 
 export type RetroStep = {
   id: string;
-  name: "Brainstorm" | "Vote" | "Discuss";
+  name: "Brainstorm" | "Vote" | "Discuss" | "Review";
   status: "current" | "upcoming" | "complete";
 };
 
@@ -14,8 +14,8 @@ const steps: RetroStep[] = [
   { id: "01", name: "Brainstorm", status: "current" },
   // { id: "02", name: "Group",  status: "upcoming" },
   { id: "02", name: "Vote", status: "upcoming" },
-  { id: "03", name: "Discuss", status: "upcoming" }
-  // { id: "05", name: "Review",  status: "upcoming" }
+  { id: "03", name: "Discuss", status: "upcoming" },
+  { id: "04", name: "Review", status: "upcoming" }
 ];
 
 function reducer(
