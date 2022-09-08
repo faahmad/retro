@@ -165,6 +165,12 @@ export function WorkspaceUsersTable({
                       scope="col"
                       className="px-6 py-3 text-left text-xs font-black uppercase tracking-wider"
                     >
+                      Last active
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-black uppercase tracking-wider"
+                    >
                       Role
                     </th>
                     <th scope="col" className="relative px-6 py-3">
@@ -183,6 +189,11 @@ export function WorkspaceUsersTable({
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-blue">
                         {user.userId}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-blue">
+                        {user.lastActiveAt
+                          ? moment(user.lastActiveAt.toDate()).fromNow()
+                          : "??"}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-blue">
                         <select
