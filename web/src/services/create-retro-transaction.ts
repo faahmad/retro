@@ -43,7 +43,7 @@ export async function createRetroTransaction({
       },
       bad: {
         type: RetroColumnType.BAD,
-        title: "What can be improved?",
+        title: "What didn't go well?",
         retroItemIds: []
       }
     },
