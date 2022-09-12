@@ -4,14 +4,14 @@ import { RetroStateStatus, useRetroState } from "../hooks/use-retro-state";
 
 export type RetroStep = {
   id: string;
-  name: "Brainstorm" | "Vote" | "Discuss" | "Review";
+  name: "Reflect" | "Vote" | "Discuss" | "Review";
   status: "current" | "upcoming" | "complete";
 };
 
 // Eventually we will have more stages, but for now only supporting
 // Brainstorm and Vote.
 const steps: RetroStep[] = [
-  { id: "01", name: "Brainstorm", status: "current" },
+  { id: "01", name: "Reflect", status: "current" },
   // { id: "02", name: "Group",  status: "upcoming" },
   { id: "02", name: "Vote", status: "upcoming" },
   { id: "03", name: "Discuss", status: "upcoming" },
@@ -59,7 +59,7 @@ export function RetroBoardStageStepper({
     if (retro.status !== RetroStateStatus.LOADING && !retroStage) {
       // retroStage isn't present on older retros, so we default to brainstorm
       // for backwards compatibility.
-      handleChangeStage("Brainstorm");
+      handleChangeStage("Reflect");
       return;
     }
     dispatch({ type: "change", payload: retroStage! });
@@ -68,7 +68,7 @@ export function RetroBoardStageStepper({
 
   return (
     <nav aria-label="retro-stage">
-      <ol className="border border-gray divide-y divide-gray md:flex md:divide-y-0">
+      <ol className="md:flex md:divide-y-0">
         {state.map((step, stepIdx) => (
           <li
             key={step.name}
@@ -82,12 +82,12 @@ export function RetroBoardStageStepper({
           >
             {step.status === "complete" ? (
               <div className="group flex items-center w-full">
-                <span className="px-6 py-4 flex items-center text-sm font-medium">
-                  <span className="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-blue rounded-full group-hover:bg-blue">
+                <span className="px-3 py-2 flex items-center text-sm font-medium">
+                  <span className="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-blue rounded-full group-hover:bg-blue">
                     <CheckIcon className="w-6 h-6 text-white" aria-hidden="true" />
                   </span>
                   <span
-                    className={`ml-4 text-sm font-medium text-blue ${
+                    className={`ml-2 text-sm font-medium text-blue ${
                       isOwner ? "hover:underline cursor-pointer" : ""
                     }`}
                   >
@@ -97,14 +97,14 @@ export function RetroBoardStageStepper({
               </div>
             ) : step.status === "current" ? (
               <div
-                className="px-6 py-4 flex items-center text-sm font-medium"
+                className="px-3 py-2 flex items-center text-sm font-medium"
                 aria-current="step"
               >
-                <span className="flex-shrink-0 w-10 h-10 flex items-center justify-center border-2 border-blue rounded-full">
+                <span className="flex-shrink-0 w-8 h-8 flex items-center justify-center border-2 border-blue rounded-full">
                   <span className="text-blue">{step.id}</span>
                 </span>
                 <span
-                  className={`ml-4 text-sm font-medium text-blue ${
+                  className={`ml-2 text-sm font-medium text-blue ${
                     isOwner ? "hover:underline cursor-pointer" : ""
                   }`}
                 >
@@ -113,12 +113,12 @@ export function RetroBoardStageStepper({
               </div>
             ) : (
               <div className="group flex items-center">
-                <span className="px-6 py-4 flex items-center text-sm font-medium ">
-                  <span className="flex-shrink-0 w-10 h-10 flex items-center justify-center border-2 border-gray rounded-full">
+                <span className="px-3 py-2 flex items-center text-sm font-medium ">
+                  <span className="flex-shrink-0 w-8 h-8 flex items-center justify-center border-2 border-gray rounded-full">
                     <span className="text-gray">{step.id}</span>
                   </span>
                   <span
-                    className={`ml-4 text-sm font-medium text-gray group-hover:text-gray ${
+                    className={`ml-2 text-sm font-medium text-gray group-hover:text-gray ${
                       isOwner ? "hover:underline cursor-pointer" : ""
                     }`}
                   >
@@ -127,30 +127,6 @@ export function RetroBoardStageStepper({
                 </span>
               </div>
             )}
-
-            {stepIdx !== steps.length - 1 ? (
-              <>
-                {/* Arrow separator for lg screens and up */}
-                <div
-                  className="hidden md:block absolute top-0 right-0 h-full w-5"
-                  aria-hidden="true"
-                >
-                  <svg
-                    className="h-full w-full text-gray"
-                    viewBox="0 0 22 80"
-                    fill="none"
-                    preserveAspectRatio="none"
-                  >
-                    <path
-                      d="M0 -2L20 40L0 82"
-                      vectorEffect="non-scaling-stroke"
-                      stroke="currentcolor"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </div>
-              </>
-            ) : null}
           </li>
         ))}
       </ol>

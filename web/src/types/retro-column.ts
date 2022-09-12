@@ -13,7 +13,7 @@ export type RetroColumnGood = {
 
 export type RetroColumnBad = {
   type: RetroColumnType.BAD;
-  title: "What can be improved?";
+  title: "What didn't go well?";
   retroItemIds: RetroItem["id"][];
 };
 

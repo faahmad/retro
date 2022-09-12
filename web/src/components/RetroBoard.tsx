@@ -263,14 +263,14 @@ export const RetroList: React.FC<RetroListProps> = ({
   onClickLike,
   onClickUnlike,
   onClickEdit,
-  stage = "Brainstorm"
+  stage = "Reflect"
 }) => {
   return (
     <div className="flex flex-col border border-red shadow shadow-red">
-      <div className="bg-white flex px-4 pt-2 pb-4 justify-between items-center mb-2 border border-red h-20">
+      <div className="bg-white flex px-4 py-2 justify-between items-center mb-2 border border-red">
         <p className="text-blue font-bold text-sm">{title}</p>
         {/* Only display the add button during the Brainstorm stage */}
-        {stage === "Brainstorm" ? (
+        {stage === "Reflect" ? (
           <AddButton className="self-end" onClick={onClickAdd} />
         ) : null}
       </div>
@@ -359,7 +359,7 @@ export const RetroListItem: React.FC<
           >
             <div className="flex content-center">
               <Linkify>
-                {isIncognito && stage === "Brainstorm" && !isAuthor ? (
+                {isIncognito && stage === "Reflect" && !isAuthor ? (
                   <div className="flex items-center" title="Incognito item until lifted">
                     <EyeOffIcon className="h-4 w-4 text-blue" />
                   </div>
@@ -370,7 +370,7 @@ export const RetroListItem: React.FC<
             </div>
 
             <div className="flex ml-2 items-center">
-              {isAuthor && stage === "Brainstorm" && <EditButton onClick={onClickEdit} />}
+              {isAuthor && stage === "Reflect" && <EditButton onClick={onClickEdit} />}
               {stage === "Vote" && (
                 <LikeButton
                   likeCount={likeCount}
