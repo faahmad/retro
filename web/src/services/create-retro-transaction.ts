@@ -25,6 +25,7 @@ export async function createRetroTransaction({
     createdById: userId,
     name: "Untitled retrospective",
     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    isIncognito: true,
     userIds: {
       [userId]: userId
     },

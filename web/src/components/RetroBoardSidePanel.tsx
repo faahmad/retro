@@ -17,7 +17,6 @@ export function RetroBoardSidePanel({ isOpen, toggle, isOwner }: any) {
 
   const name = state?.data?.name;
   const createdAt = moment(state?.data?.createdAt?.toDate()).format("YYYY-MM-DD");
-  const isIncognito = state?.data?.isIncognito;
 
   const updateRetro = useUpdateRetro();
   const trackEvent = useAnalyticsEvent();
@@ -29,9 +28,7 @@ export function RetroBoardSidePanel({ isOpen, toggle, isOwner }: any) {
       // @ts-ignore
       name: event.target?.name?.value,
       // @ts-ignore
-      createdAt: firebase.firestore.Timestamp.fromDate(createdAtJSDate),
-      // @ts-ignore
-      isIncognito: event.target?.isIncognito?.checked
+      createdAt: firebase.firestore.Timestamp.fromDate(createdAtJSDate)
     });
     trackEvent(AnalyticsEvent.RETRO_UPDATED, {
       location: AnalyticsPage.RETRO_BOARD
@@ -133,39 +130,6 @@ export function RetroBoardSidePanel({ isOpen, toggle, isOwner }: any) {
                         </div>
                       </div>
                       <div className="p-6">
-                        <fieldset>
-                          <legend className="text-sm font-medium text-white">
-                            Privacy
-                          </legend>
-                          <div className="mt-2 space-y-5">
-                            <div className="relative flex items-start">
-                              <div className="flex items-center h-5">
-                                <input
-                                  id="isIncognito"
-                                  name="isIncognito"
-                                  aria-describedby="isIncognito-description"
-                                  type="checkbox"
-                                  className="h-4 w-4 text-red border-white"
-                                  defaultChecked={isIncognito}
-                                />
-                              </div>
-                              <div className="pl-2 text-sm">
-                                <label
-                                  htmlFor="isIncognito"
-                                  className="font-bold text-white"
-                                >
-                                  Incognito
-                                </label>
-                                <p
-                                  id="isIncognito-description"
-                                  className="text-white text-xs"
-                                >
-                                  Hide what people are writing during brainstorm.
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                        </fieldset>
                         <div className="border-t-2 inset-0 border-gray mt-4 pt-4 pb-6">
                           <div className="flex text-sm">
                             <button
