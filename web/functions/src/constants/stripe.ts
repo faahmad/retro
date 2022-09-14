@@ -5,8 +5,8 @@ enum DevStripeSubscriptionPlans {
   PRO_YEARLY = "price_1Iat06KZLl59Zw3Xr6NBJHvQ"
 }
 enum ProdStripeSubscriptionPlans {
-  PRO_MONTHLY = "plan_HGB5FTkzgHuvyk",
-  PRO_YEARLY = "price_1Ias3mKZLl59Zw3X4RclJTyN"
+  PRO_MONTHLY = "price_1LhucwKZLl59Zw3XntkR7YDJ",
+  PRO_YEARLY = "price_1LhudiKZLl59Zw3XvltpqHMF"
 }
 export const StripeSubscriptionPlans = isDev
   ? DevStripeSubscriptionPlans
