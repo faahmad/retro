@@ -18,6 +18,7 @@ import { ErrorBoundary, FallbackProps } from "react-error-boundary";
 import { useCurrentUser } from "./hooks/use-current-user";
 import { useScrollToTop } from "./hooks/use-scroll-to-top";
 import { WorkspaceListPage } from "./pages/WorkspaceListPage";
+import { PricingPage } from "./pages/PricingPage";
 
 import { PainDreamFixLandingPage } from "./pages/PainDreamFixLandingPage";
 
@@ -42,6 +43,7 @@ export const AppRoutes: React.FC = () => {
           <Route exact path="/privacy" component={PrivacyPolicyPage} />
           <Route exact path="/faq" component={FAQPage} />
           <Route exact path="/design" component={DesignPage} />
+          <Route exact path="/pricing" component={PricingPage} />
 
           {isLoggedIn ? <AuthenticatedAppRoutes /> : <UnauthenticatedAppRoutes />}
         </Switch>
