@@ -18,8 +18,8 @@ const plans = [
     title: "The Plan",
     featured: true,
     description: "The best financial services for your thriving business.",
-    priceMonthly: 39.99,
-    priceYearly: 399.99,
+    priceMonthly: 9.99,
+    priceYearly: 99.99,
     mainFeatures: [
       { id: 1, value: "1 Workspace" },
       { id: 2, value: "Unlimited team members" },

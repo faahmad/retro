@@ -148,7 +148,7 @@ export const PainDreamFixLandingPage: React.FC = () => {
               </div>
               <div className="w-full mt-10 sm:w-1/2 md:w-1/2 lg:w-1/2 sm:mt-0 md:mt-0 lg:mt-0 sm:ml-4 md:ml-4 lg:w-ml-4 sm:text-right  md:text-right  lg:text-right">
                 <h2 className="text-5xl text-white font-black mb-3">
-                  $39.99<span className="text-xl font-normal text-white"> Per Month</span>
+                  $9.99<span className="text-xl font-normal text-white"> Per Month</span>
                 </h2>
                 <p className="text-xl text-white">
                   <b>Team Plan:</b>
