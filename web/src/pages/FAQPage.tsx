@@ -5,6 +5,7 @@ import landingFooterImage from "../assets/images/landing-page-footer.svg";
 
 import { PageContainer } from "../components/PageContainer";
 import { useAnalyticsPage, AnalyticsPage } from "../hooks/use-analytics-page";
+import { Navbar } from "../components/Navbar";
 
 export const FAQPage: React.FC = () => {
   useAnalyticsPage(AnalyticsPage.FAQ);
@@ -12,6 +13,7 @@ export const FAQPage: React.FC = () => {
     <div>
       <div className="landing-page flex flex-col w-full justify-center my-8">
         <PageContainer>
+          <Navbar />
           <h2 className="text-blue font-bold text-5xl">Frequently Asked Questions</h2>
           <div className="mt-20 mb-20">
             <h3 className="text-blue font-bold text-2xl">How much does Retro cost?</h3>

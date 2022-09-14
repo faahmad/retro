@@ -15,9 +15,13 @@ export const Navbar: React.FC<any> = ({ isLoggedIn }) => {
     <nav className="navbar flex flex-wrap justify-between items-baseline sm:mb-1 lg:mb-16">
       <div className="flex items-center">
         <NavbarBrand />
-        {isLoggedIn && (
+        {isLoggedIn ? (
           <div className="ml-8">
             <NavbarAuthLinks />
+          </div>
+        ) : (
+          <div className="ml-8">
+            <NavbarNoAuthLinks />
           </div>
         )}
       </div>
@@ -107,6 +111,19 @@ const NavbarBrand: React.FC = () => {
         </div>
       </Link>
     </div>
+  );
+};
+
+const NavbarNoAuthLinks = () => {
+  return (
+    <ul className="flex text-blue text-sm">
+      <Link className="px-2 hover:underline" to="/pricing">
+        Pricing
+      </Link>
+      <Link className="px-2 hover:underline" to="/faq">
+        FAQ
+      </Link>
+    </ul>
   );
 };
 
