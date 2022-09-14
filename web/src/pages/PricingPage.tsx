@@ -51,8 +51,9 @@ export default function Example() {
             <span className="block lg:inline">Simple pricing, forever.</span>
             {/* <span className="block lg:inline">no commitment.</span> */}
           </h1>
-          <p className="mt-4 text-xl text-white">
-            Everything you need, nothing you don't. Pick a plan that best suits your team.
+          <p className="mt-4 text-lg text-white">
+            Everything you need, nothing you don't. Pay the same price forever, no matter
+            how much your team grows.
           </p>
         </div>
 
