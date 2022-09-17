@@ -74,7 +74,21 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
     );
   }
 
-  const isFacilitator = data?.userIds[currentUserId] === RetroUserType.FACILITATOR;
+  let isFacilitator = false;
+  const currentUserType = data?.userIds[currentUserId];
+  // To be backwards compatible, we need to assign the facilitator as the person
+  // who created the retro. This is how we used to grant the facilitor role before
+  // we introduced the RetroUserType.
+  if (
+    (currentUserType !== RetroUserType.FACILITATOR ||
+      // @ts-expect-error
+      currentUserType !== RetroUserType.GUEST) &&
+    currentUserId === data?.createdById
+  ) {
+    isFacilitator = true;
+  } else if (currentUserType === RetroUserType.FACILITATOR) {
+    isFacilitator = true;
+  }
 
   if (status === RetroStateStatus.SUCCESS && data !== null) {
     return (

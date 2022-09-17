@@ -1,2 +1,7 @@
 20:13:07.460 [NamespaceSystem-akka.actor.default-dispatcher-5] INFO akka.event.slf4j.Slf4jLogger - Slf4jLogger started
 20:13:07.585 [main] INFO com.firebase.server.forge.App$ - Listening at localhost:9000
+21:20:55.641 [Thread-1] INFO com.firebase.server.forge.App$ - Attempting graceful shutdown.
+21:20:55.652 [NamespaceSystem-akka.actor.default-dispatcher-147] INFO com.firebase.core.namespace.Terminator$Terminator - 1 actors left to terminate: retro-prod-786
+21:20:55.659 [NamespaceSystem-akka.actor.default-dispatcher-150] INFO com.firebase.core.namespace.NamespaceActor - Stopping namespace actor for retro-prod-786
+21:20:55.660 [NamespaceSystem-akka.actor.default-dispatcher-150] INFO com.firebase.core.namespace.NamespaceActor - Gauges removed for retro-prod-786
+21:20:55.664 [Thread-1] INFO com.firebase.server.forge.App$ - Graceful shutdown complete.
