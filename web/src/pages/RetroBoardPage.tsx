@@ -88,9 +88,10 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
           name={data.name}
           workspaceName={workspaceState.name}
           createdAt={data.createdAt}
-          isOwner={isFacilitator}
+          isFacilitator={isFacilitator}
           retroId={params.retroId}
           handleToggleSidePanel={handleToggleSidePanel}
+          workspaceUser={workspaceState.users[currentUserId]}
         />
         <PageContainer className={"my-12 px-8 m-auto"}>
           {data?.stage === "Review" && <RetroReviewPage />}

@@ -1,14 +1,21 @@
 import * as React from "react";
-import { Retro } from "../types/retro";
+import { Retro, RetroUserType } from "../types/retro";
 import moment from "moment";
 import { ThumbDownIcon, ThumbUpIcon } from "@heroicons/react/outline";
+import { WorkspaceUsersMap } from "../types/workspace-user";
+import { RetroUserTag } from "./RetroUserTag";
 
 interface RetroCardProps {
   retro: Retro;
+  workspaceUsersMap: WorkspaceUsersMap;
   onClick: () => void;
 }
-export function RetroCard({ retro, onClick }: RetroCardProps) {
+export function RetroCard({ retro, workspaceUsersMap, onClick }: RetroCardProps) {
   const createdAt = retro.createdAt ? retro.createdAt.toDate() : new Date();
+
+  const facilitatorId = Object.keys(retro.userIds).find(
+    (userId) => retro.userIds[userId] === RetroUserType.FACILITATOR
+  );
 
   return (
     <div
@@ -24,12 +31,20 @@ export function RetroCard({ retro, onClick }: RetroCardProps) {
           </span>
         </p>
       </div>
-      <div className="flex flex-col justify-around h-full w-full p-4">
+      <div>
+        {facilitatorId && (
+          <RetroUserTag
+            workspaceUser={workspaceUsersMap[facilitatorId]}
+            retroUserType={RetroUserType.FACILITATOR}
+          />
+        )}
+      </div>
+      <div className="flex w-full p-4 h-full">
         <div className="flex items-center">
           <ThumbUpIcon className="h-6 w-6 text-blue" />
           <p className="ml-2 text-blue text-sm">{retro.retroItemsData.goodCount} Good</p>
         </div>
-        <div className="flex items-center">
+        <div className="flex items-center ml-10">
           <ThumbDownIcon className="h-6 w-6 text-blue" />
           <p className="ml-2 text-blue text-sm">{retro.retroItemsData.badCount} Bad</p>
         </div>
