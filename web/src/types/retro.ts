@@ -10,7 +10,7 @@ export interface Retro {
   name: string;
   createdById: User["id"];
   createdAt?: TODO;
-  userIds: { [userId: string]: User["id"] };
+  userIds: { [userId: string]: RetroUserType };
   retroItemIds: { [retroItemId: string]: string };
   isIncognito?: boolean;
   stage?: RetroStep["name"];
@@ -34,4 +34,9 @@ export interface RetroChildRef {
     milliseconds: number;
     state: "CLOSED" | "PAUSED" | "COUNTING";
   };
+}
+
+export enum RetroUserType {
+  FACILITATOR = "facilitator",
+  GUEST = "guest"
 }

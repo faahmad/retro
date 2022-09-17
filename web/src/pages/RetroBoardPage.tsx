@@ -2,7 +2,7 @@ import * as React from "react";
 import { RouteComponentProps, useParams } from "react-router-dom";
 import { PageContainer } from "../components/PageContainer";
 import { useRetroState, RetroStateStatus } from "../hooks/use-retro-state";
-import { Retro } from "../types/retro";
+import { Retro, RetroUserType } from "../types/retro";
 import {
   useRetroItemsListener,
   RetroItemsListenerStatus
@@ -25,7 +25,7 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
   const params = useParams<{ retroId: Retro["id"]; workspaceId: Workspace["id"] }>();
   useUpdateLastActive(params.workspaceId);
   // Important! useRetroItemsListener has to come first!
-  // Not the best, I know. But it's MVP!
+  // Not the best, I know. But it's MVP.
   const retroItems = useRetroItemsListener(params.retroId);
   const {
     state,
@@ -34,16 +34,25 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
     handleEditItem,
     handleLikeItem,
     handleUnlikeItem,
-    handleDeleteItem
+    handleDeleteItem,
+    handleAddUserToRetro
   } = useRetroState(params.retroId);
   const workspaceState = useGetWorkspace();
   const { data, status, error } = state;
   const currentUser = useCurrentUser();
+  const currentUserId = currentUser.data!.id;
 
   const [isSidePanelOpen, setIsSidePanelOpen] = React.useState(false);
   function handleToggleSidePanel() {
     setIsSidePanelOpen(!isSidePanelOpen);
   }
+
+  React.useEffect(() => {
+    if (status === RetroStateStatus.SUCCESS && !state.data?.userIds[currentUserId]) {
+      handleAddUserToRetro(currentUser.data!.id);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status]);
 
   if (
     status === RetroStateStatus.LOADING ||
@@ -65,13 +74,13 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
     );
   }
 
-  const isOwner = data?.createdById === currentUser?.data?.id;
+  const isFacilitator = data?.userIds[currentUserId] === RetroUserType.FACILITATOR;
 
   if (status === RetroStateStatus.SUCCESS && data !== null) {
     return (
       <React.Fragment>
         <RetroBoardSidePanel
-          isOwner={isOwner}
+          isOwner={isFacilitator}
           isOpen={isSidePanelOpen}
           toggle={handleToggleSidePanel}
         />
@@ -79,7 +88,7 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
           name={data.name}
           workspaceName={workspaceState.name}
           createdAt={data.createdAt}
-          isOwner={isOwner}
+          isOwner={isFacilitator}
           retroId={params.retroId}
           handleToggleSidePanel={handleToggleSidePanel}
         />

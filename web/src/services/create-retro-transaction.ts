@@ -1,6 +1,6 @@
 import firebase from "../lib/firebase";
 import { FirestoreCollections } from "../constants/firestore-collections";
-import { Retro } from "../types/retro";
+import { Retro, RetroUserType } from "../types/retro";
 import { RetroColumnType } from "../types/retro-column";
 import { Workspace } from "../types/workspace";
 import { User } from "../types/user";
@@ -27,7 +27,7 @@ export async function createRetroTransaction({
     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
     isIncognito: true,
     userIds: {
-      [userId]: userId
+      [userId]: RetroUserType.FACILITATOR
     },
     retroItemIds: {},
     retroItemsData: {

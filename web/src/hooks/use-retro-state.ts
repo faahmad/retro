@@ -1,6 +1,6 @@
 import * as React from "react";
 import { retroListener } from "../services/retro-listener";
-import { Retro } from "../types/retro";
+import { Retro, RetroUserType } from "../types/retro";
 import { useCreateRetroItem } from "../hooks/use-create-retro-item";
 import { useDragDropRetroItem } from "../hooks/use-drag-drop-retro-item";
 import { useUpdateRetroItem } from "../hooks/use-update-retro-item";
@@ -330,6 +330,12 @@ export function useRetroState(retroId: Retro["id"]) {
     return;
   };
 
+  const handleAddUserToRetro = async (userId: User["id"]) => {
+    const currentUserIds = state.data?.userIds || {};
+    const userIds = { ...currentUserIds, [userId]: RetroUserType.GUEST };
+    await updateRetro(retroId, { userIds });
+  };
+
   return {
     state,
     handleAddItem,
@@ -340,7 +346,8 @@ export function useRetroState(retroId: Retro["id"]) {
     handleDeleteItem,
     handleUpdateColumnItems,
     handleChangeStage,
-    handleChangePresentationIndex
+    handleChangePresentationIndex,
+    handleAddUserToRetro
   };
 }
 
