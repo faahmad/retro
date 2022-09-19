@@ -1,6 +1,6 @@
 import firebase from "../lib/firebase";
 import { FirestoreCollections } from "../constants/firestore-collections";
-import { Retro } from "../types/retro";
+import { Retro, RetroUserType } from "../types/retro";
 import { RetroColumnType } from "../types/retro-column";
 import { Workspace } from "../types/workspace";
 import { User } from "../types/user";
@@ -17,17 +17,19 @@ export async function createRetroTransaction({
   userId,
   workspaceId
 }: CreateRetroTransactionParams) {
+  const snapshot = await retroCollection.where("workspaceId", "==", workspaceId).get();
+
   // Create the new retro.
   const newRetroRef = retroCollection.doc();
   const newRetroData: Retro = {
     id: newRetroRef.id,
     workspaceId: workspaceId,
     createdById: userId,
-    name: "Untitled retrospective",
+    name: `Retrospective #${snapshot.size + 1}`,
     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
     isIncognito: true,
     userIds: {
-      [userId]: userId
+      [userId]: RetroUserType.FACILITATOR
     },
     retroItemIds: {},
     retroItemsData: {

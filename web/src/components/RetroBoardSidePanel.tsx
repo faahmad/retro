@@ -87,7 +87,7 @@ export function RetroBoardSidePanel({ isOpen, toggle, isOwner }: any) {
                         </div>
                         <div className="mt-1">
                           <p className="text-sm text-indigo-300">
-                            Only facilitators can adjust these
+                            You are the facilitator
                           </p>
                         </div>
                       </div>
@@ -186,6 +186,26 @@ export function RetroBoardSidePanel({ isOpen, toggle, isOwner }: any) {
                   </form>
                 ) : (
                   <div className="h-full divide-y divide-gray-200 flex flex-col bg-blue text-white shadow-xl">
+                    <div className="py-2 px-4 bg-indigo-700 sm:px-6">
+                      <div className="flex items-center">
+                        <Dialog.Title className="text-lg font-medium text-white">
+                          Retro Info
+                        </Dialog.Title>
+                        <div className="ml-3 h-7 flex items-center">
+                          <button
+                            type="button"
+                            className="bg-indigo-700 rounded-md text-indigo-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
+                            onClick={toggle}
+                          >
+                            <span className="sr-only">Close panel</span>
+                            <XIcon className="h-6 w-6" aria-hidden="true" />
+                          </button>
+                        </div>
+                      </div>
+                      <div className="mt-1">
+                        <p className="text-sm text-indigo-300">You are a guest</p>
+                      </div>
+                    </div>
                     <div className="mt-4 p-4">
                       <div className="flex text-sm">
                         <button

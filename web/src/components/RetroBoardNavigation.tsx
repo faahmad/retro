@@ -6,6 +6,8 @@ import { RetroBoardStageStepper } from "./RetroBoardStageStepper";
 import moment from "moment";
 import { useRetroCountdownTimer } from "../hooks/use-retro-countdown-timer";
 import { RetroCountdownTimer } from "./RetroCountdownTimer";
+import { RetroUserTag } from "./RetroUserTag";
+import { RetroUserType } from "../types/retro";
 
 export function RetroBoardNavigation(props: any) {
   const timer = useRetroCountdownTimer(props.retroId);
@@ -30,7 +32,7 @@ export function RetroBoardNavigation(props: any) {
                   onClick={props.handleToggleSidePanel}
                   className="h-8 w-8 flex items-center justify-center bg-blue text-white border border-red shadow shadow-red hover:bg-pink-1/2 active:transform-1 focus:outline-none"
                 >
-                  {props.isOwner ? (
+                  {props.isFacilitator ? (
                     <CogIcon className="h-6 w-6" />
                   ) : (
                     <MenuAlt1Icon className="h-6 w-6" />
@@ -50,7 +52,10 @@ export function RetroBoardNavigation(props: any) {
 
             {/* Stepper */}
             <div className="hidden md:block">
-              <RetroBoardStageStepper isOwner={props.isOwner} retroId={props.retroId} />
+              <RetroBoardStageStepper
+                isOwner={props.isFacilitator}
+                retroId={props.retroId}
+              />
             </div>
 
             {/* Action buttons */}
@@ -59,7 +64,7 @@ export function RetroBoardNavigation(props: any) {
                 className={`mr-2 ease-in-out shadow shadow-blue ${
                   timer.isTimerOpen ? "absolute" : "hidden"
                 }`}
-                style={{ top: "50px", right: "160px" }}
+                style={{ top: "60px", right: "160px" }}
               >
                 <RetroCountdownTimer timer={timer} />
               </div>
@@ -83,6 +88,14 @@ export function RetroBoardNavigation(props: any) {
                   <LinkIcon className="mr-2 h-4 w-4" aria-hidden="true" />
                   <span>{isCopied ? "Copied!" : "Copy link"}</span>
                 </button>
+              </div>
+              <div className="ml-2">
+                <RetroUserTag
+                  workspaceUser={props.workspaceUser}
+                  retroUserType={
+                    props.isFacilitator ? RetroUserType.FACILITATOR : RetroUserType.GUEST
+                  }
+                />
               </div>
             </div>
           </div>

@@ -8,12 +8,12 @@ import { useRetroState } from "../hooks/use-retro-state";
 import { ActionItemI } from "../types/action-item";
 import { Retro } from "../types/retro";
 import moment from "moment";
-import { UserAvatar } from "../components/UserAvatar";
 import { useRetroItemsListener } from "../hooks/use-retro-items-listener";
 import { useGetWorkspace } from "../hooks/use-get-workspace";
 import { RetroItem } from "../types/retro-item";
 import { WorkspaceUsersMap } from "../types/workspace-user";
 import { LoadingPage } from "./LoadingPage";
+import { RetroUserTag } from "../components/RetroUserTag";
 
 export function RetroReviewPage() {
   const params = useParams<{ retroId: string }>();
@@ -34,7 +34,10 @@ export function RetroReviewPage() {
   return (
     <PageContainer>
       <Stats retroItems={retroItems} retro={retro.data} actionItems={actionItems} />
-      <Participants userIds={retro.data.userIds} workspaceUsers={workspaceState.users} />
+      <Participants
+        userIds={retro.data.userIds}
+        workspaceUsersMap={workspaceState.users}
+      />
       <ActionItems retroId={params.retroId} actionItems={actionItems} />
     </PageContainer>
   );
@@ -145,38 +148,25 @@ export function Stats(props: {
   );
 }
 
-function Participants(props: {
+function Participants({
+  userIds,
+  workspaceUsersMap
+}: {
   userIds: Retro["userIds"];
-  workspaceUsers: WorkspaceUsersMap;
+  workspaceUsersMap: WorkspaceUsersMap;
 }) {
-  const users = Object.keys(props.userIds).map((userId) => props.workspaceUsers[userId]);
-
+  const workspaceUsers = Object.keys(userIds).map((userId) => workspaceUsersMap[userId]);
   return (
     <div className="mt-8">
       <h3 className="text-lg text-blue font-medium leading-6">Participants</h3>
 
       <div className="mt-2 grid grid-cols-1 gap-4 sm:grid-cols-4 text-blue">
-        {users.map((user) => (
-          <div
-            key={user?.userId}
-            className="relative flex items-center rounded-lg border border-blue bg-white px-3 py-2"
-          >
-            <div className="flex-shrink-0">
-              <UserAvatar
-                photoURL={user?.userPhotoURL as string}
-                displayName={user?.userDisplayName as string}
-              />
-            </div>
-            <div className="min-w-0 flex-1">
-              <div className="focus:outline-none">
-                <span className="absolute inset-0" aria-hidden="true" />
-                <p className="text-sm font-medium">{user?.userDisplayName}</p>
-                {user?.userRole === "owner" && (
-                  <p className="truncate text-xs text-gray">Facilitator</p>
-                )}
-              </div>
-            </div>
-          </div>
+        {workspaceUsers.map((workspaceUser) => (
+          <RetroUserTag
+            key={workspaceUser?.userId}
+            workspaceUser={workspaceUser}
+            retroUserType={userIds[workspaceUser?.userId]}
+          />
         ))}
       </div>
     </div>

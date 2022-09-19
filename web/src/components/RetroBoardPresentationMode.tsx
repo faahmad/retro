@@ -61,7 +61,7 @@ export function RetroBoardPresentationMode() {
           <div className="flex items-baseline justify-between mb-2">
             <div>
               <p className="text-xs text-gray">
-                {index! + 1} of {retroItems.length} - ordered by likes
+                {index! + 1} of {retroItems.length} - ordered by votes
               </p>
             </div>
             {isOwner ? (

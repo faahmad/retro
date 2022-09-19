@@ -16,6 +16,7 @@ import { useGetWorkspace } from "../hooks/use-get-workspace";
 import { Navbar } from "../components/Navbar";
 import { ActionItemsList } from "../components/RetroBoardPresentationMode";
 import { useUpdateLastActive } from "../hooks/use-update-last-active";
+import { WorkspaceUsersMap } from "../types/workspace-user";
 
 export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
   useAnalyticsPage(AnalyticsPage.DASHBOARD);
@@ -45,6 +46,7 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
         <RetroBoardsOverview
           workspaceId={workspaceState.id}
           workspaceOwnerId={workspaceState.ownerId}
+          workspaceUsersMap={workspaceState.users}
           retros={workspaceState.retros}
           history={history}
           isActive={workspaceState.isActive}
@@ -68,7 +70,15 @@ const RetroBoardsOverview: React.FC<{
   history: RouteComponentProps["history"];
   isActive: boolean;
   retros: Retro[];
-}> = ({ history, isActive, retros, workspaceId, workspaceOwnerId }) => {
+  workspaceUsersMap: WorkspaceUsersMap;
+}> = ({
+  history,
+  isActive,
+  retros,
+  workspaceId,
+  workspaceOwnerId,
+  workspaceUsersMap
+}) => {
   const createRetro = useCreateRetro();
   const trackEvent = useAnalyticsEvent();
 
@@ -127,6 +137,7 @@ const RetroBoardsOverview: React.FC<{
                 <RetroCard
                   key={retro.id}
                   retro={retro}
+                  workspaceUsersMap={workspaceUsersMap}
                   onClick={() => handleRedirectToRetroPage(retro)}
                 />
               );

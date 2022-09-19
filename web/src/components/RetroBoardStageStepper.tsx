@@ -18,6 +18,21 @@ const steps: RetroStep[] = [
   { id: "04", name: "Review", status: "upcoming" }
 ];
 
+/**
+ * Use this function to get the display name for the steps
+ * because we have changed them on frontend, but backend values need
+ * to remain as is for backwards compatibility.
+ */
+function getStepDisplayName(name: RetroStep["name"]) {
+  const map = {
+    Reflect: "Reflect",
+    Vote: "Vote",
+    Discuss: "Discuss",
+    Review: "Summary"
+  };
+  return map[name];
+}
+
 function reducer(
   state: RetroStep[],
   action: { type: string; payload: RetroStep["name"] }
@@ -91,7 +106,7 @@ export function RetroBoardStageStepper({
                       isOwner ? "hover:underline cursor-pointer" : ""
                     }`}
                   >
-                    {step.name}
+                    {getStepDisplayName(step.name)}
                   </span>
                 </span>
               </div>
@@ -108,7 +123,7 @@ export function RetroBoardStageStepper({
                     isOwner ? "hover:underline cursor-pointer" : ""
                   }`}
                 >
-                  {step.name}
+                  {getStepDisplayName(step.name)}
                 </span>
               </div>
             ) : (
@@ -122,7 +137,7 @@ export function RetroBoardStageStepper({
                       isOwner ? "hover:underline cursor-pointer" : ""
                     }`}
                   >
-                    {step.name}
+                    {getStepDisplayName(step.name)}
                   </span>
                 </span>
               </div>

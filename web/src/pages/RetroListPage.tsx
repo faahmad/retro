@@ -18,7 +18,7 @@ export function RetroListPage() {
     analytics.track("Retro Opened", { ...retro, location: AnalyticsPage.RETRO_LIST });
     return history.push(`/workspaces/${retro.workspaceId}/retros/${retro.id}`);
   };
-  const { status, retros, name } = useGetWorkspace();
+  const { status, retros, name, users } = useGetWorkspace();
 
   if (status === WorkspaceStateStatus.LOADING) {
     return <LoadingText>Loading...</LoadingText>;
@@ -40,6 +40,7 @@ export function RetroListPage() {
             <RetroCard
               key={retro.id}
               retro={retro}
+              workspaceUsersMap={users}
               onClick={() => handleRedirectToRetroPage(retro)}
             />
           );

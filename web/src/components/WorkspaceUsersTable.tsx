@@ -205,7 +205,7 @@ export function WorkspaceUsersTable({
                           }}
                         >
                           <option value="member">member</option>
-                          <option value="owner">owner</option>
+                          <option value="owner">admin</option>
                         </select>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-xs underline text-red">
