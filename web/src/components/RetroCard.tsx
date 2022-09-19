@@ -13,9 +13,10 @@ interface RetroCardProps {
 export function RetroCard({ retro, workspaceUsersMap, onClick }: RetroCardProps) {
   const createdAt = retro.createdAt ? retro.createdAt.toDate() : new Date();
 
-  const facilitatorId = Object.keys(retro.userIds).find(
-    (userId) => retro.userIds[userId] === RetroUserType.FACILITATOR
-  );
+  const facilitatorId =
+    Object.keys(retro.userIds).find(
+      (userId) => retro.userIds[userId] === RetroUserType.FACILITATOR
+    ) || retro.createdById;
 
   return (
     <div

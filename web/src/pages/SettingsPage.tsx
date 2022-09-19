@@ -68,7 +68,9 @@ export const SettingsPage = () => {
         <div className="text-blue ml-2">
           <p className="text-xl font-black py-1">
             {currentUser.data?.displayName || "--"}{" "}
-            <span className="text-pink">({currentWorkspaceUser?.userRole})</span>
+            <span className="text-pink">
+              ({currentWorkspaceUser?.userRole === "owner" ? "admin" : "member"})
+            </span>
           </p>
           <p className="py-1">{currentUser.data?.email}</p>
         </div>
@@ -76,7 +78,7 @@ export const SettingsPage = () => {
 
       {hasBillingAccess && (
         <div className="mt-8 p-4 border border-blue border-dashed">
-          <h5 className="text-blue text-xl underline">Workspace Owner Controls</h5>
+          <h5 className="text-blue text-xl underline">Workspace Admin Controls</h5>
           <GeneralSettings workspaceId={workspaceState.id} name={workspaceState.name} />
           <BillingSettings workspaceId={workspaceState.id} />
           <div className="my-4" />
@@ -180,18 +182,20 @@ function BillingSettings({ workspaceId }: BillingSettingsProps) {
   return (
     <div className="text-red border border-red shadow p-8 flex flex-col mt-2 mb-4">
       <div className="text-blue ml-2">
-        <div className="flex-grow flex flex-row justify-between">
-          <p className="text-xl font-black py-1">Billing</p>
-          {isSubscriptionActive && (
-            <button
-              className="active:transform-1 border-none rounded-none focus:outline-none"
-              onClick={openBillingPortalFn}
-              disabled={isOpeningPortal}
-            >
-              {isOpeningPortal ? "Redirecting you to Stripe" : <PencilEditIcon />}
-            </button>
-          )}
-        </div>
+        <p className="text-xl font-black py-1">Billing</p>
+        {subscription && (
+          <div className="flex-grow flex flex-row justify-between">
+            {isSubscriptionActive && (
+              <button
+                className="active:transform-1 border-none rounded-none focus:outline-none"
+                onClick={openBillingPortalFn}
+                disabled={isOpeningPortal}
+              >
+                {isOpeningPortal ? "Redirecting you to Stripe" : <PencilEditIcon />}
+              </button>
+            )}
+          </div>
+        )}
         {isSubscriptionActive ? (
           <SubscriptionActiveText
             amount={subscription.items[0].amount}

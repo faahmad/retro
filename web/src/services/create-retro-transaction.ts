@@ -17,13 +17,15 @@ export async function createRetroTransaction({
   userId,
   workspaceId
 }: CreateRetroTransactionParams) {
+  const snapshot = await retroCollection.where("workspaceId", "==", workspaceId).get();
+
   // Create the new retro.
   const newRetroRef = retroCollection.doc();
   const newRetroData: Retro = {
     id: newRetroRef.id,
     workspaceId: workspaceId,
     createdById: userId,
-    name: "Untitled retrospective",
+    name: `Retrospective #${snapshot.size + 1}`,
     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
     isIncognito: true,
     userIds: {

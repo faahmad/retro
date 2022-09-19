@@ -2,7 +2,7 @@ import * as React from "react";
 import { RouteComponentProps, useParams } from "react-router-dom";
 import { PageContainer } from "../components/PageContainer";
 import { useRetroState, RetroStateStatus } from "../hooks/use-retro-state";
-import { Retro, RetroUserType } from "../types/retro";
+import { Retro } from "../types/retro";
 import {
   useRetroItemsListener,
   RetroItemsListenerStatus
@@ -19,6 +19,9 @@ import { Workspace } from "../types/workspace";
 import { useUpdateLastActive } from "../hooks/use-update-last-active";
 import { RetroReviewPage } from "./RetroReviewPage";
 import { RetroBoardNavigation } from "../components/RetroBoardNavigation";
+import { getIsFacilitator } from "../utils/getIsFacilitator";
+import { RetroStep } from "../components/RetroBoardStageStepper";
+import { InformationCircleIcon } from "@heroicons/react/outline";
 
 export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
   useAnalyticsPage(AnalyticsPage.RETRO_BOARD);
@@ -74,21 +77,23 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
     );
   }
 
-  let isFacilitator = false;
-  const currentUserType = data?.userIds[currentUserId];
-  // To be backwards compatible, we need to assign the facilitator as the person
-  // who created the retro. This is how we used to grant the facilitor role before
-  // we introduced the RetroUserType.
-  if (
-    (currentUserType !== RetroUserType.FACILITATOR ||
-      // @ts-expect-error
-      currentUserType !== RetroUserType.GUEST) &&
-    currentUserId === data?.createdById
-  ) {
-    isFacilitator = true;
-  } else if (currentUserType === RetroUserType.FACILITATOR) {
-    isFacilitator = true;
+  function getStageExplainerText(stage?: RetroStep["name"]) {
+    if (!stage) {
+      return "";
+    }
+
+    const map = {
+      Reflect: "Write down your reflections. Everything you write is anonymous.",
+      Vote: "Add a thumbs up to the reflections you agree with and want to discuss.",
+      Discuss:
+        "The facilitator should go through the reflections and add actions if needed.",
+      Review: "Great job! The retro is over. Here's a summary."
+    };
+
+    return map[stage];
   }
+
+  const isFacilitator = getIsFacilitator(data!, currentUserId);
 
   if (status === RetroStateStatus.SUCCESS && data !== null) {
     return (
@@ -107,7 +112,11 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
           handleToggleSidePanel={handleToggleSidePanel}
           workspaceUser={workspaceState.users[currentUserId]}
         />
-        <PageContainer className={"my-12 px-8 m-auto"}>
+        <div className="px-8 mt-4 flex items-center max-w-l">
+          <InformationCircleIcon className="h-4 w-4 text-gray mr-2" />
+          <p className="text-gray text-xs">{getStageExplainerText(data?.stage)}</p>
+        </div>
+        <PageContainer className={"my-5 px-8 m-auto"}>
           {data?.stage === "Review" && <RetroReviewPage />}
 
           {data?.stage === "Discuss" && <RetroBoardPresentationMode />}
