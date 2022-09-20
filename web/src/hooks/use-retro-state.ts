@@ -166,7 +166,6 @@ export function useRetroState(retroId: Retro["id"]) {
   };
 
   const handleRetroError = (error: any) => {
-    debugger;
     return dispatch({ type: RetroActionTypes.RETRO_ERROR, payload: error });
   };
 
