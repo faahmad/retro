@@ -147,7 +147,11 @@ export function useRetroState(retroId: Retro["id"]) {
 
   React.useEffect(() => {
     handleRetroLoading();
-    const retroListenerUnsubscribeFn = retroListener(retroId, handleRetroSnapshot);
+    const retroListenerUnsubscribeFn = retroListener(
+      retroId,
+      handleRetroSnapshot,
+      handleRetroError
+    );
     return () => {
       retroListenerUnsubscribeFn();
     };
@@ -159,6 +163,11 @@ export function useRetroState(retroId: Retro["id"]) {
 
   const handleRetroSnapshot = (retro: Retro) => {
     return dispatch({ type: RetroActionTypes.RETRO_SNAPSHOT, payload: retro });
+  };
+
+  const handleRetroError = (error: any) => {
+    debugger;
+    return dispatch({ type: RetroActionTypes.RETRO_ERROR, payload: error });
   };
 
   const handleAddItem = async (input: any) => {

@@ -10,6 +10,13 @@ import { useHistory } from "react-router-dom";
 import analytics from "analytics.js";
 import { AnalyticsPage, useAnalyticsPage } from "../hooks/use-analytics-page";
 import { Navbar } from "../components/Navbar";
+import { useCurrentUser } from "../hooks/use-current-user";
+import { DeleteRetroModal } from "../components/DeleteRetroModal";
+import firebase from "../lib/firebase";
+import { FirestoreCollections } from "../constants/firestore-collections";
+
+const db = firebase.firestore();
+const retroCollection = db.collection(FirestoreCollections.RETRO);
 
 export function RetroListPage() {
   useAnalyticsPage(AnalyticsPage.RETRO_LIST);
@@ -19,6 +26,32 @@ export function RetroListPage() {
     return history.push(`/workspaces/${retro.workspaceId}/retros/${retro.id}`);
   };
   const { status, retros, name, users } = useGetWorkspace();
+  const currentUser = useCurrentUser();
+
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
+  const [retroToDelete, setRetroToDelete] = React.useState<Retro | null>(null);
+
+  const handleOpenDeletionModal = (retro: Retro) => {
+    setRetroToDelete(retro);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleCloseDeletionModal = () => {
+    setIsDeleteModalOpen(false);
+    setRetroToDelete(null);
+  };
+
+  const handleDeleteRetro = async () => {
+    if (!retroToDelete) {
+      return;
+    }
+    try {
+      await retroCollection.doc(retroToDelete.id).delete();
+      handleCloseDeletionModal();
+    } catch (error) {
+      console.log({ error });
+    }
+  };
 
   if (status === WorkspaceStateStatus.LOADING) {
     return <LoadingText>Loading...</LoadingText>;
@@ -27,25 +60,35 @@ export function RetroListPage() {
   const hasError = status === WorkspaceStateStatus.ERROR;
 
   return (
-    <PageContainer>
-      <Navbar isLoggedIn />
-      {hasError && (
-        <ErrorMessageBanner message="It was probably us. Please try again in a couple minutes." />
-      )}
-      <p className="text-blue mb-2 underline">{name}</p>
-      <h1 className="text-blue font-black text-3xl">All Retros</h1>
-      <div className="flex flex-wrap">
-        {retros.map((retro) => {
-          return (
-            <RetroCard
-              key={retro.id}
-              retro={retro}
-              workspaceUsersMap={users}
-              onClick={() => handleRedirectToRetroPage(retro)}
-            />
-          );
-        })}
-      </div>
-    </PageContainer>
+    <React.Fragment>
+      <DeleteRetroModal
+        retro={retroToDelete}
+        isOpen={isDeleteModalOpen}
+        onRequestClose={handleCloseDeletionModal}
+        onClickDelete={handleDeleteRetro}
+      />
+      <PageContainer>
+        <Navbar isLoggedIn />
+        {hasError && (
+          <ErrorMessageBanner message="It was probably us. Please try again in a couple minutes." />
+        )}
+        <p className="text-blue mb-2 underline">{name}</p>
+        <h1 className="text-blue font-black text-3xl">All Retros</h1>
+        <div className="flex flex-wrap">
+          {retros.map((retro) => {
+            return (
+              <RetroCard
+                key={retro.id}
+                currentUserId={currentUser.data?.id || ""}
+                retro={retro}
+                workspaceUsersMap={users}
+                onClick={() => handleRedirectToRetroPage(retro)}
+                onClickDelete={() => handleOpenDeletionModal(retro)}
+              />
+            );
+          })}
+        </div>
+      </PageContainer>
+    </React.Fragment>
   );
 }

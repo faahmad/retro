@@ -17,6 +17,13 @@ import { Navbar } from "../components/Navbar";
 import { ActionItemsList } from "../components/RetroBoardPresentationMode";
 import { useUpdateLastActive } from "../hooks/use-update-last-active";
 import { WorkspaceUsersMap } from "../types/workspace-user";
+import { User } from "../types/user";
+import { DeleteRetroModal } from "../components/DeleteRetroModal";
+import firebase from "../lib/firebase";
+import { FirestoreCollections } from "../constants/firestore-collections";
+
+const db = firebase.firestore();
+const retroCollection = db.collection(FirestoreCollections.RETRO);
 
 export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
   useAnalyticsPage(AnalyticsPage.DASHBOARD);
@@ -24,8 +31,8 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
   useUpdateLastActive(workspaceState.id);
 
   const currentUser = useCurrentUser();
-  const userId = currentUser?.auth?.uid;
-  const isWorkspaceOwner = getIsWorkspaceOwner(workspaceState, userId || "");
+  const currentUserId = currentUser?.auth?.uid || "";
+  const isWorkspaceOwner = getIsWorkspaceOwner(workspaceState, currentUserId);
   const isTrialing = workspaceState.subscriptionStatus === "trialing";
   const isInActiveMode = workspaceState.subscriptionStatus === "active";
 
@@ -44,6 +51,7 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
           <BannerTrialEnded workspaceId={workspaceState.id} />
         ) : null}
         <RetroBoardsOverview
+          currentUserId={currentUserId}
           workspaceId={workspaceState.id}
           workspaceOwnerId={workspaceState.ownerId}
           workspaceUsersMap={workspaceState.users}
@@ -65,6 +73,7 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
 };
 
 const RetroBoardsOverview: React.FC<{
+  currentUserId: User["id"];
   workspaceId: Workspace["id"];
   workspaceOwnerId: Workspace["ownerId"];
   history: RouteComponentProps["history"];
@@ -72,6 +81,7 @@ const RetroBoardsOverview: React.FC<{
   retros: Retro[];
   workspaceUsersMap: WorkspaceUsersMap;
 }> = ({
+  currentUserId,
   history,
   isActive,
   retros,
@@ -81,6 +91,30 @@ const RetroBoardsOverview: React.FC<{
 }) => {
   const createRetro = useCreateRetro();
   const trackEvent = useAnalyticsEvent();
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
+  const [retroToDelete, setRetroToDelete] = React.useState<Retro | null>(null);
+
+  const handleOpenDeletionModal = (retro: Retro) => {
+    setRetroToDelete(retro);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleCloseDeletionModal = () => {
+    setIsDeleteModalOpen(false);
+    setRetroToDelete(null);
+  };
+
+  const handleDeleteRetro = async () => {
+    if (!retroToDelete) {
+      return;
+    }
+    try {
+      await retroCollection.doc(retroToDelete.id).delete();
+      handleCloseDeletionModal();
+    } catch (error) {
+      console.log({ error });
+    }
+  };
 
   const handleRedirectToRetroPage = (retro: Retro) => {
     trackEvent(AnalyticsEvent.RETRO_OPENED, {
@@ -110,52 +144,66 @@ const RetroBoardsOverview: React.FC<{
   };
 
   return (
-    <div className="flex flex-col h-full border border-red shadow shadow-red p-4 mt-8">
-      <div className="flex justify-between items-center">
-        <div>
-          <p className="text-red text-xl font-black">Retros</p>
-          <p className="text-blue text-xs">
-            {!retros.length ? "" : "Your recent retros"}
-          </p>
-        </div>
-        <div className="flex items-center">
-          <p className="text-blue font-black hidden lg:block">Create Retro</p>
-          <button
-            disabled={!isActive}
-            onClick={handleCreateRetro}
-            className="h-10 w-10 bg-blue text-white ml-3 border border-red shadow shadow-red text-2xl hover:bg-pink-1/2 active:transform-1 focus:outline-none"
-          >
-            +
-          </button>
-        </div>
-      </div>
-      {retros.length !== 0 ? (
-        <React.Fragment>
-          <div className="flex flex-wrap">
-            {retros.slice(0, 2).map((retro) => {
-              return (
-                <RetroCard
-                  key={retro.id}
-                  retro={retro}
-                  workspaceUsersMap={workspaceUsersMap}
-                  onClick={() => handleRedirectToRetroPage(retro)}
-                />
-              );
-            })}
+    <React.Fragment>
+      <DeleteRetroModal
+        isOpen={isDeleteModalOpen}
+        onRequestClose={handleCloseDeletionModal}
+        onClickDelete={handleDeleteRetro}
+        retro={retroToDelete}
+      />
+      <div className="flex flex-col h-full border border-red shadow shadow-red p-4 mt-8">
+        <div className="flex justify-between items-center">
+          <div>
+            <p className="text-red text-xl font-black">Retros</p>
+            <p className="text-blue text-xs">
+              {!retros.length ? "" : "Your recent retros"}
+            </p>
           </div>
-          {retros.length >= 2 && (
-            <Link
-              className="text-right underline text-sm"
-              to={`/workspaces/${workspaceId}/retros`}
+          <div className="flex items-center">
+            <p className="text-blue font-black hidden lg:block">Create Retro</p>
+            <button
+              disabled={!isActive}
+              onClick={handleCreateRetro}
+              className="h-10 w-10 bg-blue text-white ml-3 border border-red shadow shadow-red text-2xl hover:bg-pink-1/2 active:transform-1 focus:outline-none"
             >
-              <p className="text-blue">See all</p>
-            </Link>
-          )}
-        </React.Fragment>
-      ) : (
-        <img className="mt-4 m-w-7xl self-center" src={retroEmptyImage} alt="No Retros" />
-      )}
-    </div>
+              +
+            </button>
+          </div>
+        </div>
+        {retros.length !== 0 ? (
+          <React.Fragment>
+            <div className="flex flex-wrap">
+              {retros.slice(0, 2).map((retro) => {
+                return (
+                  <RetroCard
+                    key={retro.id}
+                    currentUserId={currentUserId}
+                    retro={retro}
+                    workspaceUsersMap={workspaceUsersMap}
+                    onClick={() => handleRedirectToRetroPage(retro)}
+                    onClickDelete={() => handleOpenDeletionModal(retro)}
+                  />
+                );
+              })}
+            </div>
+            {retros.length >= 2 && (
+              <Link
+                className="text-right underline text-sm"
+                to={`/workspaces/${workspaceId}/retros`}
+              >
+                <p className="text-blue">See all</p>
+              </Link>
+            )}
+          </React.Fragment>
+        ) : (
+          <img
+            className="mt-4 m-w-7xl self-center"
+            src={retroEmptyImage}
+            alt="No Retros"
+          />
+        )}
+      </div>
+    </React.Fragment>
   );
 };
 

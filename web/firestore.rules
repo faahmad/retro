@@ -82,7 +82,7 @@ service cloud.firestore {
 
     match /retro/{retroId} {
       // Workspace user can read a retro.
-      allow read: if isWorkspaceUser(database, resource.data.workspaceId, request.auth.uid);
+      allow read, delete: if isWorkspaceUser(database, resource.data.workspaceId, request.auth.uid);
       // Workspace user can create/update a retro.
       allow create, update: if hasActiveAccount(database, incomingData(request).workspaceId) 
                             && isWorkspaceUser(database, incomingData(request).workspaceId, request.auth.uid);
