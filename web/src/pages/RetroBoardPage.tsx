@@ -1,5 +1,5 @@
 import * as React from "react";
-import { RouteComponentProps, useParams } from "react-router-dom";
+import { RouteComponentProps, useHistory, useParams } from "react-router-dom";
 import { PageContainer } from "../components/PageContainer";
 import { useRetroState, RetroStateStatus } from "../hooks/use-retro-state";
 import { Retro } from "../types/retro";
@@ -22,6 +22,9 @@ import { RetroBoardNavigation } from "../components/RetroBoardNavigation";
 import { getIsFacilitator } from "../utils/getIsFacilitator";
 import { RetroStep } from "../components/RetroBoardStageStepper";
 import { InformationCircleIcon } from "@heroicons/react/outline";
+import { ErrorBoundary } from "react-error-boundary";
+import { Button } from "../components/Button";
+import { LoadingText } from "../components/LoadingText";
 
 export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
   useAnalyticsPage(AnalyticsPage.RETRO_BOARD);
@@ -44,6 +47,7 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
   const { data, status, error } = state;
   const currentUser = useCurrentUser();
   const currentUserId = currentUser.data!.id;
+  const history = useHistory();
 
   const [isSidePanelOpen, setIsSidePanelOpen] = React.useState(false);
   function handleToggleSidePanel() {
@@ -72,7 +76,21 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
   if (status === RetroStateStatus.ERROR) {
     return (
       <PageContainer>
-        <p className="text-blue">{error?.message}</p>
+        <p className="text-blue mb-2">
+          Something went wrong when trying to open this retro. It may have been deleted or
+          you no longer have access.
+        </p>
+        <p className="text-blue mb-2 text-sm text-gray">
+          Error message: {error?.message}
+        </p>
+        <Button
+          className="text-red shadow border"
+          onClick={() => {
+            history.push(`/workspaces/${workspaceState.id}`);
+          }}
+        >
+          Back to Dashboard
+        </Button>
       </PageContainer>
     );
   }
@@ -97,50 +115,73 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
 
   if (status === RetroStateStatus.SUCCESS && data !== null) {
     return (
-      <React.Fragment>
-        <RetroBoardSidePanel
-          isOwner={isFacilitator}
-          isOpen={isSidePanelOpen}
-          toggle={handleToggleSidePanel}
-        />
-        <RetroBoardNavigation
-          name={data.name}
-          workspaceName={workspaceState.name}
-          createdAt={data.createdAt}
-          isFacilitator={isFacilitator}
-          retroId={params.retroId}
-          handleToggleSidePanel={handleToggleSidePanel}
-          workspaceUser={workspaceState.users[currentUserId]}
-        />
-        <div className="px-8 mt-4 flex items-center max-w-l">
-          <InformationCircleIcon className="h-4 w-4 text-gray mr-2" />
-          <p className="text-gray text-xs">{getStageExplainerText(data?.stage)}</p>
-        </div>
-        <PageContainer className={"my-5 px-8 m-auto"}>
-          {data?.stage === "Review" && <RetroReviewPage />}
+      <ErrorBoundary FallbackComponent={RetroErrorFallback}>
+        <React.Fragment>
+          <RetroBoardSidePanel
+            isOwner={isFacilitator}
+            isOpen={isSidePanelOpen}
+            toggle={handleToggleSidePanel}
+          />
+          <RetroBoardNavigation
+            name={data.name}
+            workspaceName={workspaceState.name}
+            createdAt={data.createdAt}
+            isFacilitator={isFacilitator}
+            retroId={params.retroId}
+            handleToggleSidePanel={handleToggleSidePanel}
+            workspaceUser={workspaceState.users[currentUserId]}
+          />
+          <div className="px-8 mt-4 flex items-center max-w-l">
+            <InformationCircleIcon className="h-4 w-4 text-gray mr-2" />
+            <p className="text-gray text-xs">{getStageExplainerText(data?.stage)}</p>
+          </div>
+          <PageContainer className={"my-5 px-8 m-auto"}>
+            {data?.stage === "Review" && <RetroReviewPage />}
 
-          {data?.stage === "Discuss" && <RetroBoardPresentationMode />}
+            {data?.stage === "Discuss" && <RetroBoardPresentationMode />}
 
-          {(data?.stage === "Reflect" || data?.stage === "Vote") && (
-            <RetroBoard
-              retroState={state}
-              users={workspaceState.users}
-              retroItems={retroItems.data}
-              onAddItem={handleAddItem}
-              onDeleteItem={handleDeleteItem}
-              onEditItem={(retroItemId, content) =>
-                handleEditItem({ content, id: retroItemId })
-              }
-              onLikeItem={handleLikeItem}
-              onUnlikeItem={handleUnlikeItem}
-              onDragDrop={handleDragDrop}
-            />
-          )}
-        </PageContainer>
-      </React.Fragment>
+            {(data?.stage === "Reflect" || data?.stage === "Vote") && (
+              <RetroBoard
+                retroState={state}
+                users={workspaceState.users}
+                retroItems={retroItems.data}
+                onAddItem={handleAddItem}
+                onDeleteItem={handleDeleteItem}
+                onEditItem={(retroItemId, content) =>
+                  handleEditItem({ content, id: retroItemId })
+                }
+                onLikeItem={handleLikeItem}
+                onUnlikeItem={handleUnlikeItem}
+                onDragDrop={handleDragDrop}
+              />
+            )}
+          </PageContainer>
+        </React.Fragment>
+      </ErrorBoundary>
     );
   }
 
   // This should never happen TBH.
   return null;
 };
+
+function RetroErrorFallback() {
+  const handleOnClick = () => {
+    // resetErrorBoundary();
+    // window.location.reload();
+    // return;
+  };
+
+  return (
+    <PageContainer>
+      <div className="text-center text-red">
+        <LoadingText>
+          Oops, something went wrong. Please refresh your browser.
+        </LoadingText>
+        <Button className="shadow border" onClick={handleOnClick}>
+          Back to Dashboard
+        </Button>
+      </div>
+    </PageContainer>
+  );
+}
