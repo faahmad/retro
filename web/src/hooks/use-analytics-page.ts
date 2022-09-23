@@ -24,8 +24,6 @@ export function useAnalyticsPage(page: AnalyticsPage) {
     firebase.analytics().logEvent("page_view", {
       page_title: page
     });
-    // @ts-ignore
-    window.analytics.page(page);
     return;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

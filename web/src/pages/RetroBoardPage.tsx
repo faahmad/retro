@@ -130,6 +130,7 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
             retroId={params.retroId}
             handleToggleSidePanel={handleToggleSidePanel}
             workspaceUser={workspaceState.users[currentUserId]}
+            workspaceId={workspaceState.id}
           />
           <div className="px-8 mt-4 flex items-center max-w-l">
             <InformationCircleIcon className="h-4 w-4 text-gray mr-2" />

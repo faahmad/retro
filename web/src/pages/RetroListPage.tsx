@@ -25,8 +25,16 @@ export function RetroListPage() {
     analytics.track("Retro Opened", { ...retro, location: AnalyticsPage.RETRO_LIST });
     return history.push(`/workspaces/${retro.workspaceId}/retros/${retro.id}`);
   };
-  const { status, retros, name, users } = useGetWorkspace();
+  const { status, retros, name, users, ownerId } = useGetWorkspace();
   const currentUser = useCurrentUser();
+  const currentUserId = currentUser?.auth?.uid;
+
+  let isWorkspaceAdmin = false;
+  if (currentUserId) {
+    if (users[currentUserId]?.userRole === "owner" || ownerId === currentUserId) {
+      isWorkspaceAdmin = true;
+    }
+  }
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
   const [retroToDelete, setRetroToDelete] = React.useState<Retro | null>(null);
@@ -79,7 +87,8 @@ export function RetroListPage() {
             return (
               <RetroCard
                 key={retro.id}
-                currentUserId={currentUser.data?.id || ""}
+                isWorkspaceAdmin={isWorkspaceAdmin}
+                currentUserId={currentUserId || ""}
                 retro={retro}
                 workspaceUsersMap={users}
                 onClick={() => handleRedirectToRetroPage(retro)}

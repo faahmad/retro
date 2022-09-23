@@ -37,8 +37,6 @@ export enum AnalyticsEvent {
 export function useAnalyticsEvent() {
   function handleAnalyticsEvent(eventName: AnalyticsEvent, eventProperties?: Object) {
     firebase.analytics().logEvent(eventName, eventProperties);
-    // @ts-ignore
-    window.analytics.track(eventName, eventProperties);
     return;
   }
   return handleAnalyticsEvent;

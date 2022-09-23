@@ -36,6 +36,9 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
   const isTrialing = workspaceState.subscriptionStatus === "trialing";
   const isInActiveMode = workspaceState.subscriptionStatus === "active";
 
+  const isWorkspaceAdmin =
+    workspaceState?.users[currentUserId]?.userRole === "owner" || isWorkspaceOwner;
+
   return (
     <React.Fragment>
       <PageContainer>
@@ -51,6 +54,7 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
           <BannerTrialEnded workspaceId={workspaceState.id} />
         ) : null}
         <RetroBoardsOverview
+          isWorkspaceAdmin={isWorkspaceAdmin}
           currentUserId={currentUserId}
           workspaceId={workspaceState.id}
           workspaceOwnerId={workspaceState.ownerId}
@@ -76,6 +80,7 @@ const RetroBoardsOverview: React.FC<{
   currentUserId: User["id"];
   workspaceId: Workspace["id"];
   workspaceOwnerId: Workspace["ownerId"];
+  isWorkspaceAdmin: boolean;
   history: RouteComponentProps["history"];
   isActive: boolean;
   retros: Retro[];
@@ -87,6 +92,7 @@ const RetroBoardsOverview: React.FC<{
   retros,
   workspaceId,
   workspaceOwnerId,
+  isWorkspaceAdmin,
   workspaceUsersMap
 }) => {
   const createRetro = useCreateRetro();
@@ -178,6 +184,7 @@ const RetroBoardsOverview: React.FC<{
                   <RetroCard
                     key={retro.id}
                     currentUserId={currentUserId}
+                    isWorkspaceAdmin={isWorkspaceAdmin}
                     retro={retro}
                     workspaceUsersMap={workspaceUsersMap}
                     onClick={() => handleRedirectToRetroPage(retro)}

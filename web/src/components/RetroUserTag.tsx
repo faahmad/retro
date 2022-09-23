@@ -12,7 +12,7 @@ export function RetroUserTag({ workspaceUser, retroUserType }: RetroUserTagProps
   return (
     <div
       key={workspaceUser?.userId}
-      className="relative flex items-center bg-white px-3 py-2"
+      className="relative flex items-center px-3 py-2 text-blue"
     >
       <div className="flex-shrink-0">
         <UserAvatar
