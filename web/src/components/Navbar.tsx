@@ -9,30 +9,81 @@ import {
   getWorkspaceFromCurrentUser
 } from "../utils/workspace-utils";
 import { AnalyticsEvent, useAnalyticsEvent } from "../hooks/use-analytics-event";
+import { UserAvatar } from "./UserAvatar";
+import { useGetWorkspace } from "../hooks/use-get-workspace";
+import isEmpty from "lodash/isEmpty";
 
 export const Navbar: React.FC<any> = ({ isLoggedIn }) => {
   return (
     <nav className="navbar flex flex-wrap justify-between items-baseline sm:mb-1 lg:mb-16">
-      <div className="flex items-center">
-        <NavbarBrand />
-        {isLoggedIn ? (
-          <div className="ml-8">
-            <NavbarAuthLinks />
-          </div>
-        ) : (
-          <div className="ml-8">
-            <NavbarNoAuthLinks />
-          </div>
-        )}
-      </div>
-      {!isLoggedIn ? (
-        <div className="flex flex-col">
-          <NavbarLoggedOutButtons />
+      <div className="flex items-center justify-between w-full">
+        <div className="flex items-center">
+          <NavbarBrand />
+          {isLoggedIn ? (
+            <div className="ml-8">
+              <NavbarAuthLinks />
+            </div>
+          ) : (
+            <div className="ml-8">
+              <NavbarNoAuthLinks />
+            </div>
+          )}
         </div>
-      ) : null}
+        <div>
+          {!isLoggedIn ? (
+            <div className="flex flex-col">
+              <NavbarLoggedOutButtons />
+            </div>
+          ) : (
+            <CurrentUserBadge />
+          )}
+        </div>
+      </div>
     </nav>
   );
 };
+
+function CurrentUserBadge() {
+  const currentUser = useCurrentUser();
+  const workspace = useGetWorkspace();
+
+  const currentUserData = currentUser.data;
+  const workspaceUsers = workspace?.users;
+
+  if (
+    !currentUserData ||
+    isEmpty(currentUserData) ||
+    !workspaceUsers ||
+    isEmpty(workspaceUsers)
+  ) {
+    return null;
+  }
+
+  return (
+    <div
+      key={currentUserData.id}
+      className="relative flex items-center bg-white px-3 py-2 text-blue border shadow"
+    >
+      <div className="flex-shrink-0">
+        <UserAvatar
+          photoURL={currentUserData.photoUrl as string | undefined}
+          displayName={currentUserData.displayName}
+        />
+      </div>
+      <div className="min-w-0 flex-1">
+        <div className="focus:outline-none">
+          <span className="absolute inset-0" aria-hidden="true" />
+          <p className="text-sm font-medium">{currentUser.data?.displayName}</p>
+          <p className="truncate text-xs text-gray">
+            {workspace?.users[currentUserData.id].userRole === "owner"
+              ? "admin"
+              : "member"}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function NavbarLoggedOutButtons() {
   const history = useHistory();

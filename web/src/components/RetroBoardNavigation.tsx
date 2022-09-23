@@ -1,6 +1,11 @@
 /* This example requires Tailwind CSS v2.0+ */
 import React from "react";
-import { ClockIcon, CogIcon, MenuAlt1Icon } from "@heroicons/react/outline";
+import {
+  ArrowLeftIcon,
+  ClockIcon,
+  CogIcon,
+  MenuAlt1Icon
+} from "@heroicons/react/outline";
 import { LinkIcon } from "@heroicons/react/solid";
 import { RetroBoardStageStepper } from "./RetroBoardStageStepper";
 import moment from "moment";
@@ -8,8 +13,10 @@ import { useRetroCountdownTimer } from "../hooks/use-retro-countdown-timer";
 import { RetroCountdownTimer } from "./RetroCountdownTimer";
 import { RetroUserTag } from "./RetroUserTag";
 import { RetroUserType } from "../types/retro";
+import { useHistory } from "react-router-dom";
 
 export function RetroBoardNavigation(props: any) {
+  const history = useHistory();
   const timer = useRetroCountdownTimer(props.retroId);
   const [isCopied, setIsCopied] = React.useState(false);
   async function handleCopyLink() {
@@ -21,33 +28,41 @@ export function RetroBoardNavigation(props: any) {
   }
 
   return (
-    <nav className="bg-white border-b border-blue">
+    <nav className="bg-white border-b border-blue py-1">
       <>
         <div className="mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center h-16 justify-between">
-            <div className="flex items-center">
-              {/* Logo & Name */}
-              <div className="flex items-center">
-                <button
-                  onClick={props.handleToggleSidePanel}
-                  className="h-8 w-8 flex items-center justify-center bg-blue text-white border border-red shadow shadow-red hover:bg-pink-1/2 active:transform-1 focus:outline-none"
-                >
-                  {props.isFacilitator ? (
-                    <CogIcon className="h-6 w-6" />
-                  ) : (
-                    <MenuAlt1Icon className="h-6 w-6" />
-                  )}
-                </button>
-              </div>
-              <div className="hidden md:ml-4 md:block">
-                <div>
-                  <h2 className="text-blue text-xs">{props.name}</h2>
-                  <p className="text-xs text-gray">
-                    {props.workspaceName} &#11825;{" "}
-                    {moment(props.createdAt.toDate()).format("L")}
-                  </p>
+          <div className="flex items-center h-20 justify-between">
+            <div>
+              <div className="flex items-center my-2">
+                {/* Logo & Name */}
+                <div className="flex items-center">
+                  <button
+                    onClick={props.handleToggleSidePanel}
+                    className="h-8 w-8 flex items-center justify-center shadow shadow-red bg-blue text-white border border-red hover:bg-pink-1/2 active:transform-1 focus:outline-none"
+                  >
+                    {props.isFacilitator ? (
+                      <CogIcon className="h-6 w-6" />
+                    ) : (
+                      <MenuAlt1Icon className="h-6 w-6" />
+                    )}
+                  </button>
+                </div>
+                <div className="hidden md:ml-4 md:mr-2 md:block">
+                  <div>
+                    <h2 className="text-blue text-sm">{props.name}</h2>
+                    <p className="text-xs text-gray">
+                      {props.workspaceName} &#11825;{" "}
+                      {moment(props.createdAt.toDate()).format("L")}
+                    </p>
+                  </div>
                 </div>
               </div>
+              <button
+                className="text-xs text-gray flex items-center justify-center py-1 focus:outline-none hover:text-blue"
+                onClick={() => history.push(`/workspaces/${props.workspaceId}`)}
+              >
+                <ArrowLeftIcon className="h-4 w-4 mr-2" /> Exit
+              </button>
             </div>
 
             {/* Stepper */}
@@ -64,7 +79,7 @@ export function RetroBoardNavigation(props: any) {
                 className={`mr-2 ease-in-out shadow shadow-blue ${
                   timer.isTimerOpen ? "absolute" : "hidden"
                 }`}
-                style={{ top: "60px", right: "160px" }}
+                style={{ top: "70px", right: "160px" }}
               >
                 <RetroCountdownTimer timer={timer} />
               </div>

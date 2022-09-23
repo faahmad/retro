@@ -18,7 +18,7 @@ export function useLoginWithGoogle() {
       });
       return history.push("/onboarding");
     }
-    return;
+    return history.push("/workspaces");
   };
 
   return handleLoginWithGoogle;

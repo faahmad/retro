@@ -30,11 +30,15 @@ export function WorkspaceListPage() {
 }
 
 function WorkspaceList({ workspaces }: { workspaces: UserWorkspace[] }) {
+  // There is a bug where Firebase sometimes returns duplicate workspaces
+  // @ts-ignore
+  const uniqueWorkspaces = [...new Map(workspaces.map((w) => [w.id, w])).values()];
+
   return (
     <React.Fragment>
       <h2>Your workspaces</h2>
       <ul>
-        {workspaces.map((workspace) => (
+        {uniqueWorkspaces.map((workspace) => (
           <li key={workspace.id} className="ml-4 text-blue underline cursor">
             <Link to={`/workspaces/${workspace.id}`}>{workspace.name}</Link>
           </li>

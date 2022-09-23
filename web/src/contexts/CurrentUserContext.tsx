@@ -84,8 +84,6 @@ export function CurrentUserProvider({ children }: { children: React.ReactNode })
       lastSignInTime: firebaseUser.metadata.lastSignInTime,
       providers: firebaseUser.providerData.map((data) => data?.providerId)
     };
-    // @ts-ignore
-    window.analytics.identify(firebaseUser.uid, userProps);
     trackEvent(AnalyticsEvent.USER_SIGNED_IN, userProps);
     return;
   };

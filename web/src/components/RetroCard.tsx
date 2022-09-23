@@ -13,13 +13,15 @@ interface RetroCardProps {
   workspaceUsersMap: WorkspaceUsersMap;
   onClick: () => void;
   onClickDelete: () => void;
+  isWorkspaceAdmin: boolean;
 }
 export function RetroCard({
   retro,
   workspaceUsersMap,
   onClick,
   currentUserId,
-  onClickDelete
+  onClickDelete,
+  isWorkspaceAdmin
 }: RetroCardProps) {
   const createdAt = retro.createdAt ? retro.createdAt.toDate() : new Date();
 
@@ -47,7 +49,7 @@ export function RetroCard({
           </p>
         </div>
         <div>
-          {isFacilitator ? (
+          {isFacilitator || isWorkspaceAdmin ? (
             <button className="h-5 w-5 cursor-pointer" onClick={onClickDelete}>
               <TrashIcon className="h-5 w-5 text-gray hover:text-blue" />
             </button>

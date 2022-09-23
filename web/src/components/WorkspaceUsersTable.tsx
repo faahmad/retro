@@ -11,6 +11,7 @@ import { useGetWorkspace } from "../hooks/use-get-workspace";
 import { useCurrentUser } from "../hooks/use-current-user";
 import { WorkspaceInvite, WorkspaceInviteStatus } from "../types/workspace-invite";
 import moment from "moment";
+import { MailIcon } from "@heroicons/react/outline";
 
 type ActionSetT = { type: "set"; email: string; userId: string };
 type ActionUnsetT = { type: "unset"; email: null; userId: null };
@@ -126,13 +127,13 @@ export function WorkspaceUsersTable({
       <div className="flex items-center justify-between mb-3">
         <h2 className="text-xl text-blue font-bold">Team members</h2>
         <div className="flex items-baseline">
-          <p className="text-blue font-black hidden lg:block">Invite Member</p>
+          <p className="text-blue hidden lg:block text-sm">Invite user by email</p>
           <button
             disabled={false}
             onClick={handleToggleInviteModal}
-            className="h-10 w-10 bg-blue text-white ml-3 border border-red shadow shadow-red text-2xl hover:bg-pink-1/2 active:transform-1 focus:outline-none"
+            className="h-10 w-10 bg-blue text-white ml-3 border border-red shadow shadow-red text-2xl flex items-center justify-center hover:bg-pink-1/2 active:transform-1 focus:outline-none"
           >
-            +
+            <MailIcon className="h-5 w-5" />
           </button>
         </div>
       </div>
@@ -260,11 +261,11 @@ function WorkspaceInvitesTable({
   return (
     <div className="mt-6">
       <h2 className="text-xl text-blue font-bold">
-        Pending invites ({pendingInvites.length})
+        Pending email invites ({pendingInvites.length})
       </h2>
 
       {pendingInvites.length === 0 ? (
-        <p className="text-blue">There are no pending invites.</p>
+        <p className="text-blue">There are no pending email invites.</p>
       ) : (
         <div className="flex flex-col">
           <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
