@@ -85,6 +85,13 @@ export function CurrentUserProvider({ children }: { children: React.ReactNode })
       lastSignInTime: firebaseUser.metadata.lastSignInTime,
       providers: firebaseUser.providerData.map((data) => data?.providerId)
     };
+    FullStory.identify(firebaseUser.uid, {
+      email: firebaseUser.email || undefined,
+      displayName: firebaseUser.displayName || undefined,
+      photoURL: firebaseUser.photoURL,
+      providerID: firebaseUser.providerId,
+      isAnonymous: firebaseUser.isAnonymous
+    });
     trackEvent(AnalyticsEvent.USER_SIGNED_IN, userProps);
     return;
   };
@@ -96,14 +103,6 @@ export function CurrentUserProvider({ children }: { children: React.ReactNode })
   const handleOnAuthenticated = async (firebaseUser: firebase.User) => {
     const idToken = await getIdTokenFromFirebaseUser(firebaseUser);
     saveIdToken(idToken);
-
-    FullStory.identify(firebaseUser.uid, {
-      email: firebaseUser.email || undefined,
-      displayName: firebaseUser.displayName || undefined,
-      photoURL: firebaseUser.photoURL,
-      providerID: firebaseUser.providerId,
-      isAnonymous: firebaseUser.isAnonymous
-    });
     handleAnalytics(firebaseUser);
     dispatch({
       type: CurrentUserActionTypes.AUTHENTICATED,
