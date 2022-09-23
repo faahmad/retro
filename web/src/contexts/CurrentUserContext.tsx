@@ -8,6 +8,7 @@ import {
   saveIdToken
 } from "../services/auth-service";
 import { AnalyticsEvent, useAnalyticsEvent } from "../hooks/use-analytics-event";
+import * as FullStory from "@fullstory/browser";
 
 export enum CurrentUserState {
   LOADING = "loading",
@@ -95,6 +96,7 @@ export function CurrentUserProvider({ children }: { children: React.ReactNode })
   const handleOnAuthenticated = async (firebaseUser: firebase.User) => {
     const idToken = await getIdTokenFromFirebaseUser(firebaseUser);
     saveIdToken(idToken);
+    FullStory.identify(firebaseUser.uid, firebaseUser);
     handleAnalytics(firebaseUser);
     dispatch({
       type: CurrentUserActionTypes.AUTHENTICATED,

@@ -1,4 +1,5 @@
 import firebase from "../lib/firebase";
+import * as FullStory from "@fullstory/browser";
 
 export enum AnalyticsEvent {
   JOIN_WAITLIST_CLICKED = "Join Waitlist Link Clicked",
@@ -37,6 +38,7 @@ export enum AnalyticsEvent {
 export function useAnalyticsEvent() {
   function handleAnalyticsEvent(eventName: AnalyticsEvent, eventProperties?: Object) {
     firebase.analytics().logEvent(eventName, eventProperties);
+    FullStory.event(eventName, eventProperties);
     return;
   }
   return handleAnalyticsEvent;
