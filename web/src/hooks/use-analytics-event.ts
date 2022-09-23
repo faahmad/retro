@@ -38,7 +38,7 @@ export enum AnalyticsEvent {
 export function useAnalyticsEvent() {
   function handleAnalyticsEvent(eventName: AnalyticsEvent, eventProperties?: Object) {
     firebase.analytics().logEvent(eventName, eventProperties);
-    FullStory.event(eventName, eventProperties);
+    FullStory.event(eventName, eventProperties || {});
     return;
   }
   return handleAnalyticsEvent;

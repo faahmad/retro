@@ -96,7 +96,14 @@ export function CurrentUserProvider({ children }: { children: React.ReactNode })
   const handleOnAuthenticated = async (firebaseUser: firebase.User) => {
     const idToken = await getIdTokenFromFirebaseUser(firebaseUser);
     saveIdToken(idToken);
-    FullStory.identify(firebaseUser.uid, firebaseUser);
+
+    FullStory.identify(firebaseUser.uid, {
+      email: firebaseUser.email || undefined,
+      displayName: firebaseUser.displayName || undefined,
+      photoURL: firebaseUser.photoURL,
+      providerID: firebaseUser.providerId,
+      isAnonymous: firebaseUser.isAnonymous
+    });
     handleAnalytics(firebaseUser);
     dispatch({
       type: CurrentUserActionTypes.AUTHENTICATED,
