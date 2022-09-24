@@ -16,8 +16,8 @@ import isEmpty from "lodash/isEmpty";
 export const Navbar: React.FC<any> = ({ isLoggedIn }) => {
   return (
     <nav className="navbar flex flex-wrap justify-between items-baseline sm:mb-1 lg:mb-16">
-      <div className="flex items-center justify-between w-full">
-        <div className="flex items-center">
+      <div className="flex flex-wrap items-center justify-between w-full">
+        <div className="flex flex-wrap items-center">
           <NavbarBrand />
           {isLoggedIn ? (
             <div className="ml-8">
@@ -107,16 +107,10 @@ function NavbarLoggedOutButtons() {
 
   return (
     <React.Fragment>
-      <Button
-        className="mt-10 sm:mb-0 lg:mb-2 sm:mt-0 md:mt-0 lg:mt-0 text-blue"
-        onClick={handleClickSignup}
-      >
+      <Button className="text-blue mt-8 md:mt-0" onClick={handleClickSignup}>
         Sign up for free
       </Button>
-      <Button
-        className="mt-10 sm:mt-0 md:mt-0 lg:mt-0 text-blue"
-        onClick={handleClickLogin}
-      >
+      <Button className="mt-2 mb-4 text-blue" onClick={handleClickLogin}>
         Log in
       </Button>
     </React.Fragment>

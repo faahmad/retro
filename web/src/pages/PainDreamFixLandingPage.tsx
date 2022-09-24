@@ -44,10 +44,10 @@ export const PainDreamFixLandingPage: React.FC = () => {
           <div className="flex flex-col-reverse text-center lg:flex-row lg:items-center lg:text-left">
             <div id="hero-title" className="w-full lg:w-1/2 mt-4 lg:mt-0">
               <h2 className="text-blue font-black text-xl lg:text-2xl">
-                Agile retrospectives made easy
+                Team retrospectives made easy
               </h2>
               <h3 className="text-blue text-lg mt-2">
-                An online retrospective tool that will keep your meetings fun, focused,
+                An online retrospective tool that will keep your meetings fast, focused,
                 and productive.
               </h3>
               <Button
@@ -83,20 +83,26 @@ export const PainDreamFixLandingPage: React.FC = () => {
                   alt="Conduct"
                   src={howItWorksConductImage}
                   className="bg-white mb-2"
-                  style={{ height: "115px", width: "140px" }}
+                  style={{ width: "140px" }}
                 />
-                <p className="text-xl mb-2">Easy to use</p>
-                <p>Get more engagement from team members that usually don't speak up.</p>
+                <p className="font-black text-lg mb-3">Anonymous everything</p>
+                <p className="text-sm">
+                  Get honest feedback and prevent bias with anonymous reflections.
+                  Prioritize what matters most with anonymous voting.
+                </p>
               </HowItWorksCard>
               <HowItWorksCard>
                 <img
                   alt="Invite"
                   src={howItWorksInviteImage}
                   className="bg-white mb-2"
-                  style={{ height: "115px", width: "140px" }}
+                  style={{ width: "140px" }}
                 />
-                <p className="text-xl mb-2">Improve</p>
-                <p>Surface the most important pains and get valuable actions.</p>
+                <p className="font-black text-lg mb-3">Action items</p>
+                <p className="text-sm">
+                  Our structured retrospective process helps teams identify root causes.
+                  Create trackable action items to guarantee continuous improvement.
+                </p>
               </HowItWorksCard>
 
               <HowItWorksCard>
@@ -104,10 +110,13 @@ export const PainDreamFixLandingPage: React.FC = () => {
                   alt="Conduct"
                   src={howItWorksAnalyzeImage}
                   className="bg-white mb-2"
-                  style={{ height: "115px", width: "140px" }}
+                  style={{ width: "140px" }}
                 />
-                <p className="text-xl mb-2">Insights</p>
-                <p>Analyze your team's improvement over time.</p>
+                <p className="font-black text-lg mb-3">Automatic summaries</p>
+                <p className="text-sm">
+                  Get an automated summary of your retrospective and action items so you
+                  don't have to worry about taking notes.
+                </p>
               </HowItWorksCard>
             </div>
           </div>
@@ -134,7 +143,7 @@ export const PainDreamFixLandingPage: React.FC = () => {
             </div>
           </div>
         </PageContainer>
-        <div className="bg-red text-white p-12">
+        <div className="bg-red text-white p-8">
           <PageContainer>
             <div className="mt-20 mb-20 flex flex-col lg:flex-row max-w-6xl m-auto">
               <div className="w-full sm:w-1/2 md:w-1/2 lg:w-1/2 sm:ml-4 md:ml-4 lg:w-ml-4">
@@ -155,7 +164,7 @@ export const PainDreamFixLandingPage: React.FC = () => {
                   <br />
                   1 Workspace
                   <br />
-                  Unlimited Team Members
+                  Unlimited Users
                   <br />
                   Unlimited Boards
                 </p>
@@ -197,7 +206,7 @@ export const PainDreamFixLandingPage: React.FC = () => {
 
 const HowItWorksCard: React.FC = ({ children }) => {
   return (
-    <div className="bg-white h-72 w-64 text-blue border border-red shadow-red flex flex-col items-center p-4 text-center mb-4">
+    <div className="bg-white w-64 text-blue border border-red shadow-red flex flex-col items-center p-4 text-center mb-4">
       {children}
     </div>
   );

@@ -24,8 +24,8 @@ const plans = [
       { id: 1, value: "1 Workspace" },
       { id: 2, value: "Unlimited team members" },
       { id: 3, value: "Unlimited retros" },
-      { id: 4, value: "Anonymous, multiplayer participation" },
-      { id: 5, value: "Focused discussions" },
+      { id: 4, value: "Structured retro format" },
+      { id: 5, value: "Anonymous, multiplayer participation" },
       { id: 6, value: "Automatic meeting summaries" }
     ]
   }
