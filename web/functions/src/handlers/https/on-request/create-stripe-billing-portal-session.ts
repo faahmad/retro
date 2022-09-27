@@ -1,5 +1,9 @@
 import * as functions from "firebase-functions";
-import { getUserIdFromIdToken, getWorkspace } from "../../../services/firebase-admin";
+import {
+  getUserIdFromIdToken,
+  getWorkspace,
+  getWorkspaceUser
+} from "../../../services/firebase-admin";
 import { createBillingPortalSession } from "../../../services/stripe";
 import { cors } from "../../../lib/cors";
 import { logger } from "../../../lib/logger";
@@ -19,12 +23,15 @@ export const createStripeBillingPortalSession = functions.https.onRequest((req, 
 
       const userId = await getUserIdFromIdToken(idToken);
       const workspace = await getWorkspace(workspaceId);
+      const workspaceUser = await getWorkspaceUser(workspaceId, userId);
 
-      if (userId !== workspace?.ownerId) {
+      logger.log("createStripeBillingPortal", workspaceUser);
+
+      if (workspaceUser?.userRole !== "owner") {
         throw new Error("Unauthorized.");
       }
 
-      if (!workspace.customerId) {
+      if (!workspace?.customerId) {
         throw new Error("Invalid customerId.");
       }
 

@@ -14,6 +14,7 @@ import { useCurrentUser } from "../hooks/use-current-user";
 import { DeleteRetroModal } from "../components/DeleteRetroModal";
 import firebase from "../lib/firebase";
 import { FirestoreCollections } from "../constants/firestore-collections";
+import * as Sentry from "@sentry/react";
 
 const db = firebase.firestore();
 const retroCollection = db.collection(FirestoreCollections.RETRO);
@@ -57,7 +58,7 @@ export function RetroListPage() {
       await retroCollection.doc(retroToDelete.id).delete();
       handleCloseDeletionModal();
     } catch (error) {
-      console.log({ error });
+      Sentry.captureException(error);
     }
   };
 

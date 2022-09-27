@@ -22,6 +22,7 @@ const firestore = firebase.firestore();
 
 const IS_DEV = window.location.hostname === "localhost";
 if (IS_DEV) {
+  // eslint-disable-next-line no-console
   console.info("Localhost detected, using emulator.");
   firebase.auth().useEmulator("http://localhost:9099/");
   firestore.settings({

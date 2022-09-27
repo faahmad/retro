@@ -1,8 +1,6 @@
 import "./styles/index.css";
-import { apolloClient } from "./lib";
 import React from "react";
 import ReactDOM from "react-dom";
-import { ApolloProvider } from "@apollo/react-hooks";
 import { AppRoutes } from "./AppRoutes";
 import * as serviceWorker from "./serviceWorker";
 import { CurrentUserProvider } from "./contexts/CurrentUserContext";
@@ -18,11 +16,9 @@ FullStory.init({
 });
 
 ReactDOM.render(
-  <ApolloProvider client={apolloClient}>
-    <CurrentUserProvider>
-      <AppRoutes />
-    </CurrentUserProvider>
-  </ApolloProvider>,
+  <CurrentUserProvider>
+    <AppRoutes />
+  </CurrentUserProvider>,
   document.getElementById("root")
 );
 

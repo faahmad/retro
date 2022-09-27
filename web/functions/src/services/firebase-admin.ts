@@ -43,10 +43,25 @@ export async function getWorkspace(id: string) {
   return workspaceDoc.data() as Workspace | undefined;
 }
 
-export async function getWorkspaceUsers(workspaceId: string) {
-  const workspaceUsersDoc = await db
+export async function getWorkspaceUser(workspaceId: string, userId: string) {
+  const workspaceUserDoc = await db
     .collection(FirestoreCollections.WORKSPACE_USER)
-    .doc(workspaceId)
+    .doc(`${workspaceId}_${userId}`)
     .get();
-  return workspaceUsersDoc.data();
+  return workspaceUserDoc.data();
+}
+
+export async function getWorkspaceUsers(workspaceId: string) {
+  const workspaceUsersQuerySnapshot = await db
+    .collection(FirestoreCollections.WORKSPACE_USER)
+    .where("workspaceId", "==", workspaceId)
+    .get();
+
+  let workspaceUsersMap: any = {};
+  workspaceUsersQuerySnapshot.forEach((workspaceUserSnapshot) => {
+    const user = workspaceUserSnapshot.data();
+    workspaceUsersMap[user.userId] = user;
+  });
+
+  return workspaceUsersMap;
 }

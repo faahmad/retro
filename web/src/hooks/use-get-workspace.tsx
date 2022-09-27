@@ -9,7 +9,6 @@ import { workspaceInvitesListener } from "../services/workspace-invite-listener"
 import { workspaceRetrosListener } from "../services/workspace-retros-listener";
 import { Retro } from "../types/retro";
 import { useGetWorkspaceSubscription } from "./use-get-workspace-subscription";
-import { updateWorkspace } from "../services/update-workspace";
 import { useParams } from "react-router-dom";
 
 export enum WorkspaceStateStatus {
@@ -28,7 +27,6 @@ enum WorkspaceStateActionTypes {
 type WorkspaceStateValues = {
   status: WorkspaceStateStatus;
   error: string | null;
-  isActive: boolean;
   users: WorkspaceUsersMap;
   invitedUsers: WorkspaceInvite[];
   retros: Retro[];
@@ -37,7 +35,6 @@ type WorkspaceStateValues = {
 const initialState: WorkspaceStateValues = {
   status: WorkspaceStateStatus.LOADING,
   error: null,
-  isActive: false,
   users: {},
   invitedUsers: [],
   retros: [],
@@ -63,17 +60,10 @@ const initialState: WorkspaceStateValues = {
 export function useGetWorkspace() {
   const [values, dispatch] = React.useReducer(workspaceStateReducer, initialState);
   const workspaceId = useParams<any>().workspaceId;
-  const { subscription, isLoading }: any = useGetWorkspaceSubscription(workspaceId);
-  React.useEffect(() => {
-    if (workspaceId && subscription) {
-      updateWorkspace(workspaceId, {
-        subscriptionId: subscription.id,
-        subscriptionStatus: subscription.status,
-        subscriptionTrialEnd: subscription.trialEnd
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoading]);
+  const { subscription }: any = useGetWorkspaceSubscription(
+    workspaceId,
+    values.subscriptionId
+  );
 
   const handleWorkspaceSnapshot = (workspaceData: Workspace) => {
     return dispatch({
@@ -130,7 +120,12 @@ export function useGetWorkspace() {
     };
   }, [workspaceId]);
 
-  return values;
+  return {
+    ...values,
+    // Using the values directly from Stripe instead of trying to pass through Firestore.
+    subscriptionStatus: subscription?.status,
+    subscriptionTrialEnd: subscription?.trialEnd
+  };
 }
 
 function workspaceStateReducer(
@@ -169,21 +164,10 @@ function reduceWorkspace(
     ...workspaceData,
     status: WorkspaceStateStatus.SUCCESS,
     createdAt: workspaceData.createdAt.toDate(),
-    updatedAt: workspaceData.createdAt.toDate(),
-    isActive:
-      getIsInActiveMode(workspaceData.subscriptionStatus) ||
-      getIsInTrialMode(workspaceData.subscriptionStatus)
+    updatedAt: workspaceData.createdAt.toDate()
   };
 
   return nextState;
-}
-
-function getIsInActiveMode(subscriptionStatus: Workspace["subscriptionStatus"]) {
-  return subscriptionStatus === "active";
-}
-
-function getIsInTrialMode(subscriptionStatus: Workspace["subscriptionStatus"]) {
-  return subscriptionStatus === "trialing";
 }
 
 function reduceWorkspaceUser(

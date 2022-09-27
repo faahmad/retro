@@ -25,6 +25,7 @@ import { InformationCircleIcon } from "@heroicons/react/outline";
 import { ErrorBoundary } from "react-error-boundary";
 import { Button } from "../components/Button";
 import { LoadingText } from "../components/LoadingText";
+import { BannerTrialEnded } from "../components/BannerTrialEnded";
 
 export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
   useAnalyticsPage(AnalyticsPage.RETRO_BOARD);
@@ -112,6 +113,12 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
   }
 
   const isFacilitator = getIsFacilitator(data!, currentUserId);
+  const isSubscriptionLoaded = workspaceState.subscriptionStatus !== undefined;
+  const isSubscriptionTrialing = workspaceState.subscriptionStatus === "trialing";
+  const isSubscriptionActive = workspaceState.subscriptionStatus === "active";
+  const isAccountActive = isSubscriptionTrialing || isSubscriptionActive;
+
+  const isWorkspaceAdmin = workspaceState?.users?.[currentUserId]?.userRole === "owner";
 
   if (status === RetroStateStatus.SUCCESS && data !== null) {
     return (
@@ -132,6 +139,14 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
             workspaceUser={workspaceState.users[currentUserId]}
             workspaceId={workspaceState.id}
           />
+          <div className="px-8">
+            {isSubscriptionLoaded && !isAccountActive && (
+              <BannerTrialEnded
+                workspaceId={workspaceState.id}
+                isWorkspaceAdmin={isWorkspaceAdmin}
+              />
+            )}
+          </div>
           <div className="px-8 mt-4 flex items-center max-w-l">
             <InformationCircleIcon className="h-4 w-4 text-gray mr-2" />
             <p className="text-gray text-xs">{getStageExplainerText(data?.stage)}</p>
@@ -143,6 +158,7 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
 
             {(data?.stage === "Reflect" || data?.stage === "Vote") && (
               <RetroBoard
+                isAccountActive={isAccountActive}
                 retroState={state}
                 users={workspaceState.users}
                 retroItems={retroItems.data}
