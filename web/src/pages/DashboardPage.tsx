@@ -45,10 +45,6 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
   const isWorkspaceAdmin =
     workspaceState?.users[currentUserId]?.userRole === "owner" || isWorkspaceOwner;
 
-  console.log({ subscriptionStatus: workspaceState.subscriptionStatus });
-
-  console.log({ isAccountActive });
-
   return (
     <React.Fragment>
       <PageContainer>
@@ -162,8 +158,6 @@ const RetroBoardsOverview: React.FC<{
     }
     return;
   };
-
-  console.log({ isActive });
 
   return (
     <React.Fragment>
