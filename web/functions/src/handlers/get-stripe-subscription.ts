@@ -1,5 +1,9 @@
 import * as functions from "firebase-functions";
-import { getUserIdFromIdToken, getWorkspace } from "../services/firebase-admin";
+import {
+  getUserIdFromIdToken,
+  getWorkspace,
+  getWorkspaceUser
+} from "../services/firebase-admin";
 import { getStripeSubscription as getSubscription } from "../services/stripe";
 import { cors } from "../lib/cors";
 import { logger } from "../lib/logger";
@@ -25,12 +29,13 @@ export const getStripeSubscription = functions.https.onRequest((request, respons
 
       const userId = await getUserIdFromIdToken(idToken);
       const workspace = await getWorkspace(workspaceId);
+      const workspaceUser = await getWorkspaceUser(workspaceId, userId);
 
       if (!workspace) {
         throw new Error("Invalid workspace.");
       }
 
-      if (userId !== workspace.ownerId) {
+      if (!workspaceUser) {
         throw new Error("Unauthorized.");
       }
 

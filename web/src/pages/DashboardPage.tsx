@@ -21,20 +21,26 @@ import { User } from "../types/user";
 import { DeleteRetroModal } from "../components/DeleteRetroModal";
 import firebase from "../lib/firebase";
 import { FirestoreCollections } from "../constants/firestore-collections";
+import { useParams } from "react-router-dom";
+import * as Sentry from "@sentry/react";
 
 const db = firebase.firestore();
 const retroCollection = db.collection(FirestoreCollections.RETRO);
 
 export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
+  const { workspaceId } = useParams<{ workspaceId: string }>();
   useAnalyticsPage(AnalyticsPage.DASHBOARD);
   const workspaceState = useGetWorkspace();
-  useUpdateLastActive(workspaceState.id);
+  useUpdateLastActive(workspaceId);
 
   const currentUser = useCurrentUser();
   const currentUserId = currentUser?.auth?.uid || "";
   const isWorkspaceOwner = getIsWorkspaceOwner(workspaceState, currentUserId);
-  const isTrialing = workspaceState.subscriptionStatus === "trialing";
-  const isInActiveMode = workspaceState.subscriptionStatus === "active";
+
+  const isSubscriptionLoaded = workspaceState.subscriptionStatus !== undefined;
+  const isSubscriptionTrialing = workspaceState.subscriptionStatus === "trialing";
+  const isSubscriptionActive = workspaceState.subscriptionStatus === "active";
+  const isAccountActive = isSubscriptionTrialing || isSubscriptionActive;
 
   const isWorkspaceAdmin =
     workspaceState?.users[currentUserId]?.userRole === "owner" || isWorkspaceOwner;
@@ -45,23 +51,27 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
         <Navbar isLoggedIn={true} />
         <p className="text-blue mb-2 underline">{workspaceState.name}</p>
         <h1 className="text-blue font-black text-3xl">Dashboard</h1>
-        {isWorkspaceOwner && isTrialing ? (
+        {isWorkspaceOwner && isAccountActive && (
           <UpgradeToProBanner
-            workspaceId={workspaceState.id}
+            workspaceId={workspaceId}
             trialEnd={workspaceState.subscriptionTrialEnd}
           />
-        ) : isWorkspaceOwner && !isInActiveMode ? (
-          <BannerTrialEnded workspaceId={workspaceState.id} />
-        ) : null}
+        )}
+        {isSubscriptionLoaded && !isAccountActive && (
+          <BannerTrialEnded
+            workspaceId={workspaceId}
+            isWorkspaceAdmin={isWorkspaceAdmin}
+          />
+        )}
         <RetroBoardsOverview
           isWorkspaceAdmin={isWorkspaceAdmin}
           currentUserId={currentUserId}
-          workspaceId={workspaceState.id}
+          workspaceId={workspaceId}
           workspaceOwnerId={workspaceState.ownerId}
           workspaceUsersMap={workspaceState.users}
           retros={workspaceState.retros}
           history={history}
-          isActive={workspaceState.isActive}
+          isActive={isAccountActive}
         />
         <div className="flex flex-col h-full border border-red shadow shadow-red p-4 mt-4">
           <ActionItemsList
@@ -118,7 +128,7 @@ const RetroBoardsOverview: React.FC<{
       await retroCollection.doc(retroToDelete.id).delete();
       handleCloseDeletionModal();
     } catch (error) {
-      console.log({ error });
+      Sentry.captureException(error);
     }
   };
 
@@ -165,16 +175,18 @@ const RetroBoardsOverview: React.FC<{
               {!retros.length ? "" : "Your recent retros"}
             </p>
           </div>
-          <div className="flex items-center">
-            <p className="text-blue font-black hidden lg:block">Create Retro</p>
-            <button
-              disabled={!isActive}
-              onClick={handleCreateRetro}
-              className="h-10 w-10 bg-blue text-white ml-3 border border-red shadow shadow-red text-2xl hover:bg-pink-1/2 active:transform-1 focus:outline-none"
-            >
-              +
-            </button>
-          </div>
+          {isActive && (
+            <div className="flex items-center">
+              <p className="text-blue font-black hidden lg:block">Create Retro</p>
+              <button
+                disabled={!isActive}
+                onClick={handleCreateRetro}
+                className="h-10 w-10 bg-blue text-white ml-3 border border-red shadow shadow-red text-2xl hover:bg-pink-1/2 active:transform-1 focus:outline-none"
+              >
+                +
+              </button>
+            </div>
+          )}
         </div>
         {retros.length !== 0 ? (
           <React.Fragment>

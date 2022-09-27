@@ -43,6 +43,7 @@ interface RetroBoardProps {
     retroItemId: RetroItem["id"],
     columnType: RetroItem["type"]
   ) => Promise<void>;
+  isAccountActive: boolean;
 }
 
 export function RetroBoard({
@@ -54,7 +55,8 @@ export function RetroBoard({
   onLikeItem,
   onUnlikeItem,
   onDragDrop,
-  onDeleteItem
+  onDeleteItem,
+  isAccountActive
 }: RetroBoardProps) {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [
@@ -231,6 +233,7 @@ export function RetroBoard({
                 onClickEdit={handleOnClickEdit}
                 onClickLike={onLikeItem}
                 onClickUnlike={onUnlikeItem}
+                isAccountActive={isAccountActive}
               />
             );
           })}
@@ -251,6 +254,7 @@ interface RetroListProps {
   onClickLike: (input: any) => void;
   onClickUnlike: (input: any) => void;
   onClickEdit: (retroItem: RetroItem) => void;
+  isAccountActive: boolean;
 }
 
 export const RetroList: React.FC<RetroListProps> = ({
@@ -263,14 +267,15 @@ export const RetroList: React.FC<RetroListProps> = ({
   onClickLike,
   onClickUnlike,
   onClickEdit,
-  stage = "Reflect"
+  stage = "Reflect",
+  isAccountActive
 }) => {
   return (
     <div className="flex flex-col border border-red shadow shadow-red">
       <div className="bg-white flex px-4 py-2 justify-between items-center mb-2 border border-red">
         <p className="text-blue font-bold text-sm">{title}</p>
         {/* Only display the add button during the Brainstorm stage */}
-        {stage === "Reflect" ? (
+        {stage === "Reflect" && isAccountActive ? (
           <AddButton className="self-end" onClick={onClickAdd} />
         ) : null}
       </div>

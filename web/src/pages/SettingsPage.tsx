@@ -10,8 +10,6 @@ import { UpgradeToProBanner } from "../components/UpgradeToProBanner";
 import { useGetWorkspace } from "../hooks/use-get-workspace";
 import { useCurrentUser } from "../hooks/use-current-user";
 import { WorkspaceStateStatus } from "../hooks/use-get-workspace";
-import { axios } from "../lib/axios";
-import { getBaseURL } from "../services/stripe-service";
 import { useAnalyticsPage, AnalyticsPage } from "../hooks/use-analytics-page";
 import { Navbar } from "../components/Navbar";
 import { WorkspaceUsersTable } from "../components/WorkspaceUsersTable";
@@ -21,6 +19,7 @@ import { BannerTrialEnded } from "../components/BannerTrialEnded";
 import { Workspace } from "../types/workspace";
 import { Button } from "../components/Button";
 import { updateWorkspace } from "../services/update-workspace";
+import { useGetWorkspaceSubscription } from "../hooks/use-get-workspace-subscription";
 
 export const SettingsPage = () => {
   useAnalyticsPage(AnalyticsPage.SETTINGS);
@@ -80,7 +79,10 @@ export const SettingsPage = () => {
         <div className="mt-8 p-4 border border-blue border-dashed">
           <h5 className="text-blue text-xl underline">Workspace Admin Controls</h5>
           <GeneralSettings workspaceId={workspaceState.id} name={workspaceState.name} />
-          <BillingSettings workspaceId={workspaceState.id} />
+          <BillingSettings
+            workspaceId={workspaceState.id}
+            isWorkspaceAdmin={hasBillingAccess}
+          />
           <div className="my-4" />
           <WorkspaceUsersTable
             workspaceId={workspaceState.id}
@@ -157,33 +159,25 @@ function GeneralSettings({
 
 type BillingSettingsProps = {
   workspaceId: string;
+  isWorkspaceAdmin: boolean;
 };
-function BillingSettings({ workspaceId }: BillingSettingsProps) {
+function BillingSettings({ workspaceId, isWorkspaceAdmin }: BillingSettingsProps) {
   const { openBillingPortalFn, isOpeningPortal } = useOpenBillingPortal(workspaceId);
-  const [subscription, setSubscription] = React.useState<any>(null);
-  const isTrialing = subscription?.status === "trialing";
-  const isSubscriptionActive = subscription?.status === "active";
-
-  React.useEffect(() => {
-    axios
-      .post(getBaseURL() + "/getStripeSubscription", {
-        workspaceId
-      })
-      .then((response) => setSubscription(response.data));
-
-    return;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const workspaceState = useGetWorkspace();
+  const { subscription } = useGetWorkspaceSubscription(workspaceId);
 
   if (!subscription) {
     return null;
   }
 
+  const isTrialing = subscription.status === "trialing";
+  const isSubscriptionActive = subscription.status === "active";
+
   return (
     <div className="text-red border border-red shadow p-8 flex flex-col mt-2 mb-4">
       <div className="text-blue ml-2">
         <p className="text-xl font-black py-1">Billing</p>
-        {subscription && (
+        {workspaceState?.subscriptionId && (
           <div className="flex-grow flex flex-row justify-between">
             {isSubscriptionActive && (
               <button
@@ -208,7 +202,10 @@ function BillingSettings({ workspaceId }: BillingSettingsProps) {
             trialEnd={subscription.trialEnd}
           />
         ) : !isSubscriptionActive ? (
-          <BannerTrialEnded workspaceId={workspaceId} />
+          <BannerTrialEnded
+            workspaceId={workspaceId}
+            isWorkspaceAdmin={isWorkspaceAdmin}
+          />
         ) : null}
       </div>
     </div>

@@ -5,7 +5,6 @@ import { Workspace } from "../types/workspace";
 import { increment } from "../utils/firestore-utils";
 
 const db = firebase.firestore();
-const workspaceInviteCollection = db.collection(FirestoreCollections.WORKSPACE_INVITE);
 const workspaceUserCollection = db.collection(FirestoreCollections.WORKSPACE_USER);
 const userCollection = db.collection(FirestoreCollections.USER);
 const workspaceCollection = db.collection(FirestoreCollections.WORKSPACE);
