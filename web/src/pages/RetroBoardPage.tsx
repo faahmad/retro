@@ -26,6 +26,9 @@ import { ErrorBoundary } from "react-error-boundary";
 import { Button } from "../components/Button";
 import { LoadingText } from "../components/LoadingText";
 import { BannerTrialEnded } from "../components/BannerTrialEnded";
+import ReactModal from "react-modal";
+import addTeamMemberImage from "../assets/images/add-team-member-image.svg";
+import { LinkIcon } from "@heroicons/react/outline";
 
 export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
   useAnalyticsPage(AnalyticsPage.RETRO_BOARD);
@@ -124,6 +127,7 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
     return (
       <ErrorBoundary FallbackComponent={RetroErrorFallback}>
         <React.Fragment>
+          <AddYourTeamModal />
           <RetroBoardSidePanel
             isOwner={isFacilitator}
             isOpen={isSidePanelOpen}
@@ -200,5 +204,67 @@ function RetroErrorFallback() {
         </Button>
       </div>
     </PageContainer>
+  );
+}
+
+function AddYourTeamModal() {
+  const [isOpen, setIsOpen] = React.useState(true);
+  const handleClose = () => setIsOpen(false);
+
+  const [isCopied, setIsCopied] = React.useState(false);
+  async function handleCopyLink() {
+    await navigator.clipboard.writeText(window.location.href);
+    setIsCopied(true);
+    setTimeout(() => {
+      setIsCopied(false);
+    }, 2000);
+  }
+
+  return (
+    <ReactModal
+      ariaHideApp={false}
+      isOpen={isOpen}
+      onRequestClose={handleClose}
+      style={{
+        content: { maxWidth: "600px", maxHeight: "450px", padding: "20px" },
+        overlay: { background: "rgba(17, 38, 156, 0.6)" }
+      }}
+      className="bg-white shadow-red border m-auto absolute inset-0 border-red focus:outline-none z-50"
+      // IMPORTANT: closeTimeoutMS has to be the same as what is set in the tailwind.css file.
+      closeTimeoutMS={200}
+    >
+      <div className="flex items-center justify-center">
+        <img src={addTeamMemberImage} alt="Add your team member" />
+      </div>
+
+      <div className="my-5">
+        <p className="text-blue text-lg">
+          Share this link with your team so they can join your retro. They don't need to
+          create a login.
+        </p>
+      </div>
+
+      <div className="flex justify-end">
+        <button
+          style={{ width: "120px", height: "40px" }}
+          type="button"
+          className="mr-4 inline-flex text-center justify-center bg-white p-1 border border-blue text-blue hover:bg-pink hover:text-white px-2 py-1 text-sm focus:outline-none"
+          onClick={handleClose}
+        >
+          <span className="text-lg">Close</span>
+        </button>
+        <div className="flex flex-col">
+          <button
+            style={{ width: "160px", height: "40px" }}
+            type="button"
+            className="inline-flex justify-center items-center bg-blue p-1 border border-white text-white hover:bg-pink hover:text-white px-2 py-1 text-sm focus:outline-none"
+            onClick={handleCopyLink}
+          >
+            <LinkIcon className="h-4 w-4" aria-hidden="true" />
+            <span className="ml-2 text-lg">{isCopied ? "Copied!" : "Copy Link"}</span>
+          </button>
+        </div>
+      </div>
+    </ReactModal>
   );
 }
