@@ -287,21 +287,23 @@ export const RetroList: React.FC<RetroListProps> = ({
               className="m-0 p-0 overflow-auto h-full"
               {...provided.droppableProps}
             >
-              {items.map((item: RetroItem, index) => {
-                return (
-                  <RetroListItem
-                    key={item.id}
-                    index={index}
-                    author={users[item.createdByUserId]}
-                    isIncognito={isIncognito}
-                    onClickLike={onClickLike}
-                    onClickUnlike={onClickUnlike}
-                    onClickEdit={() => onClickEdit(item)}
-                    stage={stage}
-                    {...item}
-                  />
-                );
-              })}
+              {items
+                .filter((item) => item !== undefined)
+                .map((item: RetroItem, index) => {
+                  return (
+                    <RetroListItem
+                      key={item.id}
+                      index={index}
+                      author={users[item.createdByUserId]}
+                      isIncognito={isIncognito}
+                      onClickLike={onClickLike}
+                      onClickUnlike={onClickUnlike}
+                      onClickEdit={() => onClickEdit(item)}
+                      stage={stage}
+                      {...item}
+                    />
+                  );
+                })}
               {provided.placeholder}
             </ul>
           );
