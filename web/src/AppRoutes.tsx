@@ -26,6 +26,7 @@ import { LoginPage } from "./pages/LoginPage";
 import { RetroListPage } from "./pages/RetroListPage";
 import { SignupPage } from "./pages/SignupPage";
 import { AnonAuthLoginPage } from "./pages/AnonAuthLoginPage";
+import * as Sentry from "@sentry/react";
 
 export const AppRoutes: React.FC = () => {
   const currentUser = useCurrentUser();
@@ -96,7 +97,14 @@ function AuthenticatedAppRoutes() {
   );
 }
 
-const ErrorFallback: React.FC<FallbackProps> = ({ resetErrorBoundary }) => {
+const ErrorFallback: React.FC<FallbackProps> = ({ resetErrorBoundary, error }) => {
+  React.useEffect(() => {
+    if (error) {
+      Sentry.captureException(error);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleOnClick = () => {
     resetErrorBoundary();
     window.location.reload();
