@@ -37,6 +37,7 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
   const currentUserId = currentUser?.auth?.uid || "";
   const isWorkspaceOwner = getIsWorkspaceOwner(workspaceState, currentUserId);
 
+  const isSubscriptionLoading = workspaceState.subscriptionStatus === undefined;
   const isSubscriptionLoaded = workspaceState.subscriptionStatus !== undefined;
   const isSubscriptionTrialing = workspaceState.subscriptionStatus === "trialing";
   const isSubscriptionActive = workspaceState.subscriptionStatus === "active";
@@ -72,6 +73,7 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
           retros={workspaceState.retros}
           history={history}
           isActive={isAccountActive}
+          isSubscriptionLoading={isSubscriptionLoading}
         />
         <div className="flex flex-col h-full border border-red shadow shadow-red p-4 mt-4">
           <ActionItemsList
@@ -94,6 +96,7 @@ const RetroBoardsOverview: React.FC<{
   isWorkspaceAdmin: boolean;
   history: RouteComponentProps["history"];
   isActive: boolean;
+  isSubscriptionLoading: boolean;
   retros: Retro[];
   workspaceUsersMap: WorkspaceUsersMap;
 }> = ({
@@ -104,7 +107,8 @@ const RetroBoardsOverview: React.FC<{
   workspaceId,
   workspaceOwnerId,
   isWorkspaceAdmin,
-  workspaceUsersMap
+  workspaceUsersMap,
+  isSubscriptionLoading
 }) => {
   const createRetro = useCreateRetro();
   const trackEvent = useAnalyticsEvent();
@@ -176,6 +180,11 @@ const RetroBoardsOverview: React.FC<{
               {!retros.length ? "" : "Your recent retros"}
             </p>
           </div>
+          {isSubscriptionLoading && (
+            <div className="flex items-center">
+              <p className="text-blue font-black">Loading...</p>
+            </div>
+          )}
           {isActive && (
             <div className="flex items-center">
               <p className="text-blue font-black hidden lg:block">Create Retro</p>
