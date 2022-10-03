@@ -100,6 +100,7 @@ export function RetroBoardPresentationMode() {
           isOwner={isOwner}
           workspaceId={retro.data.workspaceId}
           retroId={retro.data.id}
+          label="Actions we agree to take on as a team. The facilitator can add actions."
         />
       </div>
     </div>
@@ -114,18 +115,20 @@ function RetroBoardPresentationCard({ retroItem }: { retroItem: RetroItem }) {
   };
 
   return (
-    <div className="bg-white overflow-hidden shadow shadow-blue border border-blue divide-y divide-gray-200">
-      <div className="px-4 py-5 sm:p-6">
+    <div className="bg-white overflow-hidden shadow shadow-blue border border-blue">
+      <div className="py-2 px-2">
+        <div className="flex">
+          <div className="text-xs bg-white text-gray p-1">{typeMap[retroItem.type]}</div>
+        </div>
+      </div>
+      <div className="px-4 py-5 sm:p-6 border-t border-blue">
         <p className="text-blue text-lg">{retroItem.content}</p>
       </div>
       <div className="px-4 py-4 sm:px-6">
-        <div className="flex justify-between">
+        <div className="flex">
           <div className="flex items-center">
             <ThumbUpIcon className="text-gray h-6 w-6 mr-1" />
             <span className="text-gray">{retroItem.likeCount}</span>
-          </div>
-          <div className="text-sm bg-white text-blue border border-blue shadow shadow-blue p-1">
-            {typeMap[retroItem.type]}
           </div>
         </div>
       </div>
@@ -137,12 +140,14 @@ export function ActionItemsList({
   retroId,
   workspaceId,
   isOwner,
-  hideForm
+  hideForm,
+  label
 }: {
   retroId?: string;
   workspaceId: string;
   isOwner: boolean;
   hideForm?: boolean;
+  label: string;
 }) {
   const [showCompleted, setShowCompleted] = React.useState(false);
   const { actionItems, createActionItem, toggleActionItemStatus } = useActionItemHelpers(
@@ -166,7 +171,7 @@ export function ActionItemsList({
       <div className="border border-blue p-4">
         <div className="mb-4">
           <h3 className="text-xl text-blue">Team actions</h3>
-          <p className="text-gray">Actions we agree to take on as a team.</p>
+          <p className="text-gray text-xs">{label}</p>
         </div>
 
         {isOwner && !hideForm && (
