@@ -78,6 +78,7 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
             hideForm
             workspaceId={workspaceState.id}
             isOwner={isWorkspaceOwner}
+            label="Actions we agreed to take from all our previous retros."
           />
         </div>
       </PageContainer>
