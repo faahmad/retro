@@ -9,6 +9,8 @@ interface RetroUserTagProps {
 }
 
 export function RetroUserTag({ workspaceUser, retroUserType }: RetroUserTagProps) {
+  const displayName = workspaceUser?.userDisplayName || workspaceUser?.userEmail;
+
   return (
     <div
       key={workspaceUser?.userId}
@@ -17,13 +19,14 @@ export function RetroUserTag({ workspaceUser, retroUserType }: RetroUserTagProps
       <div className="flex-shrink-0">
         <UserAvatar
           photoURL={workspaceUser?.userPhotoURL as string}
-          displayName={workspaceUser?.userDisplayName as string}
+          // @ts-ignore
+          displayName={displayName}
         />
       </div>
       <div className="min-w-0 flex-1">
         <div className="focus:outline-none">
           <span className="absolute inset-0" aria-hidden="true" />
-          <p className="text-sm font-medium">{workspaceUser?.userDisplayName}</p>
+          <p className="text-sm font-medium">{displayName}</p>
           <p className="truncate text-xs text-gray">{retroUserType}</p>
         </div>
       </div>
