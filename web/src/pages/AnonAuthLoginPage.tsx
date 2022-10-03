@@ -126,6 +126,10 @@ function AnonLoginForm({
   return (
     <div className="flex flex-col items-center">
       <h1 className="text-blue text-3xl mb-6 text-center">{title}</h1>
+      <p className="text-blue max-w-xl mb-6">
+        You've been invited to a retro! All you gotta do is set a username below, and
+        you'll join immediately. No passwords needed!
+      </p>
       <form className="flex flex-col mb-12" onSubmit={onSubmit}>
         <div className="flex flex-col mb-4">
           <label className="text-blue text-sm" htmlFor="userName">
