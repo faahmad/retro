@@ -59,6 +59,9 @@ function CurrentUserBadge() {
     return null;
   }
 
+  const displayName = currentUserData.displayName || currentUserData.email;
+  const currentWorkspaceUser = workspaceUsers?.[currentUserData.id];
+
   return (
     <div
       key={currentUserData.id}
@@ -67,18 +70,19 @@ function CurrentUserBadge() {
       <div className="flex-shrink-0">
         <UserAvatar
           photoURL={currentUserData.photoUrl as string | undefined}
-          displayName={currentUserData.displayName}
+          // @ts-ignore
+          displayName={displayName}
         />
       </div>
       <div className="min-w-0 flex-1">
         <div className="focus:outline-none">
           <span className="absolute inset-0" aria-hidden="true" />
-          <p className="text-sm font-medium">{currentUser.data?.displayName}</p>
-          <p className="truncate text-xs text-gray">
-            {workspace?.users[currentUserData.id].userRole === "owner"
-              ? "admin"
-              : "member"}
-          </p>
+          <p className="text-sm font-medium">{displayName}</p>
+          {currentWorkspaceUser && (
+            <p className="truncate text-xs text-gray">
+              {currentWorkspaceUser?.userRole === "owner" ? "admin" : "member"}
+            </p>
+          )}
         </div>
       </div>
     </div>
