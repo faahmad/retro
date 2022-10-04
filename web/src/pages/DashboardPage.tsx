@@ -78,8 +78,10 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
         <div className="flex flex-col h-full border border-red shadow shadow-red p-4 mt-4">
           <ActionItemsList
             hideForm
+            showCopyButton
             workspaceId={workspaceState.id}
             isOwner={isWorkspaceOwner}
+            title={`${workspaceState.name} actions`}
             label="Actions we agreed to take from all our previous retros."
           />
         </div>

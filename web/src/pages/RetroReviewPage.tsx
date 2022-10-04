@@ -14,6 +14,7 @@ import { RetroItem } from "../types/retro-item";
 import { WorkspaceUsersMap } from "../types/workspace-user";
 import { LoadingPage } from "./LoadingPage";
 import { RetroUserTag } from "../components/RetroUserTag";
+import { ButtonCopyActionItems } from "../components/ButtonCopyActionItems";
 
 export function RetroReviewPage() {
   const params = useParams<{ retroId: string }>();
@@ -38,7 +39,11 @@ export function RetroReviewPage() {
         userIds={retro.data.userIds}
         workspaceUsersMap={workspaceState.users}
       />
-      <ActionItems retroId={params.retroId} actionItems={actionItems} />
+      <ActionItems
+        retroId={params.retroId}
+        actionItems={actionItems}
+        actionItemsListTitle={`${retro.data.name} actions`}
+      />
     </PageContainer>
   );
 }
@@ -119,7 +124,9 @@ export function Stats(props: {
 
   return (
     <div>
-      <h3 className="text-lg text-blue font-medium leading-6 text-gray-900">Summary</h3>
+      <h3 className="text-lg text-blue font-medium leading-6 text-gray-900">
+        {props.retro?.name} Summary
+      </h3>
 
       <dl className="mt-2 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {stats.map((item) => (
@@ -175,10 +182,12 @@ function Participants({
 
 function ActionItems({
   actionItems,
-  retroId
+  retroId,
+  actionItemsListTitle
 }: {
   actionItems: ActionItemI[];
   retroId: Retro["id"];
+  actionItemsListTitle: string;
 }) {
   const openActionItems: ActionItemI[] = actionItems.filter(
     (actionItem: ActionItemI) => actionItem.status === "open"
@@ -186,9 +195,20 @@ function ActionItems({
 
   return (
     <div className="mt-8 mb-16 bg-white text-blue">
-      <h3 className="text-lg text-blue font-medium leading-6 text-gray-900">
-        Action items
-      </h3>
+      <div className="flex justify-between">
+        <h3 className="text-lg text-blue font-medium leading-6 text-gray-900">
+          Action items
+        </h3>
+        <div>
+          {openActionItems.length ? (
+            <ButtonCopyActionItems
+              retroId={retroId}
+              title={actionItemsListTitle}
+              actionItems={openActionItems}
+            />
+          ) : null}
+        </div>
+      </div>
 
       <ul className="mt-2 divide-y divide-gray-200">
         {openActionItems.map((actionItem) => (

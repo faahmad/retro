@@ -41,6 +41,7 @@ body {
 @variants active {
   .transform-1 {
     transform: translateX(0.125rem) translateY(0.125rem);
+    box-shadow: none;
   }
 }
 

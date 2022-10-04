@@ -9629,10 +9629,12 @@ body {
 
 .transform-1 {
   transform: translateX(0.125rem) translateY(0.125rem);
+  box-shadow: none;
 }
 
 .active\:transform-1:active {
   transform: translateX(0.125rem) translateY(0.125rem);
+  box-shadow: none;
 }
 
 .bg-pink-1\/2 {
