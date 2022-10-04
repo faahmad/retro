@@ -13,7 +13,7 @@ const actionItemCollection = firebase
   .collection(FirestoreCollections.ACTION_ITEM);
 
 export function useActionItemHelpers(workspaceId: Workspace["id"]) {
-  const [actionItems, setActionItems] = React.useState([]);
+  const [actionItems, setActionItems] = React.useState<ActionItemI[]>([]);
   React.useEffect(() => {
     return actionItemCollection
       .where("workspaceId", "==", workspaceId)

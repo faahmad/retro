@@ -14,6 +14,7 @@ import { RetroStateStatus, useRetroState } from "../hooks/use-retro-state";
 import { RetroItem } from "../types/retro-item";
 import { ActionItemI } from "../types/action-item";
 import moment from "moment";
+import { ButtonCopyActionItems } from "./ButtonCopyActionItems";
 
 export function RetroBoardPresentationMode() {
   const params = useParams<{ retroId: string }>();
@@ -100,6 +101,7 @@ export function RetroBoardPresentationMode() {
           isOwner={isOwner}
           workspaceId={retro.data.workspaceId}
           retroId={retro.data.id}
+          title={`${retro.data.name} actions`}
           label="Actions we agree to take on as a team. The facilitator can add actions."
         />
       </div>
@@ -141,13 +143,17 @@ export function ActionItemsList({
   workspaceId,
   isOwner,
   hideForm,
-  label
+  label,
+  title,
+  showCopyButton = false
 }: {
   retroId?: string;
   workspaceId: string;
   isOwner: boolean;
   hideForm?: boolean;
+  title: string;
   label: string;
+  showCopyButton?: boolean;
 }) {
   const [showCompleted, setShowCompleted] = React.useState(false);
   const { actionItems, createActionItem, toggleActionItemStatus } = useActionItemHelpers(
@@ -166,12 +172,27 @@ export function ActionItemsList({
     return;
   }
 
+  const openActionItems = actionItems.filter(
+    (actionItem) => actionItem.status === "open"
+  );
+
   return (
     <>
       <div className="border border-blue p-4">
-        <div className="mb-4">
-          <h3 className="text-xl text-blue">Team actions</h3>
-          <p className="text-gray text-xs">{label}</p>
+        <div className="flex justify-between">
+          <div className="mb-4">
+            <h3 className="text-xl text-blue">{title}</h3>
+            <p className="text-gray text-xs">{label}</p>
+          </div>
+          <div>
+            {showCopyButton && openActionItems.length ? (
+              <ButtonCopyActionItems
+                retroId={retroId}
+                actionItems={openActionItems}
+                title={title}
+              />
+            ) : null}
+          </div>
         </div>
 
         {isOwner && !hideForm && (
@@ -189,9 +210,11 @@ export function ActionItemsList({
               />
               <button
                 type="submit"
-                className="border border-blue px-4 text-white bg-blue"
+                className="border border-blue px-4 text-white bg-blue inline-flex items-center"
               >
-                Submit
+                <span className="mr-2">Submit</span>
+                <span className="text-lg">⏎</span>
+                {/* <span>⌘</span> */}
               </button>
             </div>
           </form>
