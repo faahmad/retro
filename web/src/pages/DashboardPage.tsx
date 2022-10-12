@@ -54,6 +54,7 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
         <h1 className="text-blue font-black text-3xl">Dashboard</h1>
         {isWorkspaceOwner && isAccountActive && (
           <UpgradeToProBanner
+            status={workspaceState.subscriptionStatus}
             workspaceId={workspaceId}
             trialEnd={workspaceState.subscriptionTrialEnd}
           />

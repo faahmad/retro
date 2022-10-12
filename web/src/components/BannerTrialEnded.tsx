@@ -3,12 +3,12 @@ import { PawIcon } from "../images/PawIcon";
 import { Button } from "./Button";
 import { useOpenBillingPortal } from "../hooks/use-open-billing-portal";
 
-interface UpgradeToProBannerProps {
+interface BannerTrialEndedProps {
   workspaceId: string;
   isWorkspaceAdmin: boolean;
 }
 
-export function BannerTrialEnded(props: UpgradeToProBannerProps) {
+export function BannerTrialEnded(props: BannerTrialEndedProps) {
   return props.isWorkspaceAdmin ? (
     <BannerTrialEndedAdmin workspaceId={props.workspaceId} />
   ) : (

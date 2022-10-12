@@ -198,6 +198,7 @@ function BillingSettings({ workspaceId, isWorkspaceAdmin }: BillingSettingsProps
           />
         ) : isTrialing ? (
           <UpgradeToProBanner
+            status={workspaceState.subscriptionStatus}
             workspaceId={workspaceId}
             trialEnd={subscription.trialEnd}
           />

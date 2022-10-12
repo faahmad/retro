@@ -1,23 +1,29 @@
 import * as React from "react";
 import moment from "moment";
 import { PawIcon } from "../images/PawIcon";
-import { Button } from "./Button";
-import { useOpenBillingPortal } from "../hooks/use-open-billing-portal";
+import { useCreateCheckoutSession } from "../hooks/use-create-checkout-session";
 
 interface UpgradeToProBannerProps {
   trialEnd: number | null;
   workspaceId: string;
+  status: "trialing" | "canceled";
 }
 
 export const UpgradeToProBanner: React.FC<UpgradeToProBannerProps> = ({
   trialEnd,
-  workspaceId
+  workspaceId,
+  status
 }) => {
-  const { openBillingPortalFn, isOpeningPortal, error, isLoading } = useOpenBillingPortal(
-    workspaceId
+  const returnUrl = `http://localhost:3000/workspaces/${workspaceId}`;
+
+  const { createCheckoutSessionFn, error, isLoading } = useCreateCheckoutSession(
+    workspaceId,
+    returnUrl,
+    returnUrl,
+    status
   );
 
-  if (!trialEnd || isLoading || error) {
+  if (!trialEnd || error || isLoading) {
     return null;
   }
 
@@ -33,14 +39,10 @@ export const UpgradeToProBanner: React.FC<UpgradeToProBannerProps> = ({
           </p>
         </div>
       </div>
-      <Button
-        className="text-red"
-        onClick={openBillingPortalFn}
-        disabled={isOpeningPortal}
-        style={{ maxWidth: "8rem" }}
-      >
-        {isOpeningPortal ? "Loading" : "Upgrade"}
-      </Button>
+
+      <button type="submit" onClick={createCheckoutSessionFn}>
+        Upgrade
+      </button>
     </div>
   );
 };
