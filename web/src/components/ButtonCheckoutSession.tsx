@@ -10,7 +10,7 @@ export function ButtonCheckoutSession({
   workspaceId: string;
   subscriptionStatus: StripeSubscriptionStatus;
 }) {
-  const returnUrl = `http://localhost:3000/workspaces/${workspaceId}`;
+  const returnUrl = window.location.href;
 
   const statusToModeMap: {
     [key in StripeSubscriptionStatus]: "setup" | "subscription";
