@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useRouteMatch } from "react-router-dom";
 import { createStripeBillingPortalSession } from "../services/stripe-service";
+import { useAnalyticsEvent, AnalyticsEvent } from "./use-analytics-event";
 
 /**
  * React hook that creates a Stripe Billing Portal session.
@@ -12,6 +13,7 @@ export function useOpenBillingPortal(workspaceId: string, returnUrl?: string) {
   const [data, setData] = React.useState<any>(null);
   const [error, setError] = React.useState(null);
   const [isLoading, setIsLoading] = React.useState(true);
+  const track = useAnalyticsEvent();
 
   // As soon as this hook mounts, we create the billing portal session
   // so the user doesn't have to wait for it to load.
@@ -38,6 +40,7 @@ export function useOpenBillingPortal(workspaceId: string, returnUrl?: string) {
     if (!data || !data.url) {
       return;
     }
+    track(AnalyticsEvent.BILLING_PORTAL_CLICKED, { workspaceId });
     window.location.replace(data.url);
     return;
   };

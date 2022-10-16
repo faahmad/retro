@@ -2,6 +2,7 @@ import { StripeSubscriptionStatus } from "../types/stripe-subscription-status";
 import { createStripeCheckoutSession } from "../services/stripe-service";
 import * as React from "react";
 import { Button } from "./Button";
+import { useAnalyticsEvent, AnalyticsEvent } from "../hooks/use-analytics-event";
 
 export function ButtonCheckoutSession({
   workspaceId,
@@ -11,6 +12,7 @@ export function ButtonCheckoutSession({
   subscriptionStatus: StripeSubscriptionStatus;
 }) {
   const returnUrl = window.location.href;
+  const track = useAnalyticsEvent();
 
   const statusToModeMap: {
     [key in StripeSubscriptionStatus]: "setup" | "subscription";
@@ -34,6 +36,8 @@ export function ButtonCheckoutSession({
       // TODO: Throw an error.
       return;
     }
+
+    track(AnalyticsEvent.CHECKOUT_SESSION_CLICKED, { workspaceId, subscriptionStatus });
 
     window.location.replace(session.url);
   }
