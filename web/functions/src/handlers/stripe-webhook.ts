@@ -2,6 +2,7 @@ import * as functions from "firebase-functions";
 import Stripe from "stripe";
 import { updateWorkspace, getWorkspaceIdByCustomerId } from "../services/firebase-admin";
 import { responses } from "../utils/responses";
+import { logger } from "../lib/logger";
 
 export const stripeWebhook = functions.https.onRequest(async (request, response) => {
   try {
@@ -40,16 +41,12 @@ export const stripeWebhook = functions.https.onRequest(async (request, response)
         await attachWorkspacePaymentMethod(paymentMethod);
         break;
       }
-      case "payment_method.detached": {
-        const paymentMethod = data.object;
-        await removeWorkspacePaymentMethod(paymentMethod);
-        break;
-      }
     }
 
     response.status(200).json(responses.ok());
     return;
   } catch (error) {
+    logger.log({ error: error.message });
     response.status(500).json(responses.serverError(error));
     return;
   }
@@ -77,16 +74,5 @@ async function attachWorkspacePaymentMethod(paymentMethod: Stripe.PaymentMethod)
   }
   return updateWorkspace(workspaceId, {
     paymentMethodId: paymentMethod.id
-  });
-}
-
-async function removeWorkspacePaymentMethod(paymentMethod: Stripe.PaymentMethod) {
-  const customerId = paymentMethod.customer as string;
-  const workspaceId = await getWorkspaceIdByCustomerId(customerId);
-  if (!workspaceId) {
-    throw new Error(`Invalid customerId ${customerId}`);
-  }
-  return updateWorkspace(workspaceId, {
-    paymentMethodId: null
   });
 }
