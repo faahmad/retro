@@ -32,7 +32,8 @@ export enum AnalyticsEvent {
   RETRO_STAGE_CHANGED = "Retro Stage Changed",
   INVITE_LINK_COPIED = "Invite Link Copied",
   SKIPPED_ONBOARDING_INVITES = "Skipped Onboarding Invites",
-  ACTION_ITEM_CREATED = "Action Item Created"
+  ACTION_ITEM_CREATED = "Action Item Created",
+  ACTION_ITEMS_COPIED = "Action Items Copied"
 }
 
 export function useAnalyticsEvent() {
