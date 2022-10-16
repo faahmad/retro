@@ -15,13 +15,12 @@ export function createStripeBillingPortalSession(
 ) {
   return axios.post(getBaseURL() + "/createStripeBillingPortalSession", params);
 }
-interface CreateStripeCheckoutSessionUrl {
+interface CreateStripeCheckoutSessionParams {
   workspaceId: string;
-  successUrl: string;
-  cancelUrl: string;
-  status: "trialing" | "canceled";
+  returnUrl: string;
+  mode: "setup" | "subscription";
 }
-export function createStripeCheckoutSession(params: CreateStripeCheckoutSessionUrl) {
+export function createStripeCheckoutSession(params: CreateStripeCheckoutSessionParams) {
   return axios.post(getBaseURL() + "/createCheckoutSession", params);
 }
 

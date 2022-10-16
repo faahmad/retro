@@ -12,25 +12,18 @@ import { stripe } from "../lib/stripe";
 import { StripeSubscriptionPlans } from "../constants/stripe";
 
 interface CreateStripeCheckoutSessionParams {
-  customerId: Stripe.Customer["id"];
-  successUrl: Stripe.Checkout.Session["success_url"];
-  cancelUrl: Stripe.Checkout.Session["cancel_url"];
-  status: "trialing" | "canceled";
+  customerId: Stripe.Checkout.SessionCreateParams["customer"];
+  returnUrl: Stripe.Checkout.SessionCreateParams["success_url"];
+  mode: Stripe.Checkout.SessionCreateParams["mode"];
 }
 
 function createStripeCheckoutSession(params: CreateStripeCheckoutSessionParams) {
-  const statusMap = {
-    trialing: "setup",
-    canceled: "subscription"
-  };
-
-  let request: any = {
+  let request: Stripe.Checkout.SessionCreateParams = {
     customer: params.customerId,
     payment_method_types: ["card"],
-    // @ts-ignore
-    mode: statusMap[params.status],
-    success_url: `${params.successUrl}?success=true`,
-    cancel_url: `${params.cancelUrl}?canceled=true`
+    mode: params.mode,
+    success_url: `${params.returnUrl}?success=true`,
+    cancel_url: `${params.returnUrl}?canceled=true`
   };
 
   if (request.mode === "subscription") {
@@ -53,16 +46,14 @@ export const createCheckoutSession = functions.https.onRequest((req, res) => {
         throw new Error("Invalid Auth Header.");
       }
 
-      const { workspaceId, successUrl, cancelUrl, status } = req.body;
-      if (!workspaceId || !successUrl || !cancelUrl || !status) {
+      const { workspaceId, returnUrl, mode } = req.body;
+      if (!workspaceId || !returnUrl || !mode) {
         throw new Error("Invalid Request Body");
       }
 
       const userId = await getUserIdFromIdToken(idToken);
       const workspace = await getWorkspace(workspaceId);
       const workspaceUser = await getWorkspaceUser(workspaceId, userId);
-
-      logger.log("createCheckoutSession", workspaceUser);
 
       if (workspaceUser?.userRole !== "owner") {
         throw new Error("Unauthorized");
@@ -74,9 +65,8 @@ export const createCheckoutSession = functions.https.onRequest((req, res) => {
 
       const checkoutSession = await createStripeCheckoutSession({
         customerId: workspace.customerId,
-        successUrl,
-        cancelUrl,
-        status
+        mode,
+        returnUrl
       });
 
       return res.status(200).json(checkoutSession);

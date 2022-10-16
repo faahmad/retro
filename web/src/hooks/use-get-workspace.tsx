@@ -8,7 +8,6 @@ import { workspaceUsersListener } from "../services/workspace-users-listener";
 import { workspaceInvitesListener } from "../services/workspace-invite-listener";
 import { workspaceRetrosListener } from "../services/workspace-retros-listener";
 import { Retro } from "../types/retro";
-import { useGetWorkspaceSubscription } from "./use-get-workspace-subscription";
 import { useParams } from "react-router-dom";
 
 export enum WorkspaceStateStatus {
@@ -46,8 +45,9 @@ const initialState: WorkspaceStateValues = {
   allowedEmailDomains: [],
   createdAt: "",
   updatedAt: "",
+  // @ts-ignore
   subscriptionStatus: "",
-  subscriptionTrialEnd: null,
+  subscriptionTrialEnd: 0,
   retroItemsData: {
     goodCount: 0,
     badCount: 0,
@@ -60,10 +60,6 @@ const initialState: WorkspaceStateValues = {
 export function useGetWorkspace() {
   const [values, dispatch] = React.useReducer(workspaceStateReducer, initialState);
   const workspaceId = useParams<any>().workspaceId;
-  const { subscription }: any = useGetWorkspaceSubscription(
-    workspaceId,
-    values.subscriptionId
-  );
 
   const handleWorkspaceSnapshot = (workspaceData: Workspace) => {
     return dispatch({
@@ -121,10 +117,7 @@ export function useGetWorkspace() {
   }, [workspaceId]);
 
   return {
-    ...values,
-    // Using the values directly from Stripe instead of trying to pass through Firestore.
-    subscriptionStatus: subscription?.status,
-    subscriptionTrialEnd: subscription?.trialEnd
+    ...values
   };
 }
 

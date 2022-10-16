@@ -1,3 +1,4 @@
+import { StripeSubscriptionStatus } from "./stripe-subscription-status";
 import { TODO } from "./todo";
 
 export interface Workspace {
@@ -9,8 +10,8 @@ export interface Workspace {
   ownerEmail: string;
   createdAt: TODO;
   updatedAt: TODO;
-  subscriptionStatus: string;
-  subscriptionTrialEnd: number | null;
+  subscriptionStatus: StripeSubscriptionStatus;
+  subscriptionTrialEnd: number;
   retroItemsData: {
     goodCount: number;
     badCount: number;
@@ -20,4 +21,5 @@ export interface Workspace {
   userCount: number;
   customerId?: string;
   subscriptionId?: string;
+  paymentMethodId?: string | null;
 }
