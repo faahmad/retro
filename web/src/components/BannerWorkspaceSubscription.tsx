@@ -80,7 +80,7 @@ function Banner(props: BannerProps) {
 
   return (
     <div
-      className={`flex flex-wrap justify-between items-center my-2 p-4 border shadow ${variantStyles}`}
+      className={`flex flex-wrap justify-between items-center my-2 p-4 border ${variantStyles}`}
     >
       <div className="flex flex-wrap items-center">
         <div className="pl-2">
@@ -114,7 +114,7 @@ function TrialingUpgradeBanner({
     <Banner
       variant={BannerVariant.DEFAULT}
       label="Upgrade your workspace"
-      description="Your account is in trial mode. Upgrade your account to keep leveling up your team."
+      description="Your account is in trial mode. Add a payment method to keep leveling up your team."
     >
       <ButtonBillingPortalSession workspaceId={workspaceId} />
     </Banner>
@@ -138,7 +138,7 @@ function TrialingInfoBanner({
   return (
     <Banner
       variant={BannerVariant.DEFAULT}
-      label="Upgrade your workspace"
+      label="Trialing"
       description={`Your free trial ends ${trialEndFromNow}. Once it ends, you will be billed automatically.`}
     >
       <ButtonBillingPortalSession workspaceId={workspaceId} />

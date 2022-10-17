@@ -4,9 +4,11 @@ import { Button } from "./Button";
 import { useAnalyticsEvent, AnalyticsEvent } from "../hooks/use-analytics-event";
 
 export function ButtonBillingPortalSession({ workspaceId }: { workspaceId: string }) {
+  const [loading, setLoading] = React.useState(false);
   const track = useAnalyticsEvent();
 
   async function handleClick() {
+    setLoading(true);
     const response = await createStripeBillingPortalSession({
       workspaceId,
       returnUrl: window.location.href
@@ -30,7 +32,7 @@ export function ButtonBillingPortalSession({ workspaceId }: { workspaceId: strin
       style={{ maxWidth: "8rem" }}
       className="flex-2 bg-white text-blue border-blue shadow-blue"
     >
-      Update
+      {!loading ? "Update" : "Loading..."}
     </Button>
   );
 }

@@ -5,8 +5,10 @@ import { useAnalyticsEvent, AnalyticsEvent } from "../hooks/use-analytics-event"
 
 export function ButtonCheckoutSession({ workspaceId }: { workspaceId: string }) {
   const track = useAnalyticsEvent();
+  const [loading, setLoading] = React.useState(false);
 
   async function handleClick() {
+    setLoading(true);
     const response = await createStripeCheckoutSession({
       workspaceId,
       returnUrl: window.location.href,
@@ -34,7 +36,7 @@ export function ButtonCheckoutSession({ workspaceId }: { workspaceId: string }) 
       style={{ maxWidth: "8rem" }}
       className="flex-2 bg-blue text-white border-white shadow-blue"
     >
-      Upgrade
+      {!loading ? "Upgrade" : "Loading..."}
     </Button>
   );
 }
