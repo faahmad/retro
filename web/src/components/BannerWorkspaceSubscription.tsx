@@ -2,6 +2,8 @@ import * as React from "react";
 import * as moment from "moment";
 import { StripeSubscriptionStatus } from "../types/stripe-subscription-status";
 import { ButtonCheckoutSession } from "./ButtonCheckoutSession";
+import { ButtonBillingPortalSession } from "./ButtonBillingPortalSession";
+import { Workspace } from "../types/workspace";
 
 interface Props {
   workspaceId: string;
@@ -11,155 +13,187 @@ interface Props {
   paymentMethodId: string | null | undefined;
 }
 
-export function BannerWorkspaceSubscription(props: Props) {
-  const hasPaymentMethod = Boolean(props.paymentMethodId);
+export function BannerWorkspaceSubscription({
+  workspaceId,
+  isWorkspaceAdmin,
+  subscriptionTrialEnd,
+  subscriptionStatus,
+  paymentMethodId
+}: Props) {
+  const hasPaymentMethod = Boolean(paymentMethodId);
 
-  // When trialing, use checkoutSession with SETUP
-  if (props.subscriptionStatus === "trialing" && !hasPaymentMethod) {
-    if (!props.isWorkspaceAdmin) {
-      return <AccountInactiveNonAdminBannerNoCTA />;
-    }
+  // The team has not attached a payment method, so we want them to add one.
+  if (subscriptionStatus === "trialing" && !hasPaymentMethod) {
     return (
-      <TrialingBannerCheckoutCTA
-        workspaceId={props.workspaceId}
-        status={props.subscriptionStatus}
+      <TrialingUpgradeBanner
+        workspaceId={workspaceId}
+        isWorkspaceAdmin={isWorkspaceAdmin}
       />
     );
   }
 
-  if (props.subscriptionStatus === "trialing" && hasPaymentMethod) {
-    if (!props.isWorkspaceAdmin) {
-      return null;
-    }
-    return <TrialingBannerNoCTA trialEnd={props.subscriptionTrialEnd} />;
+  // The team has attached a payment method, so there are no actions to take.
+  if (subscriptionStatus === "trialing" && hasPaymentMethod) {
+    return (
+      <TrialingInfoBanner
+        workspaceId={workspaceId}
+        isWorkspaceAdmin={isWorkspaceAdmin}
+        trialEnd={subscriptionTrialEnd}
+      />
+    );
   }
 
-  // When past_due, use checkoutSession with SETUP
-  if (props.subscriptionStatus === "past_due" && !hasPaymentMethod) {
-    if (!props.isWorkspaceAdmin) {
-      return <AccountInactiveNonAdminBannerNoCTA />;
-    }
-
+  // The team's subscription bill is past due, so we want them to update their payment method.
+  if (subscriptionStatus === "past_due") {
     return (
-      <PastDueBannerCheckoutCTA
-        workspaceId={props.workspaceId}
-        status={props.subscriptionStatus}
-      />
+      <PastDueBanner workspaceId={workspaceId} isWorkspaceAdmin={isWorkspaceAdmin} />
     );
   }
 
   // When canceled, use checkoutSession with SETUP
-  if (props.subscriptionStatus === "canceled") {
-    if (!props.isWorkspaceAdmin) {
-      return <AccountInactiveNonAdminBannerNoCTA />;
-    }
-
+  if (subscriptionStatus === "canceled") {
     return (
-      <CanceledBannerCheckoutCTA
-        workspaceId={props.workspaceId}
-        status={props.subscriptionStatus}
+      <CanceledBanner workspaceId={workspaceId} isWorkspaceAdmin={isWorkspaceAdmin} />
+    );
+  }
+
+  // The team's workspace is active, so there is nothing to show.
+  return null;
+}
+
+enum BannerVariant {
+  DEFAULT = "default",
+  ERROR = "error"
+}
+interface BannerProps {
+  variant: BannerVariant;
+  label: string;
+  description: string;
+  children?: React.ReactNode;
+}
+function Banner(props: BannerProps) {
+  const variantStylesMap: { [key in BannerVariant]: string } = {
+    [BannerVariant.DEFAULT]: "bg-white text-blue shadow-blue",
+    [BannerVariant.ERROR]: "bg-red text-white shadow-red"
+  };
+  const variantStyles = variantStylesMap[props.variant];
+
+  return (
+    <div
+      className={`flex flex-wrap justify-between items-center my-2 p-4 border shadow ${variantStyles}`}
+    >
+      <div className="flex flex-wrap items-center">
+        <div className="pl-2">
+          <p className="font-black">{props.label}</p>
+          <p className="text-sm mb-2 md:mb-0">{props.description}</p>
+        </div>
+      </div>
+      {props.children || null}
+    </div>
+  );
+}
+
+function TrialingUpgradeBanner({
+  workspaceId,
+  isWorkspaceAdmin
+}: {
+  workspaceId: Workspace["id"];
+  isWorkspaceAdmin: boolean;
+}) {
+  if (!isWorkspaceAdmin) {
+    return (
+      <Banner
+        variant={BannerVariant.DEFAULT}
+        label="Trialing"
+        description="Your team's account is in trial mode. Ask an admin to upgrade your account to keep leveling up."
       />
     );
   }
 
-  return null;
+  return (
+    <Banner
+      variant={BannerVariant.DEFAULT}
+      label="Upgrade your workspace"
+      description="Your account is in trial mode. Upgrade your account to keep leveling up your team."
+    >
+      <ButtonBillingPortalSession workspaceId={workspaceId} />
+    </Banner>
+  );
 }
 
-function TrialingBannerCheckoutCTA({
+function TrialingInfoBanner({
   workspaceId,
-  status
+  isWorkspaceAdmin,
+  trialEnd
 }: {
-  workspaceId: string;
-  status: StripeSubscriptionStatus;
+  workspaceId: Workspace["id"];
+  isWorkspaceAdmin: boolean;
+  trialEnd: number;
 }) {
+  if (!isWorkspaceAdmin) {
+    return null;
+  }
+
+  const trialEndFromNow = moment.unix(trialEnd).fromNow();
   return (
-    <div className="flex justify-between items-center text-blue my-2 p-4 bg-white border shadow flex-wrap">
-      <div className="flex flex-wrap items-center">
-        <div className="pl-2">
-          <p className="font-black">Upgrade to PRO</p>
-          <p className="text-sm">
-            Your account is in trial mode. Upgrade to PRO to keep leveling up your team.
-          </p>
-        </div>
-      </div>
-      <ButtonCheckoutSession workspaceId={workspaceId} subscriptionStatus={status} />
-    </div>
+    <Banner
+      variant={BannerVariant.DEFAULT}
+      label="Upgrade your workspace"
+      description={`Your free trial ends ${trialEndFromNow}. Once it ends, you will be billed automatically.`}
+    >
+      <ButtonBillingPortalSession workspaceId={workspaceId} />
+    </Banner>
   );
 }
 
-const TrialingBannerNoCTA: React.FC<{ trialEnd: number }> = ({ trialEnd }) => {
+function InactiveInfoBanner() {
   return (
-    <div className="flex justify-between items-center text-blue my-2 p-4 bg-white border shadow flex-wrap">
-      <div className="flex flex-wrap items-center">
-        <div className="pl-2">
-          <p className="font-black">Trialing</p>
-          <p className="text-sm">
-            Your free trial ends {moment.unix(trialEnd).fromNow()}. Once it ends, you will
-            be billed automatically.
-          </p>
-        </div>
-      </div>
-    </div>
+    <Banner
+      variant={BannerVariant.ERROR}
+      label="Your team's account is inactive"
+      description="You can still read all of your existing data. Ask an admin to make a payment to create new retros."
+    />
   );
-};
+}
 
-const AccountInactiveNonAdminBannerNoCTA = () => {
-  return (
-    <div className="flex justify-between items-center text-blue my-2 p-4 bg-red text-white border shadow shadow-red flex-wrap">
-      <div className="flex flex-wrap items-center">
-        <div className="pl-2">
-          <p className="font-black">Your team's account is inactive</p>
-          <p className="text-sm mb-2 md:mb-0">
-            Please ask a workspace admin to upgrade your account
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const PastDueBannerCheckoutCTA = ({
+function PastDueBanner({
   workspaceId,
-  status
+  isWorkspaceAdmin
 }: {
-  workspaceId: string;
-  status: Props["subscriptionStatus"];
-}) => {
+  workspaceId: Workspace["id"];
+  isWorkspaceAdmin: boolean;
+}) {
+  if (!isWorkspaceAdmin) {
+    return <InactiveInfoBanner />;
+  }
   return (
-    <div className="flex justify-between items-center text-blue my-2 p-4 bg-red text-white border shadow shadow-red flex-wrap">
-      <div className="flex flex-wrap items-center">
-        <div className="pl-2">
-          <p className="font-black">Past due</p>
-          <p className="text-sm mb-2 md:mb-0">
-            You can still read all of your existing data, but you need to update your
-            payment method to create new retros.
-          </p>
-        </div>
-      </div>
-      <ButtonCheckoutSession workspaceId={workspaceId} subscriptionStatus={status} />
-    </div>
+    <Banner
+      variant={BannerVariant.ERROR}
+      label="Past due"
+      description="You can still read all of your existing data, but you need to update your payment method to create new retros."
+    >
+      <ButtonBillingPortalSession workspaceId={workspaceId} />
+    </Banner>
   );
-};
+}
 
-const CanceledBannerCheckoutCTA = ({
+function CanceledBanner({
   workspaceId,
-  status
+  isWorkspaceAdmin
 }: {
-  workspaceId: string;
-  status: Props["subscriptionStatus"];
-}) => {
+  workspaceId: Workspace["id"];
+  isWorkspaceAdmin: boolean;
+}) {
+  if (!isWorkspaceAdmin) {
+    return <InactiveInfoBanner />;
+  }
   return (
-    <div className="flex justify-between items-center text-blue my-2 p-4 bg-red text-white border shadow shadow-red flex-wrap">
-      <div className="flex flex-wrap items-center">
-        <div className="pl-2">
-          <p className="font-black">Canceled</p>
-          <p className="text-sm mb-2 md:mb-0">
-            You can still read all of your existing data, but you'll have to upgrade your
-            account to create new retros.
-          </p>
-        </div>
-      </div>
-      <ButtonCheckoutSession workspaceId={workspaceId} subscriptionStatus={status} />
-    </div>
+    <Banner
+      variant={BannerVariant.ERROR}
+      label="Canceled"
+      description="You can still read all of your existing data, but you need to upgrade your account to create new retros."
+    >
+      <ButtonCheckoutSession workspaceId={workspaceId} />
+    </Banner>
   );
-};
+}
