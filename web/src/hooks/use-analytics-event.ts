@@ -34,7 +34,8 @@ export enum AnalyticsEvent {
   SKIPPED_ONBOARDING_INVITES = "Skipped Onboarding Invites",
   ACTION_ITEM_CREATED = "Action Item Created",
   CHECKOUT_SESSION_CLICKED = "Checkout Session Clicked",
-  BILLING_PORTAL_CLICKED = "Billing Portal Clicked"
+  BILLING_PORTAL_CLICKED = "Billing Portal Clicked",
+  ACTION_ITEMS_COPIED = "Action Items Copied"
 }
 
 export function useAnalyticsEvent() {

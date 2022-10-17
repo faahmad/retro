@@ -18,7 +18,7 @@ export function ButtonCopyActionItems(props: {
       className="inline-flex items-center bg-blue border border-white text-white text-xs py-1 px-2 shadow shadow-blue focus:outline-none active:transform-1 w-32"
     >
       <ClipboardCheckIcon className="h-4 w-4 mr-1" />
-      <span>{isCopied ? "Copied!" : "Copy actions"}</span>
+      <span>{isCopied ? "Copied!" : "Copy to clipboard"}</span>
     </button>
   );
 }
