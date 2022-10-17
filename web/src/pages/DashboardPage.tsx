@@ -3,8 +3,6 @@ import { RouteComponentProps, Link } from "react-router-dom";
 import retroEmptyImage from "../assets/images/retro-empty-image.svg";
 import { Footer } from "../components/Footer";
 import { PageContainer } from "../components/PageContainer";
-import { UpgradeToProBanner } from "../components/UpgradeToProBanner";
-import { BannerTrialEnded } from "../components/BannerTrialEnded";
 import { useCurrentUser } from "../hooks/use-current-user";
 import { Retro } from "../types/retro";
 import { Workspace } from "../types/workspace";
@@ -23,6 +21,7 @@ import firebase from "../lib/firebase";
 import { FirestoreCollections } from "../constants/firestore-collections";
 import { useParams } from "react-router-dom";
 import * as Sentry from "@sentry/react";
+import { BannerWorkspaceSubscription } from "../components/BannerWorkspaceSubscription";
 
 const db = firebase.firestore();
 const retroCollection = db.collection(FirestoreCollections.RETRO);
@@ -38,7 +37,6 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
   const isWorkspaceOwner = getIsWorkspaceOwner(workspaceState, currentUserId);
 
   const isSubscriptionLoading = workspaceState.subscriptionStatus === undefined;
-  const isSubscriptionLoaded = workspaceState.subscriptionStatus !== undefined;
   const isSubscriptionTrialing = workspaceState.subscriptionStatus === "trialing";
   const isSubscriptionActive = workspaceState.subscriptionStatus === "active";
   const isAccountActive = isSubscriptionTrialing || isSubscriptionActive;
@@ -52,18 +50,15 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
         <Navbar isLoggedIn={true} />
         <p className="text-blue mb-2 underline">{workspaceState.name}</p>
         <h1 className="text-blue font-black text-3xl">Dashboard</h1>
-        {isWorkspaceOwner && isAccountActive && (
-          <UpgradeToProBanner
-            workspaceId={workspaceId}
-            trialEnd={workspaceState.subscriptionTrialEnd}
-          />
-        )}
-        {isSubscriptionLoaded && !isAccountActive && (
-          <BannerTrialEnded
-            workspaceId={workspaceId}
-            isWorkspaceAdmin={isWorkspaceAdmin}
-          />
-        )}
+
+        <BannerWorkspaceSubscription
+          workspaceId={workspaceId}
+          isWorkspaceAdmin={isWorkspaceAdmin}
+          subscriptionStatus={workspaceState?.subscriptionStatus}
+          subscriptionTrialEnd={workspaceState?.subscriptionTrialEnd}
+          paymentMethodId={workspaceState?.paymentMethodId}
+        />
+
         <RetroBoardsOverview
           isWorkspaceAdmin={isWorkspaceAdmin}
           currentUserId={currentUserId}

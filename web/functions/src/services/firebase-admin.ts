@@ -26,12 +26,13 @@ export async function getWorkspaceIdByCustomerId(customerId: string) {
 }
 
 interface UpdateWorkspaceParams {
-  customerId?: string;
+  customerId: string;
   subscriptionId?: string;
-  subscriptionTrialEnd: number | null;
-  subscriptionStatus?: string;
+  subscriptionTrialEnd?: number | null;
+  subscriptionStatus: string;
+  paymentMethodId: string | null;
 }
-export function updateWorkspace(id: string, params: UpdateWorkspaceParams) {
+export function updateWorkspace(id: string, params: Partial<UpdateWorkspaceParams>) {
   return db
     .collection(FirestoreCollections.WORKSPACE)
     .doc(id)

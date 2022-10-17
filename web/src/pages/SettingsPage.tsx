@@ -2,11 +2,6 @@ import * as React from "react";
 import { PageContainer } from "../components/PageContainer";
 import { Title } from "../components/Typography";
 import { UserAvatar } from "../components/UserAvatar";
-import moment from "moment";
-import { PencilEditIcon } from "../components/PencilEditIcon";
-import { dollarAmountAdapter } from "../utils/dollar-amount-adapter";
-import { useOpenBillingPortal } from "../hooks/use-open-billing-portal";
-import { UpgradeToProBanner } from "../components/UpgradeToProBanner";
 import { useGetWorkspace } from "../hooks/use-get-workspace";
 import { useCurrentUser } from "../hooks/use-current-user";
 import { WorkspaceStateStatus } from "../hooks/use-get-workspace";
@@ -15,11 +10,11 @@ import { Navbar } from "../components/Navbar";
 import { WorkspaceUsersTable } from "../components/WorkspaceUsersTable";
 import { logOut } from "../services/auth-service";
 import { useHistory } from "react-router-dom";
-import { BannerTrialEnded } from "../components/BannerTrialEnded";
 import { Workspace } from "../types/workspace";
 import { Button } from "../components/Button";
 import { updateWorkspace } from "../services/update-workspace";
-import { useGetWorkspaceSubscription } from "../hooks/use-get-workspace-subscription";
+import { ButtonCheckoutSession } from "../components/ButtonCheckoutSession";
+import { ButtonBillingPortalSession } from "../components/ButtonBillingPortalSession";
 
 export const SettingsPage = () => {
   useAnalyticsPage(AnalyticsPage.SETTINGS);
@@ -161,66 +156,32 @@ type BillingSettingsProps = {
   workspaceId: string;
   isWorkspaceAdmin: boolean;
 };
-function BillingSettings({ workspaceId, isWorkspaceAdmin }: BillingSettingsProps) {
-  const { openBillingPortalFn, isOpeningPortal } = useOpenBillingPortal(workspaceId);
+function BillingSettings({ workspaceId }: BillingSettingsProps) {
   const workspaceState = useGetWorkspace();
-  const { subscription } = useGetWorkspaceSubscription(workspaceId);
-
-  if (!subscription) {
-    return null;
-  }
-
-  const isTrialing = subscription.status === "trialing";
-  const isSubscriptionActive = subscription.status === "active";
+  const isCanceled = workspaceState.subscriptionStatus === "canceled";
 
   return (
     <div className="text-red border border-red shadow p-8 flex flex-col mt-2 mb-4">
       <div className="text-blue ml-2">
         <p className="text-xl font-black py-1">Billing</p>
-        {workspaceState?.subscriptionId && (
+        {!workspaceState.subscriptionStatus ? (
+          <p>Fetching your subscription info...</p>
+        ) : (
           <div className="flex-grow flex flex-row justify-between">
-            {isSubscriptionActive && (
-              <button
-                className="active:transform-1 border-none rounded-none focus:outline-none"
-                onClick={openBillingPortalFn}
-                disabled={isOpeningPortal}
-              >
-                {isOpeningPortal ? "Redirecting you to Stripe" : <PencilEditIcon />}
-              </button>
+            <div>
+              <p className="py-4">
+                Your workspace's subscription is{" "}
+                <strong>{workspaceState.subscriptionStatus}</strong>
+              </p>
+            </div>
+            {isCanceled ? (
+              <ButtonCheckoutSession workspaceId={workspaceId} />
+            ) : (
+              <ButtonBillingPortalSession workspaceId={workspaceId} />
             )}
           </div>
         )}
-        {isSubscriptionActive ? (
-          <SubscriptionActiveText
-            amount={subscription.items[0].amount}
-            currentPeriodEnd={subscription.currentPeriodEnd}
-            interval={subscription.items[0].interval}
-          />
-        ) : isTrialing ? (
-          <UpgradeToProBanner
-            workspaceId={workspaceId}
-            trialEnd={subscription.trialEnd}
-          />
-        ) : !isSubscriptionActive ? (
-          <BannerTrialEnded
-            workspaceId={workspaceId}
-            isWorkspaceAdmin={isWorkspaceAdmin}
-          />
-        ) : null}
       </div>
     </div>
-  );
-}
-
-function SubscriptionActiveText({ amount, currentPeriodEnd, interval }: any) {
-  return (
-    <React.Fragment>
-      <p className="py-4">
-        This workspace's Pro Plan is{" "}
-        <span className="font-black">${dollarAmountAdapter.fromSource(amount)}</span> a{" "}
-        {interval} and will renew on{" "}
-        <span className="font-black">{moment.unix(currentPeriodEnd).calendar()}</span>.
-      </p>
-    </React.Fragment>
   );
 }

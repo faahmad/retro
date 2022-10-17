@@ -17,7 +17,8 @@
     "deploy:dev": "yarn run build && firebase deploy --project dev --only hosting",
     "deploy:prod": "yarn run build && firebase deploy --project prod --only hosting",
     "lint": "eslint 'src/**/*.{js,jsx,json,ts,tsx}' --quiet --fix",
-    "prettier": "prettier \"src/**/*.{js,jsx,json,css,ts,tsx,scss}\" --write"
+    "prettier": "prettier \"src/**/*.{js,jsx,json,css,ts,tsx,scss}\" --write",
+    "stripe": "stripe listen --forward-to http://localhost:5001/retro-prod-786/us-central1/stripeWebhook"
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.3",

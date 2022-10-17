@@ -25,7 +25,7 @@ import { InformationCircleIcon } from "@heroicons/react/outline";
 import { ErrorBoundary } from "react-error-boundary";
 import { Button } from "../components/Button";
 import { LoadingText } from "../components/LoadingText";
-import { BannerTrialEnded } from "../components/BannerTrialEnded";
+import { BannerWorkspaceSubscription } from "../components/BannerWorkspaceSubscription";
 
 export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
   useAnalyticsPage(AnalyticsPage.RETRO_BOARD);
@@ -113,7 +113,6 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
   }
 
   const isFacilitator = getIsFacilitator(data!, currentUserId);
-  const isSubscriptionLoaded = workspaceState.subscriptionStatus !== undefined;
   const isSubscriptionTrialing = workspaceState.subscriptionStatus === "trialing";
   const isSubscriptionActive = workspaceState.subscriptionStatus === "active";
   const isAccountActive = isSubscriptionTrialing || isSubscriptionActive;
@@ -140,10 +139,13 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
             workspaceId={workspaceState.id}
           />
           <div className="px-8">
-            {isSubscriptionLoaded && !isAccountActive && (
-              <BannerTrialEnded
+            {!isAccountActive && (
+              <BannerWorkspaceSubscription
                 workspaceId={workspaceState.id}
                 isWorkspaceAdmin={isWorkspaceAdmin}
+                subscriptionStatus={workspaceState.subscriptionStatus}
+                subscriptionTrialEnd={workspaceState.subscriptionTrialEnd}
+                paymentMethodId={workspaceState.paymentMethodId}
               />
             )}
           </div>
