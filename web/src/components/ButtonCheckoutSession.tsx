@@ -1,33 +1,16 @@
-import { StripeSubscriptionStatus } from "../types/stripe-subscription-status";
 import { createStripeCheckoutSession } from "../services/stripe-service";
 import * as React from "react";
 import { Button } from "./Button";
 import { useAnalyticsEvent, AnalyticsEvent } from "../hooks/use-analytics-event";
 
-export function ButtonCheckoutSession({
-  workspaceId,
-  subscriptionStatus
-}: {
-  workspaceId: string;
-  subscriptionStatus: StripeSubscriptionStatus;
-}) {
-  const returnUrl = window.location.href;
+export function ButtonCheckoutSession({ workspaceId }: { workspaceId: string }) {
   const track = useAnalyticsEvent();
-
-  const statusToModeMap: {
-    [key in StripeSubscriptionStatus]: "setup" | "subscription";
-  } = {
-    trialing: "setup",
-    past_due: "setup",
-    canceled: "subscription",
-    active: "subscription"
-  };
 
   async function handleClick() {
     const response = await createStripeCheckoutSession({
       workspaceId,
-      returnUrl,
-      mode: statusToModeMap[subscriptionStatus]
+      returnUrl: window.location.href,
+      mode: "subscription"
     });
 
     const session = response.data;
@@ -37,7 +20,10 @@ export function ButtonCheckoutSession({
       return;
     }
 
-    track(AnalyticsEvent.CHECKOUT_SESSION_CLICKED, { workspaceId, subscriptionStatus });
+    track(AnalyticsEvent.CHECKOUT_SESSION_CLICKED, {
+      workspaceId,
+      subscriptionStatus: "canceled"
+    });
 
     window.location.replace(session.url);
   }

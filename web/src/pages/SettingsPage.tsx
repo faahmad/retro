@@ -2,7 +2,6 @@ import * as React from "react";
 import { PageContainer } from "../components/PageContainer";
 import { Title } from "../components/Typography";
 import { UserAvatar } from "../components/UserAvatar";
-import { useOpenBillingPortal } from "../hooks/use-open-billing-portal";
 import { useGetWorkspace } from "../hooks/use-get-workspace";
 import { useCurrentUser } from "../hooks/use-current-user";
 import { WorkspaceStateStatus } from "../hooks/use-get-workspace";
@@ -15,6 +14,7 @@ import { Workspace } from "../types/workspace";
 import { Button } from "../components/Button";
 import { updateWorkspace } from "../services/update-workspace";
 import { ButtonCheckoutSession } from "../components/ButtonCheckoutSession";
+import { ButtonBillingPortalSession } from "../components/ButtonBillingPortalSession";
 
 export const SettingsPage = () => {
   useAnalyticsPage(AnalyticsPage.SETTINGS);
@@ -158,11 +158,7 @@ type BillingSettingsProps = {
 };
 function BillingSettings({ workspaceId }: BillingSettingsProps) {
   const workspaceState = useGetWorkspace();
-
-  const isTrialing = workspaceState.subscriptionStatus === "trialing";
-  const hasPaymentMethod = Boolean(workspaceState.paymentMethodId);
-  const isTrialOK = isTrialing && hasPaymentMethod;
-  const isActive = workspaceState.subscriptionStatus === "active";
+  const isCanceled = workspaceState.subscriptionStatus === "canceled";
 
   return (
     <div className="text-red border border-red shadow p-8 flex flex-col mt-2 mb-4">
@@ -178,26 +174,14 @@ function BillingSettings({ workspaceId }: BillingSettingsProps) {
                 <strong>{workspaceState.subscriptionStatus}</strong>
               </p>
             </div>
-            {isActive || isTrialOK ? (
-              <BillingPortalButton workspaceId={workspaceId} />
+            {isCanceled ? (
+              <ButtonCheckoutSession workspaceId={workspaceId} />
             ) : (
-              <ButtonCheckoutSession
-                workspaceId={workspaceId}
-                subscriptionStatus={workspaceState.subscriptionStatus}
-              />
+              <ButtonBillingPortalSession workspaceId={workspaceId} />
             )}
           </div>
         )}
       </div>
     </div>
-  );
-}
-
-function BillingPortalButton({ workspaceId }: { workspaceId: string }) {
-  const { openBillingPortalFn } = useOpenBillingPortal(workspaceId);
-  return (
-    <Button style={{ maxWidth: "8rem" }} className="flex-2" onClick={openBillingPortalFn}>
-      Update
-    </Button>
   );
 }

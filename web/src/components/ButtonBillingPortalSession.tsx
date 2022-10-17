@@ -1,22 +1,15 @@
-import { StripeSubscriptionStatus } from "../types/stripe-subscription-status";
 import { createStripeBillingPortalSession } from "../services/stripe-service";
 import * as React from "react";
 import { Button } from "./Button";
 import { useAnalyticsEvent, AnalyticsEvent } from "../hooks/use-analytics-event";
 
-export function ButtonBillingPortalSession({
-  workspaceId
-}: {
-  workspaceId: string;
-  subscriptionStatus: StripeSubscriptionStatus;
-}) {
-  const returnUrl = window.location.href;
+export function ButtonBillingPortalSession({ workspaceId }: { workspaceId: string }) {
   const track = useAnalyticsEvent();
 
   async function handleClick() {
     const response = await createStripeBillingPortalSession({
       workspaceId,
-      returnUrl
+      returnUrl: window.location.href
     });
 
     const session = response.data;
