@@ -76,7 +76,7 @@ export const DashboardPage: React.FC<RouteComponentProps> = ({ history }) => {
             showCopyButton
             workspaceId={workspaceState.id}
             isOwner={isWorkspaceOwner}
-            title={`${workspaceState.name} actions`}
+            title="Action items"
             label="Actions we agreed to take from all our previous retros."
           />
         </div>
