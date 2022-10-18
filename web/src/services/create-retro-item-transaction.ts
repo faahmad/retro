@@ -50,7 +50,6 @@ export async function createRetroItemTransaction({
     const retroRef = retroCollection.doc(retroId);
     const countKey = getCountKeyByType(newRetroItem.type);
     const updates = {
-      userIds: { [userId]: userId },
       retroItemIds: {
         [newRetroItemId]: newRetroItemId
       },
