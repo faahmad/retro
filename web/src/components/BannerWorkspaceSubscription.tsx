@@ -113,7 +113,7 @@ function TrialingUpgradeBanner({
   return (
     <Banner
       variant={BannerVariant.DEFAULT}
-      label="Upgrade your workspace"
+      label="Trialing"
       description="Your account is in trial mode. Add a payment method to keep leveling up your team."
     >
       <ButtonBillingPortalSession workspaceId={workspaceId} />
