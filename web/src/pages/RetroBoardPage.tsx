@@ -81,9 +81,7 @@ export const RetroBoardPage: React.FC<RouteComponentProps> = () => {
           Something went wrong when trying to open this retro. It may have been deleted or
           you no longer have access.
         </p>
-        <p className="text-blue mb-2 text-sm text-gray">
-          Error message: {error?.message}
-        </p>
+        <p className="text-blue mb-2 text-sm">Error message: {error?.message}</p>
         <Button
           className="text-red shadow border"
           onClick={() => {
