@@ -4,6 +4,7 @@ import * as React from "react";
 import { ArrowLeftIcon } from "@heroicons/react/outline";
 import { useHistory, useParams } from "react-router-dom";
 import { useCurrentUser } from "../hooks/use-current-user";
+import { UserAvatar } from "./UserAvatar";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -16,15 +17,16 @@ export function UserMenu({ isFacilitator }: { isFacilitator: boolean }) {
 
   const backToDashboard = () => history.push(`/workspaces/${params.workspaceId}`);
 
+  const displayName = currentUser?.data?.displayName || currentUser?.data?.email;
+
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
         <Menu.Button className="flex rounded-full bg-white text-sm">
           <span className="sr-only">Open user menu</span>
-          <img
-            className="h-8 w-8 rounded-full"
-            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-            alt=""
+          <UserAvatar
+            photoURL={currentUser?.data?.photoUrl || undefined}
+            displayName={displayName || undefined}
           />
         </Menu.Button>
       </div>
@@ -40,9 +42,7 @@ export function UserMenu({ isFacilitator }: { isFacilitator: boolean }) {
       >
         <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-blue rounded-md bg-white border border-blue shadow-blue ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="px-4 py-3">
-            <p className="text-sm">
-              {currentUser?.data?.displayName || currentUser?.data?.email || ""}
-            </p>
+            <p className="text-sm">{displayName || ""}</p>
             <p className="truncate text-sm font-medium text-gray">
               {isFacilitator ? "facilitator" : "guest"}
             </p>
