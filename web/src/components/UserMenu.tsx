@@ -3,12 +3,14 @@ import { Menu, Transition } from "@headlessui/react";
 import * as React from "react";
 import { ArrowLeftIcon } from "@heroicons/react/outline";
 import { useHistory, useParams } from "react-router-dom";
+import { useCurrentUser } from "../hooks/use-current-user";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export function UserMenu() {
+export function UserMenu({ isFacilitator }: { isFacilitator: boolean }) {
+  const currentUser = useCurrentUser();
   const params = useParams<{ workspaceId: string; retroId: string }>();
   const history = useHistory();
 
@@ -38,8 +40,12 @@ export function UserMenu() {
       >
         <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-blue rounded-md bg-white border border-blue shadow-blue ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="px-4 py-3">
-            <p className="text-sm">tom@example.com</p>
-            <p className="truncate text-sm font-medium text-gray">facilitator</p>
+            <p className="text-sm">
+              {currentUser?.data?.displayName || currentUser?.data?.email || ""}
+            </p>
+            <p className="truncate text-sm font-medium text-gray">
+              {isFacilitator ? "facilitator" : "guest"}
+            </p>
           </div>
           {/* <div className="py-1">
             <Menu.Item>

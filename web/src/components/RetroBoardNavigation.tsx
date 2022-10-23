@@ -52,11 +52,16 @@ export function RetroBoardNavigation(props: any) {
             </div>
 
             {/* Stepper */}
-            <div className="hidden md:block">
+            <div className="flex flex-col items-center">
               <RetroBoardStageStepper
                 isOwner={props.isFacilitator}
                 retroId={props.retroId}
               />
+              <span className="inline-flex items-center rounded-md bg-grayLight px-2 py-0.5 text-sm font-medium text-gray mt-1">
+                {props.isFacilitator
+                  ? "✨ You are the facilitator ✨"
+                  : "You are a guest"}
+              </span>
             </div>
 
             {/* Action buttons */}
@@ -90,7 +95,7 @@ export function RetroBoardNavigation(props: any) {
                 </button>
               </div>
               <div className="ml-4">
-                <UserMenu />
+                <UserMenu isFacilitator={props.isFacilitator} />
               </div>
             </div>
           </div>
