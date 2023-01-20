@@ -2,18 +2,6 @@
 
 The retrospective tool for people who hate retros.
 
-## Onboarding checklist
-
-- Join the Discord server
-- Get added to the Firebase projects
-- Get access to the Shared Google Drive
-- Get access to the Figma designs
-- Get added to the Amplitude dashboard
-- Get access to the Google Analytics dashboard
-- Get access to the Stripe dashboard
-- Get access to the CustomerIO workspace
-- Get added to Retro's workspace (for team-fooding)
-
 ## Development environment setup
 
 ### Prereqs
