@@ -1,6 +1,6 @@
 # Retro
 
-Source code of Retro.
+Source code of Retro. This project has been archived.
 
 ## Development environment setup
 
