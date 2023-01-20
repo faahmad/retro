@@ -1,6 +1,6 @@
 # Retro
 
-The retrospective tool for people who hate retros.
+Source code of Retro.
 
 ## Development environment setup
 
